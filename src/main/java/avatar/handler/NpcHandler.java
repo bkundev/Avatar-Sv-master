@@ -1,19 +1,28 @@
 package avatar.handler;
 
+import avatar.constants.Cmd;
 import avatar.constants.NpcName;
 import avatar.item.Item;
+import avatar.model.Command;
 import avatar.model.User;
 import avatar.lucky.DialLucky;
 import avatar.lucky.DialLuckyManager;
 import avatar.model.Menu;
 import avatar.model.Npc;
-
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 import java.io.IOException;
-
+import java.util.concurrent.*;
+import avatar.network.Message;
+import avatar.play.NpcManager;
 import avatar.play.Zone;
+import avatar.server.ServerManager;
+import avatar.server.UserManager;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class NpcHandler {
 
@@ -44,6 +53,9 @@ public class NpcHandler {
         dl.show(us);
     }
 
+    public void handlerTaiXiu(Message ms) throws IOException {
+
+    }
     public static void handlerCommunicate(int npcId, User us) throws IOException {
         Zone z = us.getZone();
         if (z != null) {
@@ -54,10 +66,51 @@ public class NpcHandler {
         } else {
             return;
         }
-
         int npcIdCase = npcId - Npc.ID_ADD;
 
         switch (npcIdCase) {
+            case NpcName.Tai_Xiu: {
+                List<Menu> list = new ArrayList<>();
+                Menu taiXiu = Menu.builder().name("Chơi Tài Xỉu").menus(
+                                List.of(
+                                        Menu.builder().name("Cược Tài").menus(
+                                                List.of(
+                                                        Menu.builder().name("Nhập Số Xu Cược Tài").action(() -> {
+                                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 12, "Nhập Số Tiền Cược Tài", 1);
+                                                        }).build()
+                                                )).build(),
+                                        Menu.builder().name("Cược Xỉu").menus(
+                                                List.of(
+                                                        Menu.builder().name("Nhập Số Xu Cược Xỉu").action(() -> {
+                                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 13, "Nhập Số Tiền Cược Xỉu", 1);
+                                                        }).build()
+                                                )).build(),
+                                        Menu.builder().name("Tất Tay tài").menus(
+                                                List.of(
+                                                        Menu.builder().name("Tất Tay Tài 100.000.000 Xu").action(() -> {
+                                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 15, "Nhập Bừa 1 Số Để Tất Tay Tài 100.000.000 Xu", 1);
+                                                        }).build()
+                                                )).build(),
+                                        Menu.builder().name("Tất Tay xỉu").menus(
+                                                List.of(
+                                                        Menu.builder().name("Tất Tay Tài 100.000.000 Xu").action(() -> {
+                                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 15, "Nhập Bừa 1 Số Để Tất Tay Tài 100.000.000 Xu", 1);
+                                                        }).build()
+                                                )).build()
+                                ))
+                        .id(npcId)
+                        .npcName("Không Tài Thì Xỉu")
+                        .npcChat("xuc xac nao")
+                        .build();
+                list.add(taiXiu);
+                list.add(Menu.builder().name("Hướng dẫn").action(() -> {
+                    us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
+                }).build());
+                list.add(Menu.builder().name("Thoát").build());
+                us.setMenus(list);
+                us.getAvatarService().openUIMenu(npcId, 0, list, "tài xỉu", "");
+                break;
+            }
             case NpcName.binzoet:{
 
                 List<Menu> list = new ArrayList<>();
@@ -72,7 +125,6 @@ public class NpcHandler {
                 break;
             }
             case NpcName.em_Thinh:{
-
                 List<Menu> list = new ArrayList<>();
                 List<Item> Items = new ArrayList<>();
                 Menu quaySo = Menu.builder().name("vật phẩm").menus(

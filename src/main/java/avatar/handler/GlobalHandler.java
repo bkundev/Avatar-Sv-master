@@ -1,19 +1,34 @@
 package avatar.handler;
 
+import avatar.constants.NpcName;
 import avatar.item.Item;
 import avatar.model.Menu;
+import avatar.model.Npc;
 import avatar.model.User;
-
+import java.util.Random;
+import java.text.MessageFormat;
+import java.util.concurrent.CountDownLatch;
+import java.io.IOException;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 import avatar.network.Message;
+import avatar.play.NpcManager;
+import avatar.play.Zone;
 import avatar.server.Avatar;
 import avatar.server.ServerManager;
 import avatar.server.UserManager;
 
 public class GlobalHandler {
+
+    private int Sum_Xu = 0;//tổng xu ván cược;
+    private static final int Max = 100000000;
+    public boolean Cuoc = false;
 
     private User us;
 
@@ -56,76 +71,162 @@ public class GlobalHandler {
     public void comingSoon() {
         us.getAvatarService().serverDialog("Chức năng đang được xây dựng, vui lòng thử lại sau");
     }
+    public void handleSicbo() {
+        int total = 0;
 
+        if(Cuoc==false){
+            Zone zi = us.getZone();
+            Random random = new Random();
+            CountDownLatch latch = new CountDownLatch(1);
+            int dice1 = random.nextInt(6) + 1;
+            int dice2 = random.nextInt(6) + 1;
+            int dice3 = random.nextInt(6) + 1;
+            total = dice1 + dice2 + dice3;
+            Cuoc = true;
+
+            System.out.println("Dice 1: " + dice1);
+            System.out.println("Dice 2: " + dice2);
+            System.out.println("Dice 3: " + dice3);
+            System.out.println("Total: " + total);
+
+            Npc npc = NpcManager.getInstance().find(zi.getMap().getId(), zi.getId(), NpcName.Tai_Xiu + Npc.ID_ADD);
+            System.out.print("Rolling the dice");
+            Thread countdownThread = new Thread(() -> {
+                try {
+                    for (int i = 45; i >= 1; i--) {
+                        Thread.sleep(1000);
+                        int count = (int) latch.getCount();
+                        npc.setTextChats(List.of(MessageFormat.format("time {0}", i)));
+                        System.out.print(i);
+                    }
+                    System.out.println();
+                    latch.countDown();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            countdownThread.start();
+
+            try {
+                latch.await(); // Wait for countdown to finish
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            // Determine win or lose
+            if (total<=10) {
+                npc.setTextChats(List.of(MessageFormat.format("Xỉu {0},{1},{2}", dice1,dice2,dice3)));
+                System.out.println("xỉu (Small)");
+            } else {
+                npc.setTextChats(List.of(MessageFormat.format("Tài {0},{1},{2}", dice1,dice2,dice3)));
+                System.out.println("Tài (Big)");
+            }
+            Cuoc = false;
+            total =0;
+            countdownThread.stop();
+        }
+    }
     public void handleTextBox(Message ms) throws IOException {
+
         int userId = ms.reader().readInt();
         byte menuId = ms.reader().readByte();
         String text = ms.reader().readUTF();
-        if (menuId == 7) {
-            try {
-                short itemCode = Short.parseShort(text);
-                Item item = new Item(itemCode, -1, 0);
-                this.us.addItemToChests(item);
-                us.getAvatarService().serverDialog("added " + item.getPart().getName() + " into my chests");
-            } catch (NumberFormatException e) {
-                us.getAvatarService().serverDialog("invalid input, item code must be number");
-            }
-        }
-        if (menuId == 8) {
-            try {
-                if(us.getId()==7){
-                    List<User> lst = UserManager.users;
-                    String noidung = text.toString();
-                    for (int i = 0; i < lst.stream().count(); i++) {
-                        lst.get(i).getAvatarService().serverInfo(noidung);
+        List<User> lst = UserManager.users;
+        switch (menuId){
+            case 7:
+                try {
+                    short itemCode = Short.parseShort(text);
+                    Item item = new Item(itemCode, -1, 0);
+                    this.us.addItemToChests(item);
+                    us.getAvatarService().serverDialog("added " + item.getPart().getName() + " into my chests");
+                } catch (NumberFormatException e) {
+                    us.getAvatarService().serverDialog("invalid input, item code must be number");
+                }
+                break;
+            case 8:
+                try {
+                    if(us.getId()==7){
+                        String noidung = text.toString();
+                        for (int i = 0; i < lst.stream().count(); i++) {
+                            lst.get(i).getAvatarService().serverInfo(noidung);
+                        }
+
                     }
 
+                } catch (NumberFormatException e) {
+                    us.getAvatarService().serverDialog("invalid input, item code must be number");
                 }
+            case 9:
+                try {
+                    if(us.getId()==7){
+                        byte thoitiet = Byte.parseByte(text);
+                        us.getAvatarService().weather(thoitiet);
+                    }
 
-            } catch (NumberFormatException e) {
-                us.getAvatarService().serverDialog("invalid input, item code must be number");
-            }
-        }
-        if (menuId == 9) {
-            try {
-                if(us.getId()==7){
-                    byte thoitiet = Byte.parseByte(text);
-                    us.getAvatarService().weather(thoitiet);
+                } catch (NumberFormatException e) {
+                    us.getAvatarService().serverDialog("invalid input, item code must be number");
                 }
+            case 10:
+                try {
+                    if(us.getId()==7){
+                        if(Integer.parseInt(text) == 1)
+                            for (int i = 0; i < lst.stream().count(); i++) {
+                                lst.get(i).getAvatarService().serverDialog("server sẽ bảo trì sau 2 phút.vui lòng off để tránh mất đồ");
+                            }
+                    }
 
-            } catch (NumberFormatException e) {
-                us.getAvatarService().serverDialog("invalid input, item code must be number");
-            }
-        }
-        if (menuId == 10) {
-            try {
-                if(us.getId()==7){
-                    List<User> lst = UserManager.users;
-                    if(Integer.parseInt(text) == 1)
-                        for (int i = 0; i < lst.stream().count(); i++) {
-                            lst.get(i).getAvatarService().serverDialog("server sẽ bảo trì sau 2 phút.vui lòng off để tránh mất đồ");
-                        }
+                } catch (NumberFormatException e) {
+                    us.getAvatarService().serverDialog("invalid input, item code must be number");
                 }
-
-            } catch (NumberFormatException e) {
-                us.getAvatarService().serverDialog("invalid input, item code must be number");
-            }
-        }
-        if (menuId == 11) {
-            try {
-                List<User> lst = UserManager.users;
-                if(us.getId()==7){
-                    if(Integer.parseInt(text) == 1){
-                        for (int i = 0; i < lst.stream().count(); i++) {
-                            lst.get(i).getAvatarService().serverInfo((String.format("ad : thành phố  %s. có %d  đang online. chúc mọi người vui vẻ", ServerManager.cityName, ServerManager.clients.size())));
+            case 11:
+                try {
+                    if(us.getId()==7){
+                        if(Integer.parseInt(text) == 1){
+                            for (int i = 0; i < lst.stream().count(); i++) {
+                                lst.get(i).getAvatarService().serverInfo((String.format("ad : thành phố  %s. có %d  đang online. chúc mọi người vui vẻ", ServerManager.cityName, ServerManager.clients.size())));
+                            }
                         }
                     }
-                }
 
-            } catch (NumberFormatException e) {
-                us.getAvatarService().serverDialog("invalid input, item code must be number");
-            }
+                } catch (NumberFormatException e) {
+                    us.getAvatarService().serverDialog("invalid input, item code must be number");
+                }
+            case 12:
+                try {
+                    Integer xu = Integer.parseInt(text);
+                    us.getAvatarService().serverDialog("bạn đã đặt cược tài "+xu+" xu thành công!");
+                    handleSicbo();
+                } catch (NumberFormatException e) {
+                    us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
+                }
+                break;
+            case 13:
+                try {
+                    Integer xu = Integer.parseInt(text);
+                    us.getAvatarService().serverDialog("bạn đã đặt cược xỉu "+xu+" xu thành công!");
+                    handleSicbo();
+                } catch (NumberFormatException e) {
+                    us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
+                }
+                break;
+            case 14:
+                try {
+                    Integer xu = Integer.parseInt(text);
+                    us.getAvatarService().serverDialog("bạn đã đặt cược xỉu "+xu+" xu thành công!");
+                } catch (NumberFormatException e) {
+                    us.getAvatarService().serverDialog("Vui Lòng Nhập Số Bất kỳ Để Cược Tấy Tay 100.000.000 Xu");
+                }
+                break;
+            case 15:
+                try {
+                    Integer xu = Integer.parseInt(text);
+                    us.getAvatarService().serverDialog("bạn đã đặt cược xỉu "+xu+" xu thành công!");
+                } catch (NumberFormatException e) {
+                    us.getAvatarService().serverDialog("Vui Lòng Nhập Số Bất kỳ Để Cược Tấy Tay 100.000.000 Xu");
+                }
+                break;
         }
+
     }
 
     private void sendCityMap() throws IOException {
