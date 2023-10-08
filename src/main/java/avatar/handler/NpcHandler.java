@@ -4,6 +4,7 @@ import avatar.constants.Cmd;
 import avatar.constants.NpcName;
 import avatar.item.Item;
 import avatar.model.Command;
+import java.math.BigInteger;
 import avatar.model.User;
 import avatar.lucky.DialLucky;
 import avatar.lucky.DialLuckyManager;
@@ -37,7 +38,7 @@ public class NpcHandler {
                 }
             }
             if (dl.getType() == DialLuckyManager.XU) {
-                if (us.getXu() < 15000) {
+                if (us.getXu().intValue() < 15000) {
                     us.getAvatarService().serverDialog("Bạn không đủ xu!");
                     return;
                 }
@@ -73,30 +74,18 @@ public class NpcHandler {
                 List<Menu> list = new ArrayList<>();
                 Menu taiXiu = Menu.builder().name("Chơi Tài Xỉu").menus(
                                 List.of(
-                                        Menu.builder().name("Cược Tài").menus(
-                                                List.of(
-                                                        Menu.builder().name("Nhập Số Xu Cược Tài").action(() -> {
-                                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 12, "Nhập Số Tiền Cược Tài", 1);
-                                                        }).build()
-                                                )).build(),
-                                        Menu.builder().name("Cược Xỉu").menus(
-                                                List.of(
-                                                        Menu.builder().name("Nhập Số Xu Cược Xỉu").action(() -> {
-                                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 13, "Nhập Số Tiền Cược Xỉu", 1);
-                                                        }).build()
-                                                )).build(),
-                                        Menu.builder().name("Tất Tay tài").menus(
-                                                List.of(
-                                                        Menu.builder().name("Tất Tay Tài 100.000.000 Xu").action(() -> {
-                                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 15, "Nhập Bừa 1 Số Để Tất Tay Tài 100.000.000 Xu", 1);
-                                                        }).build()
-                                                )).build(),
-                                        Menu.builder().name("Tất Tay xỉu").menus(
-                                                List.of(
-                                                        Menu.builder().name("Tất Tay Tài 100.000.000 Xu").action(() -> {
-                                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 15, "Nhập Bừa 1 Số Để Tất Tay Tài 100.000.000 Xu", 1);
-                                                        }).build()
-                                                )).build()
+                                        Menu.builder().name("Cược Tài").action(() -> {
+                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 12, "Nhập Số Tiền Cược Tài", 1);
+                                        }).build(),
+                                        Menu.builder().name("Cược Xỉu").action(() -> {
+                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 13, "Nhập Số Tiền Cược Xỉu", 1);
+                                        }).build(),
+                                        Menu.builder().name("Tất Tay tài").action(() -> {
+                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 14, "Nhập Bừa 1 Số Để Tất Tay Tài 100.000.000 Xu", 1);
+                                        }).build(),
+                                        Menu.builder().name("Tất Tay xỉu").action(() -> {
+                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 15, "Nhập Bừa 1 Số Để Tất Tay Xỉu 100.000.000 Xu", 1);
+                                        }).build()
                                 ))
                         .id(npcId)
                         .npcName("Không Tài Thì Xỉu")
@@ -104,7 +93,7 @@ public class NpcHandler {
                         .build();
                 list.add(taiXiu);
                 list.add(Menu.builder().name("Hướng dẫn").action(() -> {
-                    us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
+                    us.getAvatarService().customTab("Hướng dẫn", "cứ ôn in bừa");
                 }).build());
                 list.add(Menu.builder().name("Thoát").build());
                 us.setMenus(list);
@@ -115,9 +104,9 @@ public class NpcHandler {
 
                 List<Menu> list = new ArrayList<>();
                 list.add(Menu.builder().name("reset xu luong").action(() -> {
-                    us.setXu(999999999);
-                    us.setLuong(9999);
-                    us.getAvatarService().serverDialog("bu");
+                    //us.setXu(999999999);
+                    //us.setLuong(9999);
+                    us.getAvatarService().serverDialog("reset cc");
                 }).build());
                 list.add(Menu.builder().name("Thoát").build());
                 us.setMenus(list);

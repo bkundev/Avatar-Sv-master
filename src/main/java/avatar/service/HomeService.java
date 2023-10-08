@@ -1,6 +1,8 @@
 package avatar.service;
 
 import avatar.db.DbManager;
+
+import java.math.BigInteger;
 import java.sql.ResultSet;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
@@ -23,7 +25,7 @@ public class HomeService extends Service {
         byte x = ms.reader().readByte();
         byte y = ms.reader().readByte();
         byte type = ms.reader().readByte();
-        this.session.user.updateXu(-2000);
+        this.session.user.updateXu(BigInteger.valueOf(-2000));
         int result = 0;
         try {
             String INSERT_HOUSE_ITEM = "INSERT INTO `house_player_item` (`user_id`, `house_item_id`, `x`, `y`) VALUES (?, ?, ?, ?)";
@@ -155,7 +157,7 @@ public class HomeService extends Service {
                     ps.setInt(2, this.session.user.getId());
                     int result_update = ps.executeUpdate();
                     ps.close();
-                    this.session.user.updateXu(-2000);
+                    this.session.user.updateXu(BigInteger.valueOf(-2000));
                     ms = new Message(-46);
                     DataOutputStream ds = ms.writer();
                     ds.writeShort(1);

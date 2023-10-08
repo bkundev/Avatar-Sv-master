@@ -7,6 +7,10 @@ package avatar.play;
 
 import avatar.model.Npc;
 import java.util.ArrayList;
+import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  *

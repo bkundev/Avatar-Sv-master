@@ -13,6 +13,8 @@ import avatar.model.Gift;
 import avatar.model.User;
 import avatar.server.Utils;
 import avatar.service.AvatarService;
+
+import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -114,7 +116,7 @@ public class DialLucky {
             } else if (type == XU) {
                 int xu = Utils.nextInt(1, 10) * 1000;
                 gift.setXu(xu);
-                us.updateXu(xu);
+                us.updateXu(BigInteger.valueOf(xu));
             } else if (type == XP) {
                 int xp = Utils.nextInt(1, 10) * 10;
                 gift.setXp(xp);

@@ -5,6 +5,7 @@
  */
 package avatar.play.offline;
 
+import avatar.constants.NpcName;
 import avatar.item.Item;
 import avatar.model.Npc;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class ObjPremium extends AbsMapOffline {
 
     @Override
     public void init() {
-        Npc thuongNhan = Npc.builder().id(1211)
+        Npc thuongNhan = Npc.builder().id(1221)
                 .name("thuong nhan")
                 .x((short) 180)
                 .y((short) 168)

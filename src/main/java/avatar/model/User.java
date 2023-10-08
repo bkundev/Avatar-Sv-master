@@ -2,19 +2,18 @@ package avatar.model;
 
 import avatar.common.BossShopItem;
 import avatar.db.DbManager;
-import avatar.handler.UpgradeItemHandler;
 import avatar.item.Item;
 import avatar.item.Part;
 import avatar.lucky.DialLucky;
 import avatar.network.Session;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.json.simple.JSONValue;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
-import java.io.DataOutputStream;
 
 import avatar.network.Message;
 import avatar.play.MapService;
@@ -38,7 +37,6 @@ import avatar.service.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
@@ -56,7 +54,7 @@ public class User {
     private String username;
     private String password;
     private byte gender;
-    public int xu;
+    public BigInteger xu;
     public int luong;
     public int luongKhoa;
     public int xeng;
@@ -137,8 +135,9 @@ public class User {
         this.gender = gender;
     }
 
-    public synchronized void updateXu(int xuUp) {
-        this.xu += xuUp;
+    public synchronized void updateXu(BigInteger xuUp) {
+        BigInteger xuAsBigInteger = xu;
+        this.xu = xuAsBigInteger.add(xuUp);
     }
 
     public synchronized void updateLuong(int luongUp) {
@@ -266,7 +265,7 @@ public class User {
                     this.expMain = res.getInt("exp_main");
                     this.gender = res.getByte("gender");
                     this.gender = res.getByte("gender");
-                    this.xu = res.getInt("xu");
+                    this.xu = BigInteger.valueOf(res.getLong("xu"));
                     this.luong = res.getShort("luong");
                     this.luongKhoa = res.getShort("luong_khoa");
                     this.xeng = res.getInt("xeng");

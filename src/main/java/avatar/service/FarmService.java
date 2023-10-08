@@ -117,7 +117,7 @@ public class FarmService extends Service {
             ds.writeByte(i.getKey());
             ds.writeShort(i.getValue());
         }
-        ds.writeInt(this.session.user.getXu());
+        ds.writeInt(Math.toIntExact(this.session.user.getXu().longValue()));
         ds.writeByte(us.getLeverFarm());
         ds.writeByte(us.getLeverPercen());
         ds.writeByte(phanbon.size());

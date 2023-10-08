@@ -17,12 +17,19 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
+import javax.swing.*;
+import java.text.MessageFormat;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+
+
 import avatar.network.Message;
 import avatar.play.NpcManager;
 import avatar.play.Zone;
 import avatar.server.Avatar;
 import avatar.server.ServerManager;
 import avatar.server.UserManager;
+import lombok.SneakyThrows;
 
 public class GlobalHandler {
 
@@ -71,9 +78,9 @@ public class GlobalHandler {
     public void comingSoon() {
         us.getAvatarService().serverDialog("Chức năng đang được xây dựng, vui lòng thử lại sau");
     }
+    @SneakyThrows
     public void handleSicbo() {
         int total = 0;
-
         if(Cuoc==false){
             Zone zi = us.getZone();
             Random random = new Random();
