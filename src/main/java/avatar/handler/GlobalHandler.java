@@ -5,6 +5,9 @@ import avatar.item.Item;
 import avatar.model.Menu;
 import avatar.model.Npc;
 import avatar.model.User;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Random;
 import java.text.MessageFormat;
 import java.util.concurrent.CountDownLatch;
@@ -32,11 +35,6 @@ import avatar.server.UserManager;
 import lombok.SneakyThrows;
 
 public class GlobalHandler {
-
-    private int Sum_Xu = 0;//tổng xu ván cược;
-    private static final int Max = 100000000;
-    public boolean Cuoc = false;
-
     private User us;
 
     public GlobalHandler(User user) {
@@ -74,64 +72,12 @@ public class GlobalHandler {
             return;
         }
     }
-
     public void comingSoon() {
         us.getAvatarService().serverDialog("Chức năng đang được xây dựng, vui lòng thử lại sau");
     }
-    @SneakyThrows
+
     public void handleSicbo() {
-        int total = 0;
-        if(Cuoc==false){
-            Zone zi = us.getZone();
-            Random random = new Random();
-            CountDownLatch latch = new CountDownLatch(1);
-            int dice1 = random.nextInt(6) + 1;
-            int dice2 = random.nextInt(6) + 1;
-            int dice3 = random.nextInt(6) + 1;
-            total = dice1 + dice2 + dice3;
-            Cuoc = true;
 
-            System.out.println("Dice 1: " + dice1);
-            System.out.println("Dice 2: " + dice2);
-            System.out.println("Dice 3: " + dice3);
-            System.out.println("Total: " + total);
-
-            Npc npc = NpcManager.getInstance().find(zi.getMap().getId(), zi.getId(), NpcName.Tai_Xiu + Npc.ID_ADD);
-            System.out.print("Rolling the dice");
-            Thread countdownThread = new Thread(() -> {
-                try {
-                    for (int i = 45; i >= 1; i--) {
-                        Thread.sleep(1000);
-                        int count = (int) latch.getCount();
-                        npc.setTextChats(List.of(MessageFormat.format("time {0}", i)));
-                        System.out.print(i);
-                    }
-                    System.out.println();
-                    latch.countDown();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            });
-            countdownThread.start();
-
-            try {
-                latch.await(); // Wait for countdown to finish
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-            // Determine win or lose
-            if (total<=10) {
-                npc.setTextChats(List.of(MessageFormat.format("Xỉu {0},{1},{2}", dice1,dice2,dice3)));
-                System.out.println("xỉu (Small)");
-            } else {
-                npc.setTextChats(List.of(MessageFormat.format("Tài {0},{1},{2}", dice1,dice2,dice3)));
-                System.out.println("Tài (Big)");
-            }
-            Cuoc = false;
-            total =0;
-            countdownThread.stop();
-        }
     }
     public void handleTextBox(Message ms) throws IOException {
 
@@ -157,12 +103,12 @@ public class GlobalHandler {
                         for (int i = 0; i < lst.stream().count(); i++) {
                             lst.get(i).getAvatarService().serverInfo(noidung);
                         }
-
                     }
 
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("invalid input, item code must be number");
                 }
+                break;
             case 9:
                 try {
                     if(us.getId()==7){
@@ -173,6 +119,7 @@ public class GlobalHandler {
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("invalid input, item code must be number");
                 }
+                break;
             case 10:
                 try {
                     if(us.getId()==7){
@@ -185,6 +132,7 @@ public class GlobalHandler {
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("invalid input, item code must be number");
                 }
+                break;
             case 11:
                 try {
                     if(us.getId()==7){
@@ -198,38 +146,69 @@ public class GlobalHandler {
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("invalid input, item code must be number");
                 }
+                break;
             case 12:
                 try {
-                    Integer xu = Integer.parseInt(text);
-                    us.getAvatarService().serverDialog("bạn đã đặt cược tài "+xu+" xu thành công!");
-                    handleSicbo();
+                    if(us.datCuoc == 0){
+                        BigInteger xu = BigInteger.valueOf(Long.parseLong(text));
+                        us.getAvatarService().serverDialog("Bạn Đã Đặt Cược Tài "+xu+" Xu Thành Công!");
+                        us.updateXu(xu.negate());
+                        us.getAvatarService().updateMoney(0);
+                        us.datCuoc =1;
+                        us.tienCuoc = xu;
+                    }else {
+                        us.getAvatarService().serverDialog("Bạn Đã ặt Cược Tài "+us.tienCuoc+" Rồi!");
+                    }
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
                 }
                 break;
             case 13:
                 try {
-                    Integer xu = Integer.parseInt(text);
-                    us.getAvatarService().serverDialog("bạn đã đặt cược xỉu "+xu+" xu thành công!");
-                    handleSicbo();
+                    if(us.datCuoc == 0){
+                        BigInteger xu = BigInteger.valueOf(Long.parseLong(text));
+                        us.getAvatarService().serverDialog("Bạn Đã Đặt Cược Tài "+xu+" Xu Thành Công!");
+                        us.updateXu(xu.negate());
+                        us.getAvatarService().updateMoney(0);
+                        us.datCuoc =2;
+                        us.tienCuoc = xu;
+                    }else {
+                        us.getAvatarService().serverDialog("Bạn Đã ặt Cược Tài "+us.tienCuoc+" Rồi!");
+                    }
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
                 }
                 break;
             case 14:
                 try {
-                    Integer xu = Integer.parseInt(text);
-                    us.getAvatarService().serverDialog("bạn đã đặt cược xỉu "+xu+" xu thành công!");
+                    if(us.datCuoc == 0){
+                        BigInteger xu = BigInteger.valueOf(Long.parseLong(text));
+                        us.getAvatarService().serverDialog("Bạn Đã Đặt Cược Tài "+xu+" Xu Thành Công!");
+                        us.updateXu(xu.negate());
+                        us.getAvatarService().updateMoney(0);
+                        us.datCuoc =1;
+                        us.tienCuoc = xu;
+                    }else {
+                        us.getAvatarService().serverDialog("Bạn Đã ặt Cược Tài "+us.tienCuoc+" Rồi!");
+                    }
                 } catch (NumberFormatException e) {
-                    us.getAvatarService().serverDialog("Vui Lòng Nhập Số Bất kỳ Để Cược Tấy Tay 100.000.000 Xu");
+                    us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
                 }
                 break;
             case 15:
                 try {
-                    Integer xu = Integer.parseInt(text);
-                    us.getAvatarService().serverDialog("bạn đã đặt cược xỉu "+xu+" xu thành công!");
+                    if(us.datCuoc == 0){
+                        BigInteger xu = BigInteger.valueOf(Long.parseLong(text));
+                        us.getAvatarService().serverDialog("Bạn Đã Đặt Cược Tài "+xu+" Xu Thành Công!");
+                        us.updateXu(xu.negate());
+                        us.getAvatarService().updateMoney(0);
+                        us.datCuoc =2;
+                        us.tienCuoc = xu;
+                    }else {
+                        us.getAvatarService().serverDialog("Bạn Đã ặt Cược Tài "+us.tienCuoc+" Rồi!");
+                    }
                 } catch (NumberFormatException e) {
-                    us.getAvatarService().serverDialog("Vui Lòng Nhập Số Bất kỳ Để Cược Tấy Tay 100.000.000 Xu");
+                    us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
                 }
                 break;
         }
@@ -269,7 +248,7 @@ public class GlobalHandler {
         // ms = new Message(-93);
         // ds = ms.writer();
         // ds.writeByte(27);
-        // ds.writeByte(1);
+// ds.writeByte(1);
         // ds.writeShort(306);
         // ds.writeByte(34);
         // ds.writeShort(map27.length);
@@ -289,7 +268,7 @@ public class GlobalHandler {
         // String GET_MAP_ITEM_TYPE = "SELECT * FROM `map_item_type` WHERE `map_id` =
         // ?";
         // PreparedStatement ps =
-        // DbManager.getInstance().getConnectionForGame().prepareStatement(GET_MAP_ITEM_TYPE,
+// DbManager.getInstance().getConnectionForGame().prepareStatement(GET_MAP_ITEM_TYPE,
         // 1005, 1007);
         // ps.setInt(1, mapId);
         // ResultSet res = ps.executeQuery();

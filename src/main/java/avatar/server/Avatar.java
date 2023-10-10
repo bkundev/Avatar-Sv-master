@@ -27,6 +27,7 @@ public class Avatar {
             ServerManager.start();
         });
         T.start();
+
     }
 
     /**

@@ -55,6 +55,9 @@ public class User {
     private String password;
     private byte gender;
     public BigInteger xu;
+    public int datCuoc = 0;
+    public BigInteger tienCuoc;
+
     public int luong;
     public int luongKhoa;
     public int xeng;
