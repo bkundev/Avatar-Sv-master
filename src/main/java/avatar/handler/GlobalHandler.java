@@ -32,7 +32,6 @@ import avatar.play.Zone;
 import avatar.server.Avatar;
 import avatar.server.ServerManager;
 import avatar.server.UserManager;
-import lombok.SneakyThrows;
 
 public class GlobalHandler {
     private User us;
@@ -80,7 +79,6 @@ public class GlobalHandler {
 
     }
     public void handleTextBox(Message ms) throws IOException {
-
         int userId = ms.reader().readInt();
         byte menuId = ms.reader().readByte();
         String text = ms.reader().readUTF();
@@ -151,13 +149,14 @@ public class GlobalHandler {
                 try {
                     if(us.datCuoc == 0){
                         BigInteger xu = BigInteger.valueOf(Long.parseLong(text));
-                        us.getAvatarService().serverDialog("Bạn Đã Đặt Cược Tài "+xu+" Xu Thành Công!");
+                        us.getAvatarService().serverDialog("Bạn Đã  Cược Tài "+xu+" Xu Thành Công!");
                         us.updateXu(xu.negate());
                         us.getAvatarService().updateMoney(0);
                         us.datCuoc =1;
+                        us.SicboNhanTien = false;
                         us.tienCuoc = xu;
                     }else {
-                        us.getAvatarService().serverDialog("Bạn Đã ặt Cược Tài "+us.tienCuoc+" Rồi!");
+                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài "+us.tienCuoc+" Rồi!");
                     }
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
@@ -167,13 +166,14 @@ public class GlobalHandler {
                 try {
                     if(us.datCuoc == 0){
                         BigInteger xu = BigInteger.valueOf(Long.parseLong(text));
-                        us.getAvatarService().serverDialog("Bạn Đã Đặt Cược Tài "+xu+" Xu Thành Công!");
+                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài "+xu+" Xu Thành Công!");
                         us.updateXu(xu.negate());
+                        us.SicboNhanTien = false;
                         us.getAvatarService().updateMoney(0);
                         us.datCuoc =2;
                         us.tienCuoc = xu;
                     }else {
-                        us.getAvatarService().serverDialog("Bạn Đã ặt Cược Tài "+us.tienCuoc+" Rồi!");
+                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài "+us.tienCuoc+" Rồi!");
                     }
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
@@ -183,13 +183,14 @@ public class GlobalHandler {
                 try {
                     if(us.datCuoc == 0){
                         BigInteger xu = BigInteger.valueOf(Long.parseLong(text));
-                        us.getAvatarService().serverDialog("Bạn Đã Đặt Cược Tài "+xu+" Xu Thành Công!");
+                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài "+xu+" Xu Thành Công!");
                         us.updateXu(xu.negate());
                         us.getAvatarService().updateMoney(0);
                         us.datCuoc =1;
+                        us.SicboNhanTien = false;
                         us.tienCuoc = xu;
                     }else {
-                        us.getAvatarService().serverDialog("Bạn Đã ặt Cược Tài "+us.tienCuoc+" Rồi!");
+                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài "+us.tienCuoc+" Rồi!");
                     }
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
@@ -199,13 +200,14 @@ public class GlobalHandler {
                 try {
                     if(us.datCuoc == 0){
                         BigInteger xu = BigInteger.valueOf(Long.parseLong(text));
-                        us.getAvatarService().serverDialog("Bạn Đã Đặt Cược Tài "+xu+" Xu Thành Công!");
+                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài "+xu+" Xu Thành Công!");
                         us.updateXu(xu.negate());
                         us.getAvatarService().updateMoney(0);
                         us.datCuoc =2;
+                        us.SicboNhanTien = false;
                         us.tienCuoc = xu;
                     }else {
-                        us.getAvatarService().serverDialog("Bạn Đã ặt Cược Tài "+us.tienCuoc+" Rồi!");
+                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài "+us.tienCuoc+" Rồi!");
                     }
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");

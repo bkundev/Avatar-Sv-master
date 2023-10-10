@@ -57,7 +57,7 @@ public class User {
     public BigInteger xu;
     public int datCuoc = 0;
     public BigInteger tienCuoc;
-
+    public boolean SicboNhanTien = false;
     public int luong;
     public int luongKhoa;
     public int xeng;
