@@ -143,7 +143,7 @@ public class AvatarService extends Service {
             ds.writeByte(us.getGender());
             ds.writeByte(us.getLeverMain());
             ds.writeByte(us.getLeverMainPercen());
-            ds.writeInt(Math.toIntExact(us.getXu().longValue()));
+            ds.writeInt(Math.toIntExact(us.getXu()));
             ds.writeByte(us.getFriendly());
             ds.writeByte(us.getCrazy());
             ds.writeByte(us.getStylish());
@@ -523,7 +523,7 @@ public class AvatarService extends Service {
             DataOutputStream ds = ms.writer();
             ds.writeInt(session.user.xeng);
             ds.writeByte((byte) type);
-            ds.writeInt(Math.toIntExact(session.user.xu.longValue()));
+            ds.writeInt(Math.toIntExact(session.user.xu));
             ds.writeInt(session.user.luong);
             ds.writeInt(session.user.luongKhoa);
             ds.flush();

@@ -546,11 +546,11 @@ public class Session implements ISession {
                 }
                 if (priceXu > 0) {
                     price = priceXu;
-                    if (user.getXu().longValue() < price) {
+                    if (user.getXu() < price) {
                         this.user.getService().serverMessage("Bạn không đủ xu!");
                         return;
                     }
-                    this.user.updateXu(BigInteger.valueOf(-price));
+                    this.user.updateXu(-price);
                 } else {
                     price = priceLuong;
                     if (user.getLuong() < price) {
@@ -577,7 +577,7 @@ public class Session implements ISession {
                     ds.writeByte(1);
                 }
                 ds.writeUTF("Bạn đã mua vật phẩm thành công.");
-                ds.writeInt(Math.toIntExact(user.getXu().longValue()));
+                ds.writeInt(Math.toIntExact(user.getXu()));
                 ds.writeInt(user.getLuong());
                 ds.writeInt(user.getLuongKhoa());
                 ds.flush();
@@ -723,11 +723,11 @@ public class Session implements ISession {
                         getService().serverDialog("Vật phẩm này chỉ có thể nâng cấp bằng lượng");
                         return;
                     }
-                    if (user.getXu().intValue() < upgradeItem.getXu()) {
+                    if (user.getXu() < upgradeItem.getXu()) {
                         getService().serverDialog(MessageFormat.format("Bạn cần có {0} xu để nâng cấp món đồ này", upgradeItem.getXu()));
                         return;
                     }
-                    user.updateXu(BigInteger.valueOf(-upgradeItem.getXu()));
+                    user.updateXu(-upgradeItem.getXu());
                     doFinalUpgrade(upgradeItem, item);
                     return;
                 } else if (type == BossShopHandler.SELECT_LUONG) {
@@ -790,10 +790,10 @@ public class Session implements ISession {
                 user.removeItem(593, 1);
             }
             if (dl.getType() == DialLuckyManager.XU) {
-                if (user.getXu().longValue() < 15000) {
+                if (user.getXu() < 15000) {
                     return;
                 }
-                user.updateXu(BigInteger.valueOf(-15000));
+                user.updateXu(-15000);
             }
             if (dl.getType() == DialLuckyManager.LUONG) {
                 if (user.getLuong() < 5) {
@@ -827,12 +827,12 @@ public class Session implements ISession {
         if (food != null) {
             int shop = food.getShop();
             int price = food.getPrice();
-            if (price > user.xu.longValue()) {
+            if (price > user.xu) {
                 this.user.getService().serverDialog("Bạn không đủ xu!");
                 return;
             }
             String name = food.getName();
-            this.user.updateXu(BigInteger.valueOf(-price));
+            this.user.updateXu(-price);
             if (shop == 4) {
                 int health = 100 - this.user.getHunger() + food.getPercentHelth();
                 health = ((health > 100) ? 100 : health);

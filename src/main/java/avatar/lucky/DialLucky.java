@@ -116,7 +116,7 @@ public class DialLucky {
             } else if (type == XU) {
                 int xu = Utils.nextInt(1, 10) * 1000;
                 gift.setXu(xu);
-                us.updateXu(BigInteger.valueOf(xu));
+                us.updateXu(xu);
             } else if (type == XP) {
                 int xp = Utils.nextInt(1, 10) * 10;
                 gift.setXp(xp);

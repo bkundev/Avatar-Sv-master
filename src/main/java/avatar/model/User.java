@@ -54,9 +54,9 @@ public class User {
     private String username;
     private String password;
     private byte gender;
-    public BigInteger xu;
+    public long xu;
     public int datCuoc = 0;
-    public BigInteger tienCuoc;
+    public long tienCuoc;
     public boolean SicboNhanTien = false;
     public int luong;
     public int luongKhoa;
@@ -138,9 +138,8 @@ public class User {
         this.gender = gender;
     }
 
-    public synchronized void updateXu(BigInteger xuUp) {
-        BigInteger xuAsBigInteger = xu;
-        this.xu = xuAsBigInteger.add(xuUp);
+    public synchronized void updateXu(long xuUp) {
+        this.xu += xuUp;
     }
 
     public synchronized void updateLuong(int luongUp) {
@@ -268,7 +267,7 @@ public class User {
                     this.expMain = res.getInt("exp_main");
                     this.gender = res.getByte("gender");
                     this.gender = res.getByte("gender");
-                    this.xu = BigInteger.valueOf(res.getLong("xu"));
+                    this.xu = res.getLong("xu");
                     this.luong = res.getShort("luong");
                     this.luongKhoa = res.getShort("luong_khoa");
                     this.xeng = res.getInt("xeng");

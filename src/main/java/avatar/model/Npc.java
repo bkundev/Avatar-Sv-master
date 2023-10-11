@@ -28,7 +28,6 @@ public class Npc extends User {
     public static final int ID_ADD = 2000000000;
     private static boolean Cuoc = false;
     private static boolean Sicboquay = false;
-    private BigInteger reset_xuCuoc = new BigInteger("0");
     @Getter
     @Setter
     private List<String> textChats;
@@ -43,48 +42,47 @@ public class Npc extends User {
                         getMapService().chat(this, text);
                         Thread.sleep(1000);
                         if(text.contains("Tài")) {
+                            Npc.Cuoc = false;
                             for (int i = 0; i < lstUser.stream().count(); i++) {
                                 if(lstUser.get(i).datCuoc == 0){break;}
                                 if(lstUser.get(i).datCuoc == 1)
                                 {
-                                    BigInteger XuCuoc = lstUser.get(i).tienCuoc;
-                                    BigInteger x2 = new BigInteger("2");
-                                    BigInteger sum = XuCuoc.multiply(x2);
                                     if(lstUser.get(i).SicboNhanTien == false){
                                         lstUser.get(i).SicboNhanTien = true;
+                                        long sum = (lstUser.get(i).tienCuoc)*2;
                                         lstUser.get(i).updateXu(sum);
                                         lstUser.get(i).getAvatarService().serverDialog("Chúc Mừng Bạn Đã Bú " + text + " và thắng " + sum + " Tiền.");
                                         lstUser.get(i).getAvatarService().updateMoney(0);
                                     }
                                 } else {
-                                    BigInteger XuCuoc = lstUser.get(i).tienCuoc;
+                                    long XuCuoc = lstUser.get(i).tienCuoc;
                                     lstUser.get(i).getAvatarService().serverDialog("Cút Rồi "+ text+ " Bạn đã gãy "+XuCuoc+" Xu");
                                 }
+                                lstUser.get(i).SicboNhanTien = true;
                                 lstUser.get(i).datCuoc = 0;
-                                lstUser.get(i).tienCuoc = reset_xuCuoc;
+                                lstUser.get(i).tienCuoc = 0;
                             }
                         } else if (text.contains("Xỉu")) {
+                            Npc.Cuoc = false;
                             for (int i = 0; i < lstUser.stream().count(); i++) {
                                 {
                                     if(lstUser.get(i).datCuoc == 0){break;}
                                     if (lstUser.get(i).datCuoc == 2) {
-                                        BigInteger XuCuoc = lstUser.get(i).tienCuoc;
-                                        BigInteger x2 = new BigInteger("2");
-                                        BigInteger sum = XuCuoc.multiply(x2);
                                         if(lstUser.get(i).SicboNhanTien == false){
                                             lstUser.get(i).SicboNhanTien = true;
+                                            long sum = (lstUser.get(i).tienCuoc)*2;
                                             lstUser.get(i).updateXu(sum);
                                             lstUser.get(i).getAvatarService().serverDialog("Chúc Mừng Bạn Đã Bú " + text + " và thắng " + sum + " Tiền.");
                                             lstUser.get(i).getAvatarService().updateMoney(0);
                                         }
                                     } else {
-                                        BigInteger XuCuoc = lstUser.get(i).tienCuoc;
+                                        long XuCuoc = lstUser.get(i).tienCuoc;
                                         lstUser.get(i).getAvatarService().serverDialog("Cút Rồi " + text + " Bạn đã gãy " + XuCuoc + " Xu");
                                     }
                                 }
-
+                                lstUser.get(i).SicboNhanTien = true;
                                 lstUser.get(i).datCuoc = 0;
-                                lstUser.get(i).tienCuoc = reset_xuCuoc;
+                                lstUser.get(i).tienCuoc = 0;
                             }
 
                         } else if (text.contains("top")) {
@@ -131,6 +129,7 @@ public class Npc extends User {
                 stringList.add("Tài " + dice1 + "," + dice2 + "," + dice3);
                 System.out.println("Tài (Big)");
             }
+
             System.out.println("new sicbo");
             stringList.add("Top Win 1: comingSoon |top 2: comingSoon | Top 3: comingSoon");
             Npc.textChatsTaiXiu = stringList;

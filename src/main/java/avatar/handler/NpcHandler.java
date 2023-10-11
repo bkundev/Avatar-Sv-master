@@ -38,7 +38,7 @@ public class NpcHandler {
                 }
             }
             if (dl.getType() == DialLuckyManager.XU) {
-                if (us.getXu().intValue() < 15000) {
+                if (us.getXu() < 15000) {
                     us.getAvatarService().serverDialog("Bạn không đủ xu!");
                     return;
                 }
