@@ -1,6 +1,10 @@
 package avatar.server;
 
 import avatar.db.DbManager;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import org.json.simple.JSONObject;
@@ -485,6 +489,22 @@ public class Utils {
                         animation_i.put("dx", dx);
                         animation_i.put("dy", dy);
                         animation.add(animation_i);
+                    }
+                    itemName = itemName.replace("'", "\\'");
+
+                    // Convert JSON array to string and escape single quotes
+                    String animations = animation.toString().replace("'", "\\'");
+                    String query = "INSERT INTO `items`(`id`, `coin`, `gold`, `type`,`icon`, `name`, `sell`, `expired_day`, `zorder`, `gender`, `level`, `animation`) VALUES ("
+                            + itemID + ", " + itemXu + ", " + itemLuong + ", " + itemType + ", '" + idIcon2 + "', "
+                            +"'"+ itemName + "'"+", " + sell + ", '" + 0 + "'," + zOrder + ", " + gender + ", " + lvRequire + ", "
+                            +"'"+ animations + "'"+");\n";
+                    try {
+                        // Write the query to the specified file path
+                        Files.write(Paths.get("C:\\Users\\Administrator\\Desktop\\a\\itemsquery1.txt"), query.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                        System.out.println("File written successfully.");
+                    } catch (IOException e) {
+                        System.err.println("Error writing to file: " + e.getMessage());
+                        e.printStackTrace();
                     }
                     String INSERT_ITEM2 = "INSERT INTO `items` (`id`, `coin`, `gold`, `type`, `icon`, `name`, `sell`, `zorder`, `gender`, `level`, `animation`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     PreparedStatement ps2 = DbManager.getInstance().getConnectionForGame()

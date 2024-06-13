@@ -113,10 +113,10 @@ public class Npc extends User {
             int total = dice1 + dice2 + dice3;
             Npc.Cuoc = true;
             Sicboquay = true;
-            System.out.println("Dice 1: " + dice1);
-            System.out.println("Dice 2: " + dice2);
-            System.out.println("Dice 3: " + dice3);
-            System.out.println("Total: " + total);
+            //System.out.println("Dice 1: " + dice1);
+            ///System.out.println("Dice 2: " + dice2);
+           // System.out.println("Dice 3: " + dice3);
+            //System.out.println("Total: " + total);
             List<String> stringList = new ArrayList<>();
             for (int i = 10; i >= 1; i--) {
                 stringList.add("Thời Gian Đặt Cược : " + i + " S");
@@ -124,14 +124,14 @@ public class Npc extends User {
             }
             if (total <= 10) {
                 stringList.add("Xỉu " + dice1 + "," + dice2 + "," + dice3);
-                System.out.println("xỉu (Small)");
+               // System.out.println("xỉu (Small)");
             } else {
                 stringList.add("Tài " + dice1 + "," + dice2 + "," + dice3);
-                System.out.println("Tài (Big)");
+               // System.out.println("Tài (Big)");
             }
 
-            System.out.println("new sicbo");
-            stringList.add("Top Win 1: comingSoon |top 2: comingSoon | Top 3: comingSoon");
+           // System.out.println("new sicbo");
+            //stringList.add("Top Win 1: comingSoon |top 2: comingSoon | Top 3: comingSoon");
             Npc.textChatsTaiXiu = stringList;
 
         }else return;

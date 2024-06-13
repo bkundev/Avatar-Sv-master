@@ -119,7 +119,7 @@ public class NpcHandler {
                 Menu quaySo = Menu.builder().name("vật phẩm").menus(
                                 List.of(
                                         Menu.builder().name("demo item").action(() -> {
-                                            for (int i = 2000; i < 6323; i++) {
+                                            for (int i = 2000; i < 6676; i++) {
                                                 Item item = new Item((short) i);
                                                 Items.add(item);
                                             }

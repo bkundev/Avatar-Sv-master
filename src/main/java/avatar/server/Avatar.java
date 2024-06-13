@@ -14,6 +14,13 @@ public class Avatar {
     }
 
     public static void start() {
+        //getPart insert sql item
+
+         //for (int i = 2000; i < 6676; i++) {
+         //   byte[] dat = Avatar.getFile("res/p/part_"+i+".dat");
+         //    Utils.decodeItemDataFile(dat,true);
+        // }
+
         T = new Thread(() -> {
             System.out.println("     _                      _                      ____                                      \n    / \\    __   __   __ _  | |_    __ _   _ __    / ___|    ___   _ __  __   __   ___   _ __ \n   / _ \\   \\ \\ / /  / _` | | __|  / _` | | '__|   \\___ \\   / _ \\ | '__| \\ \\ / /  / _ \\ | '__|\n  / ___ \\   \\ V /  | (_| | | |_  | (_| | | |       ___) | |  __/ | |     \\ V /  |  __/ | |   \n /_/   \\_\\   \\_/    \\__,_|  \\__|  \\__,_| |_|      |____/   \\___| |_|      \\_/    \\___| |_|   \n                                                                                             ");
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
@@ -27,7 +34,6 @@ public class Avatar {
             ServerManager.start();
         });
         T.start();
-
     }
 
     /**
