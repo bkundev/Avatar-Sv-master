@@ -127,7 +127,7 @@ public class ServerManager {
         System.out.println("Load NPC data start ...");
         loadNpcData();
         System.out.println("Reset player online ...");
-        DbManager.getInstance().update("UPDATE `players` SET `is_online` = 0, `client_id` = -1");
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `is_online` = 0, `client_id` = -1");
         System.out.println("Reset player online successfully");
     }
 

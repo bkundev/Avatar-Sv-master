@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.dbutils.QueryRunner;
@@ -26,9 +26,6 @@ public class DbManager {
 
     private static DbManager instance = null;
     private HikariDataSource hikariDataSource;
-    private DbExecutor dbExecutor;
-    private DbUpdater dbUpdater;
-    private DbInserter dbInserter;
     private String host;
     private int port;
     private String dbname;
@@ -64,10 +61,6 @@ public class DbManager {
 
     }
 
-    public Connection getConnection() throws SQLException {
-        return this.hikariDataSource.getConnection();
-    }
-
     public void start() {
         if (this.hikariDataSource != null) {
             logger.warn("DB Connection Pool has already been created.");
@@ -87,11 +80,6 @@ public class DbManager {
                 this.hikariDataSource = new HikariDataSource(config);
                 logger.debug("DB Connection Pool has created.");
 
-                QueryRunner queryRunner = new QueryRunner(this.hikariDataSource);
-                this.dbExecutor = new DbExecutor(queryRunner);
-                this.dbUpdater = new DbUpdater(queryRunner);
-                this.dbInserter = new DbInserter(queryRunner);
-
             } catch (Exception e) {
                 logger.error("DB Connection Pool Creation has failed.");
             }
@@ -110,15 +98,21 @@ public class DbManager {
         }
     }
 
-    public <T> List<T> selectResultAsListObj(String sql, Class<T> clazz, Object... params) {
-        return this.dbExecutor.selectResultAsListObj(sql, clazz, params);
+    public Connection getConnection() throws SQLException {
+        return this.hikariDataSource.getConnection();
     }
 
-    public <T> T insertResultAsObj(String sql, Object... params) {
-        return this.dbInserter.insertResultAsObj(sql, params);
-    }
-
-    public int update(String sql, Object... params) {
-        return this.dbUpdater.update(sql, params);
+    public int executeUpdate(String sqlStatement, Object... params) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement)) {
+            int i = 1;
+            for (Object object : params) {
+                preparedStatement.setObject(i++, object);
+            }
+            return preparedStatement.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
     }
 }

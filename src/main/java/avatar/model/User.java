@@ -7,6 +7,7 @@ import avatar.item.Part;
 import avatar.lucky.DialLucky;
 import avatar.network.Session;
 
+import java.sql.*;
 import java.util.Date;
 
 import org.json.simple.JSONValue;
@@ -17,9 +18,6 @@ import java.io.IOException;
 import avatar.network.Message;
 import avatar.play.MapService;
 
-import java.sql.ResultSet;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import avatar.play.Zone;
@@ -34,7 +32,6 @@ import avatar.service.NoService;
 import avatar.service.ParkService;
 import avatar.service.Service;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -162,9 +159,9 @@ public class User {
     }
 
     protected void saveData() {
-        DbManager.getInstance().update("UPDATE `players` SET `gender` = ?, `friendly` = ?, `crazy` = ?, `stylish` = ?, `happy` = ?, `hunger` = ? WHERE `user_id` = ? LIMIT 1;",
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `gender` = ?, `friendly` = ?, `crazy` = ?, `stylish` = ?, `happy` = ?, `hunger` = ? WHERE `user_id` = ? LIMIT 1;",
                 this.gender, this.friendly, this.crazy, this.stylish, this.happy, this.hunger, this.id);
-        DbManager.getInstance().update("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ? WHERE `user_id` = ? LIMIT 1;",
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ? WHERE `user_id` = ? LIMIT 1;",
                 this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain, this.id);
         JSONArray jChests = new JSONArray();
         for (Item item : this.chests) {
@@ -182,23 +179,22 @@ public class User {
             obj.put("quantity", item.getQuantity());
             jWearing.add(obj);
         }
-        DbManager.getInstance().update("UPDATE `players` SET `chests` = ?, `wearing` = ? WHERE `user_id` = ? LIMIT 1;",
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `chests` = ?, `wearing` = ? WHERE `user_id` = ? LIMIT 1;",
                 jChests.toJSONString(), jWearing.toJSONString(), this.id);
         System.out.println("Save data user " + this.getUsername());
     }
 
     public synchronized boolean login() {
-        try {
-            if (!ServerManager.active) {
-                getService().serverMessage("Máy chủ đang bảo trì. Vui lòng quay lại sau!");
-                return false;
-            }
-            String ACCOUNT_LOGIN = "SELECT * FROM `users` WHERE `username` = ? AND `password` = ? LIMIT 1;";
-            PreparedStatement ps = DbManager.getInstance().getConnection().prepareStatement(ACCOUNT_LOGIN);
+        if (!ServerManager.active) {
+            getService().serverMessage("Máy chủ đang bảo trì. Vui lòng quay lại sau!");
+            return false;
+        }
+        String ACCOUNT_LOGIN = "SELECT * FROM `users` WHERE `username` = ? AND `password` = ? LIMIT 1;";
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(ACCOUNT_LOGIN);) {
             ps.setString(1, this.username);
             ps.setString(2, Utils.md5(password));
-            ResultSet red = ps.executeQuery();
-            try {
+            try (ResultSet red = ps.executeQuery()) {
                 if (red.next()) {
                     this.id = red.getInt("id");
                     this.role = (byte) red.getInt("role");
@@ -210,7 +206,7 @@ public class User {
                     JSONObject banData = (JSONObject) ((red.getString("ban") != null)
                             ? JSONValue.parse(red.getString("ban"))
                             : new JSONObject());
-                    if (banData.size() != 0) {
+                    if (!banData.isEmpty()) {
                         int banType = ((Long) banData.get("type")).intValue();
                         if (banType == 2) {
                             if (banData.get("forever") != null) {
@@ -241,9 +237,6 @@ public class User {
                 } else {
                     getService().serverMessage(GameString.loginPassFail());
                 }
-            } finally {
-                red.close();
-                ps.close();
             }
         } catch (SQLException ex) {
             getService().serverMessage(ex.getMessage());
@@ -252,14 +245,13 @@ public class User {
     }
 
     public boolean loadData() {
-        try {
-            String GET_PLAYER_DATA = "SELECT * FROM `players` WHERE `user_id` = ? LIMIT 1;";
-            PreparedStatement ps = DbManager.getInstance().getConnection().prepareStatement(GET_PLAYER_DATA);
+        String GET_PLAYER_DATA = "SELECT * FROM `players` WHERE `user_id` = ? LIMIT 1;";
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(GET_PLAYER_DATA);) {
             ps.setInt(1, this.id);
-            ResultSet res = ps.executeQuery();
-            try {
+            try (ResultSet res = ps.executeQuery()) {
                 if (res.next()) {
-                    if(res.getInt("user_id")==7){
+                    if (res.getInt("user_id") == 7) {
                         //this.id+=(Npc.ID_ADD+1000);
                     }
                     this.leverMain = res.getInt("level_main");
@@ -280,8 +272,8 @@ public class User {
                     this.star = res.getByte("star");
                     this.chests = new ArrayList<>();
                     JSONArray chests = (JSONArray) JSONValue.parse(res.getString("chests"));
-                    for (int i = 0; i < chests.size(); i++) {
-                        JSONObject obj = (JSONObject) chests.get(i);
+                    for (Object chest : chests) {
+                        JSONObject obj = (JSONObject) chest;
                         int id = ((Long) obj.get("id")).intValue();
                         long expired = ((Long) obj.get("expired"));
                         int quantity = 1;
@@ -298,8 +290,8 @@ public class User {
                     }
                     this.wearing = new ArrayList<>();
                     JSONArray wearing = (JSONArray) JSONValue.parse(res.getString("wearing"));
-                    for (int i = 0; i < wearing.size(); i++) {
-                        JSONObject obj = (JSONObject) wearing.get(i);
+                    for (Object o : wearing) {
+                        JSONObject obj = (JSONObject) o;
                         int id = ((Long) obj.get("id")).intValue();
                         long expired = ((Long) obj.get("expired"));
                         int quantity = 1;
@@ -317,9 +309,6 @@ public class User {
                     setLoadDataFinish(true);
                     return true;
                 }
-            } finally {
-                res.close();
-                ps.close();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -399,7 +388,7 @@ public class User {
             zone.leave(this);
         }
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        DbManager.getInstance().update("UPDATE `players` SET `is_online` = ?, `client_id` = ?, `last_online` = ? WHERE `user_id` = ? LIMIT 1;", 0, session.id, timestamp, this.id);
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `is_online` = ?, `client_id` = ?, `last_online` = ? WHERE `user_id` = ? LIMIT 1;", 0, session.id, timestamp, this.id);
         if (isLoadDataFinish()) {
             saveData();
         }
@@ -609,6 +598,7 @@ public class User {
             e.printStackTrace();
         }
     }
+
     public void doRemoveItem(Message ms) {
         try {
             short itemID = ms.reader().readShort();

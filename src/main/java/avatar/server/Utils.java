@@ -351,7 +351,7 @@ public class Utils {
                 int price = dis.readInt();
                 byte shop = dis.readByte();
                 short imgId = dis.readShort();
-                DbManager.getInstance().insertResultAsObj(
+                DbManager.getInstance().executeUpdate(
                         "INSERT INTO `foods` (`id`, `name`, `description`, `price`, `shop`, `img`) VALUES (?, ?, ?, ?, ?, ?);",
                         itemID, name, desc, price, shop, imgId);
             }
@@ -373,7 +373,7 @@ public class Utils {
                 short y0 = (short) dis.readUnsignedByte();
                 short w = dis.readByte();
                 short h = dis.readByte();
-                DbManager.getInstance().insertResultAsObj(
+                DbManager.getInstance().executeUpdate(
                         "INSERT INTO `item_image_data`(`id`, `image_id`, `x`, `y`, `w`, `h`) VALUES (?,?,?,?,?,?)",
                         itemID,
                         bigID, x0, y0, w, h);
@@ -395,7 +395,7 @@ public class Utils {
                 short type = dis.readByte();
                 short x = dis.readByte();
                 short y = dis.readByte();
-                DbManager.getInstance().insertResultAsObj(
+                DbManager.getInstance().executeUpdate(
                         "INSERT INTO `map_item`(`id`, `type_id`, `type`, `x`, `y`) VALUES (?,?,?,?,?)",
                         id, typeID, type, x, y);
             }
@@ -431,7 +431,7 @@ public class Utils {
                     obj.put("y", y);
                     position.add(obj);
                 }
-                DbManager.getInstance().insertResultAsObj(
+                DbManager.getInstance().executeUpdate(
                         "INSERT INTO `map_item_type`(`id`, `name`, `description`, `image`, `icon`, `price_coin`, `price_gold`, `buy`, `dx`, `dy`, `position`) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
                         id, name, des, imgID, iconID, price_coin, price_gold, buy, dx, dy, position.toJSONString());
             }

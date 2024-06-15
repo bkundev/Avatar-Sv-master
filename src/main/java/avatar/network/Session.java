@@ -443,7 +443,7 @@ public class Session implements ISession {
 
     private void enter() {
         if (user.loadData()) {
-            DbManager.getInstance().update("UPDATE `players` SET `is_online` = ?, `client_id` = ? WHERE `user_id` = ? LIMIT 1;", 1, this.id, user.getId());
+            DbManager.getInstance().executeUpdate("UPDATE `players` SET `is_online` = ?, `client_id` = ? WHERE `user_id` = ? LIMIT 1;", 1, this.id, user.getId());
             user.initAvatar();
             this.handler = new GlobalHandler(user);
             UserManager.getInstance().add(user);
@@ -457,7 +457,7 @@ public class Session implements ISession {
                 return;
             }
             isCharCreatedPopup = true;
-            DbManager.getInstance().insertResultAsObj("INSERT INTO `players`(`user_id`, `level_main`, `gender`) VALUES (?, ?, ?);", user.getId(), 1, 0);
+            DbManager.getInstance().executeUpdate("INSERT INTO `players`(`user_id`, `level_main`, `gender`) VALUES (?, ?, ?);", user.getId(), 1, 0);
             enter();
         }
     }
