@@ -7,7 +7,6 @@ import avatar.item.Part;
 import avatar.lucky.DialLucky;
 import avatar.network.Session;
 
-import java.math.BigInteger;
 import java.util.Date;
 
 import org.json.simple.JSONValue;
@@ -188,14 +187,14 @@ public class User {
         System.out.println("Save data user " + this.getUsername());
     }
 
-    public boolean login() {
+    public synchronized boolean login() {
         try {
             if (!ServerManager.active) {
                 getService().serverMessage("Máy chủ đang bảo trì. Vui lòng quay lại sau!");
                 return false;
             }
             String ACCOUNT_LOGIN = "SELECT * FROM `users` WHERE `username` = ? AND `password` = ? LIMIT 1;";
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame().prepareStatement(ACCOUNT_LOGIN);
+            PreparedStatement ps = DbManager.getInstance().getConnection().prepareStatement(ACCOUNT_LOGIN);
             ps.setString(1, this.username);
             ps.setString(2, Utils.md5(password));
             ResultSet red = ps.executeQuery();
@@ -255,7 +254,7 @@ public class User {
     public boolean loadData() {
         try {
             String GET_PLAYER_DATA = "SELECT * FROM `players` WHERE `user_id` = ? LIMIT 1;";
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame().prepareStatement(GET_PLAYER_DATA);
+            PreparedStatement ps = DbManager.getInstance().getConnection().prepareStatement(GET_PLAYER_DATA);
             ps.setInt(1, this.id);
             ResultSet res = ps.executeQuery();
             try {

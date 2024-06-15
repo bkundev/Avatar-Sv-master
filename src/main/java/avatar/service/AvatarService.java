@@ -18,6 +18,7 @@ import avatar.network.Message;
 import avatar.network.Session;
 import avatar.play.Map;
 import avatar.play.Zone;
+import lombok.Builder;
 import org.apache.log4j.Logger;
 
 public class AvatarService extends Service {
@@ -649,5 +650,46 @@ public class AvatarService extends Service {
         } catch (IOException ex) {
             logger.error("customTab ", ex);
         }
+    }
+
+
+    public void sendEffectStyle4(byte id, byte loopLimit, short num, byte timeStop) {
+        try {
+            Message ms = new Message(Cmd.EFFECT_OBJ);
+            DataOutputStream ds = ms.writer();
+            ds.writeByte(0);
+            ds.writeByte(id);
+            ds.writeByte(4);
+            ds.writeByte(loopLimit);
+            ds.writeShort(num);
+            ds.writeByte(timeStop);
+            ds.flush();
+            sendMessage(ms);
+        } catch (IOException ex) {
+            logger.error("send eff ", ex);
+        }
+    }
+
+    public void sendEffectData(Message mss) {
+        try {
+            byte id = mss.reader().readByte();
+            String folder = session.getResourcesPath() + "effect/";
+            byte[] imageData = Avatar.getFile(folder + id + ".png");
+            byte[] effData = Avatar.getFile("res/data/effect/" + id + ".dat");
+
+
+            Message ms = new Message(Cmd.EFFECT_OBJ);
+            DataOutputStream ds = ms.writer();
+            ds.writeByte(1);
+            ds.writeByte(id);
+            ds.writeShort(imageData.length);
+            ds.write(imageData);
+            ds.write(effData);
+            ds.flush();
+            sendMessage(ms);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -6,16 +6,18 @@
 package avatar.model;
 
 import avatar.db.DbManager;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.Getter;
 import org.apache.log4j.Logger;
 
 /**
- *
  * @author kitakeyos - Hoàng Hữu Dũng
  */
 public class FoodManager {
@@ -31,10 +33,10 @@ public class FoodManager {
     private final List<Food> foods = new ArrayList<>();
 
     public void load() {
-        try {
-            foods.clear();
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame().prepareStatement("SELECT * FROM foods;");
-            ResultSet rs = ps.executeQuery();
+        foods.clear();
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM foods;");
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
@@ -54,13 +56,11 @@ public class FoodManager {
                         .build();
                 foods.add(food);
             }
-            rs.close();
-            ps.close();
         } catch (SQLException ex) {
             logger.error("load foods err ", ex);
         }
     }
-    
+
     public Food findFoodByFoodID(int id) {
         for (Food food : foods) {
             if (food.getId() == id) {

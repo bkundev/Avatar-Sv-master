@@ -1,5 +1,6 @@
 package avatar.item;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import avatar.common.BossShopItem;
 import avatar.model.UpgradeItem;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -38,11 +38,10 @@ public class PartManager {
     }
 
     public void load() {
-        try {
-            parts.clear();
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame()
-                    .prepareStatement("SELECT * FROM `items`;");
-            ResultSet rs = ps.executeQuery();
+        parts.clear();
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `items`;");
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 int coin = rs.getInt("coin");
@@ -79,10 +78,8 @@ public class PartManager {
                         .dx(dx)
                         .dy(dy)
                         .build());
-                System.out.println("id: " + id + " name: " + name);
+                //System.out.println("id: " + id + " name: " + name);
             }
-            rs.close();
-            ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -90,11 +87,10 @@ public class PartManager {
     }
 
     public void loadUpgradeItemData() {
-        try {
-            upgradeItems.clear();
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame()
-                    .prepareStatement("SELECT * FROM `upgrade_item`;");
-            ResultSet rs = ps.executeQuery();
+        upgradeItems.clear();
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `upgrade_item`;");
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 int itemId = rs.getInt("item_id");
@@ -116,8 +112,6 @@ public class PartManager {
                         .build()
                 );
             }
-            rs.close();
-            ps.close();
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

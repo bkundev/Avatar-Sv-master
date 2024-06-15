@@ -11,13 +11,14 @@ import avatar.item.Part;
 import avatar.lucky.DialLucky;
 import avatar.lucky.DialLuckyManager;
 
-import java.math.BigInteger;
+import java.sql.Connection;
 import java.text.MessageFormat;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 import avatar.model.*;
 import avatar.play.NpcManager;
+import avatar.service.*;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
 
@@ -45,11 +46,6 @@ import avatar.play.offline.AbsMapOffline;
 import avatar.play.offline.MapOfflineManager;
 import avatar.server.UserManager;
 import avatar.server.Utils;
-import avatar.service.AvatarService;
-import avatar.service.FarmService;
-import avatar.service.HomeService;
-import avatar.service.ParkService;
-import avatar.service.Service;
 import lombok.Getter;
 
 import java.net.InetSocketAddress;
@@ -637,12 +633,12 @@ public class Session implements ISession {
         ds.writeByte(-1);
         ds.flush();
         this.sendMessage(ms);
-        user.getAvatarService().openMenuOption(5, 0, "Đảo Hawaii", "Ai Cập", "Vương Quốc Bóng Đêm","Biển Thành Phố Lỏ","Đubai");
+        user.getAvatarService().openMenuOption(5, 0, "Đảo Hawaii", "Ai Cập", "Vương Quốc Bóng Đêm", "Biển Thành Phố Lỏ", "Đubai");
     }
 
     public void doCommunicate(Message ms) throws IOException {
         int userId = ms.reader().readInt();
-        if (userId >= 2000000000||userId==7) {
+        if (userId >= 2000000000 || userId == 7) {
             NpcHandler.handlerCommunicate(userId, this.user);
             return;
         } else {
@@ -657,7 +653,7 @@ public class Session implements ISession {
                         Menu.builder().name("Diễn Đàn").build(),
                         Menu.builder().name("Mã quà tặng").build()
                 ));
-                if (user.getStar()<0||user.getStar()>=0) {
+                if (user.getStar() < 0 || user.getStar() >= 0) {
                     menus.add(0, Menu.builder().name("Admin")
                             .menus(List.of(
                                     Menu.builder().name("Thêm item").action(() -> {
@@ -665,13 +661,13 @@ public class Session implements ISession {
                                     }).build(),
                                     Menu.builder().name("Fix Lỗi Rương").action(() -> {
                                         try {
-                                            System.out.println("fix Item id : "+ user.getUsername());
+                                            System.out.println("fix Item id : " + user.getUsername());
                                             List<Item> items = user.getChests();
-                                            int itemIndex = (int) items.stream().count()-1;
-                                            System.out.println("index: "+itemIndex);
+                                            int itemIndex = items.size() - 1;
+                                            System.out.println("index: " + itemIndex);
                                             Item item = items.get(itemIndex);
-                                            System.out.println("fix Item id : "+ user.getUsername());
-                                            user.removeItem(item.getId(),1);
+                                            System.out.println("fix Item id : " + user.getUsername());
+                                            user.removeItem(item.getId(), 1);
                                             user.getAvatarService().serverDialog("ok");
                                         } catch (NumberFormatException e) {
                                             user.getAvatarService().serverDialog("error");
@@ -688,6 +684,18 @@ public class Session implements ISession {
                                     }).build(),
                                     Menu.builder().name("infor").action(() -> {
                                         user.getAvatarService().sendTextBoxPopup(user.getId(), 11, "infor", 1);
+                                    }).build(),
+                                    Menu.builder().name("Effect").action(() -> {
+                                        EffectService.createEffect()
+                                                .session(this)
+                                                .id((byte) 1)
+                                                .style((byte) 0)
+                                                .loopLimit((byte) 5)
+                                                .loop((short) 2)
+                                                .loopType((byte) 1)
+                                                .radius((short) 50)
+                                                .idPlayer(user.getId())
+                                                .send();
                                     }).build(),
                                     Menu.builder().name("Khoá nick").build(),
                                     Menu.builder().name("Tặng item").build()
@@ -854,9 +862,9 @@ public class Session implements ISession {
     public void joinHouse(Message ms) throws IOException {
         int userId = ms.reader().readInt();
         Vector<HouseItem> hItems = new Vector<>();
-        try {
+        try (Connection connection = DbManager.getInstance().getConnection();) {
             String GET_HOUSE_DATA = "SELECT * FROM `house_buy` WHERE `user_id` = ? LIMIT 1";
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame().prepareStatement(GET_HOUSE_DATA);
+            PreparedStatement ps = connection.prepareStatement(GET_HOUSE_DATA);
             ps.setInt(1, userId);
             ResultSet res = ps.executeQuery();
             if (res.next()) {
@@ -868,7 +876,7 @@ public class Session implements ISession {
                 ps.close();
                 res.close();
                 String GET_ITEMS_IN_CHEST = "SELECT * FROM `house_player_item` WHERE `user_id` = ?";
-                ps = DbManager.getInstance().getConnectionForGame().prepareStatement(GET_ITEMS_IN_CHEST);
+                ps = connection.prepareStatement(GET_ITEMS_IN_CHEST);
                 ps.setInt(1, userId);
                 res = ps.executeQuery();
                 if (res != null) {
@@ -920,16 +928,15 @@ public class Session implements ISession {
     public void changePassword(Message ms) throws IOException {
         String passOld = ms.reader().readUTF();
         String passNew = ms.reader().readUTF();
-        try {
+        try (Connection connection = DbManager.getInstance().getConnection()) {
             String ACCOUNT_LOGIN = "SELECT * FROM `users` WHERE `id` = ? AND `password` = ? LIMIT 1";
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame().prepareStatement(ACCOUNT_LOGIN);
+            PreparedStatement ps = connection.prepareStatement(ACCOUNT_LOGIN);
             ps.setInt(1, this.user.getId());
             ps.setString(2, Utils.md5(passOld));
             ResultSet red = ps.executeQuery();
             if (red.next()) {
                 String ACCOUNT_UPDATE_PASSWORD = "UPDATE `users` SET `password` = ? WHERE `id` = ?";
-                PreparedStatement changePass = DbManager.getInstance().getConnectionForGame()
-                        .prepareStatement(ACCOUNT_UPDATE_PASSWORD);
+                PreparedStatement changePass = connection.prepareStatement(ACCOUNT_UPDATE_PASSWORD);
                 changePass.setString(1, Utils.md5(passNew));
                 changePass.setInt(2, this.user.getId());
                 int result = changePass.executeUpdate();

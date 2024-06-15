@@ -46,7 +46,7 @@ public class GlobalHandler {
         byte menuId = ms.reader().readByte();
         byte select = ms.reader().readByte();
         System.out.println("userId = " + userId + ", menuId = " + menuId + ", select = " + select);
-        if (userId >= 2000000000||userId==7) {
+        if (userId >= 2000000000 || userId == 7) {
             NpcHandler.handlerAction(this.us, userId, menuId, select);
             return;
         } else {
@@ -71,6 +71,7 @@ public class GlobalHandler {
             return;
         }
     }
+
     public void comingSoon() {
         us.getAvatarService().serverDialog("Chức năng đang được xây dựng, vui lòng thử lại sau");
     }
@@ -78,12 +79,13 @@ public class GlobalHandler {
     public void handleSicbo() {
 
     }
+
     public void handleTextBox(Message ms) throws IOException {
         int userId = ms.reader().readInt();
         byte menuId = ms.reader().readByte();
         String text = ms.reader().readUTF();
         List<User> lst = UserManager.users;
-        switch (menuId){
+        switch (menuId) {
             case 7:
                 try {
                     short itemCode = Short.parseShort(text);
@@ -96,7 +98,7 @@ public class GlobalHandler {
                 break;
             case 8:
                 try {
-                    if(us.getId()==7){
+                    if (us.getId() == 7) {
                         String noidung = text.toString();
                         for (int i = 0; i < lst.stream().count(); i++) {
                             lst.get(i).getAvatarService().serverInfo(noidung);
@@ -109,9 +111,9 @@ public class GlobalHandler {
                 break;
             case 9:
                 try {
-                    if(us.getId()==7){
-                        byte thoitiet = Byte.parseByte(text);
-                        us.getAvatarService().weather(thoitiet);
+                    if (us.getId() == 7) {
+                        byte weather = Byte.parseByte(text);
+                        us.getAvatarService().weather(weather);
                     }
 
                 } catch (NumberFormatException e) {
@@ -120,8 +122,8 @@ public class GlobalHandler {
                 break;
             case 10:
                 try {
-                    if(us.getId()==7){
-                        if(Integer.parseInt(text) == 1)
+                    if (us.getId() == 7) {
+                        if (Integer.parseInt(text) == 1)
                             for (int i = 0; i < lst.stream().count(); i++) {
                                 lst.get(i).getAvatarService().serverDialog("server sẽ bảo trì sau 2 phút.vui lòng off để tránh mất đồ");
                             }
@@ -133,8 +135,8 @@ public class GlobalHandler {
                 break;
             case 11:
                 try {
-                    if(us.getId()==7){
-                        if(Integer.parseInt(text) == 1){
+                    if (us.getId() == 7) {
+                        if (Integer.parseInt(text) == 1) {
                             for (int i = 0; i < lst.stream().count(); i++) {
                                 lst.get(i).getAvatarService().serverInfo((String.format("ad : thành phố  %s. có %d  đang online. chúc mọi người vui vẻ", ServerManager.cityName, ServerManager.clients.size())));
                             }
@@ -147,103 +149,78 @@ public class GlobalHandler {
                 break;
             case 12:
                 try {
-                    if(us.datCuoc == 0){
+                    if (us.datCuoc == 0) {
                         long xu = Long.parseLong(text);
-                        if(us.getXu()>= xu){
-                            if(xu<100000001){
-                                us.getAvatarService().serverDialog("Bạn Đã  Cược Tài "+xu+" Xu Thành Công!");
+                        if (us.getXu() >= xu) {
+                            if (xu < 100000001) {
+                                us.getAvatarService().serverDialog("Bạn Đã  Cược Tài " + xu + " Xu Thành Công!");
                                 us.updateXu(-xu);
                                 us.getAvatarService().updateMoney(0);
-                                us.datCuoc =1;
+                                us.datCuoc = 1;
                                 us.SicboNhanTien = false;
                                 us.tienCuoc = xu;
-                            }else
+                            } else
                                 us.getAvatarService().serverDialog("Đặt nhỏ hơn 100met Thôi");
-                        }else{
-                            us.getAvatarService().serverDialog("Đặt nhỏ hơn "+us.getXu()+" Xu thôi định bịp tao hả!");
+                        } else {
+                            us.getAvatarService().serverDialog("Đặt nhỏ hơn " + us.getXu() + " Xu thôi định bịp tao hả!");
                         }
                     } else if (us.datCuoc == 1) {
-                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài "+us.tienCuoc+" Rồi!");
-                    }else if (us.datCuoc == 2) {
-                        us.getAvatarService().serverDialog("Bạn Đã Cược xỉu "+us.tienCuoc+" Rồi!");
+                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài " + us.tienCuoc + " Rồi!");
+                    } else if (us.datCuoc == 2) {
+                        us.getAvatarService().serverDialog("Bạn Đã Cược xỉu " + us.tienCuoc + " Rồi!");
                     }
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
                 }
                 break;
             case 13:
+            case 15:
                 try {
-                if(us.datCuoc == 0){
-                    long xu = Long.parseLong(text);
-                    if(us.getXu()>= xu){
-                        if(xu<100000001){
-                            us.getAvatarService().serverDialog("Bạn Đã  Cược xỉu "+xu+" Xu Thành Công!");
-                            us.updateXu(-xu);
-                            us.getAvatarService().updateMoney(0);
-                            us.datCuoc =2;
-                            us.SicboNhanTien = false;
-                            us.tienCuoc = xu;
-                        }else
-                            us.getAvatarService().serverDialog("Đặt nhỏ hơn 100met Thôi");
-                    }else{
-                        us.getAvatarService().serverDialog("Đặt nhỏ hơn "+us.getXu()+" Xu thôi định bịp tao hả!");
-                    }
-                }else if (us.datCuoc == 1) {
-                    us.getAvatarService().serverDialog("Bạn Đã Cược Tài "+us.tienCuoc+" Rồi!");
-                }else if (us.datCuoc == 2) {
-                    us.getAvatarService().serverDialog("Bạn Đã Cược xỉu "+us.tienCuoc+" Rồi!");
-                }
-            } catch (NumberFormatException e) {
-                us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
-            }
-                break;
-            case 14:
-                try {
-                    if(us.datCuoc == 0){
+                    if (us.datCuoc == 0) {
                         long xu = Long.parseLong(text);
-                        if(us.getXu()>= xu){
-                            if(xu<100000001){
-                                us.getAvatarService().serverDialog("Bạn Đã  Cược Tài "+xu+" Xu Thành Công!");
+                        if (us.getXu() >= xu) {
+                            if (xu < 100000001) {
+                                us.getAvatarService().serverDialog("Bạn Đã  Cược xỉu " + xu + " Xu Thành Công!");
                                 us.updateXu(-xu);
                                 us.getAvatarService().updateMoney(0);
-                                us.datCuoc =1;
+                                us.datCuoc = 2;
                                 us.SicboNhanTien = false;
                                 us.tienCuoc = xu;
-                            }else
+                            } else
                                 us.getAvatarService().serverDialog("Đặt nhỏ hơn 100met Thôi");
-                        }else{
-                            us.getAvatarService().serverDialog("Đặt nhỏ hơn "+us.getXu()+" Xu thôi định bịp tao hả!");
+                        } else {
+                            us.getAvatarService().serverDialog("Đặt nhỏ hơn " + us.getXu() + " Xu thôi định bịp tao hả!");
                         }
-                    }else if (us.datCuoc == 1) {
-                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài "+us.tienCuoc+" Rồi!");
-                    }else if (us.datCuoc == 2) {
-                        us.getAvatarService().serverDialog("Bạn Đã Cược xỉu "+us.tienCuoc+" Rồi!");
+                    } else if (us.datCuoc == 1) {
+                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài " + us.tienCuoc + " Rồi!");
+                    } else if (us.datCuoc == 2) {
+                        us.getAvatarService().serverDialog("Bạn Đã Cược xỉu " + us.tienCuoc + " Rồi!");
                     }
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
                 }
                 break;
-            case 15:
+            case 14:
                 try {
-                    if(us.datCuoc == 0){
+                    if (us.datCuoc == 0) {
                         long xu = Long.parseLong(text);
-                        if(us.getXu()>= xu){
-                            if(xu<100000001){
-                                us.getAvatarService().serverDialog("Bạn Đã  Cược xỉu "+xu+" Xu Thành Công!");
+                        if (us.getXu() >= xu) {
+                            if (xu < 100000001) {
+                                us.getAvatarService().serverDialog("Bạn Đã  Cược Tài " + xu + " Xu Thành Công!");
                                 us.updateXu(-xu);
                                 us.getAvatarService().updateMoney(0);
-                                us.datCuoc =2;
+                                us.datCuoc = 1;
                                 us.SicboNhanTien = false;
                                 us.tienCuoc = xu;
-                            }else
+                            } else
                                 us.getAvatarService().serverDialog("Đặt nhỏ hơn 100met Thôi");
-                        }else{
-                            us.getAvatarService().serverDialog("Đặt nhỏ hơn "+us.getXu()+" Xu thôi định bịp tao hả!");
+                        } else {
+                            us.getAvatarService().serverDialog("Đặt nhỏ hơn " + us.getXu() + " Xu thôi định bịp tao hả!");
                         }
-                    }else if (us.datCuoc == 1) {
-                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài "+us.tienCuoc+" Rồi!");
-                    }else if (us.datCuoc == 2) {
-                        us.getAvatarService().serverDialog("Bạn Đã Cược xỉu "+us.tienCuoc+" Rồi!");
+                    } else if (us.datCuoc == 1) {
+                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài " + us.tienCuoc + " Rồi!");
+                    } else if (us.datCuoc == 2) {
+                        us.getAvatarService().serverDialog("Bạn Đã Cược xỉu " + us.tienCuoc + " Rồi!");
                     }
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
@@ -255,10 +232,10 @@ public class GlobalHandler {
 
     private void sendCityMap() throws IOException {
         String folder = "res/map/";
-        byte[] data = Avatar.getFile(String.valueOf(folder) + "cityMap.dat");
-        byte[] image = Avatar.getFile(String.valueOf(folder) + "cityMap.png");
-        byte[] map27 = Avatar.getFile(String.valueOf(folder) + "27.dat");
-        byte[] map_bg = Avatar.getFile(String.valueOf(folder) + "bg/27.png");
+        byte[] data = Avatar.getFile(folder + "cityMap.dat");
+        byte[] image = Avatar.getFile(folder + "cityMap.png");
+        byte[] map27 = Avatar.getFile(folder + "27.dat");
+        byte[] map_bg = Avatar.getFile(folder + "bg/27.png");
         Message ms = new Message(-92);
         DataOutputStream ds = ms.writer();
         ds.writeByte(1);

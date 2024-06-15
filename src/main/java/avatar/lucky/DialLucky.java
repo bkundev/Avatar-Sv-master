@@ -14,7 +14,7 @@ import avatar.model.User;
 import avatar.server.Utils;
 import avatar.service.AvatarService;
 
-import java.math.BigInteger;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,10 +23,10 @@ import java.util.List;
 import java.util.NavigableMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import lombok.Getter;
 
 /**
- *
  * @author kitakeyos - Hoàng Hữu Dũng
  */
 public class DialLucky {
@@ -51,31 +51,29 @@ public class DialLucky {
     }
 
     public void load() {
-        try {
-            String text = null;
-            switch (this.type) {
-                case DialLuckyManager.XU:
-                    text = "SELECT * FROM `dial_lucky` WHERE `xu` = 1;";
-                    break;
+        String text = null;
+        switch (this.type) {
+            case DialLuckyManager.XU:
+                text = "SELECT * FROM `dial_lucky` WHERE `xu` = 1;";
+                break;
 
-                case DialLuckyManager.LUONG:
-                    text = "SELECT * FROM `dial_lucky` WHERE `luong` = 1;";
-                    break;
+            case DialLuckyManager.LUONG:
+                text = "SELECT * FROM `dial_lucky` WHERE `luong` = 1;";
+                break;
 
-                case DialLuckyManager.MIEN_PHI:
-                    text = "SELECT * FROM `dial_lucky` WHERE `free` = 1;";
-                    break;
-            }
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame().prepareStatement(text);
-            ResultSet rs = ps.executeQuery();
+            case DialLuckyManager.MIEN_PHI:
+                text = "SELECT * FROM `dial_lucky` WHERE `free` = 1;";
+                break;
+        }
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(text);
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 int itemID = rs.getInt("item_id");
                 int ratio = rs.getInt("ratio");
                 Item item = new Item(itemID);
                 randomItem.add(ratio, item);
             }
-            rs.close();
-            ps.close();
         } catch (SQLException ex) {
             Logger.getLogger(DialLucky.class.getName()).log(Level.SEVERE, null, ex);
         }

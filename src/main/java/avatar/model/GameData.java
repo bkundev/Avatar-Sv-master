@@ -1,8 +1,6 @@
 package avatar.model;
 
-import avatar.item.Item;
-import avatar.lucky.DialLucky;
-
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +12,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import avatar.db.DbManager;
-import avatar.lucky.DialLuckyManager;
 import lombok.Getter;
 
 @Getter
@@ -33,19 +30,17 @@ public class GameData {
 
     public void load() {
         loadItemImageData();
-        loadFarmImageData();
+        //loadFarmImageData();
         loadMapItem();
         loadMapItemType();
     }
 
 
-
     public void loadItemImageData() {
-        try {
-            itemImageDatas.clear();
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame()
-                    .prepareStatement("SELECT * FROM `avatar_img_data`;");
-            ResultSet rs = ps.executeQuery();
+        itemImageDatas.clear();
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `avatar_img_data`;");
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 int id = rs.getInt("item_id");
                 int bigImageID = rs.getInt("image_id");
@@ -55,8 +50,6 @@ public class GameData {
                 int h = rs.getInt("h");
                 itemImageDatas.add(ImageInfo.builder().id(id).bigImageID(bigImageID).x(x).y(y).w(w).h(h).build());
             }
-            rs.close();
-            ps.close();
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -64,10 +57,10 @@ public class GameData {
     }
 
     public void loadFarmImageData() {
-        try {
-            farmImageDatas.clear();
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame().prepareStatement("SELECT * FROM `farm_image_data`;");
-            ResultSet rs = ps.executeQuery();
+        farmImageDatas.clear();
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `farm_image_data`;");
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 int bigImageID = rs.getInt("image_id");
@@ -78,8 +71,6 @@ public class GameData {
                 farmImageDatas.add(
                         ImageInfo.builder().id(id).bigImageID(bigImageID).x(x).y(y).w(w).h(h).build());
             }
-            rs.close();
-            ps.close();
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -87,11 +78,10 @@ public class GameData {
     }
 
     public void loadMapItem() {
-        try {
-            mapItems.clear();
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame()
-                    .prepareStatement("SELECT * FROM `map_item`;");
-            ResultSet rs = ps.executeQuery();
+        mapItems.clear();
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `map_item`;");
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 short id = rs.getShort("id");
                 short typeID = rs.getShort("type_id");
@@ -100,8 +90,6 @@ public class GameData {
                 byte y = rs.getByte("y");
                 mapItems.add(MapItem.builder().id(id).typeID(typeID).type(type).x(x).y(y).build());
             }
-            rs.close();
-            ps.close();
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -109,11 +97,10 @@ public class GameData {
     }
 
     public void loadMapItemType() {
-        try {
-            mapItemTypes.clear();
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame()
-                    .prepareStatement("SELECT * FROM `map_item_type`;");
-            ResultSet rs = ps.executeQuery();
+        mapItemTypes.clear();
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `map_item_type`;");
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 short id = rs.getShort("id");
                 String name = rs.getString("name");

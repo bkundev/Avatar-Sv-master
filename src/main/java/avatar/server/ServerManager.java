@@ -16,6 +16,7 @@ import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
 import avatar.model.Npc;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Properties;
@@ -87,18 +88,15 @@ public class ServerManager {
 
     protected static void loadSettings() {
         System.out.println("Load settings in database");
-        try {
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame()
-                    .prepareStatement("SELECT * FROM `settings`;");
-            ResultSet res = ps.executeQuery();
-            HashMap<String, String> settings = new HashMap<String, String>();
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `settings`;");
+             ResultSet res = ps.executeQuery();) {
+            HashMap<String, String> settings = new HashMap<>();
             while (res.next()) {
                 String name = res.getString("name");
                 String value = res.getString("value");
                 settings.put(name, value);
             }
-            res.close();
-            ps.close();
             if (settings.containsKey("hash_settings")) {
                 ServerManager.hashSettings = settings.get("hash_settings");
             }
@@ -134,11 +132,10 @@ public class ServerManager {
     }
 
     private static void loadNpcData() {
-        try {
-            int numNPC = 0;
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame()
-                    .prepareStatement("SELECT * FROM `npc`;");
-            ResultSet res = ps.executeQuery();
+        int numNPC = 0;
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `npc`;");
+             ResultSet res = ps.executeQuery();) {
             while (res.next()) {
                 int botID = res.getInt("id");
                 String botName = res.getString("name");
@@ -175,8 +172,6 @@ public class ServerManager {
                 System.out.println("  + NPC " + Utils.removeAccent(botName) + " - " + botID);
                 ++numNPC;
             }
-            res.close();
-            ps.close();
             System.out.println("Load success " + numNPC + " NPC !");
         } catch (Exception e) {
             e.printStackTrace();
@@ -188,7 +183,7 @@ public class ServerManager {
     protected static void start() {
         System.out.println("Start socket port = " + ServerManager.port);
         try {
-            ServerManager.clients = new ArrayList<Session>();
+            ServerManager.clients = new ArrayList<>();
             ServerManager.server = new ServerSocket(ServerManager.port);
             ServerManager.id = 0;
             ServerManager.numClients = 0;
@@ -196,14 +191,13 @@ public class ServerManager {
             System.out.println("Start server Success !");
             while (ServerManager.start) {
                 try {
-                    System.out.println("Loop");
                     Socket client = ServerManager.server.accept();
                     Session cl = new Session(client, ++ServerManager.id);
                     ServerManager.clients.add(cl);
                     ++ServerManager.numClients;
                     log("Accept socket " + cl + " done!");
                 } catch (IOException e) {
-                    System.out.println(e.toString());
+                    e.printStackTrace();
                 }
             }
         } catch (IOException e) {

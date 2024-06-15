@@ -86,13 +86,14 @@ public class Service {
 
     public void weather(byte weather) {
         try {
+            System.out.println("weather: " + weather);
             Message ms = new Message(Cmd.WEATHER);
             DataOutputStream ds = ms.writer();
             ds.writeByte(weather);
             ds.flush();
             sendMessage(ms);
         } catch (IOException ex) {
-            logger.error("removeItem() ", ex);
+            logger.error("weather() ", ex);
         }
     }
 

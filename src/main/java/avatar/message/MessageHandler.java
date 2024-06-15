@@ -308,6 +308,10 @@ public class MessageHandler implements IMessageHandler {
                         this.client.doiKhuVuc(mss);
                         break;
                     }
+                    case Cmd.EFFECT_OBJ: {
+                        this.client.getAvatarService().sendEffectData(mss);
+                        break;
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();

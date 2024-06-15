@@ -4,7 +4,8 @@ import avatar.db.DbManager;
 import avatar.model.GameData;
 import avatar.model.MapItem;
 import avatar.model.MapItemType;
-import avatar.model.Position;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,23 +13,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import lombok.Getter;
 import lombok.Setter;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 @Getter
 @Setter
 public class Map {
-    
+
     private byte id;
     private byte type;
     private String name;
     private List<Zone> zones;
     private List<MapItem> mapItems;
     private List<MapItemType> mapItemTypes;
-    
+
     public Map(int id, int type, int maxEntrys) {
         this.id = (byte) id;
         this.type = (byte) type;
@@ -40,10 +39,10 @@ public class Map {
             this.zones.add(new Zone(this, (byte) i));
         }
     }
-    
+
     public void load() {
-        try {
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame().prepareStatement("SELECT * FROM `map_item` WHERE `map_id` = ?;");
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `map_item` WHERE `id` = ?;");) {
             ps.setInt(1, this.id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -58,13 +57,12 @@ public class Map {
                 mapItemTypes.add(mapItemType);
             }
             rs.close();
-            ps.close();
         } catch (SQLException ex) {
             Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void update() {
-        
+
     }
 }

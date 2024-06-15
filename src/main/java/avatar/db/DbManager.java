@@ -7,7 +7,7 @@ package avatar.db;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
+
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.log4j.Logger;
 
@@ -28,7 +29,6 @@ public class DbManager {
     private DbExecutor dbExecutor;
     private DbUpdater dbUpdater;
     private DbInserter dbInserter;
-    private Connection[] connections;
     private String host;
     private int port;
     private String dbname;
@@ -47,10 +47,9 @@ public class DbManager {
 
     private DbManager() {
         try {
-            FileInputStream input = new FileInputStream(new File("database.properties"));
+            FileInputStream input = new FileInputStream("database.properties");
             Properties props = new Properties();
             props.load(new InputStreamReader(input, StandardCharsets.UTF_8));
-            this.connections = new Connection[4];
             this.driver = props.getProperty("driver");
             this.host = props.getProperty("host");
             this.port = Integer.parseInt(props.getProperty("port"));
@@ -69,10 +68,9 @@ public class DbManager {
         return this.hikariDataSource.getConnection();
     }
 
-    public boolean start() {
+    public void start() {
         if (this.hikariDataSource != null) {
             logger.warn("DB Connection Pool has already been created.");
-            return false;
         } else {
             try {
                 HikariConfig config = new HikariConfig();
@@ -80,8 +78,8 @@ public class DbManager {
                 config.setDriverClassName(this.driver);
                 config.setUsername(this.username);
                 config.setPassword(this.passeword);
-                config.addDataSourceProperty("minimumIdle", this.minConnections);
-                config.addDataSourceProperty("maximumPoolSize", this.maxConnections);
+                config.setMinimumIdle(this.minConnections);
+                config.setMaximumPoolSize(this.maxConnections);
                 config.addDataSourceProperty("cachePrepStmts", "true");
                 config.addDataSourceProperty("prepStmtCacheSize", "250");
                 config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
@@ -94,19 +92,10 @@ public class DbManager {
                 this.dbUpdater = new DbUpdater(queryRunner);
                 this.dbInserter = new DbInserter(queryRunner);
 
-                return true;
             } catch (Exception e) {
                 logger.error("DB Connection Pool Creation has failed.");
-                return false;
             }
         }
-    }
-
-    public Connection getConnectionForGame() throws SQLException {
-        if (connections[3] == null || connections[3].isClosed() || !connections[3].isValid(0)) {
-            connections[3] = getConnection();
-        }
-        return connections[3];
     }
 
     public void shutdown() {

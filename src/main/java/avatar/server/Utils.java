@@ -462,7 +462,7 @@ public class Utils {
                     byte sell = dis.readByte();
                     short idIcon = dis.readShort();
                     String INSERT_ITEM = "INSERT INTO `items` (`id`, `coin`, `gold`, `type`, `icon`, `name`, `sell`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                    PreparedStatement ps = DbManager.getInstance().getConnectionForGame()
+                    PreparedStatement ps = DbManager.getInstance().getConnection()
                             .prepareStatement(INSERT_ITEM);
                     ps.setShort(1, itemID);
                     ps.setInt(2, itemXu);
@@ -507,7 +507,7 @@ public class Utils {
                         e.printStackTrace();
                     }
                     String INSERT_ITEM2 = "INSERT INTO `items` (`id`, `coin`, `gold`, `type`, `icon`, `name`, `sell`, `zorder`, `gender`, `level`, `animation`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                    PreparedStatement ps2 = DbManager.getInstance().getConnectionForGame()
+                    PreparedStatement ps2 = DbManager.getInstance().getConnection()
                             .prepareStatement(INSERT_ITEM2);
                     ps2.setShort(1, itemID);
                     ps2.setInt(2, itemXu);
@@ -524,7 +524,7 @@ public class Utils {
                 } else {
                     short color = dis.readShort();
                     String INSERT_ITEM3 = "INSERT INTO `items` (`id`, `coin`, `gold`, `type`, `icon`) VALUES (?, ?, ?, ?, ?)";
-                    PreparedStatement ps3 = DbManager.getInstance().getConnectionForGame()
+                    PreparedStatement ps3 = DbManager.getInstance().getConnection()
                             .prepareStatement(INSERT_ITEM3);
                     ps3.setShort(1, itemID);
                     ps3.setInt(2, itemXu);

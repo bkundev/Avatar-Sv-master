@@ -2,15 +2,18 @@ package avatar.service;
 
 import avatar.db.DbManager;
 
-import java.math.BigInteger;
+import java.sql.Connection;
 import java.sql.ResultSet;
+
 import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
+
 import java.util.Vector;
 import java.io.IOException;
 import java.io.DataOutputStream;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 import avatar.network.Message;
 import avatar.network.Session;
 
@@ -27,15 +30,14 @@ public class HomeService extends Service {
         byte type = ms.reader().readByte();
         this.session.user.updateXu(-2000);
         int result = 0;
-        try {
-            String INSERT_HOUSE_ITEM = "INSERT INTO `house_player_item` (`user_id`, `house_item_id`, `x`, `y`) VALUES (?, ?, ?, ?)";
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame().prepareStatement(INSERT_HOUSE_ITEM);
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement("INSERT INTO `house_player_item` (`user_id`, `house_item_id`, `x`, `y`) VALUES (?, ?, ?, ?)");) {
+
             ps.setInt(1, this.session.user.getId());
             ps.setShort(2, itemId);
             ps.setByte(3, x);
             ps.setByte(4, y);
             result = ps.executeUpdate();
-            ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
             System.err.println(e.getMessage());
@@ -58,9 +60,9 @@ public class HomeService extends Service {
         byte x2 = ms.reader().readByte();
         byte y2 = ms.reader().readByte();
         byte rotate = ms.reader().readByte();
-        try {
-            String UPDATE_HOUSE_ITEM = "UPDATE `house_player_item` SET `x` = ?, `y` = ?, `rotate` = ? WHERE `user_id` = ? AND `house_item_id` = ? AND `x` = ? AND `y` = ? LIMIT 1";
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame().prepareStatement(UPDATE_HOUSE_ITEM);
+        String UPDATE_HOUSE_ITEM = "UPDATE `house_player_item` SET `x` = ?, `y` = ?, `rotate` = ? WHERE `user_id` = ? AND `house_item_id` = ? AND `x` = ? AND `y` = ? LIMIT 1";
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(UPDATE_HOUSE_ITEM);) {
             ps.setByte(1, x2);
             ps.setByte(2, y2);
             ps.setByte(3, rotate);
@@ -94,15 +96,14 @@ public class HomeService extends Service {
         byte x = ms.reader().readByte();
         byte y = ms.reader().readByte();
         byte rotate = ms.reader().readByte();
-        try {
-            String INSERT_HOUSE_ITEM = "DELETE FROM `house_player_item` WHERE `user_id` = ? AND `house_item_id` = ? AND `x` = ? AND `y` = ? LIMIT 1";
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame().prepareStatement(INSERT_HOUSE_ITEM);
+        String INSERT_HOUSE_ITEM = "DELETE FROM `house_player_item` WHERE `user_id` = ? AND `house_item_id` = ? AND `x` = ? AND `y` = ? LIMIT 1";
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(INSERT_HOUSE_ITEM);) {
             ps.setInt(1, this.session.user.getId());
             ps.setShort(2, itemId);
             ps.setByte(3, x);
             ps.setByte(4, y);
             ps.executeUpdate();
-            ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
             System.err.println(e.getMessage());
@@ -117,9 +118,9 @@ public class HomeService extends Service {
     }
 
     public void createHome(Message ms) throws IOException {
-        try {
+        try (Connection connection = DbManager.getInstance().getConnection();) {
             String GET_HOUSE_DATA = "SELECT * FROM `house_buy` WHERE `user_id` = ? LIMIT 1";
-            PreparedStatement ps = DbManager.getInstance().getConnectionForGame().prepareStatement(GET_HOUSE_DATA);
+            PreparedStatement ps = connection.prepareStatement(GET_HOUSE_DATA);
             ps.setInt(1, this.session.user.getId());
             ResultSet res = ps.executeQuery();
             if (res.next()) {
@@ -131,7 +132,7 @@ public class HomeService extends Service {
                 short type = ms.reader().readShort();
                 short num = ms.reader().readShort();
                 byte[] map_data_new = new byte[num];
-                Vector<Byte> tileChange = new Vector<Byte>();
+                Vector<Byte> tileChange = new Vector<>();
                 for (int j = 0; j < num; ++j) {
                     map_data_new[j] = ms.reader().readByte();
                     if (map_data_new[j] != map_data[j]) {
@@ -152,7 +153,7 @@ public class HomeService extends Service {
                         ja_map_new.add(map_data[k]);
                     }
                     String UPDATE_HOUSE_MAP = "UPDATE `house_buy` SET `map_data` = ? WHERE `user_id` = ?";
-                    ps = DbManager.getInstance().getConnectionForGame().prepareStatement(UPDATE_HOUSE_MAP);
+                    ps = connection.prepareStatement(UPDATE_HOUSE_MAP);
                     ps.setString(1, ja_map_new.toJSONString());
                     ps.setInt(2, this.session.user.getId());
                     int result_update = ps.executeUpdate();
