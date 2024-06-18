@@ -686,16 +686,28 @@ public class Session implements ISession {
                                         user.getAvatarService().sendTextBoxPopup(user.getId(), 11, "infor", 1);
                                     }).build(),
                                     Menu.builder().name("Effect").action(() -> {
-                                        EffectService.createEffect()
-                                                .session(this)
-                                                .id((byte) 1)
-                                                .style((byte) 0)
-                                                .loopLimit((byte) 5)
-                                                .loop((short) 2)
-                                                .loopType((byte) 1)
-                                                .radius((short) 50)
-                                                .idPlayer(user.getId())
-                                                .send();
+                                        user.getZone().getPlayers().forEach(u -> {
+                                            EffectService.createEffect()
+                                                    .session(u.session)
+                                                    .id((byte) 25)
+                                                    .style((byte) 0)
+                                                    .loopLimit((byte) 5)
+                                                    .loop((short) 1)
+                                                    .loopType((byte) 1)
+                                                    .radius((short) 0)
+                                                    .idPlayer(user.getId())
+                                                    .send();
+                                            EffectService.createEffect()
+                                                    .session(u.session)
+                                                    .id((byte) 26)
+                                                    .style((byte) 0)
+                                                    .loopLimit((byte) 5)
+                                                    .loop((short) 1)
+                                                    .loopType((byte) 1)
+                                                    .radius((short) 0)
+                                                    .idPlayer(7)//người bị nhận effect
+                                                    .send();
+                                        });
                                     }).build(),
                                     Menu.builder().name("Khoá nick").build(),
                                     Menu.builder().name("Tặng item").build()

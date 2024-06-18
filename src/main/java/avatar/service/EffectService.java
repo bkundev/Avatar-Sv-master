@@ -10,15 +10,21 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class EffectService {
-    @Builder( builderMethodName = "createEffect", buildMethodName = "send")
+    @Builder(builderMethodName = "createEffect", buildMethodName = "send")
     private static void sendEffect(Session session, byte id, byte style, byte loopLimit, short num, byte timeStop, short loop, byte loopType, short radius, Position[] positions, int idPlayer, Position position) {
         try {
+            if (session == null) {
+                //System.err.println("Session is null, cannot send effect.");
+                return;
+            }
+
             Message ms = new Message(Cmd.EFFECT_OBJ);
             DataOutputStream ds = ms.writer();
             ds.writeByte(0);
             ds.writeByte(id);
             ds.writeByte(style);
             ds.writeByte(loopLimit);
+
             if (style == 4) {
                 ds.writeShort(num);
                 ds.writeByte(timeStop);
@@ -28,8 +34,16 @@ public class EffectService {
                 if (loopType == 1) {
                     ds.writeShort(radius);
                 } else if (loopType == 2) {
+                    if (positions == null) {
+                        System.err.println("Positions array is null, cannot write positions.");
+                        return;
+                    }
                     ds.writeByte(positions.length);
                     for (Position p : positions) {
+                        if (p == null) {
+                            System.err.println("Position in positions array is null, cannot write position.");
+                            continue;
+                        }
                         ds.writeShort(p.getX());
                         ds.writeShort(p.getY());
                     }
@@ -41,6 +55,7 @@ public class EffectService {
                     ds.writeShort(position.getY());
                 }
             }
+
             ds.flush();
             session.sendMessage(ms);
         } catch (IOException ex) {
