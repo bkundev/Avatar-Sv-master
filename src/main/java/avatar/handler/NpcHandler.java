@@ -70,38 +70,7 @@ public class NpcHandler {
         int npcIdCase = npcId - Npc.ID_ADD;
 
         switch (npcIdCase) {
-            case NpcName.Tai_Xiu: {
-                List<Menu> list = new ArrayList<>();
-                Menu taiXiu = Menu.builder().name("Chơi Tài Xỉu").menus(
-                                List.of(
-                                        Menu.builder().name("Cược Tài").action(() -> {
-                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 12, "Nhập Số Tiền Cược Tài", 1);
-                                        }).build(),
-                                        Menu.builder().name("Cược Xỉu").action(() -> {
-                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 13, "Nhập Số Tiền Cược Xỉu", 1);
-                                        }).build(),
-                                        Menu.builder().name("Tất Tay tài").action(() -> {
-                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 14, "Nhập Bừa 1 Số Để Tất Tay Tài 100.000.000 Xu", 1);
-                                        }).build(),
-                                        Menu.builder().name("Tất Tay xỉu").action(() -> {
-                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 15, "Nhập Bừa 1 Số Để Tất Tay Xỉu 100.000.000 Xu", 1);
-                                        }).build()
-                                ))
-                        .id(npcId)
-                        .npcName("Không Tài Thì Xỉu")
-                        .npcChat("xuc xac nao")
-                        .build();
-                list.add(taiXiu);
-                list.add(Menu.builder().name("Hướng dẫn").action(() -> {
-                    us.getAvatarService().customTab("Hướng dẫn", "cứ ôn in bừa");
-                }).build());
-                list.add(Menu.builder().name("Thoát").build());
-                us.setMenus(list);
-                us.getAvatarService().openUIMenu(npcId, 0, list, "tài xỉu", "");
-                break;
-            }
             case NpcName.binzoet:{
-
                 List<Menu> list = new ArrayList<>();
                 list.add(Menu.builder().name("reset xu luong").action(() -> {
                     //us.setXu(999999999);

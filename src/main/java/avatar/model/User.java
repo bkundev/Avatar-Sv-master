@@ -51,9 +51,6 @@ public class User {
     private String password;
     private byte gender;
     public long xu;
-    public int datCuoc = 0;
-    public long tienCuoc;
-    public boolean SicboNhanTien = false;
     public int luong;
     public int luongKhoa;
     public int xeng;
@@ -335,7 +332,7 @@ public class User {
 
     public void doAction(Message ms) {
         try {
-            int idTo = ms.reader().readInt();
+            int idTo = ms.reader().readInt();//id to select
             short action = ms.reader().readShort();
             getMapService().doAction(id, idTo, action);
         } catch (IOException e) {
