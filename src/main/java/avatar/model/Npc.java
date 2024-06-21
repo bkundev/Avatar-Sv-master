@@ -36,8 +36,8 @@ public class Npc extends User {
     public static synchronized int getGlobalHp() {
         return globalHp;
     }
-    public static synchronized void resetGlobalHp() {
-        globalHp = 1000; // Reset lại HP khi NPC được khởi tạo lại hoặc đặt lại
+    public static synchronized void resetGlobalHp(int hp) {
+        globalHp = hp; // Reset lại HP khi NPC được khởi tạo lại hoặc đặt lại
     }
 
     // Ví dụ hàm để xử lý khi NPC bị giết và chuyển sang khu vực khác
@@ -55,7 +55,7 @@ public class Npc extends User {
 
                 // Cập nhật thông tin và chuyển NPC sang khu vực mới
                 npcZone.leave(npc); // Loại bỏ NPC khỏi khu vực hiện tại
-                npc.resetGlobalHp(); // Reset HP cho NPC (hoặc giá trị mặc định)
+                npc.resetGlobalHp(1000*2); // Reset HP cho NPC (hoặc giá trị mặc định)
 
                 randomZone.enter(npc, randomX, randomY); // Nhập NPC vào khu vực mới với vị trí ngẫu nhiên
 

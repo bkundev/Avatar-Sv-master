@@ -647,7 +647,7 @@ public class User {
                     .loopLimit((byte) 5)
                     .loop((short) 1)
                     .loopType((byte) 1)
-                    .radius((short) 0)
+                    .radius((short) 25)
                     .idPlayer(us)
                     .send();
             EffectService.createEffect()
@@ -657,7 +657,7 @@ public class User {
                     .loopLimit((byte) 5)
                     .loop((short) 1)
                     .loopType((byte) 1)
-                    .radius((short) 0)
+                    .radius((short) 25)
                     .idPlayer(npcID)
                     .send();
         };

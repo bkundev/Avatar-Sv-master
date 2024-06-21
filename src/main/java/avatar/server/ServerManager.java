@@ -138,17 +138,23 @@ public class ServerManager {
             Random random = new Random(); // Đối tượng Random để sinh ngẫu nhiên
             while (true) { // Vòng lặp vô hạn để NPC xuất hiện liên tục
                 if (currentNpcCount.get() < 10) { // Kiểm tra xem có thể xuất hiện thêm NPC không
+                    List<Integer> availableItems = Arrays.asList(2401, 4552, 6314, 6432);
+                    int randomItemId = availableItems.get(random.nextInt(availableItems.size()));
                     Map m = MapManager.getInstance().find(11);
                     if (m != null) {
                         List<Zone> zones = m.getZones();
+                        List<String> chatMessages = Arrays.asList(
+                                "gãi ngứa à",
+                                "hãy xem đây"
+                        );
                         Zone randomZone = zones.get(random.nextInt(zones.size())); // Chọn ngẫu nhiên một khu vực từ danh sách
                         Npc zomber = Npc.builder()
                                 .id(Npc.ID_ADD + boss) // ID ngẫu nhiên cho NPC
                                 .name("boss")
                                 .wearing(new ArrayList<>())
                                 .build();
-                        zomber.addItemToWearing(new Item(2403)); // Thêm một item mặc định cho NPC
-                        zomber.addChat("Tao bất tử OK"); // Thêm một thông điệp chat mặc định
+                        zomber.addItemToWearing(new Item(randomItemId)); // Thêm một item mặc định cho NPC
+                        zomber.setTextChats(chatMessages); // Thêm một thông điệp chat mặc định
                         NpcManager.getInstance().add(zomber); // Thêm NPC vào quản lý NPC
                         // Ngẫu nhiên vị trí xuất hiện trong khu vực
                         short randomX = (short) 250;
