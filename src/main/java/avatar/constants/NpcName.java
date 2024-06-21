@@ -35,5 +35,5 @@ public class NpcName {
     public static final int LAI_BUON = 850;
     public static final int em_Thinh = 851;
     public static final int binzoet = 852;
-   // public static final int thuongnhan = 857;
+    public static final int boss = 999;
 }

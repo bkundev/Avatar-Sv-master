@@ -19,11 +19,14 @@ import avatar.play.NpcManager;
 import avatar.play.Zone;
 import avatar.server.ServerManager;
 import avatar.server.UserManager;
+import avatar.service.EffectService;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+
+import static avatar.constants.NpcName.boss;
 
 public class NpcHandler {
 
@@ -109,7 +112,23 @@ public class NpcHandler {
                 break;
             }
 
-
+            case boss:{
+                List<Menu> list = List.of(
+                        Menu.builder().name("damage").action(() -> {
+                            List<User> players = us.getZone().getPlayers();
+                            us.skillUidToBoss(players,us.getId(),npcId, (byte) 25, (byte) 26);
+                            for (int i = 0; i < players.size(); i++) {
+                                if(players.get(i).getUsername() == "boss")
+                                {
+                                    us.attackNpc((Npc) players.get(i),10);
+                                }
+                            }
+                        }).build()
+                );
+                us.setMenus(list);
+                us.getAvatarService().openUIMenu(npcId, 0, list, "boss", "hp tao:"+Npc.getGlobalHp());
+                break;
+            }
             case NpcName.QUAY_SO: {
                 List<Menu> list = new ArrayList<>();
                 Menu quaySo = Menu.builder().name("Quay số").menus(

@@ -10,6 +10,7 @@ import avatar.network.Session;
 import java.sql.*;
 import java.util.Date;
 
+import avatar.service.*;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONObject;
 
@@ -25,12 +26,6 @@ import avatar.server.GameString;
 import avatar.server.ServerManager;
 import avatar.server.UserManager;
 import avatar.server.Utils;
-import avatar.service.AvatarService;
-import avatar.service.FarmService;
-import avatar.service.HomeService;
-import avatar.service.NoService;
-import avatar.service.ParkService;
-import avatar.service.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,6 +49,7 @@ public class User {
     public int luong;
     public int luongKhoa;
     public int xeng;
+    private int damage;
     private short clanID;
     private byte role;
     private byte star;
@@ -634,5 +630,36 @@ public class User {
         synchronized (this.session.obj) {
             this.session.obj.notifyAll();
         }
+    }
+
+
+    public void attackNpc(Npc npc, int damage) {
+        // Giảm HP toàn cục của NPC khi bị tấn công
+        Npc.decreaseGlobalHp(damage);
+    }
+
+    public void skillUidToBoss(List<User> players,int us ,int npcID,byte skill1,byte skill2){
+        for (User player : players) {
+            EffectService.createEffect()
+                    .session(player.session)
+                    .id(skill1)
+                    .style((byte) 0)
+                    .loopLimit((byte) 5)
+                    .loop((short) 1)
+                    .loopType((byte) 1)
+                    .radius((short) 0)
+                    .idPlayer(us)
+                    .send();
+            EffectService.createEffect()
+                    .session(player.session)
+                    .id(skill2)
+                    .style((byte) 0)
+                    .loopLimit((byte) 5)
+                    .loop((short) 1)
+                    .loopType((byte) 1)
+                    .radius((short) 0)
+                    .idPlayer(npcID)
+                    .send();
+        };
     }
 }

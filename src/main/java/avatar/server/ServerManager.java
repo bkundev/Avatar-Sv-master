@@ -18,8 +18,7 @@ import avatar.model.Npc;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Properties;
+import java.util.*;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.File;
@@ -35,8 +34,10 @@ import avatar.play.MapManager;
 import avatar.play.NpcManager;
 
 import java.net.ServerSocket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static avatar.constants.NpcName.boss;
+import static avatar.model.Npc.currentNpcCount;
 
 public class ServerManager {
 
@@ -126,11 +127,72 @@ public class ServerManager {
         }
         System.out.println("Load NPC data start ...");
         loadNpcData();
+        initZombie();
         System.out.println("Reset player online ...");
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `is_online` = 0, `client_id` = -1");
         System.out.println("Reset player online successfully");
     }
 
+    public static void initZombie(){
+        Thread t = new Thread(() -> {
+            Random random = new Random(); // Đối tượng Random để sinh ngẫu nhiên
+            while (true) { // Vòng lặp vô hạn để NPC xuất hiện liên tục
+                if (currentNpcCount.get() < 10) { // Kiểm tra xem có thể xuất hiện thêm NPC không
+                    Map m = MapManager.getInstance().find(11);
+                    if (m != null) {
+                        List<Zone> zones = m.getZones();
+                        Zone randomZone = zones.get(random.nextInt(zones.size())); // Chọn ngẫu nhiên một khu vực từ danh sách
+                        Npc zomber = Npc.builder()
+                                .id(Npc.ID_ADD + boss) // ID ngẫu nhiên cho NPC
+                                .name("boss")
+                                .wearing(new ArrayList<>())
+                                .build();
+                        zomber.addItemToWearing(new Item(2403)); // Thêm một item mặc định cho NPC
+                        zomber.addChat("Tao bất tử OK"); // Thêm một thông điệp chat mặc định
+                        NpcManager.getInstance().add(zomber); // Thêm NPC vào quản lý NPC
+                        // Ngẫu nhiên vị trí xuất hiện trong khu vực
+                        short randomX = (short) 250;
+                        short randomY = (short) 50;
+                        // Nhập NPC vào khu vực với vị trí ngẫu nhiên
+
+                        randomZone.enter(zomber, randomX, randomY);
+                        System.out.println("khu :"+randomZone.getId());
+                        // Tăng số lượng NPC hiện tại trong khu vực lên 1
+                        currentNpcCount.incrementAndGet();
+                        try {
+                            Thread.sleep(10000); // Chờ 10 giây trước khi xuất hiện NPC tiếp theo
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        // Kiểm tra và xử lý di chuyển và gửi kỹ năng cho NPC
+                        List<User> players = randomZone.getPlayers();
+                        for (User u : players) {
+                            if (u.getId() == 6) { // Ví dụ: nếu người chơi có ID là 6
+                                zomber.NpcMove(zomber, u.getX(), u.getY()); // Di chuyển NPC đến vị trí của người chơi
+                                System.out.println("Move x: " + u.getX() + " Y: " + u.getY());
+                                try {
+                                    Thread.sleep(2000); // Chờ 2 giây trước khi gửi kỹ năng
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                zomber.skill(zomber, (byte) 27); // Gửi kỹ năng từ NPC đến người chơi
+                                System.out.println("Send skill");
+                            }
+                        }
+                    }
+                } else {
+                    // Nếu số lượng NPC đạt đến giới hạn, không xuất hiện thêm cho đến khi có NPC bị giết
+                    try {
+                        Thread.sleep(1000); // Chờ 1 giây trước khi kiểm tra lại
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+        t.start();
+    }
     private static void loadNpcData() {
         int numNPC = 0;
         try (Connection connection = DbManager.getInstance().getConnection();
