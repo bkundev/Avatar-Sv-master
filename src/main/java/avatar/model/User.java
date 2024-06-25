@@ -46,10 +46,12 @@ public class User {
     private String password;
     private byte gender;
     public long xu;
+    public int datCuoc = 0;
+    public long tienCuoc;
+    public boolean SicboNhanTien = false;
     public int luong;
     public int luongKhoa;
     public int xeng;
-    private int damage;
     private short clanID;
     private byte role;
     private byte star;
@@ -328,7 +330,7 @@ public class User {
 
     public void doAction(Message ms) {
         try {
-            int idTo = ms.reader().readInt();//id to select
+            int idTo = ms.reader().readInt();
             short action = ms.reader().readShort();
             getMapService().doAction(id, idTo, action);
         } catch (IOException e) {
@@ -631,8 +633,6 @@ public class User {
             this.session.obj.notifyAll();
         }
     }
-
-
     public void attackNpc(Npc npc, int damage) {
         // Giảm HP toàn cục của NPC khi bị tấn công
         Npc.decreaseGlobalHp(damage);

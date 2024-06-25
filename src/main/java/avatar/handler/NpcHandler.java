@@ -24,7 +24,6 @@ import avatar.play.Zone;
 import avatar.server.ServerManager;
 import avatar.server.UserManager;
 import avatar.server.Utils;
-import avatar.service.EffectService;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public class NpcHandler {
             }
             if (dl.getType() == DialLuckyManager.LUONG) {
                 if (us.getLuong() < 5) {
-                    us.getAvatarService().serverDialog("Bạn không đủ lượng!");
+                    us.getAvatarService().serverDialog("Bạn không đủ lượng!!");
                     return;
                 }
             }
@@ -79,7 +78,112 @@ public class NpcHandler {
         int npcIdCase = npcId - Npc.ID_ADD;
 
         switch (npcIdCase) {
+            case boss:{
+                List<Menu> list = List.of(
+                        Menu.builder().name("damage").action(() -> {
+                            List<User> players = us.getZone().getPlayers();
+                            for (int i = 0; i < players.size(); i++) {
+                                if(players.get(i).getUsername() == "boss")
+                                {
+                                    List<Integer> availableItems = Arrays.asList(2401, 4552, 6314, 6432);
+                                    Utils random = null;
+                                    int randomItemId = availableItems.get(random.nextInt(availableItems.size()));
+                                    Map m = MapManager.getInstance().find(11);
+                                    Npc npc = (Npc) players.get(i);
+
+                                    us.attackNpc(npc,10);
+                                    us.skillUidToBoss(players,us.getId(),npcId, (byte) 25, (byte) 26);
+                                    int bosItem = npc.getWearing().get(0).getId();
+                                    switch (bosItem) {
+                                        case 2401:
+                                            npc.skill(npc,(byte)27);
+                                            break;
+                                        case 4552:
+                                            npc.skillUidToBoss(players,npc.getId(), us.getId(), (byte) 25, (byte) 26);
+                                            break;
+                                        case 6314:
+                                            npc.skillUidToBoss(players,npc.getId(), us.getId(), (byte) 40, (byte) 41);
+                                            break;
+                                        case 6432:
+                                            npc.skillUidToBoss(players,npc.getId(), us.getId(), (byte) 42, (byte) 43);
+                                            break;
+                                    }
+                                    if (npc.getGlobalHp()<=0){
+                                        npc.skill(npc,(byte)45);
+                                        List<String> chatMessages = Arrays.asList(
+                                                "tạm biệt mấy ông chau",
+                                                "ta chuyển sinh đây"
+                                        );
+                                        npc.setTextChats(chatMessages);
+                                        try {
+                                            Thread.sleep(3000);
+                                        } catch (InterruptedException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                        npc.getZone().leave(npc);
+                                        List<Zone> zones = m.getZones();
+                                        random = null;
+                                        Zone randomZone = zones.get(random.nextInt(zones.size())); // Chọn ngẫu nhiên một khu vực từ danh sách
+                                        Npc zomber = Npc.builder()
+                                                .id(Npc.ID_ADD + boss) // ID ngẫu nhiên cho NPC
+                                                .name("boss")
+                                                .wearing(new ArrayList<>())
+                                                .build();
+                                        zomber.addItemToWearing(new Item(randomItemId));; // Thêm một item mặc định cho NPC
+                                        zomber.addChat("Tao bất tử OK"); // Thêm một thông điệp chat mặc định
+                                        zomber.resetGlobalHp(1000*2);
+                                        NpcManager.getInstance().add(zomber); // Thêm NPC vào quản lý NPC
+                                        // Ngẫu nhiên vị trí xuất hiện trong khu vực
+                                        short randomX = (short) 250;
+                                        short randomY = (short) 50;
+                                        // Nhập NPC vào khu vực với vị trí ngẫu nhiên
+
+                                        randomZone.enter(zomber, randomX, randomY);
+                                        System.out.println("khu :"+randomZone.getId());
+                                    }
+                                }
+                            }
+                        }).build()
+                );
+                us.setMenus(list);
+                us.getAvatarService().openUIMenu(npcId, 0, list, "boss", "hp tao:"+ getGlobalHp());
+                break;
+            }
+            case NpcName.Tai_Xiu: {
+                List<Menu> list = new ArrayList<>();
+                Menu taiXiu = Menu.builder().name("Chơi Tài Xỉu").menus(
+                                List.of(
+                                        Menu.builder().name("Cược Tài").action(() -> {
+                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 12, "Nhập Số Tiền Cược Tài", 1);
+                                        }).build(),
+                                        Menu.builder().name("Cược Xỉu").action(() -> {
+                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 13, "Nhập Số Tiền Cược Xỉu", 1);
+                                        }).build(),
+                                        Menu.builder().name("Tất Tay tài").action(() -> {
+                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 14, "Nhập Bừa 1 Số Để Tất Tay Tài 100.000.000 Xu", 1);
+                                        }).build(),
+                                        Menu.builder().name("Tất Tay xỉu").action(() -> {
+                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 15, "Nhập Bừa 1 Số Để Tất Tay Xỉu 100.000.000 Xu", 1);
+                                        }).build()
+                                ))
+                        .id(npcId)
+                        .npcName("Không Tài Thì Xỉu")
+                        .npcChat("xuc xac nao")
+                        .build();
+                list.add(taiXiu);
+                list.add(Menu.builder().name("Lịch sử").action(() -> {
+                    us.getAvatarService().customTab("Lịch sử kết quả", "lịch sử kết quả và lịch sử cược? co cai db chưa làm !!!");
+                }).build());
+                list.add(Menu.builder().name("Hướng dẫn").action(() -> {
+                    us.getAvatarService().customTab("Hướng dẫn", "cứ ôn in bừa");
+                }).build());
+                list.add(Menu.builder().name("Thoát").build());
+                us.setMenus(list);
+                us.getAvatarService().openUIMenu(npcId, 0, list, "tài xỉu", "");
+                break;
+            }
             case NpcName.binzoet:{
+
                 List<Menu> list = new ArrayList<>();
                 list.add(Menu.builder().name("reset xu luong").action(() -> {
                     //us.setXu(999999999);
@@ -117,77 +221,8 @@ public class NpcHandler {
                 us.getAvatarService().openUIMenu(npcId, 0, list, "donate đi", "");
                 break;
             }
-            case boss:{
-                List<Menu> list = List.of(
-                        Menu.builder().name("damage").action(() -> {
-                            List<User> players = us.getZone().getPlayers();
-                            for (int i = 0; i < players.size(); i++) {
-                                if(players.get(i).getUsername() == "boss")
-                                {
-                                    List<Integer> availableItems = Arrays.asList(2401, 4552, 6314, 6432);
-                                    Utils random = null;
-                                    int randomItemId = availableItems.get(random.nextInt(availableItems.size()));
-                                    Map m = MapManager.getInstance().find(11);
-                                    Npc npc = (Npc) players.get(i);
 
-                                    us.attackNpc(npc,10);
-                                    us.skillUidToBoss(players,us.getId(),npcId, (byte) 25, (byte) 26);
-                                    int bosItem = npc.getWearing().get(0).getId();
-                                    switch (bosItem) {
-                                        case 2401:
-                                            npc.skill(npc,(byte)27);
-                                            break;
-                                        case 4552:
-                                            npc.skillUidToBoss(players,npc.getId(), us.getId(), (byte) 25, (byte) 26);
-                                            break;
-                                        case 6314:
-                                            npc.skillUidToBoss(players,npc.getId(), us.getId(), (byte) 40, (byte) 41);
-                                            break;
-                                        case 6432:
-                                            npc.skillUidToBoss(players,npc.getId(), us.getId(), (byte) 42, (byte) 43);
-                                            break;
-                                    }
-                                if (npc.getGlobalHp()<=0){
-                                    npc.skill(npc,(byte)45);
-                                    List<String> chatMessages = Arrays.asList(
-                                            "tạm biệt mấy ông chau",
-                                            "ta chuyển sinh đây"
-                                    );
-                                    npc.setTextChats(chatMessages);
-                                    try {
-                                        Thread.sleep(3000);
-                                    } catch (InterruptedException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                    npc.getZone().leave(npc);
-                                        List<Zone> zones = m.getZones();
-                                        random = null;
-                                        Zone randomZone = zones.get(random.nextInt(zones.size())); // Chọn ngẫu nhiên một khu vực từ danh sách
-                                        Npc zomber = Npc.builder()
-                                                .id(Npc.ID_ADD + boss) // ID ngẫu nhiên cho NPC
-                                                .name("boss")
-                                                .wearing(new ArrayList<>())
-                                                .build();
-                                        zomber.addItemToWearing(new Item(randomItemId));; // Thêm một item mặc định cho NPC
-                                        zomber.addChat("Tao bất tử OK"); // Thêm một thông điệp chat mặc định
-                                        zomber.resetGlobalHp(1000*2);
-                                        NpcManager.getInstance().add(zomber); // Thêm NPC vào quản lý NPC
-                                        // Ngẫu nhiên vị trí xuất hiện trong khu vực
-                                        short randomX = (short) 250;
-                                        short randomY = (short) 50;
-                                        // Nhập NPC vào khu vực với vị trí ngẫu nhiên
 
-                                        randomZone.enter(zomber, randomX, randomY);
-                                        System.out.println("khu :"+randomZone.getId());
-                                    }
-                                }
-                            }
-                        }).build()
-                );
-                us.setMenus(list);
-                us.getAvatarService().openUIMenu(npcId, 0, list, "boss", "hp tao:"+ getGlobalHp());
-                break;
-            }
             case NpcName.QUAY_SO: {
                 List<Menu> list = new ArrayList<>();
                 Menu quaySo = Menu.builder().name("Quay số").menus(

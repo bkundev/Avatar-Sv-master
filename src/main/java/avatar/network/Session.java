@@ -694,8 +694,18 @@ public class Session implements ISession {
                                                     .loopLimit((byte) 5)
                                                     .loop((short) 1)
                                                     .loopType((byte) 1)
-                                                    .radius((short) 50)
+                                                    .radius((short) 0)
                                                     .idPlayer(user.getId())
+                                                    .send();
+                                            EffectService.createEffect()
+                                                    .session(u.session)
+                                                    .id((byte) 26)
+                                                    .style((byte) 0)
+                                                    .loopLimit((byte) 5)
+                                                    .loop((short) 1)
+                                                    .loopType((byte) 1)
+                                                    .radius((short) 0)
+                                                    .idPlayer(7)//người bị nhận effect
                                                     .send();
                                         });
                                     }).build(),

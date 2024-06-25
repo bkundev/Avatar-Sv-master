@@ -78,7 +78,7 @@ public class PartManager {
                         .dx(dx)
                         .dy(dy)
                         .build());
-                System.out.println("id: " + id + " name: " + name);
+                //System.out.println("id: " + id + " name: " + name);
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -34,7 +34,6 @@ import avatar.play.MapManager;
 import avatar.play.NpcManager;
 
 import java.net.ServerSocket;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static avatar.constants.NpcName.boss;
 import static avatar.model.Npc.currentNpcCount;
@@ -132,7 +131,6 @@ public class ServerManager {
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `is_online` = 0, `client_id` = -1");
         System.out.println("Reset player online successfully");
     }
-
     public static void initZombie(){
         Thread t = new Thread(() -> {
             Random random = new Random(); // Đối tượng Random để sinh ngẫu nhiên
@@ -199,6 +197,7 @@ public class ServerManager {
         });
         t.start();
     }
+
     private static void loadNpcData() {
         int numNPC = 0;
         try (Connection connection = DbManager.getInstance().getConnection();
