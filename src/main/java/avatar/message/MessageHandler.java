@@ -312,6 +312,10 @@ public class MessageHandler implements IMessageHandler {
                         this.client.getAvatarService().sendEffectData(mss);
                         break;
                     }
+                    case Cmd.MENU_ROTATE: {
+                        this.client.getAvatarService().HandlerMENU_ROTATE(this.client.user, mss);
+                        break;
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();

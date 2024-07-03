@@ -315,15 +315,16 @@ public class User {
     public void initAvatar() {
         sortWearing();
         listCmd.add(new Command("Chức năng", 2));
-//        listCmd.add(new Command("Quản trị", 0));
+  //      listCmd.add(new Command("Quản trị", 0));
         listCmdRotate.add(new Command((short) 0, "Hội nhóm", 41, (byte) 1));
         listCmdRotate.add(new Command((short) 4, "Oan Tu Xi", 44, (byte) 1));
-        listCmdRotate.add(new Command((short) 33, "Hô phong hoán vũ", 1053, (byte) 1));
-        listCmdRotate.add(new Command((short) 34, "Triệu hồi bia mộ", 1053, (byte) 1));
+        listCmdRotate.add(new Command((short) 33, "Hô phong hoán vũ", 1053, (byte) 0));
+        listCmdRotate.add(new Command((short) 34, "Triệu hồi bia mộ", 1053, (byte) 0));
         listCmdRotate.add(new Command((short) 35, "Cánh thần hiển linh", 1055, (byte) 0));
         listCmdRotate.add(new Command((short) 48, "pháo sinh nhật(5 lượng)", 1115, (byte) 0));
         listCmdRotate.add(new Command((short) 47, "Pháo hạnh phúc (5 lượng)", 242, (byte) 0));
         listCmdRotate.add(new Command((short) 8, "Pháo thịnh vượng (5 lượng)", 241, (byte) 0));
+        listCmdRotate.add(new Command((short) 9, "triệu hồi con chim k nhớ tên", 1082, (byte) 0));
         listCmdRotate.add(new Command((short) 23, "Cuốc", 869, (byte) 0));
         listCmdRotate.add(new Command((short) 36, "Hẹn hò", 1096, (byte) 1));
     }

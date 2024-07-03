@@ -685,29 +685,44 @@ public class Session implements ISession {
                                     Menu.builder().name("infor").action(() -> {
                                         user.getAvatarService().sendTextBoxPopup(user.getId(), 11, "infor", 1);
                                     }).build(),
-                                    Menu.builder().name("Effect").action(() -> {
-                                        user.getZone().getPlayers().forEach(u -> {
-                                            EffectService.createEffect()
-                                                    .session(u.session)
-                                                    .id((byte) 25)
-                                                    .style((byte) 0)
-                                                    .loopLimit((byte) 5)
-                                                    .loop((short) 1)
-                                                    .loopType((byte) 1)
-                                                    .radius((short) 0)
-                                                    .idPlayer(user.getId())
-                                                    .send();
-                                            EffectService.createEffect()
-                                                    .session(u.session)
-                                                    .id((byte) 26)
-                                                    .style((byte) 0)
-                                                    .loopLimit((byte) 5)
-                                                    .loop((short) 1)
-                                                    .loopType((byte) 1)
-                                                    .radius((short) 0)
-                                                    .idPlayer(7)//người bị nhận effect
-                                                    .send();
-                                        });
+                                    Menu.builder().name("pem").action(() -> {
+                                        if(user.getId() == 7){
+                                            user.getZone().getPlayers().forEach(u -> {
+                                                EffectService.createEffect()
+                                                        .session(u.session)
+                                                        .id((byte) 23)
+                                                        .style((byte) 0)
+                                                        .loopLimit((byte) 5)
+                                                        .loop((short) 1)
+                                                        .loopType((byte) 1)
+                                                        .radius((short) 5)
+                                                        .idPlayer(user.getId())
+                                                        .send();
+                                            });
+                                        }else{
+                                            user.getAvatarService().serverDialog("ad mới bật được b ơi");
+                                        }
+                                    }).build(),
+                                    Menu.builder().name("Tim Rơi").action(() -> {
+                                        if(user.getId() == 7){
+                                            for (int i = 0; i < 100; i++) {
+                                                user.getZone().getPlayers().forEach(u -> {
+                                                    EffectService.createEffect()
+                                                            .session(u.session)
+                                                            .id((byte) 56)
+                                                            .style((byte) 0)
+                                                            .loopLimit((byte) 5)
+                                                            .loop((short) 100)
+                                                            .loopType((byte) 1)
+                                                            .radius((short) 250)
+                                                            .idPlayer(user.getId())
+                                                            .send();
+                                                });
+
+                                            }
+                                        }else{
+                                            user.getAvatarService().serverDialog("ad mới bật được b ơi");
+                                        }
                                     }).build(),
                                     Menu.builder().name("Khoá nick").build(),
                                     Menu.builder().name("Tặng item").build()

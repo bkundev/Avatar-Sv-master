@@ -65,7 +65,7 @@ public class Zone {
             us.setY(y);
             if (!(us instanceof Npc)) {
                 getService().addPlayer(us);
-                us.getService().weather((byte) 0);
+                us.getService().weather((byte) 2);
                 us.getAvatarService().enter(this);
             }
             add(us);

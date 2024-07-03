@@ -89,9 +89,13 @@ public class GlobalHandler {
             case 7:
                 try {
                     short itemCode = Short.parseShort(text);
-                    Item item = new Item(itemCode, -1, 0);
-                    this.us.addItemToChests(item);
-                    us.getAvatarService().serverDialog("added " + item.getPart().getName() + " into my chests");
+                    if((short) itemCode>2000 && (short) itemCode<6675){
+                        Item item = new Item(itemCode, -1, 0);
+                        this.us.addItemToChests(item);
+                        us.getAvatarService().serverDialog("added " + item.getPart().getName() + " into my chests");
+                    }else{
+                        us.getAvatarService().serverDialog("id lớn hơn 2000 và nhỏ hơn 6675");
+                    }
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("invalid input, item code must be number");
                 }

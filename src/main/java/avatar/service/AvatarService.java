@@ -4,6 +4,7 @@ import avatar.common.BossShopItem;
 import avatar.item.Item;
 import avatar.item.PartManager;
 import avatar.item.Part;
+import avatar.lucky.DialLuckyManager;
 import avatar.model.*;
 import avatar.server.Avatar;
 import avatar.server.ServerManager;
@@ -18,6 +19,7 @@ import avatar.network.Message;
 import avatar.network.Session;
 import avatar.play.Map;
 import avatar.play.Zone;
+import avatar.server.UserManager;
 import lombok.Builder;
 import org.apache.log4j.Logger;
 
@@ -29,6 +31,7 @@ public class AvatarService extends Service {
         super(cl);
     }
 
+    public User user;
     public void openUIShop(int id, String name, List<Item> items) {
         try {
             System.out.println("openShop lent: " + items.size());
@@ -691,5 +694,118 @@ public class AvatarService extends Service {
             e.printStackTrace();
         }
 
+    }
+    public void HandlerMENU_ROTATE(User us, Message mss) {
+        try {
+            short id = mss.reader().readShort();
+            Message ms = new Message(Cmd.REQUEST_YOUR_INFO);
+            DataOutputStream ds = ms.writer();
+            ds.writeShort(id);
+            switch (id) {
+                case 48:
+                    us.getZone().getPlayers().forEach(u -> {
+                        EffectService.createEffect()
+                                .session(u.session)
+                                .id((byte) 1)
+                                .style((byte) 0)
+                                .loopLimit((byte) 6)
+                                .loop((short) 6)//so luong lap lai
+                                .loopType((byte) 1)
+                                .radius((short) 6)
+                                .idPlayer(us.getId())
+                                .send();
+                    });
+                    break;
+                case 47:
+                    us.getZone().getPlayers().forEach(u -> {
+                        EffectService.createEffect()
+                                .session(u.session)
+                                .id((byte) 8)
+                                .style((byte) 0)
+                                .loopLimit((byte) 6)
+                                .loop((short) 1)//so luong lap lai
+                                .loopType((byte) 1)
+                                .radius((short) 6)
+                                .idPlayer(us.getId())
+                                .send();
+                    });
+                    break;
+                case 8:
+                    us.getZone().getPlayers().forEach(u -> {
+                        EffectService.createEffect()
+                                .session(u.session)
+                                .id((byte) 16)
+                                .style((byte) 0)
+                                .loopLimit((byte) 6)
+                                .loop((short) 1)//so luong lap lai
+                                .loopType((byte) 1)
+                                .radius((short) 6)
+                                .idPlayer(us.getId())
+                                .send();
+                    });
+                    break;
+                case 35:
+                    us.getZone().getPlayers().forEach(u -> {
+                        EffectService.createEffect()
+                                .session(u.session)
+                                .id((byte) 46)
+                                .style((byte) 0)
+                                .loopLimit((byte) 6)
+                                .loop((short) 1)//so luong lap lai
+                                .loopType((byte) 1)
+                                .radius((short) 5)
+                                .idPlayer(us.getId())
+                                .send();
+                    });
+                    break;
+                case 33:
+                    us.getZone().getPlayers().forEach(u -> {
+                        EffectService.createEffect()
+                                .session(u.session)
+                                .id((byte) 48)
+                                .style((byte) 0)
+                                .loopLimit((byte) 6)
+                                .loop((short) 1)//so luong lap lai
+                                .loopType((byte) 1)
+                                .radius((short) 5)
+                                .idPlayer(us.getId())
+                                .send();
+                    });
+                    break;
+                case 34:
+                    us.getZone().getPlayers().forEach(u -> {
+                        EffectService.createEffect()
+                                .session(u.session)
+                                .id((byte) 45)
+                                .style((byte) 0)
+                                .loopLimit((byte) 6)
+                                .loop((short) 1)//so luong lap lai
+                                .loopType((byte) 1)
+                                .radius((short) 5)
+                                .idPlayer(us.getId())
+                                .send();
+                    });
+                    break;
+                case 9:
+                    us.getZone().getPlayers().forEach(u -> {
+                        EffectService.createEffect()
+                                .session(u.session)
+                                .id((byte) 11)
+                                .style((byte) 0)
+                                .loopLimit((byte) 6)
+                                .loop((short) 1)//so luong lap lai
+                                .loopType((byte) 1)
+                                .radius((short) 5)
+                                .idPlayer(us.getId())
+                                .send();
+                    });
+                    break;
+            }
+
+            ds.flush();
+            sendMessage(ms);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
