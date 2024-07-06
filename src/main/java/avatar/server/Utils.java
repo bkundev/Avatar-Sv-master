@@ -438,6 +438,40 @@ public class Utils {
         } catch (IOException ex) {
         }
     }
+    public static void decodeItemFarmFile() {//farm IMG Data
+        try {
+            byte[] dat = Avatar.getFile("res/data/map_item.dat");
+            ByteArrayInputStream is = new ByteArrayInputStream(dat);
+            DataInputStream dis = new DataInputStream(is);
+            short numItem = dis.readShort();
+            System.out.println("Num item farm " + numItem);
+            for (short n = 0; n < numItem; ++n) {
+                short itemID = dis.readShort();
+                short bigID = dis.readShort();
+                short x0 = (short) dis.readUnsignedByte();
+                short y0 = (short) dis.readUnsignedByte();
+                short w = dis.readByte();
+                short h = dis.readByte();
+                // Convert JSON array to string and escape single quotes
+                String query = "INSERT INTO `farm_image_data`(`id`, `image_id`, `x`, `y`,`w`, `h`) VALUES ("
+                        + itemID + ", " + bigID + ", " + x0 + ", " + y0 + ", '" + w + "', "
+                        +"'"+ h + "'"+");\n";
+                try {
+                    // Write the query to the specified file path
+                    Files.write(Paths.get("C:\\Users\\Administrator\\IdeaProjects\\Avatar-Sv-master\\img_farm_data.txt"), query.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                    System.out.println("File written successfully.");
+                } catch (IOException e) {
+                    System.err.println("Error writing to file: " + e.getMessage());
+                    e.printStackTrace();
+                }
+                DbManager.getInstance().executeUpdate(
+                        "INSERT INTO `farm_image_data`(`id`, `image_id`, `x`, `y`, `w`, `h`) VALUES (?,?,?,?,?,?)",
+                        itemID,
+                        bigID, x0, y0, w, h);
+            }
+        } catch (IOException ex) {
+        }
+    }
 
     public static void decodeItemDataFile(byte[] dat, boolean isSimple) {
         try {

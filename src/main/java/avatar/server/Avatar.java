@@ -1,5 +1,7 @@
 package avatar.server;
 
+import avatar.model.GameData;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,6 +12,7 @@ public class Avatar {
     private static Thread T;
 
     public static void main(String[] args) {
+        //Utils.decodeMapItemFile();
         Avatar.start();
     }
 

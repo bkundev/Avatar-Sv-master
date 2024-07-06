@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import static avatar.constants.NpcName.boss;
-import static avatar.model.Npc.getGlobalHp;
 
 public class NpcHandler {
 
@@ -96,7 +95,7 @@ public class NpcHandler {
                                     int bosItem = npc.getWearing().get(0).getId();
                                     switch (bosItem) {
                                         case 2401:
-                                            npc.skill(npc,(byte)27);
+                                           // npc.skill(npc,(byte)27);
                                             break;
                                         case 4552:
                                             npc.skillUidToBoss(players,npc.getId(), us.getId(), (byte) 25, (byte) 26);
@@ -108,8 +107,8 @@ public class NpcHandler {
                                             npc.skillUidToBoss(players,npc.getId(), us.getId(), (byte) 42, (byte) 43);
                                             break;
                                     }
-                                    if (npc.getGlobalHp()<=0){
-                                        npc.skill(npc,(byte)45);
+                                    //if (npc.getGlobalHp()<=0){
+                                   //     npc.skill(npc,(byte)45);
                                         List<String> chatMessages = Arrays.asList(
                                                 "tạm biệt mấy ông chau",
                                                 "ta chuyển sinh đây"
@@ -131,7 +130,6 @@ public class NpcHandler {
                                                 .build();
                                         zomber.addItemToWearing(new Item(randomItemId));; // Thêm một item mặc định cho NPC
                                         zomber.addChat("Tao bất tử OK"); // Thêm một thông điệp chat mặc định
-                                        zomber.resetGlobalHp(1000*2);
                                         NpcManager.getInstance().add(zomber); // Thêm NPC vào quản lý NPC
                                         // Ngẫu nhiên vị trí xuất hiện trong khu vực
                                         short randomX = (short) 250;
@@ -140,13 +138,13 @@ public class NpcHandler {
 
                                         randomZone.enter(zomber, randomX, randomY);
                                         System.out.println("khu :"+randomZone.getId());
-                                    }
+
                                 }
                             }
                         }).build()
                 );
                 us.setMenus(list);
-                us.getAvatarService().openUIMenu(npcId, 0, list, "boss", "hp tao:"+ getGlobalHp());
+                us.getAvatarService().openUIMenu(npcId, 0, list, "boss", "hp tao:");
                 break;
             }
             case NpcName.Tai_Xiu: {

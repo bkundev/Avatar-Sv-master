@@ -46,9 +46,6 @@ public class User {
     private String password;
     private byte gender;
     public long xu;
-    public int datCuoc = 0;
-    public long tienCuoc;
-    public boolean SicboNhanTien = false;
     public int luong;
     public int luongKhoa;
     public int xeng;
@@ -636,7 +633,7 @@ public class User {
     }
     public void attackNpc(Npc npc, int damage) {
         // Giảm HP toàn cục của NPC khi bị tấn công
-        Npc.decreaseGlobalHp(damage);
+        //Npc.decreaseGlobalHp(damage);
     }
 
     public void skillUidToBoss(List<User> players,int us ,int npcID,byte skill1,byte skill2){

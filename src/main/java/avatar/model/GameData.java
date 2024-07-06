@@ -30,7 +30,7 @@ public class GameData {
 
     public void load() {
         loadItemImageData();
-        //loadFarmImageData();
+        loadFarmImageData();
         loadMapItem();
         loadMapItemType();
     }

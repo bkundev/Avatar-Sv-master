@@ -76,9 +76,6 @@ public class GlobalHandler {
         us.getAvatarService().serverDialog("Chức năng đang được xây dựng, vui lòng thử lại sau");
     }
 
-    public void handleSicbo() {
-
-    }
 
     public void handleTextBox(Message ms) throws IOException {
         int userId = ms.reader().readInt();
@@ -149,85 +146,6 @@ public class GlobalHandler {
 
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("invalid input, item code must be number");
-                }
-                break;
-            case 12:
-                try {
-                    if (us.datCuoc == 0) {
-                        long xu = Long.parseLong(text);
-                        if (us.getXu() >= xu) {
-                            if (xu < 1000000010) {
-                                us.getAvatarService().serverDialog("Bạn Đã  Cược Tài " + xu + " Xu Thành Công!");
-                                us.updateXu(-xu);
-                                us.getAvatarService().updateMoney(0);
-                                us.datCuoc = 1;
-                                us.SicboNhanTien = false;
-                                us.tienCuoc = xu;
-                            } else
-                                us.getAvatarService().serverDialog("Đặt nhỏ hơn 100met Thôi");
-                        } else {
-                            us.getAvatarService().serverDialog("Đặt nhỏ hơn " + us.getXu() + " Xu thôi định bịp tao hả!");
-                        }
-                    } else if (us.datCuoc == 1) {
-                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài " + us.tienCuoc + " Rồi!");
-                    } else if (us.datCuoc == 2) {
-                        us.getAvatarService().serverDialog("Bạn Đã Cược xỉu " + us.tienCuoc + " Rồi!");
-                    }
-                } catch (NumberFormatException e) {
-                    us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
-                }
-                break;
-            case 13:
-            case 15:
-                try {
-                    if (us.datCuoc == 0) {
-                        long xu = Long.parseLong(text);
-                        if (us.getXu() >= xu) {
-                            if (xu < 1000000010) {
-                                us.getAvatarService().serverDialog("Bạn Đã  Cược xỉu " + xu + " Xu Thành Công!");
-                                us.updateXu(-xu);
-                                us.getAvatarService().updateMoney(0);
-                                us.datCuoc = 2;
-                                us.SicboNhanTien = false;
-                                us.tienCuoc = xu;
-                            } else
-                                us.getAvatarService().serverDialog("Đặt nhỏ hơn 100met Thôi");
-                        } else {
-                            us.getAvatarService().serverDialog("Đặt nhỏ hơn " + us.getXu() + " Xu thôi định bịp tao hả!");
-                        }
-                    } else if (us.datCuoc == 1) {
-                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài " + us.tienCuoc + " Rồi!");
-                    } else if (us.datCuoc == 2) {
-                        us.getAvatarService().serverDialog("Bạn Đã Cược xỉu " + us.tienCuoc + " Rồi!");
-                    }
-                } catch (NumberFormatException e) {
-                    us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
-                }
-                break;
-            case 14:
-                try {
-                    if (us.datCuoc == 0) {
-                        long xu = Long.parseLong(text);
-                        if (us.getXu() >= xu) {
-                            if (xu < 1000000010) {
-                                us.getAvatarService().serverDialog("Bạn Đã  Cược Tài " + xu + " Xu Thành Công!");
-                                us.updateXu(-xu);
-                                us.getAvatarService().updateMoney(0);
-                                us.datCuoc = 1;
-                                us.SicboNhanTien = false;
-                                us.tienCuoc = xu;
-                            } else
-                                us.getAvatarService().serverDialog("Đặt nhỏ hơn 100met Thôi");
-                        } else {
-                            us.getAvatarService().serverDialog("Đặt nhỏ hơn " + us.getXu() + " Xu thôi định bịp tao hả!");
-                        }
-                    } else if (us.datCuoc == 1) {
-                        us.getAvatarService().serverDialog("Bạn Đã Cược Tài " + us.tienCuoc + " Rồi!");
-                    } else if (us.datCuoc == 2) {
-                        us.getAvatarService().serverDialog("Bạn Đã Cược xỉu " + us.tienCuoc + " Rồi!");
-                    }
-                } catch (NumberFormatException e) {
-                    us.getAvatarService().serverDialog("Vui Lòng Nhập Số Để Cược");
                 }
                 break;
         }
