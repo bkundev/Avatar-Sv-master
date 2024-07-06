@@ -48,6 +48,7 @@ public class User {
     public long xu;
     public int luong;
     public int luongKhoa;
+    private int dame;
     public int xeng;
     private short clanID;
     private byte role;
@@ -631,10 +632,6 @@ public class User {
             this.session.obj.notifyAll();
         }
     }
-    public void attackNpc(Npc npc, int damage) {
-        // Giảm HP toàn cục của NPC khi bị tấn công
-        //Npc.decreaseGlobalHp(damage);
-    }
 
     public void skillUidToBoss(List<User> players,int us ,int npcID,byte skill1,byte skill2){
         for (User player : players) {
@@ -645,7 +642,7 @@ public class User {
                     .loopLimit((byte) 5)
                     .loop((short) 1)
                     .loopType((byte) 1)
-                    .radius((short) 25)
+                    .radius((short) 10)
                     .idPlayer(us)
                     .send();
             EffectService.createEffect()
@@ -655,7 +652,7 @@ public class User {
                     .loopLimit((byte) 5)
                     .loop((short) 1)
                     .loopType((byte) 1)
-                    .radius((short) 25)
+                    .radius((short) 10)
                     .idPlayer(npcID)
                     .send();
         };

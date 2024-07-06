@@ -3,13 +3,12 @@ package avatar.handler;
 import avatar.constants.Cmd;
 import avatar.constants.NpcName;
 import avatar.item.Item;
-import avatar.model.Command;
+import avatar.model.*;
+
 import java.math.BigInteger;
-import avatar.model.User;
+
 import avatar.lucky.DialLucky;
 import avatar.lucky.DialLuckyManager;
-import avatar.model.Menu;
-import avatar.model.Npc;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -81,66 +80,65 @@ public class NpcHandler {
                 List<Menu> list = List.of(
                         Menu.builder().name("damage").action(() -> {
                             List<User> players = us.getZone().getPlayers();
-                            for (int i = 0; i < players.size(); i++) {
-                                if(players.get(i).getUsername() == "boss")
-                                {
-                                    List<Integer> availableItems = Arrays.asList(2401, 4552, 6314, 6432);
-                                    Utils random = null;
-                                    int randomItemId = availableItems.get(random.nextInt(availableItems.size()));
-                                    Map m = MapManager.getInstance().find(11);
-                                    Npc npc = (Npc) players.get(i);
+                            //for (int i = 0; i < players.size(); i++) {
+                             //   if(players.get(i).getUsername() == "BOSS")
+                              //  {
+                                    //List<Integer> availableItems = Arrays.asList(2401, 4552, 6314, 6432);
+                                   // Utils random = null;
+                                   // int randomItemId = availableItems.get(random.nextInt(availableItems.size()));
+                                    //Map m = MapManager.getInstance().find(11);
+                                    //Boss boss1 = (Npc) players.get(i);
 
-                                    us.attackNpc(npc,10);
+                                    //bo(npc,10);
                                     us.skillUidToBoss(players,us.getId(),npcId, (byte) 25, (byte) 26);
-                                    int bosItem = npc.getWearing().get(0).getId();
-                                    switch (bosItem) {
-                                        case 2401:
+                                    //int bosItem = npc.getWearing().get(0).getId();
+                                    //switch (bosItem) {
+                                     //   case 2401:
                                            // npc.skill(npc,(byte)27);
-                                            break;
-                                        case 4552:
-                                            npc.skillUidToBoss(players,npc.getId(), us.getId(), (byte) 25, (byte) 26);
-                                            break;
-                                        case 6314:
-                                            npc.skillUidToBoss(players,npc.getId(), us.getId(), (byte) 40, (byte) 41);
-                                            break;
-                                        case 6432:
-                                            npc.skillUidToBoss(players,npc.getId(), us.getId(), (byte) 42, (byte) 43);
-                                            break;
-                                    }
+                                        //    break;
+                                      //  case 4552:
+                                      //      npc.skillUidToBoss(players,npc.getId(), us.getId(), (byte) 25, (byte) 26);
+                                       //     break;
+                                      //  case 6314:
+                                        //    npc.skillUidToBoss(players,npc.getId(), us.getId(), (byte) 40, (byte) 41);
+                                        //    break;
+                                       // case 6432:
+                                         //   npc.skillUidToBoss(players,npc.getId(), us.getId(), (byte) 42, (byte) 43);
+                                        //    break;
+                                    //}
                                     //if (npc.getGlobalHp()<=0){
                                    //     npc.skill(npc,(byte)45);
-                                        List<String> chatMessages = Arrays.asList(
-                                                "tạm biệt mấy ông chau",
-                                                "ta chuyển sinh đây"
-                                        );
-                                        npc.setTextChats(chatMessages);
-                                        try {
-                                            Thread.sleep(3000);
-                                        } catch (InterruptedException e) {
-                                            throw new RuntimeException(e);
-                                        }
-                                        npc.getZone().leave(npc);
-                                        List<Zone> zones = m.getZones();
-                                        random = null;
-                                        Zone randomZone = zones.get(random.nextInt(zones.size())); // Chọn ngẫu nhiên một khu vực từ danh sách
-                                        Npc zomber = Npc.builder()
-                                                .id(Npc.ID_ADD + boss) // ID ngẫu nhiên cho NPC
-                                                .name("boss")
-                                                .wearing(new ArrayList<>())
-                                                .build();
-                                        zomber.addItemToWearing(new Item(randomItemId));; // Thêm một item mặc định cho NPC
-                                        zomber.addChat("Tao bất tử OK"); // Thêm một thông điệp chat mặc định
-                                        NpcManager.getInstance().add(zomber); // Thêm NPC vào quản lý NPC
+                                       // List<String> chatMessages = Arrays.asList(
+                                        //        "tạm biệt mấy ông chau",
+                                       //         "ta chuyển sinh đây"
+                                       // );
+                                        //npc.setTextChats(chatMessages);
+                                        //try {
+                                        //    Thread.sleep(3000);
+                                      //  } catch (InterruptedException e) {
+                                      //      throw new RuntimeException(e);
+                                      //  }
+                                       // npc.getZone().leave(npc);
+                                       // List<Zone> zones = m.getZones();
+                                       // random = null;
+                                        //Zone randomZone = zones.get(random.nextInt(zones.size())); // Chọn ngẫu nhiên một khu vực từ danh sách
+                                       // Npc zomber = Npc.builder()
+                                       //         .id(Npc.ID_ADD + boss) // ID ngẫu nhiên cho NPC
+                                       //         .name("boss")
+                                        //        .wearing(new ArrayList<>())
+                                         //       .build();
+                                        //zomber.addItemToWearing(new Item(randomItemId));; // Thêm một item mặc định cho NPC
+                                       // zomber.addChat("Tao bất tử OK"); // Thêm một thông điệp chat mặc định
+                                       // NpcManager.getInstance().add(zomber); // Thêm NPC vào quản lý NPC
                                         // Ngẫu nhiên vị trí xuất hiện trong khu vực
-                                        short randomX = (short) 250;
-                                        short randomY = (short) 50;
+                                        //short randomX = (short) 250;
+                                       // short randomY = (short) 50;
                                         // Nhập NPC vào khu vực với vị trí ngẫu nhiên
 
-                                        randomZone.enter(zomber, randomX, randomY);
-                                        System.out.println("khu :"+randomZone.getId());
+                                        //randomZone.enter(zomber, randomX, randomY);
+                                       // System.out.println("khu :"+randomZone.getId());
 
-                                }
-                            }
+                                //}
                         }).build()
                 );
                 us.setMenus(list);
