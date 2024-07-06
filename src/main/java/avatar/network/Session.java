@@ -13,20 +13,18 @@ import avatar.lucky.DialLuckyManager;
 
 import java.sql.Connection;
 import java.text.MessageFormat;
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.*;
 
 import avatar.model.*;
-import avatar.play.NpcManager;
+import avatar.play.*;
+import avatar.play.Map;
 import avatar.service.*;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
 
-import java.util.Vector;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import avatar.message.HomeMsgHandler;
 import avatar.message.FarmMsgHandler;
@@ -36,8 +34,6 @@ import avatar.message.AvatarMsgHandler;
 import java.io.IOException;
 
 import avatar.message.MessageHandler;
-import avatar.play.HouseItem;
-import avatar.play.Zone;
 import avatar.handler.GlobalHandler;
 import avatar.handler.NpcHandler;
 import avatar.server.Avatar;
@@ -52,7 +48,8 @@ import java.net.InetSocketAddress;
 import java.io.DataOutputStream;
 import java.io.DataInputStream;
 import java.net.Socket;
-import java.util.List;
+
+import static avatar.constants.NpcName.boss;
 
 public class Session implements ISession {
 
@@ -705,21 +702,31 @@ public class Session implements ISession {
                                     }).build(),
                                     Menu.builder().name("Tim Rơi").action(() -> {
                                         if(user.getId() == 7){
-                                            for (int i = 0; i < 100; i++) {
-                                                user.getZone().getPlayers().forEach(u -> {
-                                                    EffectService.createEffect()
-                                                            .session(u.session)
-                                                            .id((byte) 56)
-                                                            .style((byte) 0)
-                                                            .loopLimit((byte) 5)
-                                                            .loop((short) 100)
-                                                            .loopType((byte) 1)
-                                                            .radius((short) 250)
-                                                            .idPlayer(user.getId())
-                                                            .send();
+                                            user.getZone().getPlayers().forEach(u -> {
+                                                EffectService.createEffect()
+                                                        .session(u.session)
+                                                        .id((byte) 56)
+                                                        .style((byte) 0)
+                                                        .loopLimit((byte) 5)
+                                                        .loop((short) 100)
+                                                        .loopType((byte) 1)
+                                                        .radius((short) 250)
+                                                        .idPlayer(user.getId())
+                                                        .send();
                                                 });
-
-                                            }
+                                        }else{
+                                            user.getAvatarService().serverDialog("ad mới bật được b ơi");
+                                        }
+                                    }).build(),
+                                    Menu.builder().name("addBoss").action(() -> {
+                                        if(user.getId() == 7){
+                                            List<User> players = user.getZone().getPlayers();
+                                            Utils random = null;
+                                            Map m = MapManager.getInstance().find(11);
+                                            List<Zone> zones = m.getZones();
+                                            Boss boss = new Boss();
+                                            Zone randomZone = zones.get(0);//random.nextInt(zones.size()));
+                                            boss.addBossToZone(randomZone,(short) 100,(short) 100);
                                         }else{
                                             user.getAvatarService().serverDialog("ad mới bật được b ơi");
                                         }
