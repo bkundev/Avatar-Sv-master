@@ -7,6 +7,8 @@ import avatar.item.Part;
 import avatar.lucky.DialLucky;
 import avatar.network.Session;
 
+import java.io.DataOutput;
+import java.io.DataOutputStream;
 import java.sql.*;
 import java.util.Date;
 
@@ -256,7 +258,7 @@ public class User {
                     this.luongKhoa = res.getShort("luong_khoa");
                     this.xeng = res.getInt("xeng");
                     this.gender = res.getByte("gender");
-                    this.clanID = res.getShort("clan_id");
+                    this.clanID = res.getShort("clan_id");                    //res.writeShort(2206);
                     this.friendly = res.getByte("friendly");
                     this.crazy = res.getByte("crazy");
                     this.stylish = res.getByte("stylish");

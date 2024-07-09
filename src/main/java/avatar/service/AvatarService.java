@@ -159,7 +159,8 @@ public class AvatarService extends Service {
                 ds.writeByte(0);
                 ds.writeUTF(itm.expiredString());
             }
-            ds.writeShort(us.getIdImg());
+            //ds.writeShort(us.getIdImg());
+            ds.writeShort(us.getClanID()); // id img clan
             ds.writeByte(listCmd.size());
             for (Command cmd : listCmd) {
                 ds.writeUTF(cmd.getName());
@@ -203,6 +204,14 @@ public class AvatarService extends Service {
             ds.writeUTF(us.getUsername());
             ds.flush();
             sendMessage(ms5);
+
+            Message message = new Message(-6);
+            ds = message.writer();
+            ds.writeInt(1);
+            ds.writeUTF("Admin");
+            ds.writeUTF("Wellcome Lo_city");
+            ds.flush();
+            session.sendMessage(message);
         } catch (IOException ex) {
             logger.error("onLoginSuccess err", ex);
         }

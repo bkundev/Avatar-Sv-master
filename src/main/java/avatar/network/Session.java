@@ -630,7 +630,11 @@ public class Session implements ISession {
         ds.writeByte(-1);
         ds.flush();
         this.sendMessage(ms);
-        user.getAvatarService().openMenuOption(5, 0, "Đảo Hawaii", "Ai Cập", "Vương Quốc Bóng Đêm", "Biển Thành Phố Lỏ", "Đubai");
+        user.getAvatarService().openMenuOption(5, 0, "Đảo Hawaii", "Ai Cập", "Vương Quốc Bóng Đêm", "Biển citylo");
+
+
+
+
     }
 
     public void doCommunicate(Message ms) throws IOException {
@@ -683,7 +687,7 @@ public class Session implements ISession {
                                         user.getAvatarService().sendTextBoxPopup(user.getId(), 11, "infor", 1);
                                     }).build(),
                                     Menu.builder().name("pem").action(() -> {
-                                        if(user.getId() == 7){
+                                        if(user.getId() == 7||user.getId() == 97){
                                             user.getZone().getPlayers().forEach(u -> {
                                                 EffectService.createEffect()
                                                         .session(u.session)
@@ -727,6 +731,15 @@ public class Session implements ISession {
                                             Boss boss = new Boss();
                                             Zone randomZone = zones.get(0);//random.nextInt(zones.size()));
                                             boss.addBossToZone(randomZone,(short) 100,(short) 100);
+                                        }else{
+                                            user.getAvatarService().serverDialog("ad mới bật được b ơi");
+                                        }
+                                    }).build(),
+                                    Menu.builder().name("EFFECT").action(() -> {
+                                        if(user.getId() == 7){
+
+                                            user.getAvatarService().sendTextBoxPopup(user.getId(), 99, "ideffect", 1);
+
                                         }else{
                                             user.getAvatarService().serverDialog("ad mới bật được b ơi");
                                         }
@@ -851,7 +864,7 @@ public class Session implements ISession {
     public void requestTileMap(Message ms) throws IOException {
         byte idTileImg = ms.reader().readByte();
         System.out.println("map = " + idTileImg);
-        byte[] dat = Avatar.getFile(getResourcesPath() + "tilemap/");
+        byte[] dat = Avatar.getFile(getResourcesPath() + "tilemap/" + idTileImg + ".png");
         if (dat == null) {
             return;
         }
@@ -896,11 +909,13 @@ public class Session implements ISession {
     public void joinHouse(Message ms) throws IOException {
         int userId = ms.reader().readInt();
         Vector<HouseItem> hItems = new Vector<>();
+
         try (Connection connection = DbManager.getInstance().getConnection();) {
             String GET_HOUSE_DATA = "SELECT * FROM `house_buy` WHERE `user_id` = ? LIMIT 1";
             PreparedStatement ps = connection.prepareStatement(GET_HOUSE_DATA);
             ps.setInt(1, userId);
             ResultSet res = ps.executeQuery();
+
             if (res.next()) {
                 JSONArray ja_map = (JSONArray) JSONValue.parse(res.getString("map_data"));
                 byte[] map_data = new byte[ja_map.size()];
@@ -909,10 +924,12 @@ public class Session implements ISession {
                 }
                 ps.close();
                 res.close();
+
                 String GET_ITEMS_IN_CHEST = "SELECT * FROM `house_player_item` WHERE `user_id` = ?";
                 ps = connection.prepareStatement(GET_ITEMS_IN_CHEST);
                 ps.setInt(1, userId);
                 res = ps.executeQuery();
+
                 if (res != null) {
                     while (res.next()) {
                         HouseItem hItem = new HouseItem();
@@ -925,6 +942,8 @@ public class Session implements ISession {
                 }
                 ps.close();
                 res.close();
+
+
                 this.user.getZone().leave(user);
                 ms = new Message(-65);
                 DataOutputStream ds = ms.writer();

@@ -9,6 +9,7 @@ import avatar.model.GameData;
 import avatar.network.Session;
 import avatar.play.Zone;
 
+import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
@@ -19,10 +20,6 @@ import avatar.model.Npc;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.File;
-import java.io.FileInputStream;
 
 import avatar.network.Message;
 

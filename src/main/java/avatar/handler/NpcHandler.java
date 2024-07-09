@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import static avatar.constants.NpcName.CHU_DAU_TU;
 import static avatar.constants.NpcName.boss;
 
 public class NpcHandler {
@@ -76,6 +77,17 @@ public class NpcHandler {
         int npcIdCase = npcId - Npc.ID_ADD;
 
         switch (npcIdCase) {
+            case CHU_DAU_TU:
+                List<Menu> list1 = new ArrayList<>();
+                list1.add(Menu.builder().name("mua nha").action(() -> {
+                    //us.setXu(999999999);
+                    //us.setLuong(9999);
+                    us.getAvatarService().serverDialog("demo ok");
+                }).build());
+                list1.add(Menu.builder().name("Thoát").build());
+                us.setMenus(list1);
+                us.getAvatarService().openUIMenu(npcId, 0, list1, "", "");
+                break;
             case boss:{
                 List<Menu> list = List.of(
                         Menu.builder().name("damage").action(() -> {
@@ -302,8 +314,14 @@ public class NpcHandler {
                 us.setMenus(list);
                 us.getAvatarService().openUIMenu(npcId, 0, list, "quay số", "Vòng quay may mắn nhận những vật phẩm quí hiếm đây! Mại dô!");
             }
+            case NpcName.THO_CAU:
+                comingSoon(us);
             break;
         }
+    }
+
+    private static void comingSoon(User us) {
+        us.getAvatarService().serverDialog("Chức năng đang được xây dựng, vui lòng thử lại sau");
     }
 
     public static List<Menu> listItemUpgrade(int npcId, User us, byte type) {
