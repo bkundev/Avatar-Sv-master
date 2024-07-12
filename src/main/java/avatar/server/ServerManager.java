@@ -125,8 +125,10 @@ public class ServerManager {
         System.out.println("Reset player online ...");
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `is_online` = 0, `client_id` = -1");
         System.out.println("Reset player online successfully");
+
+
     }
-    public  void initZombie(){
+    public  void initZombie() throws IOException {
             Random random = new Random(); // Đối tượng Random để sinh ngẫu nhiên
             while (true) { // Vòng lặp vô hạn để NPC xuất hiện liên tục
                     List<Integer> availableItems = Arrays.asList(2401, 4552, 6314, 6432);

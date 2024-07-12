@@ -9,6 +9,7 @@ import avatar.model.*;
 import avatar.server.Avatar;
 import avatar.server.ServerManager;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -475,6 +476,37 @@ public class AvatarService extends Service {
             logger.error("getMapItem() ", e);
         }
     }
+
+    public void getMapItems(Message ms) {
+        try {
+            byte[] dat = Avatar.getFile("res/data/map_item.dat");
+            ms = new Message(-41);
+            DataOutputStream ds = ms.writer();
+            ds.write(dat);
+            ds.flush();
+            sendMessage(ms);
+        } catch (EOFException eof) {
+            eof.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getMapItemTypes(Message ms) {
+        try {
+            byte[] dat = Avatar.getFile("res/data/map_item_type.dat");
+            ms = new Message(-40);
+            DataOutputStream ds = ms.writer();
+            ds.write(dat);
+            ds.flush();
+            sendMessage(ms);
+        } catch (EOFException eof) {
+            eof.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void getBigImage(Message ms) {
         try {

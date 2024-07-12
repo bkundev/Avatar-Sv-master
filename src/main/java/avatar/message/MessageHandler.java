@@ -173,14 +173,14 @@ public class MessageHandler implements IMessageHandler {
                     }
                     case Cmd.MAP_ITEM: {
                         if (this.client.user != null) {
-                            this.client.getAvatarService().getMapItem();
+                            this.client.getAvatarService().getMapItems(mss);
                             break;
                         }
                         break;
                     }
                     case Cmd.MAP_ITEM_TYPE: {
                         if (this.client.user != null) {
-                            this.client.getAvatarService().getMapItemType();
+                            this.client.getAvatarService().getMapItemTypes(mss);
                             break;
                         }
                         break;
