@@ -55,9 +55,10 @@ public class GlobalHandler {
         byte menuId = ms.reader().readByte();
         byte select = ms.reader().readByte();
         System.out.println("userId = " + userId + ", menuId = " + menuId + ", select = " + select);
+
         menuOptionHandle(userId, menuId, select);
         if (userId >= 2000000000 || userId == 7) {
-            NpcHandler.handlerAction(this.us, userId, menuId, select);
+            //NpcHandler.handlerAction(this.us, userId, menuId, select);
             return;
         } else{
             switch (userId) {
