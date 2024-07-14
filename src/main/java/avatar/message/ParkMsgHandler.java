@@ -43,9 +43,14 @@ public class ParkMsgHandler extends MessageHandler {
                 case Cmd.REQUEST_DYNAMIC_PART:
                     this.client.getAvatarService().requestPartDynaMic(mss);
                     break;
-
+                case Cmd.REQUEST_JOIN_ANY:  //map trong map hawai
+                    this.client.getAvatarService().serverDialog("Công trình Hawai trong đang xây dựng");
+                    break;
+                case Cmd.START_CAU_CA:  //map trong map hawai
+                    this.client.getAvatarService().serverDialog("Cá còn nhỏ chưa câu được vui lòng quay lại sau");
+                    break;
                 default:
-                    System.out.println("ParkMsgHandler: " + mss.getCommand());
+                    System.out.println("ParkMsgHandler: " + mss.getCommand() +"( "+ Cmd.CmdCode.get(mss.getCommand())  +" )");
                     super.onMessage(mss);
                     break;
             }

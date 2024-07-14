@@ -50,10 +50,33 @@ public class AvatarService extends Service {
             logger.error("doRequestExpicePet ", ex);
         }
     }
+    public void openUIShopEvent(BossShop bossShop, List<BossShopItem> items) {
+        try {
+            System.out.println("openShop bossShop: " + items.size());
+            Message ms = new Message(Cmd.BOSS_SHOP);
+            DataOutputStream ds = ms.writer();
+            ds.writeByte(bossShop.getTypeShop());
+            ds.writeInt(bossShop.getIdBoss());
+            ds.writeByte(bossShop.getIdShop());
+            ds.writeUTF(bossShop.getName());
+            ds.writeShort(items.size());
+            for (BossShopItem item : items) {
+                ds.writeShort(item.getItemRequest());
+                ds.writeUTF(item.initDialog(bossShop));
+                if (bossShop.getTypeShop() == 1) {
+                    ds.writeUTF(item.initDialog(bossShop));
+                }
+            }
+            ds.flush();
+            sendMessage(ms);
+        } catch (IOException ex) {
+            logger.error("doRequestExpicePet ", ex);
+        }
+    }
 
     public void openUIBossShop(BossShop bossShop, List<BossShopItem> items) {
         try {
-            System.out.println("openShop lent: " + items.size());
+            System.out.println("openShop bossShop: " + items.size());
             Message ms = new Message(Cmd.BOSS_SHOP);
             DataOutputStream ds = ms.writer();
             ds.writeByte(bossShop.getTypeShop());
