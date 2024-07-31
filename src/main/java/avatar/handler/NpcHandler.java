@@ -23,6 +23,7 @@ import avatar.play.Zone;
 import avatar.server.ServerManager;
 import avatar.server.UserManager;
 import avatar.server.Utils;
+import avatar.service.AvatarService;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -74,45 +75,19 @@ public class NpcHandler {
             return;
         }
         int npcIdCase = npcId - Npc.ID_ADD;
-
+        List<User> players = us.getZone().getPlayers();
         switch (npcIdCase) {
-            case SuKien:
-                List<Menu> list1 = new ArrayList<>();
-                List<Item> Items = new ArrayList<>();
-                Menu quaySo = Menu.builder().name("vật phẩm").menus(
-                                List.of(
-                                        Menu.builder().name("demo item").action(() -> {
-                                            for (int i = 2000; i < 6676; i++) {
-                                                Item item = new Item((short) i);
-                                                Items.add(item);
-                                            }
-                                            us.getAvatarService().openUIShop(-49,"em.Thinh",Items);
-                                        }).build()
-                                ))
-                        .id(npcId)
-                        .build();
-                list1.add(quaySo);
-                list1.add(Menu.builder().name("Hướng dẫn").action(() -> {
-                    us.getAvatarService().customTab("Hướng dẫn", "hướng dẫn đây ");
-                }).build());
-                list1.add(Menu.builder().name("Thoát").build());
-                us.setMenus(list1);
-                us.getAvatarService().openUIMenu(npcId, 0, list1, "text1", "text2");
-                break;
-            case CHU_DAU_TU:
-                List<Menu> list2 = new ArrayList<>();
+            case NpcName.SuKien:
 
-                list2.add(Menu.builder().name("mua nha").action(() -> {
-                    us.getAvatarService().serverDialog("demo ok");
-                }).build());
-                list2.add(Menu.builder().name("Thoát").build());
-                us.setMenus(list2);
-                us.getAvatarService().openUIMenu(npcId, 0, list2, "", "");
+                us.skillUidToBoss(players,us.getId(),npcId, (byte) 25, (byte) 26);
+                //us.getAvatarService().openUIShopEvent(BossShop.builder().build(),us.getBossShopItems());
+                break;
+            case NpcName.CHU_DAU_TU:
                 break;
             case boss:{
                 List<Menu> list = List.of(
                         Menu.builder().name("damage").action(() -> {
-                            List<User> players = us.getZone().getPlayers();
+                           // List<User> players = us.getZone().getPlayers();
                             //for (int i = 0; i < players.size(); i++) {
                              //   if(players.get(i).getUsername() == "BOSS")
                               //  {
@@ -123,7 +98,7 @@ public class NpcHandler {
                                     //Boss boss1 = (Npc) players.get(i);
 
                                     //bo(npc,10);
-                                    us.skillUidToBoss(players,us.getId(),npcId, (byte) 25, (byte) 26);
+                                    ////us.skillUidToBoss(players,us.getId(),npcId, (byte) 25, (byte) 26);
                                     //int bosItem = npc.getWearing().get(0).getId();
                                     //switch (bosItem) {
                                      //   case 2401:
@@ -225,32 +200,32 @@ public class NpcHandler {
 //                us.getAvatarService().openUIMenu(npcId, 0, list, "", "");
 //                break;
 //            }
-//            case NpcName.em_Thinh:{
-//                List<Menu> list = new ArrayList<>();
-//                List<Item> Items = new ArrayList<>();
-//                Menu quaySo = Menu.builder().name("vật phẩm").menus(
-//                                List.of(
-//                                        Menu.builder().name("demo item").action(() -> {
-//                                            for (int i = 2000; i < 6676; i++) {
-//                                                Item item = new Item((short) i);
-//                                                Items.add(item);
-//                                            }
-//                                            us.getAvatarService().openUIShop(-49,"em.Thinh",Items);
-//                                        }).build()
-//                                ))
-//                        .id(npcId)
-//                        .npcName("donate đi")
-//                        .npcChat("show Item")
-//                        .build();
-//                list.add(quaySo);
-//                list.add(Menu.builder().name("Hướng dẫn").action(() -> {
-//                    us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
-//                }).build());
-//                list.add(Menu.builder().name("Thoát").build());
-//                us.setMenus(list);
-//                us.getAvatarService().openUIMenu(npcId, 0, list, "donate đi", "");
-//                break;
-//            }
+            case NpcName.em_Thinh:{
+                List<Menu> list = new ArrayList<>();
+                List<Item> Items1 = new ArrayList<>();
+                Menu quaySo1 = Menu.builder().name("vật phẩm").menus(
+                                List.of(
+                                        Menu.builder().name("demo item").action(() -> {
+                                            for (int i = 2000; i < 6676; i++) {
+                                                Item item = new Item((short) i);
+                                                Items1.add(item);
+                                            }
+                                            us.getAvatarService().openUIShop(-49,"em.Thinh",Items1);
+                                        }).build()
+                                ))
+                        .id(npcId)
+                        .npcName("donate đi")
+                        .npcChat("show Item")
+                        .build();
+                list.add(quaySo1);
+                list.add(Menu.builder().name("Hướng dẫn").action(() -> {
+                    us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
+                }).build());
+                list.add(Menu.builder().name("Thoát").build());
+                us.setMenus(list);
+                us.getAvatarService().openUIMenu(npcId, 0, list, "donate đi", "");
+                break;
+            }
 
 
             case NpcName.QUAY_SO: {
