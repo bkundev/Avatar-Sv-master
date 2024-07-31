@@ -3,8 +3,7 @@ package avatar.network;
 import avatar.constants.Cmd;
 import avatar.constants.NpcName;
 import avatar.db.DbManager;
-import avatar.handler.BossShopHandler;
-import avatar.handler.UpgradeItemHandler;
+import avatar.handler.*;
 import avatar.item.Item;
 import avatar.item.PartManager;
 import avatar.item.Part;
@@ -34,8 +33,6 @@ import avatar.message.AvatarMsgHandler;
 import java.io.IOException;
 
 import avatar.message.MessageHandler;
-import avatar.handler.GlobalHandler;
-import avatar.handler.NpcHandler;
 import avatar.server.Avatar;
 import avatar.server.ServerManager;
 import avatar.play.offline.AbsMapOffline;
@@ -85,6 +82,7 @@ public class Session implements ISession {
     private Service service;
 
     private UpgradeItemHandler upgradeHandler;
+    private ShopEventHandler EventHandler;
 
     public Session(Socket sc, int id) throws IOException {
         this.obj = new Object();
@@ -758,6 +756,8 @@ public class Session implements ISession {
         }
     }
 
+
+
     public void handleBossShop(Message ms) throws IOException {
         int idBoss = ms.reader().readInt();
         byte type = ms.reader().readByte();
@@ -796,7 +796,50 @@ public class Session implements ISession {
                 }
             }
         }
+
+
+        ///Shop Sự Kiện EventShop
+        if (idBoss == Npc.ID_ADD + NpcName.SuKien && user.getBossShopItems() != null) {
+            System.out.println(MessageFormat.format("do Event item boss shop {0}, {1}, {2},"
+                    , idBoss, type, indexItem));
+            UpgradeItem upgradeItem = (UpgradeItem) user.getBossShopItems().get(indexItem);
+            if (upgradeItem != null) {
+                Item item = user.findItemInChests(5289);
+                if (item == null) {
+                    Part part = PartManager.getInstance().findPartById(5289);
+                    getService().serverDialog(MessageFormat.format("Bạn cần có {0} để đổi món đồ này", part.getName()));
+                    return;
+                }
+                doFinalEventShop(upgradeItem, item);
+                return;
+            }
+        }
     }
+
+    private void doFinalEventShop(UpgradeItem item, Item itemOld) {
+/*        Item itm = user.findItemInChests(593);
+        if (itm == null || itm.getQuantity() <= 0) {
+            return;
+        }
+        user.removeItem(593, 1);*/
+        user.removeItemFromChests(itemOld);
+            item.getItem().setExpired(-1);
+            user.addItemToChests(item.getItem());
+            user.setStylish((byte) (user.getStylish() - 1));
+            getAvatarService().requestYourInfo(user);
+            getService().serverDialog("Chúc mừng bạn đã đổi thành công");
+            Zone z = user.getZone();
+            if (z != null) {
+                Npc npc = NpcManager.getInstance().find(z.getMap().getId(), z.getId(), NpcName.SuKien + Npc.ID_ADD);
+                if (npc == null) {
+                    return;
+                }
+        } else {
+            getService().serverDialog("chưa đủ điểm");
+        }
+    }
+
+
 
     private void doFinalUpgrade(UpgradeItem item, Item itemOld) {
         int ratio = item.getRatio();

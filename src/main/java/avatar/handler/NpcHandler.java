@@ -78,9 +78,24 @@ public class NpcHandler {
         List<User> players = us.getZone().getPlayers();
         switch (npcIdCase) {
             case NpcName.SuKien:
-
-                us.skillUidToBoss(players,us.getId(),npcId, (byte) 25, (byte) 26);
-                //us.getAvatarService().openUIShopEvent(BossShop.builder().build(),us.getBossShopItems());
+                List<Menu> list1 = new ArrayList<>();
+                Menu Event = Menu.builder().name("Event").id(npcId).menus(
+                                List.of(
+                                        Menu.builder().name("Shop Event").action(() -> {
+                                            ShopEventHandler.displayUI(us, 5321, 5322, 5323);
+                                        }).build()
+                                )
+                        )
+                        .build();
+                list1.add(Event);
+                list1.add(Menu.builder().name("Xem hướng dẫn")
+                        .action(() -> {
+                            us.getAvatarService().customTab("Hướng dẫn", "-Từ Ngày");
+                        })
+                        .build());
+                list1.add(Menu.builder().name("Thoát").id(npcId).build());
+                us.setMenus(list1);
+                us.getAvatarService().openUIMenu(npcId, 0, list1,"","");
                 break;
             case NpcName.CHU_DAU_TU:
                 break;
@@ -226,8 +241,6 @@ public class NpcHandler {
                 us.getAvatarService().openUIMenu(npcId, 0, list, "donate đi", "");
                 break;
             }
-
-
             case NpcName.QUAY_SO: {
                 List<Menu> list = new ArrayList<>();
                 Menu quaySo1 = Menu.builder().name("Quay số").menus(

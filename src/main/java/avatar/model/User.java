@@ -84,6 +84,7 @@ public class User {
     @Getter
     @Setter
     private List<BossShopItem> bossShopItems;
+    private List<Part> ShopEvent;
 
     public User() {
         this.role = -1;
