@@ -4,7 +4,8 @@ import avatar.constants.Cmd;
 import avatar.constants.NpcName;
 import avatar.item.Item;
 import avatar.model.*;
-
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.math.BigInteger;
 
 import avatar.lucky.DialLucky;
@@ -79,15 +80,20 @@ public class NpcHandler {
         switch (npcIdCase) {
             case NpcName.SuKien:
                 List<Menu> list1 = new ArrayList<>();
-                Menu Event = Menu.builder().name("Event").id(npcId).menus(
-                                List.of(
-                                        Menu.builder().name("Shop Event").action(() -> {
-                                            ShopEventHandler.displayUI(us, 5321, 5322, 5323);
-                                        }).build()
-                                )
-                        )
-                        .build();
+                Menu Event = Menu.builder().name("Đổi Quà").action(() -> {
+                                            ShopEventHandler.displayUI(us, 3506,2620,2577,5539,2618, 2619, 3987,3455,3456,3457,4995,3988,3989,3990,5573);
+                                        }).build();
                 list1.add(Event);
+                list1.add(Menu.builder().name("Góp dây tơ")
+                        .action(() -> {
+                            GopDiemSK(us);
+                        })
+                        .build());
+                list1.add(Menu.builder().name("Thành tích bản thân")
+                        .action(() -> {
+                            us.getAvatarService().serverDialog("Bạn có đang "+us.getScores()+" điểm sự kiện");
+                        })
+                        .build());
                 list1.add(Menu.builder().name("Xem hướng dẫn")
                         .action(() -> {
                             us.getAvatarService().customTab("Hướng dẫn", "-Từ Ngày");
@@ -95,7 +101,7 @@ public class NpcHandler {
                         .build());
                 list1.add(Menu.builder().name("Thoát").id(npcId).build());
                 us.setMenus(list1);
-                us.getAvatarService().openUIMenu(npcId, 0, list1,"","");
+                us.getAvatarService().openMenuOption(npcId, 0, list1);
                 break;
             case NpcName.CHU_DAU_TU:
                 break;
@@ -307,7 +313,7 @@ public class NpcHandler {
                 List<Menu> list = new ArrayList<>();
                 Menu LAI_BUON = Menu.builder().name("Điểm Danh").action(() -> {
                     Item item = new Item(593, -1, 1);
-                    us.addItemToChests(item);
+                    //us.addItemToChests(item);
                     us.addExp(5);
                     us.getService().serverMessage("Bạn nhận được 5 điểm exp + 1 thẻ quay số miễn phí");
                 }).build();
@@ -325,7 +331,30 @@ public class NpcHandler {
             break;
         }
     }
+    public static void GopDiemSK(User us){
+        java.util.Map<Integer, Integer> itemsToProcess = new HashMap<>();
+        itemsToProcess.put(3085, 1);
+        itemsToProcess.put(3086, 2);
+        itemsToProcess.put(3087, 3);
+        int addscores = 0;
+// Lặp qua từng cặp ID và số lượng
+        for (java.util.Map.Entry<Integer, Integer> entry : itemsToProcess.entrySet()) {
+            int itemId = entry.getKey();
+            int scores = entry.getValue();
+            Item item = us.findItemInChests(itemId);
+            if (item != null && item.getQuantity() > 0) {
+                addscores += item.getQuantity()*scores;
+                us.updateScores(+addscores);
+                us.removeItem(itemId, item.getQuantity());
 
+            }
+        }
+        if(addscores > 0){
+            us.getAvatarService().serverDialog("Bạn đã đổi thành công : " + addscores + " điểm sự kiện");
+        }else {
+            us.getAvatarService().serverDialog("Bạn không đủ dây tơ để góp");
+        }
+    }
 
     public static List<Menu> listItemUpgrade(int npcId, User us, byte type) {
         String npcName = "Thợ KH";

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import avatar.model.Event;
 import avatar.model.UpgradeItem;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,7 +28,6 @@ public class PartManager {
     private final List<Part> parts = new ArrayList<>();
     @Getter
     private final List<UpgradeItem> upgradeItems = new ArrayList<>();
-    private final List<Event> Events = new ArrayList<>();
 
     public Part findPartById(int id) {
         return getParts().stream()
@@ -84,31 +82,7 @@ public class PartManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        loadEventItemData();
         loadUpgradeItemData();
-    }
-    public void loadEventItemData() {
-        Events.clear();
-        try (Connection connection = DbManager.getInstance().getConnection();
-             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `event_item`;");
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                int itemId = rs.getInt("item_id");
-                int itemNeed = rs.getInt("item_need");
-                Events.add(Event
-                        .builder()
-                        .id(id)
-                        .itemRequest(itemId)
-                        .itemNeed(itemNeed)
-                        .item(new Item(itemId))
-                        .build()
-                );
-            }
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
     public void loadUpgradeItemData() {
         upgradeItems.clear();
@@ -123,6 +97,7 @@ public class PartManager {
                 int itemNeed = rs.getInt("item_need");
                 int luong = rs.getInt("luong");
                 int xu = rs.getInt("xu");
+                int scores = rs.getInt("scores");
                 upgradeItems.add(UpgradeItem
                         .builder()
                         .id(id)
@@ -132,6 +107,7 @@ public class PartManager {
                         .luong(luong)
                         .isOnlyLuong(onlyLuong)
                         .xu(xu)
+                        .scores(scores)
                         .item(new Item(itemId))
                         .build()
                 );

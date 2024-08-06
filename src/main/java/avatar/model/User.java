@@ -67,6 +67,7 @@ public class User {
     private byte hunger;
     private byte chestSlot;
     private byte chestHomeSlot;
+    private int scores;
     private List<Item> wearing;
     private List<Item> chests;
     private Zone zone;
@@ -137,6 +138,9 @@ public class User {
     public synchronized void updateLuong(int luongUp) {
         this.luong += luongUp;
     }
+    public synchronized void updateScores(int ScoresUp) {
+        this.scores += ScoresUp;
+    }
 
     public synchronized void updateLuongKhoa(int luongUp) {
         this.luong += luongUp;
@@ -157,8 +161,8 @@ public class User {
     protected void saveData() {
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `gender` = ?, `friendly` = ?, `crazy` = ?, `stylish` = ?, `happy` = ?, `hunger` = ? WHERE `user_id` = ? LIMIT 1;",
                 this.gender, this.friendly, this.crazy, this.stylish, this.happy, this.hunger, this.id);
-        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ? WHERE `user_id` = ? LIMIT 1;",
-                this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain, this.id);
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ?,`scores` = ? WHERE `user_id` = ? LIMIT 1;",
+                this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain,this.scores, this.id);
         JSONArray jChests = new JSONArray();
         for (Item item : this.chests) {
             JSONObject obj = new JSONObject();
@@ -256,7 +260,7 @@ public class User {
                     this.gender = res.getByte("gender");
                     this.xu = res.getLong("xu");
                     this.luong = res.getShort("luong");
-                    this.luongKhoa = res.getShort("luong_khoa");
+                    this.luongKhoa = res.getInt("luong_khoa");
                     this.xeng = res.getInt("xeng");
                     this.gender = res.getByte("gender");
                     this.clanID = res.getShort("clan_id");                    //res.writeShort(2206);
@@ -266,6 +270,7 @@ public class User {
                     this.happy = res.getByte("happy");
                     this.hunger = res.getByte("hunger");
                     this.star = res.getByte("star");
+                    this.scores = res.getInt("scores");
                     this.chests = new ArrayList<>();
                     JSONArray chests = (JSONArray) JSONValue.parse(res.getString("chests"));
                     for (Object chest : chests) {

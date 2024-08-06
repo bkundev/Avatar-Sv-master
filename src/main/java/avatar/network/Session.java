@@ -802,30 +802,20 @@ public class Session implements ISession {
         if (idBoss == Npc.ID_ADD + NpcName.SuKien && user.getBossShopItems() != null) {
             System.out.println(MessageFormat.format("do Event item boss shop {0}, {1}, {2},"
                     , idBoss, type, indexItem));
-            UpgradeItem upgradeItem = (UpgradeItem) user.getBossShopItems().get(indexItem);
-            if (upgradeItem != null) {
-                Item item = user.findItemInChests(5289);
-                if (item == null) {
-                    Part part = PartManager.getInstance().findPartById(5289);
-                    getService().serverDialog(MessageFormat.format("Bạn cần có {0} để đổi món đồ này", part.getName()));
-                    return;
-                }
-                doFinalEventShop(upgradeItem, item);
+            UpgradeItem EventItem = (UpgradeItem) user.getBossShopItems().get(indexItem);
+            if (EventItem != null) {
+                doFinalEventShop(EventItem);
                 return;
             }
         }
     }
 
-    private void doFinalEventShop(UpgradeItem item, Item itemOld) {
-/*        Item itm = user.findItemInChests(593);
-        if (itm == null || itm.getQuantity() <= 0) {
-            return;
-        }
-        user.removeItem(593, 1);*/
-        user.removeItemFromChests(itemOld);
-            item.getItem().setExpired(-1);
-            user.addItemToChests(item.getItem());
+    private void doFinalEventShop(UpgradeItem Eventitem) {
+        if(user.getScores()> Eventitem.getScores()){
+            Eventitem.getItem().setExpired(-1);
+            user.addItemToChests(Eventitem.getItem());
             user.setStylish((byte) (user.getStylish() - 1));
+            user.updateScores(-Eventitem.getScores());
             getAvatarService().requestYourInfo(user);
             getService().serverDialog("Chúc mừng bạn đã đổi thành công");
             Zone z = user.getZone();
@@ -834,8 +824,9 @@ public class Session implements ISession {
                 if (npc == null) {
                     return;
                 }
+            }
         } else {
-            getService().serverDialog("chưa đủ điểm");
+            getService().serverDialog("Bạn chưa đủ điểm để đổi");
         }
     }
 
