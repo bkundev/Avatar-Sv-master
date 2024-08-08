@@ -257,12 +257,10 @@ public class User {
                     this.leverMain = res.getInt("level_main");
                     this.expMain = res.getInt("exp_main");
                     this.gender = res.getByte("gender");
-                    this.gender = res.getByte("gender");
                     this.xu = res.getLong("xu");
-                    this.luong = res.getShort("luong");
+                    this.luong = res.getInt("luong");
                     this.luongKhoa = res.getInt("luong_khoa");
                     this.xeng = res.getInt("xeng");
-                    this.gender = res.getByte("gender");
                     this.clanID = res.getShort("clan_id");                    //res.writeShort(2206);
                     this.friendly = res.getByte("friendly");
                     this.crazy = res.getByte("crazy");
@@ -339,7 +337,17 @@ public class User {
         try {
             int idTo = ms.reader().readInt();
             short action = ms.reader().readShort();
-            getMapService().doAction(id, idTo, action);
+            User us = UserManager.getInstance().find(idTo);
+            switch (action) {
+                case 101:
+                    if(gender== us.gender) {
+                        this.getAvatarService().serverDialog("làm gì vậy bro đồng loại mà = ))");
+                        break;
+                    }
+                default:
+                    getMapService().doAction(id, idTo, action);
+
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -356,7 +364,7 @@ public class User {
     public void viewChest(Message ms) {
 //        int type = ms.reader();
         List<Item> _chests = chests.stream().filter(item -> {
-            return item.getPart().getZOrder() != 30 && item.getPart().getZOrder() != 40;
+            return item.getPart().getZOrder() != 30;// && item.getPart().getZOrder() != 40; 40 mắt
         }).collect(Collectors.toList());
         getAvatarService().viewChest(_chests);
     }
@@ -439,6 +447,7 @@ public class User {
                 } else {
                     setReliabilityForItem(itm, item);
                 }
+                this.chests.add(item);
                 return;
             } else {
                 itm = findItemInWearing(item.getId());
@@ -449,9 +458,11 @@ public class User {
             }
             this.chests.add(item);
         }
+
     }
 
     public void setReliabilityForItem(Item old, Item newI) {
+        // item expired == -1;
         if (!old.isForever()) {
             if (newI.isForever() || newI.reliability() > old.reliability()) {
                 old.setExpired(newI.getExpired());
@@ -558,7 +569,11 @@ public class User {
                 } else if (pType == -2) {
                     getService().serverMessage(String.format("Số lượng: %,d", item.getQuantity()));
                 } else {
-                    getService().serverDialog("Vật phẩm lỗi, không thể sử dụng");
+                    item = findItemInWearing(itemID);
+                    removeItemFromWearing(item);
+                    addItemToChests(item);
+                    getMapService().usingPart(id, itemID);
+                   // getService().serverDialog("Vật phẩm lỗi, không thể sử dụng");
                 }
             } else {
                 Item item = findItemInWearing(itemID);

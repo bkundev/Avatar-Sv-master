@@ -45,7 +45,9 @@ import java.net.InetSocketAddress;
 import java.io.DataOutputStream;
 import java.io.DataInputStream;
 import java.net.Socket;
-
+import avatar.play.Map;
+import avatar.play.MapManager;
+import avatar.play.NpcManager;
 import static avatar.constants.NpcName.boss;
 
 public class Session implements ISession {
@@ -452,7 +454,7 @@ public class Session implements ISession {
                 return;
             }
             isCharCreatedPopup = true;
-            DbManager.getInstance().executeUpdate("INSERT INTO `players`(`user_id`, `level_main`, `gender`) VALUES (?, ?, ?);", user.getId(), 1, 0);
+            DbManager.getInstance().executeUpdate("INSERT INTO `players`(`user_id`, `level_main`, `gender`, `scores`) VALUES (?, ?, ?,?);", user.getId(), 1, 0,0);
             enter();
         }
     }
@@ -467,11 +469,14 @@ public class Session implements ISession {
     }
 
     public void createCharacter(Message ms) throws IOException {
-        byte gender = ms.reader().readByte();
+        byte gender = ms.reader().readByte();//1 nam 2 nu
         byte numItem = ms.reader().readByte();
         ArrayList<Item> items = new ArrayList<>();
-        for (int i = 0; i < numItem; ++i) {
-            short itemID = ms.reader().readShort();
+        short[] boyItems = { 89, 88, 0, 4, 14};
+        short[] girlItems = { 89, 88, 0, 4, 49 };
+        short[] selectedItems = (gender == 1) ? boyItems : girlItems;
+
+        for (short itemID : selectedItems) {
             items.add(new Item(itemID, -1, 1));
         }
         boolean isError = false;
@@ -487,7 +492,7 @@ public class Session implements ISession {
             this.sendMessage(ms);
             return;
         }
-        Item item = new Item(593, -1, 999);
+        Item item = new Item(593, -1, 100);
         user.addItemToChests(item);
         user.setGender(gender);
         user.setWearing(items);
@@ -571,6 +576,8 @@ public class Session implements ISession {
                 ds.writeInt(Math.toIntExact(user.getXu()));
                 ds.writeInt(user.getLuong());
                 ds.writeInt(user.getLuongKhoa());
+                user.getMapService().usingPart(user.getId(),partID);
+
                 ds.flush();
                 this.sendMessage(ms);
             } else {

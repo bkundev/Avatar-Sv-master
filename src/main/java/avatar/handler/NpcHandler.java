@@ -81,7 +81,7 @@ public class NpcHandler {
             case NpcName.SuKien:
                 List<Menu> list1 = new ArrayList<>();
                 Menu Event = Menu.builder().name("Đổi Quà").action(() -> {
-                                            ShopEventHandler.displayUI(us, 3506,2620,2577,5539,2618, 2619, 3987,3455,3456,3457,4995,3988,3989,3990,5573);
+                                            ShopEventHandler.displayUI(us, 2040,3506,2620,2577,5539,2618, 2619, 3987,3455,3456,3457,4995,3988,3989,3990,5573);
                                         }).build();
                 list1.add(Event);
                 list1.add(Menu.builder().name("Góp dây tơ")

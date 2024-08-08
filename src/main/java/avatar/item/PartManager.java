@@ -52,6 +52,7 @@ public class PartManager {
                 byte level = rs.getByte("level");
                 byte sell = rs.getByte("sell");
                 byte zOrder = rs.getByte("zorder");
+                byte gender = rs.getByte("gender");
                 short[] imgID = new short[15];
                 byte[] dx = new byte[15];
                 byte[] dy = new byte[15];
@@ -73,6 +74,7 @@ public class PartManager {
                         .level(level)
                         .sell(sell)
                         .zOrder(zOrder)
+                        .gender(gender)
                         .imgID(imgID)
                         .dx(dx)
                         .dy(dy)
