@@ -576,7 +576,6 @@ public class Session implements ISession {
                 ds.writeInt(Math.toIntExact(user.getXu()));
                 ds.writeInt(user.getLuong());
                 ds.writeInt(user.getLuongKhoa());
-                user.getMapService().usingPart(user.getId(),partID);
 
                 ds.flush();
                 this.sendMessage(ms);
@@ -735,7 +734,11 @@ public class Session implements ISession {
                                             List<Zone> zones = m.getZones();
                                             Boss boss = new Boss();
                                             Zone randomZone = zones.get(0);//random.nextInt(zones.size()));
-                                            boss.addBossToZone(randomZone,(short) 100,(short) 100);
+                                            try {
+                                                boss.addBossToZone(randomZone,(short) 100,(short) 100);
+                                            } catch (IOException e) {
+                                                throw new RuntimeException(e);
+                                            }
                                         }else{
                                             user.getAvatarService().serverDialog("ad mới bật được b ơi");
                                         }

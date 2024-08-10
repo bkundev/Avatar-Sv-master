@@ -363,9 +363,10 @@ public class User {
 
     public void viewChest(Message ms) {
 //        int type = ms.reader();
-        List<Item> _chests = chests.stream().filter(item -> {
-            return item.getPart().getZOrder() != 30;// && item.getPart().getZOrder() != 40; 40 mắt
-        }).collect(Collectors.toList());
+        List<Item> _chests = this.chests;
+        //List<Item> _chests = chests.stream().filter(item -> {
+        //    return item.getPart().getZOrder()!= 30 == //mặt;// && item.getPart().getZOrder() != 40; 40 mắt
+        //}).collect(Collectors.toList());
         getAvatarService().viewChest(_chests);
     }
 
@@ -582,7 +583,7 @@ public class User {
                 }
                 int zOrder = item.getPart().getZOrder();
                 if (zOrder == 10 || zOrder == 20 || zOrder == 50) {
-                    getService().serverMessage("Không thể cất vật phẩm này.");
+                    getService().serverDialog("Không thể cất vật phẩm này.");
                     return;
                 }
                 removeItemFromWearing(item);
@@ -625,6 +626,7 @@ public class User {
                 if (item != null) {
                     int zOrder = item.getPart().getZOrder();
                     if (zOrder == 10 || zOrder == 20 || zOrder == 50) {
+                        getAvatarService().serverDialog("error : 001");
                         return;
                     }
                     removeItemFromWearing(item);
