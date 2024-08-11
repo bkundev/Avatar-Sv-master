@@ -11,9 +11,19 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.util.List;
+import java.util.Arrays;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import avatar.network.Session;
 import avatar.play.Map;
@@ -23,6 +33,7 @@ import avatar.play.Zone;
 import avatar.server.ServerManager;
 import avatar.server.UserManager;
 import avatar.server.Utils;
+import avatar.service.ParkService;
 import avatar.service.Service;
 import com.sun.source.tree.ReturnTree;
 import lombok.Builder;
@@ -42,6 +53,10 @@ public class Boss extends User {
     @Setter
     private List<String> textChats;
 
+    private static final int TOTAL_BOSSES = 10; // Tổng số Boss muốn tạo
+    private static int currentBossId = 1001 + Npc.ID_ADD; // ID bắt đầu cho Boss
+    private static int bossCount = 0; // Đếm số lượng Boss đã được tạo
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private Thread autoChatBot = new Thread(() -> {
         while (true) {
             try {
@@ -58,22 +73,137 @@ public class Boss extends User {
     });
 
     public void addBossToZone(Zone zone, short x, short y) throws IOException {
+        if (bossCount >= TOTAL_BOSSES) {
+            return; // Dừng nếu đã tạo đủ số lượng Boss
+        }
+
+        Boss boss = createBoss(x, y, currentBossId++);
+        assignRandomItemToBoss(boss);
+        setBossTextChats(boss);
+        boss.session = createSession(boss);
+        sendAndHandleMessages(boss);
+        moveBoss(boss);
+        moveBossXY(boss,282,88);
+        bossCount++; // Tăng số lượng Boss đã tạo
+
+        // Lập lịch phân thân Boss sau 10 giây
+        scheduler.schedule(() -> {
+            try {
+                if (bossCount < TOTAL_BOSSES) {
+                    createNearbyGiftBoxes(boss,zone, x, y, currentBossId + 10000);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }, 10, TimeUnit.SECONDS);
+
+        System.out.println("add boss khu :" + zone.getId());
+    }
+
+    private Boss createBoss(short x, short y,int id) {
         Boss boss = new Boss();
-        List<Integer> availableItems = Arrays.asList(2401, 4552, 6314, 6432);
-        Utils random = null;
-        boss.setId(999);
-        int randomItemId = availableItems.get(random.nextInt(availableItems.size()));
+        boss.setId(id);
         boss.setUsername("BOSS");
         boss.setX(x);
         boss.setY(y);
-        boss.addItemToWearing((new Item(randomItemId)));
+        return boss;
+    }
+    private void createGiftBox(Zone zone, short x, short y, int giftId) throws IOException {
+        Boss giftBox = createBoss(x, y, giftId);
+        assignGiftItemToBoss(giftBox); // Gán item cho hộp quà
+        setBossTextChats(giftBox); // Có thể tùy chỉnh tin nhắn cho hộp quà
+        giftBox.session = createSession(giftBox);
+        sendAndHandleMessages(giftBox);
+        moveBoss(giftBox);
 
-        List<String> chatMessages = Arrays.asList(
-                "lại đây nào",
-                "quà của bạn đây"
-        );
+        System.out.println("Tạo hộp quà phân thân với ID: " + giftId + " tại vị trí X: " + x + ", Y: " + y);
+    }
+    private void createNearbyGiftBoxes(Boss boss,Zone zone, short x, short y, int baseGiftId) throws IOException {
+        // Tạo hộp quà ở các vị trí gần Boss
+        createGiftBox(zone, (short) (boss.getX()+(short)20),(short) (boss.getY()+(short)20),baseGiftId);
+        createGiftBox(zone, (short) (boss.getX()-(short)20), (short) (boss.getY()-(short)20), baseGiftId + 1);
+        createGiftBox(zone, (short) (boss.getX()+(short)20), (short) (boss.getY()-(short)20), baseGiftId + 2);
+        createGiftBox(zone, (short) (boss.getX()-(short)20), (short) (boss.getY()+(short)20), baseGiftId + 3);
+    }
+
+    private void assignGiftItemToBoss(Boss boss) {
+        // Gán item cụ thể cho hộp quà phân thân, nếu khác với Boss chính
+        List<Integer> giftItems = Arrays.asList(683, 2121, 2122, 2123,4006); // Ví dụ các item cho hộp quà
+        int randomItemId = giftItems.get(new Random().nextInt(giftItems.size()));
+        boss.addItemToWearing(new Item(randomItemId));
+    }
+
+    private void assignRandomItemToBoss(Boss boss) {
+        List<Integer> availableItems = Arrays.asList(6314, 6432);
+        Utils random = new Utils(); // Assuming Utils is instantiated
+        int randomItemId = availableItems.get(random.nextInt(availableItems.size()));
+        boss.addItemToWearing(new Item(randomItemId));
+    }
+
+    private void setBossTextChats(Boss boss) {
+        List<String> chatMessages = Arrays.asList("lại đây nào", "quà của bạn đây");
         boss.setTextChats(chatMessages);
-         //Cmd.SET_PROVIDER
+    }
+    private void sendAndHandleMessages(Boss boss) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (DataOutputStream dos = new DataOutputStream(baos)) {
+            dos.writeByte(0);
+            dos.writeInt(1024);
+            dos.writeUTF("MicroEmulator");
+            dos.writeInt(512);
+            dos.writeInt(1080);
+            dos.writeInt(1920);
+            dos.writeBoolean(true);
+            dos.writeByte(0);
+            dos.writeUTF("v1.0");
+            dos.writeUTF("1");
+            dos.writeUTF("2");
+            dos.writeUTF("3");
+            dos.flush();
+            byte[] data = baos.toByteArray();
+
+            MessageHandler handler = new MessageHandler(boss.session);
+            handler.onMessage(new Message(Cmd.SET_PROVIDER, data));
+
+            byte[] data2 = new byte[]{9};
+            boss.session.getHandler(new Message(Cmd.GET_HANDLER, data2));
+
+            Message ms = new Message(Cmd.AVATAR_JOIN_PARK);
+            ParkMsgHandler parkMsgHandler = new ParkMsgHandler(boss.session);
+            parkMsgHandler.onMessage(ms);
+            System.out.println("add boss khu :" + boss.getZone().getId());
+        }
+    }
+    private void moveBoss(Boss boss) throws IOException {
+        ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
+        try (DataOutputStream dos1 = new DataOutputStream(baos1)) {
+            dos1.writeShort(boss.getX());//x
+            dos1.writeShort(boss.getY());//y
+            dos1.writeByte(2);
+            dos1.flush();
+            byte[] data1 = baos1.toByteArray();
+
+            ParkMsgHandler parkMsgHandler1 = new ParkMsgHandler(boss.session);
+            parkMsgHandler1.onMessage(new Message(Cmd.MOVE_PARK, data1));
+            System.out.println("boss move : X = " + boss.getX() + ", y = " + boss.getY());
+        }
+    }
+    private void moveBossXY(Boss boss,int x,int y) throws IOException {
+        ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
+        try (DataOutputStream dos1 = new DataOutputStream(baos1)) {
+            dos1.writeShort(x);//x
+            dos1.writeShort(y);//y
+            dos1.writeByte(2);
+            dos1.flush();
+            byte[] data1 = baos1.toByteArray();
+
+            ParkMsgHandler parkMsgHandler1 = new ParkMsgHandler(boss.session);
+            parkMsgHandler1.onMessage(new Message(Cmd.MOVE_PARK, data1));
+            System.out.println("boss move : X = " + boss.getX() + ", y = " + boss.getY());
+        }
+    }
+    public Session createSession(Boss boss){
+        //Cmd.SET_PROVIDER
         try {
             // Tạo một Socket (thay thế bằng thông tin kết nối thực tế)
             Socket socket = new Socket();
@@ -84,58 +214,13 @@ public class Boss extends User {
             session.user = boss;
             session.connected = true;
             session.login = true;
-            boss.session = session;
             System.out.println("Session created with ID: " + session.id);
+            return session;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        MessageHandler handler = new MessageHandler(boss.session);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream dos = new DataOutputStream(baos);
-
-        try {
-            // Viết các giá trị theo định dạng mong đợi
-            dos.writeByte(0); // provider
-            dos.writeInt(1024); // memory
-            dos.writeUTF("MicroEmulator"); // platform
-            dos.writeInt(512); // rmsSize
-            dos.writeInt(1080); // width
-            dos.writeInt(1920); // height
-            dos.writeBoolean(true); // aaaaa
-            dos.writeByte(0); // resource
-            dos.writeUTF("v1.0"); // version
-
-            // Viết các chuỗi bổ sung (nếu có)
-            dos.writeUTF("1");
-            dos.writeUTF("2");
-            dos.writeUTF("3");
-
-            dos.flush();
-            byte[] data = baos.toByteArray();
-            dos.close();
-        //byte[] data1 = new byte[] {9,};
-        handler.onMessage(new Message(Cmd.SET_PROVIDER,data));
-        //MessageHandler  getHandler
-        byte[] data2 = new byte[] {9};
-        boss.session.getHandler(new Message(Cmd.GET_HANDLER,data2));
-        Message ms = new Message(Cmd.AVATAR_JOIN_PARK);
-        ParkMsgHandler parkMsgHandler = new ParkMsgHandler(boss.session);
-        parkMsgHandler.onMessage(ms);
-        byte[] data1 = new byte[] {8};
-        boss.session.getHandler(new Message(Cmd.GET_HANDLER,data1));
-            handler.onMessage(new Message(Cmd.SET_PROVIDER,data));
-            //MessageHandler  getHandler
-            byte[] data3 = new byte[] {9};
-            boss.session.getHandler(new Message(Cmd.GET_HANDLER,data3));
-            Message ms1 = new Message(Cmd.AVATAR_JOIN_PARK);
-            ParkMsgHandler parkMsgHandler1 = new ParkMsgHandler(boss.session);
-            parkMsgHandler1.onMessage(ms1);
-        System.out.println("add boss khu :"+zone.getId());
-    } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return null;
     }
-
     @Builder
     public void addChat(String chat) {
         textChats.add(chat);

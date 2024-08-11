@@ -128,7 +128,7 @@ public class ServerManager {
 
 
     }
-    public  void initZombie() throws IOException {
+    public static void initZombie() throws IOException {
             Random random = new Random(); // Đối tượng Random để sinh ngẫu nhiên
             while (true) { // Vòng lặp vô hạn để NPC xuất hiện liên tục
                     List<Integer> availableItems = Arrays.asList(2401, 4552, 6314, 6432);

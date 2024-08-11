@@ -735,7 +735,8 @@ public class Session implements ISession {
                                             Boss boss = new Boss();
                                             Zone randomZone = zones.get(0);//random.nextInt(zones.size()));
                                             try {
-                                                boss.addBossToZone(randomZone,(short) 100,(short) 100);
+                                                boss.addBossToZone(randomZone,(short) 0,(short) 0);
+                                                //ServerManager.initZombie();
                                             } catch (IOException e) {
                                                 throw new RuntimeException(e);
                                             }
