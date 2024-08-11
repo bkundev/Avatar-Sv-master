@@ -47,7 +47,9 @@ import static avatar.model.Npc.ID_ADD;
 public class Boss extends User {
 
     public Boss() {
+
         super();
+        startAutoChat();
     }
     @Getter
     @Setter
@@ -71,6 +73,34 @@ public class Boss extends User {
             }
         }
     });
+    private void startAutoChat() {
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                if (textChats != null && !textChats.isEmpty()) {
+                    for (String text : textChats) {
+                        if (text != null) {
+                            if (getMapService() != null) {
+                                getMapService().chat(this, text);
+                            } else {
+                                System.err.println("MapService is null.");
+                            }
+                            Thread.sleep(6000); // Điều chỉnh thời gian delay nếu cần
+                        } else {
+                            System.err.println("Text is null.");
+                        }
+                    }
+                    int randomItemId = new Random().nextInt(20);
+                    this.moveBossXY(this,getX()+randomItemId,getY()+randomItemId);
+                } else {
+                    Thread.sleep(10000); // Thời gian delay nếu không có tin nhắn chat
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }, 0, 10, TimeUnit.SECONDS); // Thời gian delay ban đầu và khoảng thời gian giữa các lần gửi tin nhắn
+    }
 
     public void addBossToZone(Zone zone, short x, short y) throws IOException {
         if (bossCount >= TOTAL_BOSSES) {
@@ -111,7 +141,6 @@ public class Boss extends User {
     private void createGiftBox(Zone zone, short x, short y, int giftId) throws IOException {
         Boss giftBox = createBoss(x, y, giftId);
         assignGiftItemToBoss(giftBox); // Gán item cho hộp quà
-        setBossTextChats(giftBox); // Có thể tùy chỉnh tin nhắn cho hộp quà
         giftBox.session = createSession(giftBox);
         sendAndHandleMessages(giftBox);
         moveBoss(giftBox);
@@ -185,6 +214,7 @@ public class Boss extends User {
 
             ParkMsgHandler parkMsgHandler1 = new ParkMsgHandler(boss.session);
             parkMsgHandler1.onMessage(new Message(Cmd.MOVE_PARK, data1));
+            getMapService().chat(this, "ta đến rồi đây");
             System.out.println("boss move : X = " + boss.getX() + ", y = " + boss.getY());
         }
     }
@@ -225,7 +255,6 @@ public class Boss extends User {
     public void addChat(String chat) {
         textChats.add(chat);
     }
-
 
     @Override
     public void sendMessage(Message ms) {

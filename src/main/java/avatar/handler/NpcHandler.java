@@ -80,6 +80,8 @@ public class NpcHandler {
             us.getAvatarService().serverDialog("id"+npcIdCase);
         } else if (npcIdCase >= 10000) {
             us.getAvatarService().serverDialog("bạn đã nhặt được...");
+            //z.leave(UserManager.getInstance().find(npcId));
+            z.remove(UserManager.getInstance().find(npcId));
         }else {
             switch (npcIdCase) {
                 case NpcName.SuKien:
