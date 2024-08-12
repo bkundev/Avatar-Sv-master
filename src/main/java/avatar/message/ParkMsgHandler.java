@@ -25,6 +25,12 @@ public class ParkMsgHandler extends MessageHandler {
         }
         try {
             switch (mss.getCommand()) {
+                case Cmd.AVATAR_REQUEST_ADD_FRIEND:
+                    this.client.getAvatarService().handleAddFriendRequest(mss);
+                    break;
+                case Cmd.CHAT_TO:
+                    this.client.getAvatarService().chatToUser(mss);
+                    break;
                 case Cmd.AVATAR_JOIN_PARK:
                     ServerManager.joinAreaMessage(this.client.user, mss);
                     break;

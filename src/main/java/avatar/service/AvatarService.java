@@ -1,5 +1,6 @@
 package avatar.service;
-
+import java.io.*;
+import java.lang.reflect.Field;
 import avatar.common.BossShopItem;
 import avatar.item.Item;
 import avatar.item.PartManager;
@@ -9,10 +10,6 @@ import avatar.model.*;
 import avatar.server.Avatar;
 import avatar.server.ServerManager;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.DataOutputStream;
-import java.io.File;
 import java.util.List;
 
 import avatar.constants.Cmd;
@@ -50,6 +47,9 @@ public class AvatarService extends Service {
             logger.error("doRequestExpicePet ", ex);
         }
     }
+
+
+
     public void openUIShopEvent(BossShop bossShop, List<BossShopItem> items) {
         try {
             System.out.println("openShop bossShop: " + items.size());
@@ -141,15 +141,28 @@ public class AvatarService extends Service {
         }
     }
 
-    public void chatTo(String sender, String content) {
+    public void chatTo(String sender, String content,int type) {
         try {
             Message ms = new Message(Cmd.CHAT_TO);
             DataOutputStream ds = ms.writer();
-            ds.writeInt(1);
+            ds.writeInt(type);
             ds.writeUTF(sender);
             ds.writeUTF(content);
             ds.flush();
             sendMessage(ms);
+        } catch (IOException ex) {
+            logger.error("chatTo ", ex);
+        }
+    }
+
+    public void chatToUser(Message ms) {
+        try {
+            int receiverId = ms.reader().readInt();
+            String content = ms.reader().readUTF();
+            int senderId = this.session.user.getId(); // ID của người gửi yêu cầu
+            User receiver = UserManager.getInstance().find(receiverId);
+            User sender = UserManager.getInstance().find(receiverId);
+            receiver.getAvatarService().chatTo(sender.getUsername(), content,1);
         } catch (IOException ex) {
             logger.error("chatTo ", ex);
         }
@@ -180,7 +193,7 @@ public class AvatarService extends Service {
             ds.writeInt(us.getLuong());
             ds.writeByte(us.getStar());
             for (Item itm : wearing) {
-                ds.writeByte(0);
+                ds.writeByte(1);
                 ds.writeUTF(itm.expiredString());
             }
             //ds.writeShort(us.getIdImg());
@@ -202,7 +215,7 @@ public class AvatarService extends Service {
             }
             ds.writeByte(1);
             ds.writeShort(us.getLeverMain());
-            ds.writeShort(-1);
+            ds.writeShort(9);
             ds.writeBoolean(session.isNewVersion());//new version
             if (session.isNewVersion()) {
                 ds.writeInt(us.getXeng());
@@ -288,6 +301,71 @@ public class AvatarService extends Service {
             logger.error("getAvatarPart() ", e);
         }
     }
+
+    public void inspectMessageData(Message message) {
+        DataInputStream dis = message.reader();
+        if (dis != null) {
+            try {
+                while (dis.available() > 0) {  // Vòng lặp cho đến khi hết dữ liệu
+                    try {
+                        int intValue = dis.readInt();  // Thử đọc int
+                        System.out.println("Read int: " + intValue);
+                    } catch (IOException e) {
+                        // Nếu không phải int, hãy thử kiểu dữ liệu khác
+                        try {
+                            String stringValue = dis.readUTF();  // Thử đọc chuỗi
+                            System.out.println("Read string: " + stringValue);
+                        } catch (IOException ex) {
+                            try {
+                                byte byteValue = dis.readByte();  // Thử đọc byte
+                                System.out.println("Read byte: " + byteValue);
+                            } catch (IOException exc) {
+                                System.out.println("Unknown data format or end of data.");
+                                break;  // Nếu tất cả các thử nghiệm đều thất bại, kết thúc vòng lặp
+                            }
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                System.err.println("Error reading message data: " + e.getMessage());
+            }
+        } else {
+            System.err.println("DataInputStream is null.");
+        }
+    }
+
+    public void handleAddFriendRequest(Message message) {
+        try {
+            // Đọc ID của người nhận từ thông điệp
+            int receiverId = message.reader().readInt();
+            int senderId = this.session.user.getId(); // ID của người gửi yêu cầu
+            // Tìm kiếm người gửi và người nhận
+            User sender = UserManager.getInstance().find(senderId);
+            User receiver = UserManager.getInstance().find(receiverId);
+            if (sender != null && receiver != null) {
+                // Tạo thông báo lời mời kết bạn cho người nhận
+                Message friendRequestMessage = new Message(Cmd.ADD_FRIEND);
+                DataOutputStream dos = friendRequestMessage.writer();
+                dos.writeInt(senderId); // Gửi ID của người gửi
+                receiver.getAvatarService().chatTo(sender.getUsername(), ":gui kb 1",1);
+                dos.writeUTF(sender.getUsername());  // Tên người gửi
+                dos.flush();
+                sendMessage(message);
+                // Xác nhận gửi lời mời kết bạn đến người gửi
+            } else {
+                // Xử lý trường hợp người dùng không tồn tạ
+                user.getAvatarService().serverDialog("kb");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
 
     /**
      * Lấy thông tin item và giá tiền để in lên shop?

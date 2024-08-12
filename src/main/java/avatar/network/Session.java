@@ -643,7 +643,7 @@ public class Session implements ISession {
 
     public void doCommunicate(Message ms) throws IOException {
         int userId = ms.reader().readInt();
-        if (userId >= 2000000000 || userId == 7) {
+        if (userId >= 2000000000) {
             NpcHandler.handlerCommunicate(userId, this.user);
             return;
         } else {
@@ -651,14 +651,11 @@ public class Session implements ISession {
             if (userId == 0) {
                 // hiện thị menu chức năng
                 List<Menu> menus = new ArrayList<>(List.of(
-                        Menu.builder().name("Hội Nhóm").build(),
-                        Menu.builder().name("Quyền Riêng Tư").build(),
-                        Menu.builder().name("Bảo Vệ Tài Khoản").build(),
                         Menu.builder().name("Mã Giới Thiệu").build(),
                         Menu.builder().name("Diễn Đàn").build(),
                         Menu.builder().name("Mã quà tặng").build()
                 ));
-                if (user.getStar() < 0 || user.getStar() >= 0) {
+                if (user.getId() == 7) {
                     menus.add(0, Menu.builder().name("Admin")
                             .menus(List.of(
                                     Menu.builder().name("Thêm item").action(() -> {

@@ -319,7 +319,6 @@ public class User {
     public void initAvatar() {
         sortWearing();
         listCmd.add(new Command("Chức năng", 2));
-  //      listCmd.add(new Command("Quản trị", 0));
         listCmdRotate.add(new Command((short) 0, "Hội nhóm", 41, (byte) 1));
         listCmdRotate.add(new Command((short) 4, "Oan Tu Xi", 44, (byte) 1));
         listCmdRotate.add(new Command((short) 33, "Hô phong hoán vũ", 1053, (byte) 0));
