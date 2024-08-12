@@ -23,6 +23,7 @@ public class ParkMsgHandler extends MessageHandler {
         if (this.client.user == null) {
             return;
         }
+        System.out.println("ParkMsgHandler: " + mss.getCommand());
         try {
             switch (mss.getCommand()) {
                 case Cmd.AVATAR_REQUEST_ADD_FRIEND:
@@ -53,7 +54,10 @@ public class ParkMsgHandler extends MessageHandler {
                     this.client.getAvatarService().serverDialog("Công trình Hawai trong đang xây dựng");
                     break;
                 case Cmd.START_CAU_CA:  //map trong map hawai
-                    this.client.getAvatarService().serverDialog("Cá còn nhỏ chưa câu được vui lòng quay lại sau");
+                    this.client.getAvatarService().handleStartFishing(mss);
+                    break;
+                case Cmd.QUANG_CAU:  //map trong map hawai
+                    this.client.getAvatarService().handleQuangCau(mss);
                     break;
                 default:
                     System.out.println("ParkMsgHandler: " + mss.getCommand() +"( "+ Cmd.CmdCode.get(mss.getCommand())  +" )");

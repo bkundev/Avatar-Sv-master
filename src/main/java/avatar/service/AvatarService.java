@@ -308,6 +308,8 @@ public class AvatarService extends Service {
             try {
                 while (dis.available() > 0) {  // Vòng lặp cho đến khi hết dữ liệu
                     try {
+                        boolean b = dis.readBoolean();
+                        System.out.println("Read int: " + b);
                         int intValue = dis.readInt();  // Thử đọc int
                         System.out.println("Read int: " + intValue);
                     } catch (IOException e) {
@@ -361,10 +363,47 @@ public class AvatarService extends Service {
         }
     }
 
+    public void handleStartFishing(Message ms) {
+        try {
+            boolean isSuccess = true;
 
+            Message response = new Message(Cmd.START_CAU_CA);
+            DataOutputStream ds = response.writer();
+            ds.writeBoolean(isSuccess);  // Ghi kết quả thành công hoặc thất bại
+            ds.flush();
+            this.sendMessage(response);
 
+        } catch (IOException ex) {
+            logger.error("handleStartFishing() ", ex);
+        }
+    }
 
+    public void handleQuangCau(Message ms) {
+        try {
 
+            short timeDelay = 5000; // 5 giây
+            byte[][] arrImg = new byte[2][10]; // Ví dụ với 2 hình ảnh, mỗi hình 10 byte
+
+            // Khởi tạo dữ liệu hình ảnh demo
+            for (int i = 0; i < arrImg.length; i++) {
+                for (int j = 0; j < arrImg[i].length; j++) {
+                    arrImg[i][j] = (byte) (i + j);
+                }
+            }
+            int userID = this.session.user.getId();
+            Message response = new Message(Cmd.QUANG_CAU);
+            DataOutputStream ds = response.writer();
+            ds.writeInt(userID);
+            ds.writeInt(457);
+            ds.writeInt(1);
+            ds.writeShort(timeDelay);
+            ds.flush();
+            this.sendMessage(response);
+
+        } catch (IOException ex) {
+            logger.error("handleStartFishing() ", ex);
+        }
+    }
 
 
     /**
