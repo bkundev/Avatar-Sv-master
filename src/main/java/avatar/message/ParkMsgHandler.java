@@ -23,11 +23,11 @@ public class ParkMsgHandler extends MessageHandler {
         if (this.client.user == null) {
             return;
         }
-        System.out.println("ParkMsgHandler: " + mss.getCommand());
+        System.out.println("ParkMsgHandler: " + mss.getCommand() +"( "+ Cmd.CmdCode.get(mss.getCommand())  +" )");
         try {
             switch (mss.getCommand()) {
                 case Cmd.AVATAR_REQUEST_ADD_FRIEND:
-                    this.client.getAvatarService().handleAddFriendRequest(mss);
+                    this.client.getParkService().handleAddFriendRequest(mss);
                     break;
                 case Cmd.CHAT_TO:
                     this.client.getAvatarService().chatToUser(mss);
@@ -54,10 +54,21 @@ public class ParkMsgHandler extends MessageHandler {
                     this.client.getAvatarService().serverDialog("Công trình Hawai trong đang xây dựng");
                     break;
                 case Cmd.START_CAU_CA:  //map trong map hawai
-                    this.client.getAvatarService().handleStartFishing(mss);
+                    this.client.getParkService().handleStartFishing(mss);
                     break;
                 case Cmd.QUANG_CAU:  //map trong map hawai
-                    this.client.getAvatarService().handleQuangCau(mss);
+                    this.client.getParkService().handleQuangCau(mss);
+                    this.client.getParkService().onStatus();
+                    this.client.getParkService().onCanCau();
+                    this.client.getParkService().CauThanhCong();
+                    this.client.getParkService().onInfoFish();
+
+                    break;
+                case Cmd.CAU_CA_XONG:  //map trong map hawai
+                    this.client.getParkService().CauCaXong();
+
+                    this.client.getParkService().doFinishFishing();
+
                     break;
                 default:
                     System.out.println("ParkMsgHandler: " + mss.getCommand() +"( "+ Cmd.CmdCode.get(mss.getCommand())  +" )");
