@@ -52,7 +52,7 @@ public class ParkService extends Service {
             Message response = new Message(Cmd.START_CAU_CA);
             DataOutputStream ds = response.writer();
             ds.writeBoolean(isSuccess);
-            ds.writeUTF("");// Ghi kết quả thành công hoặc thất bại
+            ds.writeUTF("content");
             ds.flush();
             this.sendMessage(response);
 
@@ -74,13 +74,13 @@ public class ParkService extends Service {
             logger.error("handleStartFishing() ", ex);
         }
     }
-    public void onStatus() {
+    public void onStatusFish() {
         try {
             int userID = this.session.user.getId();
             Message ms = new Message(Cmd.STATUS_FISH);
             DataOutputStream ds = ms.writer();
             ds.writeInt(userID);
-            ds.writeByte(3);
+            ds.writeByte(2);
             ds.flush();
             this.sendMessage(ms);
 
@@ -95,27 +95,19 @@ public class ParkService extends Service {
             DataOutputStream ds = ms.writer();
             ds.writeInt(userID);
             int idFish2 = 457;
-            ds.writeShort(idFish2); // gửi giá trị idFish2
-            short timeDelay = 3000; // giá trị ví dụ
-            ds.writeShort(timeDelay); // gửi giá trị timeDelay
-            byte b2 = 2; // giá trị ví dụ
-            ds.writeByte(b2); // gửi giá trị b2, số lượng mảng con
+            ds.writeShort(idFish2);
+            short timeDelay = 3000;
+            ds.writeShort(timeDelay);
 
-// Tạo mảng 2 chiều array2 và gửi từng phần tử
-            byte[][] array2 = new byte[b2][];
 
-// Tạo và điền dữ liệu cho các mảng con trong array2
-            for (int j = 0; j < b2; j++) {
-                short num3 = 4; // giá trị ví dụ cho kích thước mảng con
-                array2[j] = new byte[num3];
+            byte[] dataArray = new byte[] { -119, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 24, 0, 0, 0, 24, 8, 2, 0, 0, 0, 111, 21, -86, -81, 0, 0, 0, 127, 73, 68, 65, 84, 120, -38, -51, -43, 75, 10, -64, 48, 8, 4, 80, -17, 127, -65, -84, 122, -110, -84, 44, -76, 32, 18, -99, 20, 63, -112, 14, -39, -10, -95, -110, 88, 34, -112, 105, 66, -71, 52, 64, -17, 103, 23, -47, 114, -62, -100, -122, -92, -100, 12, 87, -126, -20, 68, 22, 104, 105, -42, -79, -48, 68, 44, -12, 81, 90, 63, 52, 35, 113, 122, 60, 12, 57, 61, -90, -95, -15, -28, 55, 16, 51, -61, -42, 6, 8, 42, 4, 14, -69, 13, -110, -93, -53, -42, -112, 37, 2, 55, 59, 0, -19, 31, -83, 64, -102, -16, 31, -19, 126, -115, -56, -92, -86, -5, -88, 13, 42, -83, -38, -61, 127, -111, 27, 125, 42, -128, -56, 68, -118, 24, 45, 0, 0, 0, 0, 73, 69, 78, 68, -82, 66, 96, -126 };
+            byte[] dataArray1 = new byte[] { -119, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 24, 0, 0, 0, 24, 8, 2, 0, 0, 0, 111, 21, -86, -81, 0, 0, 0, 127, 73, 68, 65, 84, 120, -38, -51, -43, 75, 10, -64, 48, 8, 4, 80, -17, 127, -65, -84, 122, -110, -84, 44, -76, 32, 18, -99, 20, 63, -112, 14, -39, -10, -95, -110, 88, 34, -112, 105, 66, -71, 52, 64, -17, 103, 23, -47, 114, -62, -100, -122, -92, -100, 12, 87, -126, -20, 68, 22, 104, 105, -42, -79, -48, 68, 44, -12, 81, 90, 63, 52, 35, 113, 122, 60, 12, 57, 61, -90, -95, -15, -28, 55, 16, 51, -61, -42, 6, 8, 42, 4, 14, -69, 13, -110, -93, -53, -42, -112, 37, 2, 55, 59, 0, -19, 31, -83, 64, -102, -16, 31, -19, 126, -115, -56, -92, -86, -5, -88, 13, 42, -83, -38, -61, 127, -111, 27, 125, 42, -128, -56, 68, -118, 24, 45, 0, 0, 0, 0, 73, 69, 78, 68, -82, 66, 96, -126 };
 
-                // Điền dữ liệu vào mảng con
-                for (int k = 0; k < num3; k++) {
-                    array2[j][k] = (byte) (k + 1); // giá trị ví dụ
-                }
-                ds.writeShort(num3);
-                ds.write(array2[j]);
-            }
+            ds.writeByte((byte) 2);
+            ds.writeShort(dataArray.length);
+            ds.write(dataArray);
+            ds.writeShort(dataArray1.length);
+            ds.write(dataArray1);
             ds.flush();
             this.sendMessage(ms);
 
@@ -169,28 +161,6 @@ public class ParkService extends Service {
         }
     }
 
-    public void doFinishFishing() {
-        try {
-            int userID = this.session.user.getId();
-            Message ms = new Message(Cmd.CAU_THANH_CONG);
-            DataOutputStream ds = ms.writer();
-            boolean isF = true;
-            byte[] index = {10, 20, 30}; // Dữ liệu mẫu cho index
-
-            // Ghi dữ liệu vào DataOutputStream
-            ds.writeBoolean(isF);
-            ds.writeByte((byte) index.length); // Sử dụng byte thay vì sbyte
-
-            for (byte b : index) {
-                ds.writeByte(b);
-            }
-            ds.flush();
-            this.sendMessage(ms);
-
-        } catch (IOException ex) {
-            logger.error("handleStartFishing() ", ex);
-        }
-    }
 
 
 }

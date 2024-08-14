@@ -50,24 +50,22 @@ public class ParkMsgHandler extends MessageHandler {
                 case Cmd.REQUEST_DYNAMIC_PART:
                     this.client.getAvatarService().requestPartDynaMic(mss);
                     break;
-                case Cmd.REQUEST_JOIN_ANY:  //map trong map hawai
+                case Cmd.REQUEST_JOIN_ANY:
                     this.client.getAvatarService().serverDialog("Công trình Hawai trong đang xây dựng");
                     break;
-                case Cmd.START_CAU_CA:  //map trong map hawai
+                case Cmd.START_CAU_CA: //86
                     this.client.getParkService().handleStartFishing(mss);
                     break;
-                case Cmd.QUANG_CAU:  //map trong map hawai
+                case Cmd.QUANG_CAU: //82
                     this.client.getParkService().handleQuangCau(mss);
-                    this.client.getParkService().onStatus();
                     this.client.getParkService().onCanCau();
-                    this.client.getParkService().CauThanhCong();
-                    this.client.getParkService().onInfoFish();
-
                     break;
-                case Cmd.CAU_CA_XONG:  //map trong map hawai
+                case Cmd.CAU_CA_XONG:
                     this.client.getParkService().CauCaXong();
 
-                    this.client.getParkService().doFinishFishing();
+                    break;
+                case Cmd.CAU_THANH_CONG:
+                    this.client.getParkService().CauThanhCong();
 
                     break;
                 default:
