@@ -387,6 +387,7 @@ public class User {
                 return;
             }
             byte idFeel = ms.reader().readByte();
+            System.out.println("doAvatarFeel msg 57 = " + idFeel + " ");
             getMapService().doAvatarFeel(id, idFeel);
         } catch (IOException e) {
             e.printStackTrace();

@@ -18,6 +18,7 @@ Avatar {
     }
 
     public static void start() {
+
         //getPart insert sql item
 
         //for (int i = 2000; i < 6676; i++) {
