@@ -1,5 +1,6 @@
 package avatar.server;
 
+import avatar.model.Fish;
 import avatar.model.GameData;
 
 import java.io.File;
@@ -12,8 +13,24 @@ Avatar {
 
     private static Thread T;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         //Utils.decodeMapItemFile();
+//        Fish selector = new Fish();
+//
+//        // Mô phỏng lựa chọn trong 2 giờ
+//        int attempts = 0;
+//        int count457 = 0;
+//        long startTime = System.currentTimeMillis();
+//
+//        while ((System.currentTimeMillis() - startTime) < 2 * 60) { // 2 giờ tính bằng milliseconds
+//            int selectedID = selector.getRandomFishID();
+//            if (selectedID == 457) {
+//                count457++;
+//                if (count457 >=3) {Thread.sleep(100000);}
+//            }
+//            attempts++;
+//            System.out.println("ID 457 được chọn " + count457 + " lần trong tổng số " + attempts + " lượt chọn.");
+//        }
         Avatar.start();
     }
 
