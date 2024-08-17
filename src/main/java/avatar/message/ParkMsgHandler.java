@@ -58,11 +58,13 @@ public class ParkMsgHandler extends MessageHandler {
                     break;
                 case Cmd.QUANG_CAU: //82
                     this.client.getParkService().handleQuangCau(mss);//82
-                    this.client.getParkService().onStatusFish();
-                    this.client.getParkService().CauCaXong();
                     this.client.getParkService().onCanCau(); // 91
-                    this.client.getParkService().CauThanhCong();//84
+                    break;
+                case Cmd.CAU_CA_XONG: //85
                     this.client.getParkService().CauCaXong();
+                    break;
+                case Cmd.CAU_THANH_CONG: //84
+                    this.client.getParkService().CauThanhCong();//84
                     break;
                 default:
                     System.out.println("ParkMsgHandler: " + mss.getCommand() +"( "+ Cmd.CmdCode.get(mss.getCommand())  +" )");
