@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.Random;
 
 public class ParkService extends Service {
-    private User us;
     short time;
     private static final Logger logger = Logger.getLogger(AvatarService.class);
     private static final Fish a = new Fish();
@@ -51,37 +50,46 @@ public class ParkService extends Service {
 
     public void handleStartFishing(Message ms) {
         try {
-            Message response = new Message(Cmd.START_CAU_CA);
-            DataOutputStream ds = response.writer();
+            if(!CheckItemAreaFish(446,"bạn phải có cần câu vip")){
+                return;
+            }
+            if(!CheckItemAreaFish(448,"bạn phải có mồi câu cá")){
+                return;
+            }
+            Item MoiCau = this.session.user.findItemInChests(448);
+            if(MoiCau!=null){
+                this.session.user.removeItemFromChests(MoiCau);
+            }
 
-            Item item = this.session.user.findItemInChests(446);//check cần
-            if (item != null) {
-                boolean isSuccess = false;
-                ds.writeBoolean(isSuccess);
-                ds.writeUTF("Bạn phải có cần kâu");
-                ds.flush();
-                this.sendMessage(response);
-            }else if(1==1)
-            {
-                boolean isSuccess = false;
-                ds.writeBoolean(isSuccess);
-                ds.writeUTF("content");
-                ds.flush();
-                this.sendMessage(response);
-                Item moi = this.session.user.findItemInChests(4875);//check cần//mồi câu cá trâm
-            }
-            else
-            {
-                boolean isSuccess = true;
-                ds.writeBoolean(isSuccess);
-                ds.writeUTF("");
-                ds.flush();
-                this.sendMessage(response);
-            }
 
         } catch (IOException ex) {
             logger.error("handleStartFishing() ", ex);
         }
+    }
+
+    private boolean CheckItemAreaFish(int ItemID,String messenger) throws IOException {
+        Message response = new Message(Cmd.START_CAU_CA);
+        DataOutputStream ds = response.writer();
+        boolean isSuccess = true;
+        Item item= null;
+        if(ItemID == 446){
+            item = this.session.user.findItemInWearing(ItemID);
+        }else {
+            item = this.session.user.findItemInChests(ItemID);
+        }
+        if(item==null){
+            isSuccess = false;
+            ds.writeBoolean(isSuccess);
+            ds.writeUTF(messenger);
+            ds.flush();
+            this.sendMessage(response);
+            return false;
+        }
+        ds.writeBoolean(isSuccess);
+        ds.writeUTF("Bạn phải có cần kâu");
+        ds.flush();
+        this.sendMessage(response);
+        return true;
     }
 
     public void handleQuangCau(Message ms) {
@@ -97,6 +105,7 @@ public class ParkService extends Service {
             logger.error("handleStartFishing() ", ex);
         }
     }
+
     public void onStatusFish() {
         try {
             int userID = this.session.user.getId();
@@ -115,20 +124,20 @@ public class ParkService extends Service {
     public void onCanCau() {
         try {
             Thread.sleep(7000);
-            us = UserManager.getInstance().find(this.session.user.getId());
+            //us = UserManager.getInstance().find(this.session.user.getId());
             short idFish = (short) a.getRandomFishID();
-            us.setIdFish(idFish);
+            this.session.user.setIdFish(idFish);
             time = 3000;
             if(idFish<0)
             {
                 time = -1;
-                us.setIdFish(idFish);
+                this.session.user.setIdFish(idFish);
             }
             Random random = new Random();
             Message ms = new Message(Cmd.CAN_CAU);
             DataOutputStream ds = ms.writer();
-            ds.writeInt(us.getId());
-            ds.writeShort(us.getIdFish());
+            ds.writeInt(this.session.user.getId());
+            ds.writeShort(this.session.user.getIdFish());
             ds.writeShort(time);
             int randomNumber = random.nextInt((12 - 6) + 1) + 4;
             ds.writeByte((byte) randomNumber);
@@ -154,6 +163,11 @@ public class ParkService extends Service {
             DataOutputStream ds = ms.writer();
             ds.writeInt(userID);
             ds.writeShort(this.session.user.getIdFish());
+            int IDFISH = this.session.user.getIdFish();
+            if(IDFISH>0){
+                Item item = new Item(IDFISH,-1,1);
+                this.session.user.addItemToChests(item);
+            }
             ds.flush();
             this.sendMessage(ms);
 
@@ -166,7 +180,7 @@ public class ParkService extends Service {
         try {
             Message ms = new Message(Cmd.INFO_FISH);
             DataOutputStream ds = ms.writer();
-            ds.writeInt(us.getId());
+            ds.writeInt(this.session.user.getId());
             ds.writeByte(1);
             ds.writeByte(1);
             ds.writeInt(1);
@@ -182,9 +196,10 @@ public class ParkService extends Service {
         try {
             int userID = this.session.user.getId();
             Message ms = new Message(Cmd.CAU_CA_XONG);
+            int IDFISH = this.session.user.getIdFish();
             DataOutputStream ds = ms.writer();
             ds.writeInt(userID);
-            ds.writeInt(this.session.user.getIdFish());
+            ds.writeInt(IDFISH);
             ds.flush();
             this.sendMessage(ms);
         } catch (IOException ex) {

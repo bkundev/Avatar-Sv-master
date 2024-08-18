@@ -90,7 +90,7 @@ public class NpcHandler {
                         ShopEventHandler.displayUI(us, 2040,3506,2620,2577,5539,2618, 2619, 3987,3455,3456,3457,4995,3988,3989,3990,5573);
                     }).build();
                     list1.add(Event);
-                    list1.add(Menu.builder().name("Góp dây tơ")
+                    list1.add(Menu.builder().name("Góp ....")
                             .action(() -> {
                                 GopDiemSK(us);
                             })
@@ -215,8 +215,6 @@ public class NpcHandler {
                                             }).build()
                                     ))
                             .id(npcId)
-                            .npcName("Quay số")
-                            .npcChat("Quay số may mắn đây")
                             .build();
                     list.add(quaySo1);
                     list.add(Menu.builder().name("Xem hướng dẫn").action(() -> {
@@ -225,7 +223,7 @@ public class NpcHandler {
                     }).build());
                     list.add(Menu.builder().name("Thoát").build());
                     us.setMenus(list);
-                    us.getAvatarService().openUIMenu(npcId, 0, list, "quay số", "Vòng quay may mắn nhận những vật phẩm quí hiếm đây! Mại dô!");
+                    us.getAvatarService().openMenuOption(npcId, 0, list);
                     break;
                 }
                 case NpcName.THO_KIM_HOAN: {
@@ -261,8 +259,8 @@ public class NpcHandler {
                     Menu LAI_BUON = Menu.builder().name("Điểm Danh").action(() -> {
                         Item item = new Item(593, -1, 1);
                         //us.addItemToChests(item);
-                        us.addExp(5);
-                        us.getService().serverMessage("Bạn nhận được 5 điểm exp + 1 thẻ quay số miễn phí");
+                        //us.addExp(5);
+                        us.getService().serverMessage("đang xây dựng");//Bạn nhận được 5 điểm exp + 1 thẻ quay số miễn phí");
                     }).build();
                     list.add(LAI_BUON);
                     list.add(Menu.builder().name("Xem hướng dẫn").action(() -> {
@@ -270,11 +268,31 @@ public class NpcHandler {
                     }).build());
                     list.add(Menu.builder().name("Thoát").build());
                     us.setMenus(list);
-                    us.getAvatarService().openUIMenu(npcId, 0, list, "Lãi Buôn", "Chào Các Cư Dân Chăm Chỉ ");
+                    us.getAvatarService().openMenuOption(npcId, 0, list);
                     break;
                 }
                 case NpcName.THO_CAU:
-                    us.getAvatarService().serverDialog("Chức năng đang được xây dựng, vui lòng thử lại sau");
+                    List<Menu> list = new ArrayList<>();
+                    Menu LAI_BUON = Menu.builder().name("Câu cá").action(() -> {
+                        List<Item> Items1 = new ArrayList<>();
+                        Item item = new Item(446,30,0);//câu vip
+                        Items1.add(item);
+                        Item item1 = new Item(460,2,0);//vé cau
+                        Items1.add(item1);
+                        Item item2 = new Item(448,30,1);//mồi
+                        Items1.add(item2);
+
+                        us.getAvatarService().openUIShop(npcId,"Trùm Câu Cá,",Items1);
+                    }).build();
+                    list.add(LAI_BUON);
+                    list.add(Menu.builder().name("Bán cá").action(() -> {
+                    }).build());
+                    list.add(Menu.builder().name("Xem hướng dẫn").action(() -> {
+                        us.getAvatarService().customTab("Hướng dẫn", "Câu cá kiếm được nhiều xu bản auto lên thanhpholo.com");
+                    }).build());
+                    list.add(Menu.builder().name("Thoát").build());
+                    us.setMenus(list);
+                    us.getAvatarService().openMenuOption(npcId,0,  list);
                     break;
             }
         }
