@@ -576,7 +576,6 @@ public class Session implements ISession {
                 ds.writeInt(Math.toIntExact(user.getXu()));
                 ds.writeInt(user.getLuong());
                 ds.writeInt(user.getLuongKhoa());
-
                 ds.flush();
                 this.sendMessage(ms);
             } else {

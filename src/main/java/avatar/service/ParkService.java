@@ -50,16 +50,19 @@ public class ParkService extends Service {
 
     public void handleStartFishing(Message ms) {
         try {
+            if(!CheckItemAreaFish(460,"bạn phải vé câu cá mập")){
+                return;
+            }
             if(!CheckItemAreaFish(446,"bạn phải có cần câu vip")){
                 return;
             }
-            if(!CheckItemAreaFish(448,"bạn phải có mồi câu cá")){
-                return;
-            }
-            Item MoiCau = this.session.user.findItemInChests(448);
-            if(MoiCau!=null){
-                this.session.user.removeItemFromChests(MoiCau);
-            }
+//            if(!CheckItemAreaFish(448,"bạn phải có mồi câu cá")){
+//                return;
+//            }
+//            Item MoiCau = this.session.user.findItemInChests(448);
+//            if(MoiCau!=null){
+//                this.session.user.removeItemFromChests(MoiCau);
+//            }
 
 
         } catch (IOException ex) {
@@ -86,7 +89,7 @@ public class ParkService extends Service {
             return false;
         }
         ds.writeBoolean(isSuccess);
-        ds.writeUTF("Bạn phải có cần kâu");
+        ds.writeUTF("");
         ds.flush();
         this.sendMessage(response);
         return true;
@@ -94,6 +97,12 @@ public class ParkService extends Service {
 
     public void handleQuangCau(Message ms) {
         try {
+            Item item = this.session.user.findItemInChests(448);
+            if(item==null){
+                this.session.user.getAvatarService().serverDialog("Hết mồi rồi sếp");
+                return;
+            }
+            this.session.user.removeItemFromChests(item);
             int userID = this.session.user.getId();
             Message response = new Message(Cmd.QUANG_CAU);
             DataOutputStream ds = response.writer();

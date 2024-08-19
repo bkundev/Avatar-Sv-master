@@ -273,7 +273,7 @@ public class NpcHandler {
                 }
                 case NpcName.THO_CAU:
                     List<Menu> list = new ArrayList<>();
-                    Menu LAI_BUON = Menu.builder().name("Câu cá").action(() -> {
+                    Menu thoCau = Menu.builder().name("Câu cá").action(() -> {
                         List<Item> Items1 = new ArrayList<>();
                         Item item = new Item(446,30,0);//câu vip
                         Items1.add(item);
@@ -281,11 +281,16 @@ public class NpcHandler {
                         Items1.add(item1);
                         Item item2 = new Item(448,30,1);//mồi
                         Items1.add(item2);
-
                         us.getAvatarService().openUIShop(npcId,"Trùm Câu Cá,",Items1);
+                        us.getAvatarService().updateMoney(0);
                     }).build();
-                    list.add(LAI_BUON);
+                    list.add(thoCau);
                     list.add(Menu.builder().name("Bán cá").action(() -> {
+                        try {
+                            sellFish(us);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }).build());
                     list.add(Menu.builder().name("Xem hướng dẫn").action(() -> {
                         us.getAvatarService().customTab("Hướng dẫn", "Câu cá kiếm được nhiều xu bản auto lên thanhpholo.com");
@@ -294,6 +299,21 @@ public class NpcHandler {
                     us.setMenus(list);
                     us.getAvatarService().openMenuOption(npcId,0,  list);
                     break;
+            }
+        }
+    }
+
+    public static void sellFish(User us) throws IOException {
+        int[] array = {2130,2131,2132,454,455,456,457};
+        for (int  i = 0; i < array.length; i++) {
+            Item item = us.findItemInChests(array[i]);
+            if (item != null && item.getQuantity() > 0) {
+                int sell = item.getQuantity()*item.getPart().getCoin();
+                String message = String.format("Bạn vừa bán %d %s với giá %d x %d con = %d xu.", item.getQuantity(), item.getPart().getName(),item.getPart().getCoin(),item.getQuantity(), sell);
+                us.removeItem(item.getId(), item.getQuantity());
+                us.updateXu(+sell);
+                us.getAvatarService().updateMoney(0);
+                us.getAvatarService().SendTabmsg(message);
             }
         }
     }

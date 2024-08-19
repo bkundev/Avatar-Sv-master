@@ -242,18 +242,21 @@ public class AvatarService extends Service {
             ds.flush();
             sendMessage(ms5);
 
-            Message message = new Message(-6);
-            ds = message.writer();
-            ds.writeInt(1);
-            ds.writeUTF("Admin");
-            ds.writeUTF("Wellcome Lo_city");
-            ds.flush();
-            session.sendMessage(message);
         } catch (IOException ex) {
             logger.error("onLoginSuccess err", ex);
         }
     }
 
+    public void SendTabmsg(String content) throws IOException {
+        Message ms = new Message(-6);
+        DataOutputStream ds = ms.writer();
+        ds = ms.writer();
+        ds.writeInt(1);
+        ds.writeUTF("Admin");
+        ds.writeUTF(content);
+        ds.flush();
+        this.session.sendMessage(ms);
+    }
     public void getAvatarPart() {
         try {
             List<Part> parts = PartManager.getInstance().getAvatarPart();
