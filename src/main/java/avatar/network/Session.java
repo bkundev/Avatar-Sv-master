@@ -391,10 +391,31 @@ public class Session implements ISession {
         System.out.println("agentInfo: " + agent);
     }
 
-    public void doRequestService(Message ms) throws IOException {
+
+    public  void doRequestService(Message ms) throws IOException {
         byte id = ms.reader().readByte();
-        String msg = ms.reader().readUTF();
+        //String msg = ms.reader().readUTF();
         switch (id) {
+            case 0:{
+                ms = new Message(Cmd.UPDATE_CONTAINER);
+                DataOutputStream ds = ms.writer();
+                String content = this.user.getUpgradeRequirements();
+                ds.writeByte(0);
+                ds.writeUTF(content);
+                ds.flush();
+                this.sendMessage(ms);
+                break;
+            }
+            case 1:{
+                ms = new Message(Cmd.UPDATE_CONTAINER);
+                DataOutputStream ds = ms.writer();
+                String content = this.user.upgradeChest();
+                ds.writeByte(1);
+                ds.writeUTF(content);
+                ds.flush();
+                this.sendMessage(ms);
+                break;
+            }
             case 6: {
                 ms = new Message(-10);
                 DataOutputStream ds = ms.writer();
@@ -529,6 +550,12 @@ public class Session implements ISession {
             byte type = ms.reader().readByte();
             if (type < 1 || type > 2) {
                 this.user.getService().serverMessage("Có lỗi xảy ra, vui lòng liên hệ admin. Mã lỗi: buyItemShopWrongType");
+                return;
+            }
+            int useChestSlot = user.chests.size();
+            if(useChestSlot>=user.chests.size())
+            {
+                getAvatarService().serverDialog("Rương đồ đã đầy");
                 return;
             }
             Part part = PartManager.getInstance().findPartByID(partID);
@@ -820,6 +847,12 @@ public class Session implements ISession {
     private void doFinalEventShop(UpgradeItem Eventitem) {
         if(user.getScores()> Eventitem.getScores()){
             Eventitem.getItem().setExpired(-1);
+            int useChestSlot = user.chests.size();
+            if(useChestSlot>=user.chests.size())
+            {
+                getAvatarService().serverDialog("Rương đồ đã đầy");
+                return;
+            }
             user.addItemToChests(Eventitem.getItem());
             user.setStylish((byte) (user.getStylish() - 1));
             user.updateScores(-Eventitem.getScores());

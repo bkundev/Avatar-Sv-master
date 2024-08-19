@@ -40,6 +40,10 @@ import org.json.simple.JSONArray;
 @Getter
 @Setter
 public class User {
+    private static int chestLevel;
+    private static final int[] UPGRADE_COST_COINS = {0, 0,0,20000, 50000, 100000, 200000 ,200000,500000,600000,70000,0,1000000,1200000,1500000,1700000,2000000,2500000,2700000,3000000,4000000,5000000};
+    private static final int[] UPGRADE_COST_GOLD = {0, 0, 0, 0, 0, 0, 0, 200,500,600,700,1000,1000 ,1200 ,1500 ,1700 ,2000 ,2500 ,2700 ,3000 ,4000 ,5000 };
+
 
     private static final Logger logger = Logger.getLogger(User.class);
     public Session session;
@@ -70,7 +74,7 @@ public class User {
     private byte chestHomeSlot;
     private int scores;
     private List<Item> wearing;
-    private List<Item> chests;
+    public List<Item> chests;
     private Zone zone;
     private short x, y;
     private byte direct;
@@ -154,14 +158,17 @@ public class User {
     public synchronized void updateHunger(int hunger) {
         this.hunger += (byte) hunger;
     }
+    public synchronized void updateChestSlot(int chestslot) {
+        this.chestSlot += (byte) chestslot;
+    }
 
     public void sendMessage(Message ms) {
         this.session.sendMessage(ms);
     }
 
     protected void saveData() {
-        DbManager.getInstance().executeUpdate("UPDATE `players` SET `gender` = ?, `friendly` = ?, `crazy` = ?, `stylish` = ?, `happy` = ?, `hunger` = ? WHERE `user_id` = ? LIMIT 1;",
-                this.gender, this.friendly, this.crazy, this.stylish, this.happy, this.hunger, this.id);
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `gender` = ?, `friendly` = ?, `crazy` = ?, `stylish` = ?, `happy` = ?, `hunger` = ?, `chest_slot` = ? WHERE `user_id` = ? LIMIT 1;",
+                this.gender, this.friendly, this.crazy, this.stylish, this.happy, this.hunger,this.chestSlot, this.id);
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ?,`scores` = ? WHERE `user_id` = ? LIMIT 1;",
                 this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain,this.scores, this.id);
         JSONArray jChests = new JSONArray();
@@ -258,6 +265,7 @@ public class User {
                     this.leverMain = res.getInt("level_main");
                     this.expMain = res.getInt("exp_main");
                     this.gender = res.getByte("gender");
+                    this.chestSlot = res.getByte("chest_slot");
                     this.xu = res.getLong("xu");
                     this.luong = res.getInt("luong");
                     this.luongKhoa = res.getInt("luong_khoa");
@@ -270,6 +278,7 @@ public class User {
                     this.hunger = res.getByte("hunger");
                     this.star = res.getByte("star");
                     this.scores = res.getInt("scores");
+
                     this.chests = new ArrayList<>();
                     JSONArray chests = (JSONArray) JSONValue.parse(res.getString("chests"));
                     for (Object chest : chests) {
@@ -369,6 +378,42 @@ public class User {
         getAvatarService().viewChest(_chests);
     }
 
+    // hỏi nâng cấp
+    public String getUpgradeRequirements() {
+        if (chestSlot/5 >= UPGRADE_COST_COINS.length - 1) {
+            return "Rương đã đạt cấp tối đa";
+        }
+
+        int nextLevel = (chestSlot/5)+1;
+        int coinCost = UPGRADE_COST_COINS[nextLevel];
+        int goldCost = UPGRADE_COST_GOLD[nextLevel];
+
+        return String.format(
+                "Để nâng cấp lên rương cấp %d bạn cần %d xu và %d lượng hoặc thẻ nâng cấp rương.",
+                nextLevel-2, coinCost, goldCost);
+    }
+    // nâng cấp rương
+    public String upgradeChest() {
+        if (chestSlot/5 >= UPGRADE_COST_COINS.length - 1) {
+            return "Rương đã đạt cấp tối đa";
+        }
+
+        int nextLevel = (chestSlot/5)+1;
+        int coinCost = UPGRADE_COST_COINS[nextLevel];
+        int goldCost = UPGRADE_COST_GOLD[nextLevel];
+
+        if (xu >= coinCost && luong >= goldCost) {
+            updateXu(-coinCost);
+            updateLuong(-goldCost);
+            updateChestSlot(+5);
+            getAvatarService().updateMoney(0);
+            return String.format(
+                    "chúc mừng bạn đã nâng cấp thành công rương cấp %d và có %d ô rương.",
+                    nextLevel-2, this.getChestSlot()
+            );
+        }
+        return "không đủ xu hoặc lượng";
+    }
     public void requestYourInfo(Message ms) {
         try {
             int userId = ms.reader().readInt();
@@ -442,6 +487,11 @@ public class User {
 
     public void addItemToChests(Item item) {
         synchronized (chests) {
+            int useChestSlot = this.chests.size();
+            if(useChestSlot>=this.chests.size())
+            {
+                getAvatarService().serverDialog("Rương đồ đã đầy");
+            }
             Item itm = findItemInChests(item.getId());
             if (itm != null) {
                 if (itm.getPart().getType() == -2) {
