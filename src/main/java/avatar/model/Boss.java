@@ -33,6 +33,7 @@ import avatar.play.Zone;
 import avatar.server.ServerManager;
 import avatar.server.UserManager;
 import avatar.server.Utils;
+import avatar.service.EffectService;
 import avatar.service.ParkService;
 import avatar.service.Service;
 import com.sun.source.tree.ReturnTree;
@@ -49,13 +50,13 @@ public class Boss extends User {
     public Boss() {
 
         super();
-        startAutoChat();
+        autoChatBot.start();
     }
     @Getter
     @Setter
     private List<String> textChats;
 
-    private static final int TOTAL_BOSSES = 10; // Tổng số Boss muốn tạo
+    private static final int TOTAL_BOSSES = 40; // Tổng số Boss muốn tạo
     private static int currentBossId = 1001 + Npc.ID_ADD; // ID bắt đầu cho Boss
     private static int bossCount = 0; // Đếm số lượng Boss đã được tạo
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -69,71 +70,52 @@ public class Boss extends User {
                 if (textChats == null || textChats.size() == 0) {
                     Thread.sleep(10000);
                 }
+                int[][] pairs = {
+                        {12, 3},
+                        {19, 18},
+                        {23, 24},
+                        {25, 26},
+                        {23, 24},
+                        {38, 39},
+                        {40, 41},
+                        {42, 43},
+                        {49, 50},
+                        {51, 51},
+                        {63, 64},
+                        {69, 70},
+                        {71, 72},
+                };
+
+                Random rand = new Random();
+                int randomIndex = rand.nextInt(pairs.length);
+                int[] selectedPair = pairs[randomIndex];
+                BossSkillRanDomUser((byte)selectedPair[0], (byte)selectedPair[1]);
             } catch (InterruptedException ignored) {
             }
         }
     });
-    private void startAutoChat() {
-        scheduler.scheduleAtFixedRate(() -> {
-            try {
-                if (textChats != null && !textChats.isEmpty()) {
-                    for (String text : textChats) {
-                        if (text != null) {
-                            if (getMapService() != null) {
-                                getMapService().chat(this, text);
-                            } else {
-                                System.err.println("MapService is null.");
-                            }
-                            Thread.sleep(6000); // Điều chỉnh thời gian delay nếu cần
-                        } else {
-                            System.err.println("Text is null.");
-                        }
-                    }
-                    int randomItemId = new Random().nextInt(20);
-                    this.moveBossXY(this,getX()+randomItemId,getY()+randomItemId);
-                } else {
-                    Thread.sleep(10000); // Thời gian delay nếu không có tin nhắn chat
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }, 0, 10, TimeUnit.SECONDS); // Thời gian delay ban đầu và khoảng thời gian giữa các lần gửi tin nhắn
-    }
 
     public void addBossToZone(Zone zone, short x, short y) throws IOException {
         if (bossCount >= TOTAL_BOSSES) {
             return; // Dừng nếu đã tạo đủ số lượng Boss
         }
-
         Boss boss = createBoss(x, y, currentBossId++);
         assignRandomItemToBoss(boss);
-        setBossTextChats(boss);
+        List<String> chatMessages = Arrays.asList("lại đây nào", "quà của bạn đây");
+        boss.setTextChats(chatMessages);
         boss.session = createSession(boss);
         sendAndHandleMessages(boss);
         moveBoss(boss);
         moveBossXY(boss,282,88);
         bossCount++; // Tăng số lượng Boss đã tạo
-
-        // Lập lịch phân thân Boss sau 10 giây
-        scheduler.schedule(() -> {
-            try {
-                if (bossCount < TOTAL_BOSSES) {
-                    createNearbyGiftBoxes(boss,zone, x, y, currentBossId + 10000);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }, 10, TimeUnit.SECONDS);
-
+        //createNearbyGiftBoxes(boss,zone, x, y, currentBossId + 10000);
         System.out.println("add boss khu :" + zone.getId());
     }
 
     private Boss createBoss(short x, short y,int id) {
         Boss boss = new Boss();
         boss.setId(id);
-        boss.setUsername("BOSS");
+        boss.setUsername("");
         boss.setX(x);
         boss.setY(y);
         return boss;
@@ -144,7 +126,6 @@ public class Boss extends User {
         giftBox.session = createSession(giftBox);
         sendAndHandleMessages(giftBox);
         moveBoss(giftBox);
-
         System.out.println("Tạo hộp quà phân thân với ID: " + giftId + " tại vị trí X: " + x + ", Y: " + y);
     }
     private void createNearbyGiftBoxes(Boss boss,Zone zone, short x, short y, int baseGiftId) throws IOException {
@@ -167,11 +148,6 @@ public class Boss extends User {
         Utils random = new Utils(); // Assuming Utils is instantiated
         int randomItemId = availableItems.get(random.nextInt(availableItems.size()));
         boss.addItemToWearing(new Item(randomItemId));
-    }
-
-    private void setBossTextChats(Boss boss) {
-        List<String> chatMessages = Arrays.asList("lại đây nào", "quà của bạn đây");
-        boss.setTextChats(chatMessages);
     }
     private void sendAndHandleMessages(Boss boss) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -259,5 +235,40 @@ public class Boss extends User {
     @Override
     public void sendMessage(Message ms) {
 
+    }
+    public void BossSkillRanDomUser(byte skill1,byte skill2){
+        List<User> players = this.session.user.getZone().getPlayers();
+        for (User player : players) {
+            EffectService.createEffect()
+                    .session(player.session)
+                    .id(skill1)
+                    .style((byte) 0)
+                    .loopLimit((byte) 5)
+                    .loop((short) 3)
+                    .loopType((byte) 1)
+                    .radius((short) 1)
+                    .idPlayer(this.session.user.getId())
+                    .send();
+            Random rand = new Random();
+            User randomPlayer = null;
+            while (randomPlayer == null) {
+                int rplayerIndex = rand.nextInt(players.size());
+                User playerss = players.get(rplayerIndex);
+
+                if (playerss.getId() < Npc.ID_ADD) {
+                    randomPlayer = playerss;
+                }
+            }
+            EffectService.createEffect()
+                    .session(player.session)
+                    .id(skill2)
+                    .style((byte) 0)
+                    .loopLimit((byte) 5)
+                    .loop((short) 3)
+                    .loopType((byte) 1)
+                    .radius((short) 1)
+                    .idPlayer(randomPlayer.getId())
+                    .send();
+        };
     }
 }

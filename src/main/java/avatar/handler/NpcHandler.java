@@ -34,7 +34,6 @@ import java.util.concurrent.CountDownLatch;
 import static avatar.constants.NpcName.*;
 
 public class NpcHandler {
-
     public static void handleDiaLucky(User us, byte type) {
         DialLucky dl = DialLuckyManager.getInstance().find(type);
         if (dl != null) {
@@ -76,8 +75,11 @@ public class NpcHandler {
             return;
         }
         int npcIdCase = npcId - Npc.ID_ADD;
-        if (npcIdCase > 1000 && npcIdCase<=9999) { // Ví dụ điều kiện phân loại
-            us.getAvatarService().serverDialog("id"+npcIdCase);
+        if (npcIdCase > 1000 && npcIdCase<=9999) {
+            //us.getAvatarService().serverDialog("id"+npcIdCase);
+            List<User> lstUs = us.getZone().getPlayers();
+            us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)25,(byte)26);
+
         } else if (npcIdCase >= 10000) {
             us.getAvatarService().serverDialog("bạn đã nhặt được...");
             //z.leave(UserManager.getInstance().find(npcId));
@@ -121,53 +123,6 @@ public class NpcHandler {
                     us.getAvatarService().openUIMenu(npcId, 0, list, "boss", "hp tao:");
                     break;
                 }
-                //npc binz,admin....
-//            case NpcName.Tai_Xiu: {
-//                List<Menu> list = new ArrayList<>();
-//                Menu taiXiu = Menu.builder().name("Chơi Tài Xỉu").menus(
-//                                List.of(
-//                                        Menu.builder().name("Cược Tài").action(() -> {
-//                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 12, "Nhập Số Tiền Cược Tài", 1);
-//                                        }).build(),
-//                                        Menu.builder().name("Cược Xỉu").action(() -> {
-//                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 13, "Nhập Số Tiền Cược Xỉu", 1);
-//                                        }).build(),
-//                                        Menu.builder().name("Tất Tay tài").action(() -> {
-//                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 14, "Nhập Bừa 1 Số Để Tất Tay Tài 100.000.000 Xu", 1);
-//                                        }).build(),
-//                                        Menu.builder().name("Tất Tay xỉu").action(() -> {
-//                                            us.getAvatarService().sendTextBoxPopup(us.getId(), 15, "Nhập Bừa 1 Số Để Tất Tay Xỉu 100.000.000 Xu", 1);
-//                                        }).build()
-//                                ))
-//                        .id(npcId)
-//                        .npcName("Không Tài Thì Xỉu")
-//                        .npcChat("xuc xac nao")
-//                        .build();
-//                list.add(taiXiu);
-//                list.add(Menu.builder().name("Lịch sử").action(() -> {
-//                    us.getAvatarService().customTab("Lịch sử kết quả", "lịch sử kết quả và lịch sử cược? co cai db chưa làm !!!");
-//                }).build());
-//                list.add(Menu.builder().name("Hướng dẫn").action(() -> {
-//                    us.getAvatarService().customTab("Hướng dẫn", "cứ ôn in bừa");
-//                }).build());
-//                list.add(Menu.builder().name("Thoát").build());
-//                us.setMenus(list);
-//                us.getAvatarService().openUIMenu(npcId, 0, list, "tài xỉu", "");
-//                break;
-//            }
-//            case NpcName.binzoet:{
-//
-//                List<Menu> list = new ArrayList<>();
-//                list.add(Menu.builder().name("reset xu luong").action(() -> {
-//                    //us.setXu(999999999);
-//                    //us.setLuong(9999);
-//                    us.getAvatarService().serverDialog("reset cc");
-//                }).build());
-//                list.add(Menu.builder().name("Thoát").build());
-//                us.setMenus(list);
-//                us.getAvatarService().openUIMenu(npcId, 0, list, "", "");
-//                break;
-//            }
                 case NpcName.em_Thinh:{
                     List<Menu> list = new ArrayList<>();
                     List<Item> Items1 = new ArrayList<>();

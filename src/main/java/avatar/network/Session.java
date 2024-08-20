@@ -466,8 +466,8 @@ public class Session implements ISession {
             this.handler = new GlobalHandler(user);
             UserManager.getInstance().add(user);
             getAvatarService().onLoginSuccess();
-            getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thành Phố lo");
-            getAvatarService().serverInfo("welcome thanh pho Lo");
+            getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thanh Pho lo");
+            getAvatarService().serverInfo("cư dân thông catm server game cùi hơi lag sẽ cập nhật sớm nhất có thể.");
         } else {
             if (isCharCreatedPopup) {
                 getAvatarService().serverDialog("Có lỗi xảy ra!");
@@ -528,7 +528,7 @@ public class Session implements ISession {
         if (this.messageHandler instanceof FarmMsgHandler) {
             return;
         }
-        byte numKhuVuc = 30;
+        byte numKhuVuc = 24;
         byte map = ms.reader().readByte();
         ms = new Message(60);
         DataOutputStream ds = ms.writer();
@@ -661,10 +661,6 @@ public class Session implements ISession {
         ds.flush();
         this.sendMessage(ms);
         user.getAvatarService().openMenuOption(5, 0, "Đảo Hawaii", "Ai Cập", "Vương Quốc Bóng Đêm", "Biển citylo");
-
-
-
-
     }
 
     public void doCommunicate(Message ms) throws IOException {

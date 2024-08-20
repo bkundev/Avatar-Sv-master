@@ -116,7 +116,7 @@ public class ServerManager {
         GameData.getInstance().load();
         PartManager.getInstance().load();
         FoodManager.getInstance().load();
-        int numMap = 60;
+        int numMap = 24;
         for (int i = 0; i < numMap; ++i) {
             MapManager.getInstance().add(new Map(i, 0, 30));
         }
@@ -180,10 +180,11 @@ public class ServerManager {
     }}
 
     private static void loadNpcData() {
-        int numNPC = 0;
-        try (Connection connection = DbManager.getInstance().getConnection();
-             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `npc`;");
-             ResultSet res = ps.executeQuery();) {
+        try {
+            int numNPC = 0;
+            PreparedStatement ps = DbManager.getInstance().getConnection()
+                    .prepareStatement("SELECT * FROM `npc`;");
+            ResultSet res = ps.executeQuery();
             while (res.next()) {
                 int botID = res.getInt("id");
                 String botName = res.getString("name");
@@ -220,6 +221,8 @@ public class ServerManager {
                 System.out.println("  + NPC " + Utils.removeAccent(botName) + " - " + botID);
                 ++numNPC;
             }
+            res.close();
+            ps.close();
             System.out.println("Load success " + numNPC + " NPC !");
         } catch (Exception e) {
             e.printStackTrace();

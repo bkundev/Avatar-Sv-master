@@ -29,6 +29,7 @@ Avatar {
 //                count457++;
 //                if (count457 >=3) {Thread.sleep(100000);}
 //            }
+
 //            attempts++;
 //            System.out.println("ID 457 được chọn " + count457 + " lần trong tổng số " + attempts + " lượt chọn.");
 //        }
