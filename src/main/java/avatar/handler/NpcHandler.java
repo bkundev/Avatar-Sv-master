@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import static avatar.constants.NpcName.*;
+import static avatar.constants.NpcName.boss;
 
 public class NpcHandler {
     public static void handleDiaLucky(User us, byte type) {
@@ -61,9 +62,7 @@ public class NpcHandler {
         dl.show(us);
     }
 
-    public void handlerTaiXiu(Message ms) throws IOException {
 
-    }
     public static void handlerCommunicate(int npcId, User us) throws IOException {
         Zone z = us.getZone();
         if (z != null) {
@@ -75,15 +74,28 @@ public class NpcHandler {
             return;
         }
         int npcIdCase = npcId - Npc.ID_ADD;
-        if (npcIdCase > 1000 && npcIdCase<=9999) {
+        if (npcIdCase > 1000 && npcIdCase<=9999)
+        {
+            Boss boss = z.findBoss(npcId);
+            if(boss.getHP()<=0){
+                boss.handleBossDefeat(boss,us);
+            }
             //us.getAvatarService().serverDialog("id"+npcIdCase);
+            us.updateXu(-10);
+            us.getAvatarService().updateMoney(0);
             List<User> lstUs = us.getZone().getPlayers();
             us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)25,(byte)26);
+            boss.updateHP(-10);
 
         } else if (npcIdCase >= 10000) {
-            us.getAvatarService().serverDialog("bạn đã nhặt được...");
-            //z.leave(UserManager.getInstance().find(npcId));
-            z.remove(UserManager.getInstance().find(npcId));
+            Boss boss = z.findBoss(npcId);
+            boss.updatespam(-1);
+            if(boss.getSpam()<0){
+                us.getAvatarService().serverDialog("bạn đã nhặt được hộp quà");
+                Item hopqua = new Item(683,30,1);
+                us.addItemToChests(hopqua);
+                boss.close();
+            }
         }else {
             switch (npcIdCase) {
                 case NpcName.SuKien:

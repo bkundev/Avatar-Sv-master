@@ -44,7 +44,8 @@ public class User {
     private static final int[] UPGRADE_COST_COINS = {0, 0,0,20000, 50000, 100000, 200000 ,200000,500000,600000,70000,0,1000000,1200000,1500000,1700000,2000000,2500000,2700000,3000000,4000000,5000000};
     private static final int[] UPGRADE_COST_GOLD = {0, 0, 0, 0, 0, 0, 0, 200,500,600,700,1000,1000 ,1200 ,1500 ,1700 ,2000 ,2500 ,2700 ,3000 ,4000 ,5000 };
 
-
+    public int spam;
+    public int HP;
     private static final Logger logger = Logger.getLogger(User.class);
     public Session session;
     private int id;
@@ -161,6 +162,14 @@ public class User {
     public synchronized void updateChestSlot(int chestslot) {
         this.chestSlot += (byte) chestslot;
     }
+
+    public synchronized void updateHP(long dame) {
+        this.HP += dame;
+    }
+    public synchronized void updatespam(long dame) {
+        this.spam += dame;
+    }
+
 
     public void sendMessage(Message ms) {
         this.session.sendMessage(ms);
@@ -709,6 +718,10 @@ public class User {
         }
     }
 
+    public void addItemQuatyToChest(int itemID){
+        Item item = new Item(itemID,30,1);
+        addItemToChests(item);
+    }
     public void skillUidToBoss(List<User> players,int us ,int npcID,byte skill1,byte skill2){
         for (User player : players) {
             EffectService.createEffect()
