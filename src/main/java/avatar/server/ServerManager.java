@@ -116,7 +116,7 @@ public class ServerManager {
         GameData.getInstance().load();
         PartManager.getInstance().load();
         FoodManager.getInstance().load();
-        int numMap = 24;
+        int numMap = 60;
         for (int i = 0; i < numMap; ++i) {
             MapManager.getInstance().add(new Map(i, 0, 30));
         }
@@ -128,7 +128,7 @@ public class ServerManager {
 
 
     }
-    public static void initZombie() throws IOException {
+    public  void initZombie() throws IOException {
             Random random = new Random(); // Đối tượng Random để sinh ngẫu nhiên
             while (true) { // Vòng lặp vô hạn để NPC xuất hiện liên tục
                     List<Integer> availableItems = Arrays.asList(2401, 4552, 6314, 6432);
@@ -180,11 +180,10 @@ public class ServerManager {
     }}
 
     private static void loadNpcData() {
-        try {
-            int numNPC = 0;
-            PreparedStatement ps = DbManager.getInstance().getConnection()
-                    .prepareStatement("SELECT * FROM `npc`;");
-            ResultSet res = ps.executeQuery();
+        int numNPC = 0;
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `npc`;");
+             ResultSet res = ps.executeQuery();) {
             while (res.next()) {
                 int botID = res.getInt("id");
                 String botName = res.getString("name");
@@ -221,8 +220,6 @@ public class ServerManager {
                 System.out.println("  + NPC " + Utils.removeAccent(botName) + " - " + botID);
                 ++numNPC;
             }
-            res.close();
-            ps.close();
             System.out.println("Load success " + numNPC + " NPC !");
         } catch (Exception e) {
             e.printStackTrace();
@@ -298,23 +295,10 @@ public class ServerManager {
     }
 
     public static void joinAreaMessage(User us, Message ms) throws IOException {
-        byte map = 11;
-        byte area =-1;
-        short x = us.getX();
-        short y = us.getY();
-        if (ms != null && ms.reader() != null) {
-            try {
-                // Đọc dữ liệu từ Message nếu có
-                map = ms.reader().readByte();
-                area = ms.reader().readByte();
-                x = ms.reader().readShort();
-                y = ms.reader().readShort();
-            } catch (IOException e) {
-                // Xử lý lỗi đọc dữ liệu
-                e.printStackTrace();
-                // Bạn có thể đặt các giá trị mặc định hoặc thông báo lỗi ở đây nếu cần
-            }
-        }
+        byte map = ms.reader().readByte();
+        byte area = ms.reader().readByte();
+        short x = ms.reader().readShort();
+        short y = ms.reader().readShort();
         System.out.println("map: " + map + " area: " + area + " x: " + x + " y: " + y);
         if (area < 0) {
             area = joinAreaAutoNumber(map);

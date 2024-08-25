@@ -40,18 +40,12 @@ import org.json.simple.JSONArray;
 @Getter
 @Setter
 public class User {
-    private static int chestLevel;
-    private static final int[] UPGRADE_COST_COINS = {0, 0,0,20000, 50000, 100000, 200000 ,200000,500000,600000,70000,0,1000000,1200000,1500000,1700000,2000000,2500000,2700000,3000000,4000000,5000000};
-    private static final int[] UPGRADE_COST_GOLD = {0, 0, 0, 0, 0, 0, 0, 200,500,600,700,1000,1000 ,1200 ,1500 ,1700 ,2000 ,2500 ,2700 ,3000 ,4000 ,5000 };
 
-    public int spam;
-    public int HP;
     private static final Logger logger = Logger.getLogger(User.class);
     public Session session;
     private int id;
     private String username;
     private String password;
-    private short idFish;
     private byte gender;
     public long xu;
     public int luong;
@@ -73,9 +67,8 @@ public class User {
     private byte hunger;
     private byte chestSlot;
     private byte chestHomeSlot;
-    private int scores;
     private List<Item> wearing;
-    public List<Item> chests;
+    private List<Item> chests;
     private Zone zone;
     private short x, y;
     private byte direct;
@@ -91,7 +84,6 @@ public class User {
     @Getter
     @Setter
     private List<BossShopItem> bossShopItems;
-    private List<Part> ShopEvent;
 
     public User() {
         this.role = -1;
@@ -144,9 +136,6 @@ public class User {
     public synchronized void updateLuong(int luongUp) {
         this.luong += luongUp;
     }
-    public synchronized void updateScores(int ScoresUp) {
-        this.scores += ScoresUp;
-    }
 
     public synchronized void updateLuongKhoa(int luongUp) {
         this.luong += luongUp;
@@ -159,27 +148,16 @@ public class User {
     public synchronized void updateHunger(int hunger) {
         this.hunger += (byte) hunger;
     }
-    public synchronized void updateChestSlot(int chestslot) {
-        this.chestSlot += (byte) chestslot;
-    }
-
-    public synchronized void updateHP(long dame) {
-        this.HP += dame;
-    }
-    public synchronized void updatespam(long dame) {
-        this.spam += dame;
-    }
-
 
     public void sendMessage(Message ms) {
         this.session.sendMessage(ms);
     }
 
     protected void saveData() {
-        DbManager.getInstance().executeUpdate("UPDATE `players` SET `gender` = ?, `friendly` = ?, `crazy` = ?, `stylish` = ?, `happy` = ?, `hunger` = ?, `chest_slot` = ? WHERE `user_id` = ? LIMIT 1;",
-                this.gender, this.friendly, this.crazy, this.stylish, this.happy, this.hunger,this.chestSlot, this.id);
-        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ?,`scores` = ? WHERE `user_id` = ? LIMIT 1;",
-                this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain,this.scores, this.id);
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `gender` = ?, `friendly` = ?, `crazy` = ?, `stylish` = ?, `happy` = ?, `hunger` = ? WHERE `user_id` = ? LIMIT 1;",
+                this.gender, this.friendly, this.crazy, this.stylish, this.happy, this.hunger, this.id);
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ? WHERE `user_id` = ? LIMIT 1;",
+                this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain, this.id);
         JSONArray jChests = new JSONArray();
         for (Item item : this.chests) {
             JSONObject obj = new JSONObject();
@@ -274,11 +252,12 @@ public class User {
                     this.leverMain = res.getInt("level_main");
                     this.expMain = res.getInt("exp_main");
                     this.gender = res.getByte("gender");
-                    this.chestSlot = res.getByte("chest_slot");
+                    this.gender = res.getByte("gender");
                     this.xu = res.getLong("xu");
-                    this.luong = res.getInt("luong");
-                    this.luongKhoa = res.getInt("luong_khoa");
+                    this.luong = res.getShort("luong");
+                    this.luongKhoa = res.getShort("luong_khoa");
                     this.xeng = res.getInt("xeng");
+                    this.gender = res.getByte("gender");
                     this.clanID = res.getShort("clan_id");                    //res.writeShort(2206);
                     this.friendly = res.getByte("friendly");
                     this.crazy = res.getByte("crazy");
@@ -286,8 +265,6 @@ public class User {
                     this.happy = res.getByte("happy");
                     this.hunger = res.getByte("hunger");
                     this.star = res.getByte("star");
-                    this.scores = res.getInt("scores");
-
                     this.chests = new ArrayList<>();
                     JSONArray chests = (JSONArray) JSONValue.parse(res.getString("chests"));
                     for (Object chest : chests) {
@@ -338,6 +315,7 @@ public class User {
     public void initAvatar() {
         sortWearing();
         listCmd.add(new Command("Chức năng", 2));
+  //      listCmd.add(new Command("Quản trị", 0));
         listCmdRotate.add(new Command((short) 0, "Hội nhóm", 41, (byte) 1));
         listCmdRotate.add(new Command((short) 4, "Oan Tu Xi", 44, (byte) 1));
         listCmdRotate.add(new Command((short) 33, "Hô phong hoán vũ", 1053, (byte) 0));
@@ -355,17 +333,7 @@ public class User {
         try {
             int idTo = ms.reader().readInt();
             short action = ms.reader().readShort();
-            User us = UserManager.getInstance().find(idTo);
-            switch (action) {
-                case 101:
-                    if(gender== us.gender) {
-                        this.getAvatarService().serverDialog("làm gì vậy bro đồng loại mà = ))");
-                        break;
-                    }
-                default:
-                    getMapService().doAction(id, idTo, action);
-
-            }
+            getMapService().doAction(id, idTo, action);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -387,42 +355,6 @@ public class User {
         getAvatarService().viewChest(_chests);
     }
 
-    // hỏi nâng cấp
-    public String getUpgradeRequirements() {
-        if (chestSlot/5 >= UPGRADE_COST_COINS.length - 1) {
-            return "Rương đã đạt cấp tối đa";
-        }
-
-        int nextLevel = (chestSlot/5)+1;
-        int coinCost = UPGRADE_COST_COINS[nextLevel];
-        int goldCost = UPGRADE_COST_GOLD[nextLevel];
-
-        return String.format(
-                "Để nâng cấp lên rương cấp %d bạn cần %d xu và %d lượng hoặc thẻ nâng cấp rương.",
-                nextLevel-2, coinCost, goldCost);
-    }
-    // nâng cấp rương
-    public String upgradeChest() {
-        if (chestSlot/5 >= UPGRADE_COST_COINS.length - 1) {
-            return "Rương đã đạt cấp tối đa";
-        }
-
-        int nextLevel = (chestSlot/5)+1;
-        int coinCost = UPGRADE_COST_COINS[nextLevel];
-        int goldCost = UPGRADE_COST_GOLD[nextLevel];
-
-        if (xu >= coinCost && luong >= goldCost) {
-            updateXu(-coinCost);
-            updateLuong(-goldCost);
-            updateChestSlot(+5);
-            getAvatarService().updateMoney(0);
-            return String.format(
-                    "chúc mừng bạn đã nâng cấp thành công rương cấp %d và có %d ô rương.",
-                    nextLevel-2, this.getChestSlot()
-            );
-        }
-        return "không đủ xu hoặc lượng";
-    }
     public void requestYourInfo(Message ms) {
         try {
             int userId = ms.reader().readInt();
@@ -441,7 +373,6 @@ public class User {
                 return;
             }
             byte idFeel = ms.reader().readByte();
-            System.out.println("doAvatarFeel msg 57 = " + idFeel + " ");
             getMapService().doAvatarFeel(id, idFeel);
         } catch (IOException e) {
             e.printStackTrace();
@@ -479,7 +410,6 @@ public class User {
             this.y = y;
             this.direct = direct;
             getMapService().move(this);
-            //System.out.println("move " + x + ", y = " + y);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -496,11 +426,6 @@ public class User {
 
     public void addItemToChests(Item item) {
         synchronized (chests) {
-            int useChestSlot = this.chests.size();
-            if(useChestSlot>=this.chests.size())
-            {
-                getAvatarService().serverDialog("Rương đồ đã đầy");
-            }
             Item itm = findItemInChests(item.getId());
             if (itm != null) {
                 if (itm.getPart().getType() == -2) {
@@ -508,7 +433,6 @@ public class User {
                 } else {
                     setReliabilityForItem(itm, item);
                 }
-                this.chests.add(item);
                 return;
             } else {
                 itm = findItemInWearing(item.getId());
@@ -519,11 +443,9 @@ public class User {
             }
             this.chests.add(item);
         }
-
     }
 
     public void setReliabilityForItem(Item old, Item newI) {
-        // item expired == -1;
         if (!old.isForever()) {
             if (newI.isForever() || newI.reliability() > old.reliability()) {
                 old.setExpired(newI.getExpired());
@@ -630,11 +552,7 @@ public class User {
                 } else if (pType == -2) {
                     getService().serverMessage(String.format("Số lượng: %,d", item.getQuantity()));
                 } else {
-                    item = findItemInWearing(itemID);
-                    removeItemFromWearing(item);
-                    addItemToChests(item);
-                    getMapService().usingPart(id, itemID);
-                   // getService().serverDialog("Vật phẩm lỗi, không thể sử dụng");
+                    getService().serverDialog("Vật phẩm lỗi, không thể sử dụng");
                 }
             } else {
                 Item item = findItemInWearing(itemID);
@@ -643,7 +561,7 @@ public class User {
                 }
                 int zOrder = item.getPart().getZOrder();
                 if (zOrder == 10 || zOrder == 20 || zOrder == 50) {
-                    getService().serverDialog("Không thể cất vật phẩm này.");
+                    getService().serverMessage("Không thể cất vật phẩm này.");
                     return;
                 }
                 removeItemFromWearing(item);
@@ -686,7 +604,6 @@ public class User {
                 if (item != null) {
                     int zOrder = item.getPart().getZOrder();
                     if (zOrder == 10 || zOrder == 20 || zOrder == 50) {
-                        getAvatarService().serverDialog("error : 001");
                         return;
                     }
                     removeItemFromWearing(item);
@@ -718,10 +635,6 @@ public class User {
         }
     }
 
-    public void addItemQuatyToChest(int itemID){
-        Item item = new Item(itemID,30,1);
-        addItemToChests(item);
-    }
     public void skillUidToBoss(List<User> players,int us ,int npcID,byte skill1,byte skill2){
         for (User player : players) {
             EffectService.createEffect()
@@ -731,7 +644,7 @@ public class User {
                     .loopLimit((byte) 5)
                     .loop((short) 1)
                     .loopType((byte) 1)
-                    .radius((short) 1)
+                    .radius((short) 10)
                     .idPlayer(us)
                     .send();
             EffectService.createEffect()
@@ -741,7 +654,7 @@ public class User {
                     .loopLimit((byte) 5)
                     .loop((short) 1)
                     .loopType((byte) 1)
-                    .radius((short) 1)
+                    .radius((short) 10)
                     .idPlayer(npcID)
                     .send();
         };

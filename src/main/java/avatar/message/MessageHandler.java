@@ -146,7 +146,9 @@ public class MessageHandler implements IMessageHandler {
                     }
                     case Cmd.UPDATE_CONTAINER: {
                         if (this.client.user != null) {
-                            this.client.doRequestService(mss);
+//                            this.client.doRequestService(mss);
+                            // nâng cấp hành trang
+                            this.client.getService().serverDialog("Tính năng chưa hỗ trợ, vui lòng thử lại sau ");
                             break;
                         }
                         break;

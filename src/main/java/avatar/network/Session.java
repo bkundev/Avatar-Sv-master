@@ -3,7 +3,8 @@ package avatar.network;
 import avatar.constants.Cmd;
 import avatar.constants.NpcName;
 import avatar.db.DbManager;
-import avatar.handler.*;
+import avatar.handler.BossShopHandler;
+import avatar.handler.UpgradeItemHandler;
 import avatar.item.Item;
 import avatar.item.PartManager;
 import avatar.item.Part;
@@ -33,6 +34,8 @@ import avatar.message.AvatarMsgHandler;
 import java.io.IOException;
 
 import avatar.message.MessageHandler;
+import avatar.handler.GlobalHandler;
+import avatar.handler.NpcHandler;
 import avatar.server.Avatar;
 import avatar.server.ServerManager;
 import avatar.play.offline.AbsMapOffline;
@@ -45,9 +48,7 @@ import java.net.InetSocketAddress;
 import java.io.DataOutputStream;
 import java.io.DataInputStream;
 import java.net.Socket;
-import avatar.play.Map;
-import avatar.play.MapManager;
-import avatar.play.NpcManager;
+
 import static avatar.constants.NpcName.boss;
 
 public class Session implements ISession {
@@ -84,7 +85,6 @@ public class Session implements ISession {
     private Service service;
 
     private UpgradeItemHandler upgradeHandler;
-    private ShopEventHandler EventHandler;
 
     public Session(Socket sc, int id) throws IOException {
         this.obj = new Object();
@@ -391,31 +391,10 @@ public class Session implements ISession {
         System.out.println("agentInfo: " + agent);
     }
 
-
-    public  void doRequestService(Message ms) throws IOException {
+    public void doRequestService(Message ms) throws IOException {
         byte id = ms.reader().readByte();
-        //String msg = ms.reader().readUTF();
+        String msg = ms.reader().readUTF();
         switch (id) {
-            case 0:{
-                ms = new Message(Cmd.UPDATE_CONTAINER);
-                DataOutputStream ds = ms.writer();
-                String content = this.user.getUpgradeRequirements();
-                ds.writeByte(0);
-                ds.writeUTF(content);
-                ds.flush();
-                this.sendMessage(ms);
-                break;
-            }
-            case 1:{
-                ms = new Message(Cmd.UPDATE_CONTAINER);
-                DataOutputStream ds = ms.writer();
-                String content = this.user.upgradeChest();
-                ds.writeByte(1);
-                ds.writeUTF(content);
-                ds.flush();
-                this.sendMessage(ms);
-                break;
-            }
             case 6: {
                 ms = new Message(-10);
                 DataOutputStream ds = ms.writer();
@@ -466,8 +445,8 @@ public class Session implements ISession {
             this.handler = new GlobalHandler(user);
             UserManager.getInstance().add(user);
             getAvatarService().onLoginSuccess();
-            getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thanh Pho lo");
-            getAvatarService().serverInfo("cư dân thông catm server game cùi hơi lag sẽ cập nhật sớm nhất có thể.");
+            getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thành Phố lo");
+            getAvatarService().serverInfo("welcome thanh pho Lo");
         } else {
             if (isCharCreatedPopup) {
                 getAvatarService().serverDialog("Có lỗi xảy ra!");
@@ -475,7 +454,7 @@ public class Session implements ISession {
                 return;
             }
             isCharCreatedPopup = true;
-            DbManager.getInstance().executeUpdate("INSERT INTO `players`(`user_id`, `level_main`, `gender`, `scores`) VALUES (?, ?, ?,?);", user.getId(), 1, 0,0);
+            DbManager.getInstance().executeUpdate("INSERT INTO `players`(`user_id`, `level_main`, `gender`) VALUES (?, ?, ?);", user.getId(), 1, 0);
             enter();
         }
     }
@@ -490,14 +469,11 @@ public class Session implements ISession {
     }
 
     public void createCharacter(Message ms) throws IOException {
-        byte gender = ms.reader().readByte();//1 nam 2 nu
+        byte gender = ms.reader().readByte();
         byte numItem = ms.reader().readByte();
         ArrayList<Item> items = new ArrayList<>();
-        short[] boyItems = { 89, 88, 0, 4, 14};
-        short[] girlItems = { 89, 88, 0, 4, 49 };
-        short[] selectedItems = (gender == 1) ? boyItems : girlItems;
-
-        for (short itemID : selectedItems) {
+        for (int i = 0; i < numItem; ++i) {
+            short itemID = ms.reader().readShort();
             items.add(new Item(itemID, -1, 1));
         }
         boolean isError = false;
@@ -513,7 +489,7 @@ public class Session implements ISession {
             this.sendMessage(ms);
             return;
         }
-        Item item = new Item(593, -1, 100);
+        Item item = new Item(593, -1, 999);
         user.addItemToChests(item);
         user.setGender(gender);
         user.setWearing(items);
@@ -528,7 +504,7 @@ public class Session implements ISession {
         if (this.messageHandler instanceof FarmMsgHandler) {
             return;
         }
-        byte numKhuVuc = 24;
+        byte numKhuVuc = 30;
         byte map = ms.reader().readByte();
         ms = new Message(60);
         DataOutputStream ds = ms.writer();
@@ -550,12 +526,6 @@ public class Session implements ISession {
             byte type = ms.reader().readByte();
             if (type < 1 || type > 2) {
                 this.user.getService().serverMessage("Có lỗi xảy ra, vui lòng liên hệ admin. Mã lỗi: buyItemShopWrongType");
-                return;
-            }
-            int useChestSlot = user.chests.size();
-            if(useChestSlot>=user.chests.size())
-            {
-                getAvatarService().serverDialog("Rương đồ đã đầy");
                 return;
             }
             Part part = PartManager.getInstance().findPartByID(partID);
@@ -661,11 +631,15 @@ public class Session implements ISession {
         ds.flush();
         this.sendMessage(ms);
         user.getAvatarService().openMenuOption(5, 0, "Đảo Hawaii", "Ai Cập", "Vương Quốc Bóng Đêm", "Biển citylo");
+
+
+
+
     }
 
     public void doCommunicate(Message ms) throws IOException {
         int userId = ms.reader().readInt();
-        if (userId >= 2000000000) {
+        if (userId >= 2000000000 || userId == 7) {
             NpcHandler.handlerCommunicate(userId, this.user);
             return;
         } else {
@@ -673,11 +647,14 @@ public class Session implements ISession {
             if (userId == 0) {
                 // hiện thị menu chức năng
                 List<Menu> menus = new ArrayList<>(List.of(
+                        Menu.builder().name("Hội Nhóm").build(),
+                        Menu.builder().name("Quyền Riêng Tư").build(),
+                        Menu.builder().name("Bảo Vệ Tài Khoản").build(),
                         Menu.builder().name("Mã Giới Thiệu").build(),
                         Menu.builder().name("Diễn Đàn").build(),
                         Menu.builder().name("Mã quà tặng").build()
                 ));
-                if (user.getId() == 7) {
+                if (user.getStar() < 0 || user.getStar() >= 0) {
                     menus.add(0, Menu.builder().name("Admin")
                             .menus(List.of(
                                     Menu.builder().name("Thêm item").action(() -> {
@@ -753,12 +730,7 @@ public class Session implements ISession {
                                             List<Zone> zones = m.getZones();
                                             Boss boss = new Boss();
                                             Zone randomZone = zones.get(0);//random.nextInt(zones.size()));
-                                            try {
-                                                boss.addBossToZone(randomZone,(short) 0,(short) 0);
-                                                //ServerManager.initZombie();
-                                            } catch (IOException e) {
-                                                throw new RuntimeException(e);
-                                            }
+                                            boss.addBossToZone(randomZone,(short) 100,(short) 100);
                                         }else{
                                             user.getAvatarService().serverDialog("ad mới bật được b ơi");
                                         }
@@ -785,8 +757,6 @@ public class Session implements ISession {
 
         }
     }
-
-
 
     public void handleBossShop(Message ms) throws IOException {
         int idBoss = ms.reader().readInt();
@@ -826,47 +796,7 @@ public class Session implements ISession {
                 }
             }
         }
-
-
-        ///Shop Sự Kiện EventShop
-        if (idBoss == Npc.ID_ADD + NpcName.SuKien && user.getBossShopItems() != null) {
-            System.out.println(MessageFormat.format("do Event item boss shop {0}, {1}, {2},"
-                    , idBoss, type, indexItem));
-            UpgradeItem EventItem = (UpgradeItem) user.getBossShopItems().get(indexItem);
-            if (EventItem != null) {
-                doFinalEventShop(EventItem);
-                return;
-            }
-        }
     }
-
-    private void doFinalEventShop(UpgradeItem Eventitem) {
-        if(user.getScores()> Eventitem.getScores()){
-            Eventitem.getItem().setExpired(-1);
-            int useChestSlot = user.chests.size();
-            if(useChestSlot>=user.chests.size())
-            {
-                getAvatarService().serverDialog("Rương đồ đã đầy");
-                return;
-            }
-            user.addItemToChests(Eventitem.getItem());
-            user.setStylish((byte) (user.getStylish() - 1));
-            user.updateScores(-Eventitem.getScores());
-            getAvatarService().requestYourInfo(user);
-            getService().serverDialog("Chúc mừng bạn đã đổi thành công");
-            Zone z = user.getZone();
-            if (z != null) {
-                Npc npc = NpcManager.getInstance().find(z.getMap().getId(), z.getId(), NpcName.SuKien + Npc.ID_ADD);
-                if (npc == null) {
-                    return;
-                }
-            }
-        } else {
-            getService().serverDialog("Bạn chưa đủ điểm để đổi");
-        }
-    }
-
-
 
     private void doFinalUpgrade(UpgradeItem item, Item itemOld) {
         int ratio = item.getRatio();

@@ -1,6 +1,5 @@
 package avatar.service;
-import java.io.*;
-import java.lang.reflect.Field;
+
 import avatar.common.BossShopItem;
 import avatar.item.Item;
 import avatar.item.PartManager;
@@ -10,6 +9,10 @@ import avatar.model.*;
 import avatar.server.Avatar;
 import avatar.server.ServerManager;
 
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.DataOutputStream;
+import java.io.File;
 import java.util.List;
 
 import avatar.constants.Cmd;
@@ -48,35 +51,9 @@ public class AvatarService extends Service {
         }
     }
 
-
-
-    public void openUIShopEvent(BossShop bossShop, List<BossShopItem> items) {
-        try {
-            System.out.println("openShop bossShop: " + items.size());
-            Message ms = new Message(Cmd.BOSS_SHOP);
-            DataOutputStream ds = ms.writer();
-            ds.writeByte(bossShop.getTypeShop());
-            ds.writeInt(bossShop.getIdBoss());
-            ds.writeByte(bossShop.getIdShop());
-            ds.writeUTF(bossShop.getName());
-            ds.writeShort(items.size());
-            for (BossShopItem item : items) {
-                ds.writeShort(item.getItemRequest());
-                ds.writeUTF(item.initDialog(bossShop));
-                if (bossShop.getTypeShop() == 1) {
-                    ds.writeUTF(item.initDialog(bossShop));
-                }
-            }
-            ds.flush();
-            sendMessage(ms);
-        } catch (IOException ex) {
-            logger.error("doRequestExpicePet ", ex);
-        }
-    }
-
     public void openUIBossShop(BossShop bossShop, List<BossShopItem> items) {
         try {
-            System.out.println("openShop bossShop: " + items.size());
+            System.out.println("openShop lent: " + items.size());
             Message ms = new Message(Cmd.BOSS_SHOP);
             DataOutputStream ds = ms.writer();
             ds.writeByte(bossShop.getTypeShop());
@@ -141,28 +118,15 @@ public class AvatarService extends Service {
         }
     }
 
-    public void chatTo(String sender, String content,int type) {
+    public void chatTo(String sender, String content) {
         try {
             Message ms = new Message(Cmd.CHAT_TO);
             DataOutputStream ds = ms.writer();
-            ds.writeInt(type);
+            ds.writeInt(1);
             ds.writeUTF(sender);
             ds.writeUTF(content);
             ds.flush();
             sendMessage(ms);
-        } catch (IOException ex) {
-            logger.error("chatTo ", ex);
-        }
-    }
-
-    public void chatToUser(Message ms) {
-        try {
-            int receiverId = ms.reader().readInt();
-            String content = ms.reader().readUTF();
-            int senderId = this.session.user.getId(); // ID của người gửi yêu cầu
-            User receiver = UserManager.getInstance().find(receiverId);
-            User sender = UserManager.getInstance().find(receiverId);
-            receiver.getAvatarService().chatTo(sender.getUsername(), content,1);
         } catch (IOException ex) {
             logger.error("chatTo ", ex);
         }
@@ -193,7 +157,7 @@ public class AvatarService extends Service {
             ds.writeInt(us.getLuong());
             ds.writeByte(us.getStar());
             for (Item itm : wearing) {
-                ds.writeByte(1);
+                ds.writeByte(0);
                 ds.writeUTF(itm.expiredString());
             }
             //ds.writeShort(us.getIdImg());
@@ -215,7 +179,7 @@ public class AvatarService extends Service {
             }
             ds.writeByte(1);
             ds.writeShort(us.getLeverMain());
-            ds.writeShort(9);
+            ds.writeShort(-1);
             ds.writeBoolean(session.isNewVersion());//new version
             if (session.isNewVersion()) {
                 ds.writeInt(us.getXeng());
@@ -242,21 +206,18 @@ public class AvatarService extends Service {
             ds.flush();
             sendMessage(ms5);
 
+            Message message = new Message(-6);
+            ds = message.writer();
+            ds.writeInt(1);
+            ds.writeUTF("Admin");
+            ds.writeUTF("Wellcome Lo_city");
+            ds.flush();
+            session.sendMessage(message);
         } catch (IOException ex) {
             logger.error("onLoginSuccess err", ex);
         }
     }
 
-    public void SendTabmsg(String content) throws IOException {
-        Message ms = new Message(-6);
-        DataOutputStream ds = ms.writer();
-        ds = ms.writer();
-        ds.writeInt(1);
-        ds.writeUTF("Admin");
-        ds.writeUTF(content);
-        ds.flush();
-        this.session.sendMessage(ms);
-    }
     public void getAvatarPart() {
         try {
             List<Part> parts = PartManager.getInstance().getAvatarPart();
@@ -302,40 +263,6 @@ public class AvatarService extends Service {
             sendMessage(ms);
         } catch (Exception e) {
             logger.error("getAvatarPart() ", e);
-        }
-    }
-
-    public void inspectMessageData(Message message) {
-        DataInputStream dis = message.reader();
-        if (dis != null) {
-            try {
-                while (dis.available() > 0) {  // Vòng lặp cho đến khi hết dữ liệu
-                    try {
-                        boolean b = dis.readBoolean();
-                        System.out.println("Read int: " + b);
-                        int intValue = dis.readInt();  // Thử đọc int
-                        System.out.println("Read int: " + intValue);
-                    } catch (IOException e) {
-                        // Nếu không phải int, hãy thử kiểu dữ liệu khác
-                        try {
-                            String stringValue = dis.readUTF();  // Thử đọc chuỗi
-                            System.out.println("Read string: " + stringValue);
-                        } catch (IOException ex) {
-                            try {
-                                byte byteValue = dis.readByte();  // Thử đọc byte
-                                System.out.println("Read byte: " + byteValue);
-                            } catch (IOException exc) {
-                                System.out.println("Unknown data format or end of data.");
-                                break;  // Nếu tất cả các thử nghiệm đều thất bại, kết thúc vòng lặp
-                            }
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                System.err.println("Error reading message data: " + e.getMessage());
-            }
-        } else {
-            System.err.println("DataInputStream is null.");
         }
     }
 

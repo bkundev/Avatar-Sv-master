@@ -55,10 +55,9 @@ public class GlobalHandler {
         byte menuId = ms.reader().readByte();
         byte select = ms.reader().readByte();
         System.out.println("userId = " + userId + ", menuId = " + menuId + ", select = " + select);
-
         menuOptionHandle(userId, menuId, select);
         if (userId >= 2000000000 || userId == 7) {
-            //NpcHandler.handlerAction(this.us, userId, menuId, select);
+            NpcHandler.handlerAction(this.us, userId, menuId, select);
             return;
         } else{
             switch (userId) {
@@ -132,7 +131,7 @@ public class GlobalHandler {
             case 7:
                 try {
                     short itemCode = Short.parseShort(text);
-                    if((short) itemCode> 0 && (short) itemCode<9999){
+                    if((short) itemCode>2000 && (short) itemCode<6675){
                         Item item = new Item(itemCode, -1, 0);
                         this.us.addItemToChests(item);
                         us.getAvatarService().serverDialog("added " + item.getPart().getName() + " into my chests");
@@ -257,12 +256,10 @@ public class GlobalHandler {
         try {
             Connection connection = DbManager.getInstance().getConnection();
             int mapId = 27;
-  //         String GET_MAP_ITEM_TYPE = "SELECT * FROM `map_item_typem` WHERE `map_id` = ?";
-//            PreparedStatement ps = connection.prepareStatement(GET_MAP_ITEM_TYPE);
-//            ps.setInt(1, mapId);
-//            ResultSet res = ps.executeQuery();
+
             String GET_MAP_ITEM_TYPE = "SELECT * FROM `map_item_typem` WHERE `map_id` = ?";
-            PreparedStatement ps = connection.prepareStatement(GET_MAP_ITEM_TYPE);
+            PreparedStatement ps = connection.prepareStatement(GET_MAP_ITEM_TYPE,
+                    ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ps.setInt(1, mapId);
 
             ResultSet res = ps.executeQuery();

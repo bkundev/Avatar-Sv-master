@@ -42,7 +42,7 @@ public class Map {
 
     public void load() {
         try (Connection connection = DbManager.getInstance().getConnection();
-             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `map_item` WHERE `id` = ?;");) {
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `map_item` WHERE `map_id` = ?;");) {
             ps.setInt(1, this.id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
