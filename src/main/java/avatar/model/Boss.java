@@ -11,6 +11,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.security.SecureRandom;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -27,7 +28,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import avatar.network.Session;
-import avatar.play.Map;
 import avatar.play.MapManager;
 import avatar.play.NpcManager;
 import avatar.play.Zone;
@@ -59,6 +59,9 @@ public class Boss extends User {
     private static final int TOTAL_BOSSES = 40; // Tổng số Boss muốn tạo
     public static int currentBossId = 1001 + Npc.ID_ADD; // ID bắt đầu cho Boss
     private static int bossCount = 0; // Đếm số lượng Boss đã được tạo
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final SecureRandom RANDOM = new SecureRandom();
+
     private Thread autoChatBot = new Thread(() -> {
         while (true) {
             try {
@@ -73,19 +76,8 @@ public class Boss extends User {
                     Thread.sleep(10000);
                 }
                 int[][] pairs = {
-                        {12, 3},
-                        {19, 18},
                         {23, 24},
                         {25, 26},
-                        {23, 24},
-                        {38, 39},
-                        {40, 41},
-                        {42, 43},
-                        {49, 50},
-                        {51, 51},
-                        {63, 64},
-                        {69, 70},
-                        {71, 72},
                 };
                 if(this.getHP()>0)
                 {
@@ -114,8 +106,8 @@ public class Boss extends User {
                     .send();
         });
         String username = us.getUsername();  // Lấy tên người dùng
-        String message = String.format("Khá lắm bạn %s đã kill được", username);
-        List<String> newMessages = Arrays.asList(message,"Ta sẽ quay lại sau!!!");
+        String message = String.format("Khá lắm bạn %s đã kill được %s ", username,boss.getUsername().substring(6, boss.getUsername().length() - 6));
+        List<String> newMessages = Arrays.asList("Ta sẽ quay lại sau!!!",message);
         this.textChats = new ArrayList<>(newMessages);
         for (String chatMessage : textChats) {
             getMapService().chat(boss, chatMessage);
@@ -137,7 +129,7 @@ public class Boss extends User {
         }
         Boss boss = createBoss(x, y, currentBossId++);
         assignRandomItemToBoss(boss);
-        boss.setHP(1000);
+        boss.setHP(50);
         List<String> chatMessages = Arrays.asList("YAAAA", "YOOOO");
         boss.setTextChats(chatMessages);
         boss.session = createSession(boss);
@@ -152,7 +144,6 @@ public class Boss extends User {
     private Boss createBoss(short x, short y,int id) {
         Boss boss = new Boss();
         boss.setId(id);
-        boss.setUsername("o");
         boss.setX(x);
         boss.setY(y);
         return boss;
@@ -160,6 +151,7 @@ public class Boss extends User {
     private void createGiftBox(Zone zone, short x, short y, int giftId) throws IOException {
         Boss giftBox = createBoss(x, y, giftId);
         assignGiftItemToBoss(giftBox); // Gán item cho hộp quà
+        giftBox.setUsername("VatPham");
         giftBox.session = createSession(giftBox);
         giftBox.setSpam(10);
         sendAndHandleMessages(giftBox);
@@ -183,10 +175,30 @@ public class Boss extends User {
     }
 
     private void assignRandomItemToBoss(Boss boss) {
-        List<Integer> availableItems = Arrays.asList(6314, 6432);
-        Utils random = new Utils(); // Assuming Utils is instantiated
-        int randomItemId = availableItems.get(random.nextInt(availableItems.size()));
-        boss.addItemToWearing(new Item(randomItemId));
+
+        List<Integer> itemIds = Arrays.asList(0,8,2033, 4121, 4122, 4123);//sen bo hung
+        List<Integer> itemIds1 = Arrays.asList(8,2034, 2035, 2036);//ma bu
+        List<Integer> itemIds2 = Arrays.asList(6161, 6162, 6163);//ma bu map
+        //List<Integer> itemIds3 = Arrays.asList(10, 20, 30, 40, 50);
+
+        Map<List<Integer>, String> itemListToName = new HashMap<>();
+        itemListToName.put(itemIds, "SenBoHung");
+        itemListToName.put(itemIds1, "MaBu");
+        itemListToName.put(itemIds2, "MaBuMap");
+
+        List<List<Integer>> allItemLists = Arrays.asList(itemIds,itemIds1, itemIds2);
+        Random random = new Random();
+        int randomIndex = random.nextInt(allItemLists.size());
+        List<Integer> randomList = allItemLists.get(randomIndex);
+        String bossName = itemListToName.get(randomList);
+
+        for (int itemId : randomList) {
+            Item item = new Item(itemId);
+            boss.addItemToWearing(item);
+        }
+        String bossUsername = generateRandomUsername(6).toLowerCase();
+        String bossUsername1 = generateRandomUsername(6).toLowerCase();;
+        boss.setUsername(bossUsername+bossName+bossUsername1);
     }
     private void sendAndHandleMessages(Boss boss) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -309,5 +321,13 @@ public class Boss extends User {
                     .idPlayer(randomPlayer.getId())
                     .send();
         };
+    }
+    public static String generateRandomUsername(int length) {
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int randomIndex = RANDOM.nextInt(CHARACTERS.length());
+            sb.append(CHARACTERS.charAt(randomIndex));
+        }
+        return sb.toString();
     }
 }

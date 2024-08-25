@@ -78,15 +78,15 @@ public class NpcHandler {
         if (npcIdCase > 1000 && npcIdCase<=9999)
         {
             Boss boss = z.findBoss(npcId);
-            if(boss.getHP()<=0){
-                boss.handleBossDefeat(boss,us);
+            if (boss.isDefeated()) {
+                us.getAvatarService().serverDialog("boss đã chết");
+                return;
             }
-            //us.getAvatarService().serverDialog("id"+npcIdCase);
             us.updateXu(-10);
             us.getAvatarService().updateMoney(0);
             List<User> lstUs = us.getZone().getPlayers();
             us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)25,(byte)26);
-            boss.updateHP(-10);
+            boss.updateHP(-10,boss, us);
 
         } else if (npcIdCase >= 10000) {
             Boss boss = z.findBoss(npcId);

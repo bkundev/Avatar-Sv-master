@@ -245,10 +245,23 @@ public class ServerManager {
     }
 
     public static void joinAreaMessage(User us, Message ms) throws IOException {
-        byte map = ms.reader().readByte();
-        byte area = ms.reader().readByte();
-        short x = ms.reader().readShort();
-        short y = ms.reader().readShort();
+        byte map = 11;
+        byte area =-1;
+        short x = us.getX();
+        short y = us.getY();
+        if (ms != null && ms.reader() != null) {
+            try {
+                // Đọc dữ liệu từ Message nếu có
+                map = ms.reader().readByte();
+                area = ms.reader().readByte();
+                x = ms.reader().readShort();
+                y = ms.reader().readShort();
+            } catch (IOException e) {
+                // Xử lý lỗi đọc dữ liệu
+                e.printStackTrace();
+                // Bạn có thể đặt các giá trị mặc định hoặc thông báo lỗi ở đây nếu cần
+            }
+        }
         System.out.println("map: " + map + " area: " + area + " x: " + x + " y: " + y);
         if (area < 0) {
             area = joinAreaAutoNumber(map);

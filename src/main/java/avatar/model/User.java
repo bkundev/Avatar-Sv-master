@@ -46,6 +46,7 @@ public class User {
 
     public int spam;
     public int HP;
+    private boolean isDefeated;
     private static final Logger logger = Logger.getLogger(User.class);
     public Session session;
     private int id;
@@ -99,6 +100,7 @@ public class User {
         this.wearing = new ArrayList<>();
         this.listCmd = new ArrayList<>();
         this.listCmdRotate = new ArrayList<>();
+        this.isDefeated = false;
     }
 
     public AvatarService getAvatarService() {
@@ -163,8 +165,19 @@ public class User {
         this.chestSlot += (byte) chestslot;
     }
 
-    public synchronized void updateHP(long dame) {
+    public synchronized void updateHP(long dame,Boss boss,User us) throws IOException {
         this.HP += dame;
+        if (HP <= 0) {
+            HP = 0;
+            if (!isDefeated) {
+                isDefeated = true;
+                // Chỉ thực hiện xử lý khi boss chưa bị đánh bại
+                boss.handleBossDefeat(boss,us); // Gọi với đối tượng User thực tế
+            }
+        }
+    }
+    public boolean isDefeated() {
+        return isDefeated;
     }
     public synchronized void updatespam(long dame) {
         this.spam += dame;
