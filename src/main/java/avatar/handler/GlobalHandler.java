@@ -131,7 +131,7 @@ public class GlobalHandler {
             case 7:
                 try {
                     short itemCode = Short.parseShort(text);
-                    if((short) itemCode>2000 && (short) itemCode<6675){
+                    if((short) itemCode>0 && (short) itemCode<9999){
                         Item item = new Item(itemCode, -1, 0);
                         this.us.addItemToChests(item);
                         us.getAvatarService().serverDialog("added " + item.getPart().getName() + " into my chests");

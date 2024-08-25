@@ -93,18 +93,8 @@ public class Boss extends User {
     });
 
     public synchronized void handleBossDefeat(Boss boss, User us) throws IOException {
-        boss.getZone().getPlayers().forEach(u -> {
-            EffectService.createEffect()
-                    .session(u.session)
-                    .id((byte) 45)
-                    .style((byte) 0)
-                    .loopLimit((byte) 6)
-                    .loop((short) 1)//so luong lap lai
-                    .loopType((byte) 1)
-                    .radius((short) 5)
-                    .idPlayer(boss.getId())
-                    .send();
-        });
+        us.applyStoredXuUpdate();
+        us.getAvatarService().updateMoney(1);
         String username = us.getUsername();  // Lấy tên người dùng
         String message = String.format("Khá lắm bạn %s đã kill được %s ", username,boss.getUsername().substring(6, boss.getUsername().length() - 6));
         List<String> newMessages = Arrays.asList("Ta sẽ quay lại sau!!!",message);
@@ -121,15 +111,27 @@ public class Boss extends User {
             }
         }, 5, TimeUnit.SECONDS);// 2 giây trễ trước khi boss rời khỏi zone
         // boss.getZone().leave(boss);
+        boss.getZone().getPlayers().forEach(u -> {
+            EffectService.createEffect()
+                    .session(u.session)
+                    .id((byte) 45)
+                    .style((byte) 0)
+                    .loopLimit((byte) 6)
+                    .loop((short) 1)//so luong lap lai
+                    .loopType((byte) 1)
+                    .radius((short) 5)
+                    .idPlayer(boss.getId())
+                    .send();
+        });
 
     }
-    public void addBossToZone(Zone zone, short x, short y) throws IOException {
+    public void addBossToZone(Zone zone, short x, short y,int hp) throws IOException {
         if (bossCount >= TOTAL_BOSSES) {
             return; // Dừng nếu đã tạo đủ số lượng Boss
         }
         Boss boss = createBoss(x, y, currentBossId++);
         assignRandomItemToBoss(boss);
-        boss.setHP(50);
+        boss.setHP(hp);
         List<String> chatMessages = Arrays.asList("YAAAA", "YOOOO");
         boss.setTextChats(chatMessages);
         boss.session = createSession(boss);

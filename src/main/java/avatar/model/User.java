@@ -47,6 +47,7 @@ public class User {
     public int spam;
     public int HP;
     private boolean isDefeated;
+    private int storedXuUpdate; // Biến lưu trữ xu đã cập nhật
     private static final Logger logger = Logger.getLogger(User.class);
     public Session session;
     private int id;
@@ -141,8 +142,12 @@ public class User {
 
     public synchronized void updateXu(long xuUp) {
         this.xu += xuUp;
+        this.storedXuUpdate += xuUp; // Lưu xu vào biến tạm thời
     }
-
+    public void applyStoredXuUpdate() {
+        this.xu += storedXuUpdate * 30; // Cộng dồn số xu ba lần
+        this.storedXuUpdate = 0; // Reset xu đã lưu trữ
+    }
     public synchronized void updateLuong(int luongUp) {
         this.luong += luongUp;
     }

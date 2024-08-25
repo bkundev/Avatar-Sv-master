@@ -753,7 +753,43 @@ public class Session implements ISession {
                                             Boss boss = new Boss();
                                             Zone randomZone = zones.get(0);//random.nextInt(zones.size()));
                                             try {
-                                                boss.addBossToZone(randomZone,(short) 0,(short) 0);
+                                                boss.addBossToZone(randomZone,(short) 0,(short) 0,(int)1000);
+                                                //ServerManager.initZombie();
+                                            } catch (IOException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        }else{
+                                            user.getAvatarService().serverDialog("ad mới bật được b ơi");
+                                        }
+                                    }).build(),
+                                    Menu.builder().name("addBoss1").action(() -> {
+                                        if(user.getId() == 7){
+                                            List<User> players = user.getZone().getPlayers();
+                                            Utils random = null;
+                                            Map m = MapManager.getInstance().find(11);
+                                            List<Zone> zones = m.getZones();
+                                            Boss boss = new Boss();
+                                            Zone randomZone = zones.get(0);//random.nextInt(zones.size()));
+                                            try {
+                                                boss.addBossToZone(randomZone,(short) 0,(short) 0,(int)3000);
+                                                //ServerManager.initZombie();
+                                            } catch (IOException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        }else{
+                                            user.getAvatarService().serverDialog("ad mới bật được b ơi");
+                                        }
+                                    }).build(),
+                                    Menu.builder().name("addBoss2").action(() -> {
+                                        if(user.getId() == 7){
+                                            List<User> players = user.getZone().getPlayers();
+                                            Utils random = null;
+                                            Map m = MapManager.getInstance().find(11);
+                                            List<Zone> zones = m.getZones();
+                                            Boss boss = new Boss();
+                                            Zone randomZone = zones.get(0);//random.nextInt(zones.size()));
+                                            try {
+                                                boss.addBossToZone(randomZone,(short) 0,(short) 0,(int)10000);
                                                 //ServerManager.initZombie();
                                             } catch (IOException e) {
                                                 throw new RuntimeException(e);
