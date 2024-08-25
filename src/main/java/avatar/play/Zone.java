@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 
 import avatar.constants.Cmd;
 import avatar.item.Item;
+import avatar.model.Boss;
 import avatar.model.Npc;
 import avatar.model.User;
 
@@ -25,11 +26,12 @@ public class Zone {
     private int id;
     private ArrayList<User> players;
     private MapService service;
-
+    private List<Boss> bosses;
     public Zone(Map map, int id) {
         this.map = map;
         this.id = id;
         this.players = new ArrayList<>();
+        this.bosses = new ArrayList<>();
         this.service = new MapService(null);
         this.service.setZone(this);
     }
@@ -44,7 +46,16 @@ public class Zone {
         }
         return null;
     }
-
+    public Boss findBoss(int id) {
+        synchronized(players) {
+            for (User us : players) {
+                if (us.getId() == id && us instanceof Boss) {
+                    return (Boss) us;  // Ép kiểu và trả về đối tượng Boss
+                }
+            }
+        }
+        return null;  // Trả về null nếu không tìm thấy Boss nào với ID đó
+    }
     public void add(User us) {
         synchronized (players) {
             players.add(us);

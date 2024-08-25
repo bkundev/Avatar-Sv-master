@@ -128,56 +128,6 @@ public class ServerManager {
 
 
     }
-    public  void initZombie() throws IOException {
-            Random random = new Random(); // Đối tượng Random để sinh ngẫu nhiên
-            while (true) { // Vòng lặp vô hạn để NPC xuất hiện liên tục
-                    List<Integer> availableItems = Arrays.asList(2401, 4552, 6314, 6432);
-                    int randomItemId = availableItems.get(random.nextInt(availableItems.size()));
-                    Map m = MapManager.getInstance().find(11);
-                    if (m != null) {
-                        List<Zone> zones = m.getZones();
-                        List<String> chatMessages = Arrays.asList(
-                                "gãi ngứa à",
-                                "hãy xem đây"
-                        );
-                        Zone randomZone = zones.get(random.nextInt(zones.size())); // Chọn ngẫu nhiên một khu vực từ danh sách
-                        Npc zomber = Npc.builder()
-                                .id(Npc.ID_ADD + boss) // ID ngẫu nhiên cho NPC
-                                .name("boss")
-                                .wearing(new ArrayList<>())
-                                .build();
-                        zomber.addItemToWearing(new Item(randomItemId)); // Thêm một item mặc định cho NPC
-                        zomber.setTextChats(chatMessages); // Thêm một thông điệp chat mặc định
-                        NpcManager.getInstance().add(zomber); // Thêm NPC vào quản lý NPC
-                        // Ngẫu nhiên vị trí xuất hiện trong khu vực
-                        short randomX = (short) 250;
-                        short randomY = (short) 50;
-                        // Nhập NPC vào khu vực với vị trí ngẫu nhiên
-
-                        randomZone.enter(zomber, randomX, randomY);
-                        System.out.println("khu :" + randomZone.getId());
-                        // Tăng số lượng NPC hiện tại trong khu vực lên 1
-                        try {
-                            Thread.sleep(10000); // Chờ 10 giây trước khi xuất hiện NPC tiếp theo
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-
-                        // Kiểm tra và xử lý di chuyển và gửi kỹ năng cho NPC
-                        List<User> players = randomZone.getPlayers();
-                        for (User u : players) {
-                            if (u.getId() == 6) { // Ví dụ: nếu người chơi có ID là 6
-                                System.out.println("Move x: " + u.getX() + " Y: " + u.getY());
-                                try {
-                                    Thread.sleep(2000); // Chờ 2 giây trước khi gửi kỹ năng
-                                } catch (InterruptedException e) {
-                                    throw new RuntimeException(e);
-                                }
-                                System.out.println("Send skill");
-                            }
-                        }
-                    }
-    }}
 
     private static void loadNpcData() {
         int numNPC = 0;

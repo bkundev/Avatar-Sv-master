@@ -29,7 +29,6 @@ public class PartManager {
     @Getter
     private final List<UpgradeItem> upgradeItems = new ArrayList<>();
 
-
     public Part findPartById(int id) {
         return getParts().stream()
                 .filter(part -> part.getId() == id)
@@ -53,6 +52,7 @@ public class PartManager {
                 byte level = rs.getByte("level");
                 byte sell = rs.getByte("sell");
                 byte zOrder = rs.getByte("zorder");
+                byte gender = rs.getByte("gender");
                 short[] imgID = new short[15];
                 byte[] dx = new byte[15];
                 byte[] dy = new byte[15];
@@ -74,18 +74,18 @@ public class PartManager {
                         .level(level)
                         .sell(sell)
                         .zOrder(zOrder)
+                        .gender(gender)
                         .imgID(imgID)
                         .dx(dx)
                         .dy(dy)
                         .build());
-                //System.out.println("id: " + id + " name: " + name);
+                System.out.println("id: " + id + " name: " + name);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         loadUpgradeItemData();
     }
-
     public void loadUpgradeItemData() {
         upgradeItems.clear();
         try (Connection connection = DbManager.getInstance().getConnection();
@@ -99,6 +99,7 @@ public class PartManager {
                 int itemNeed = rs.getInt("item_need");
                 int luong = rs.getInt("luong");
                 int xu = rs.getInt("xu");
+                int scores = rs.getInt("scores");
                 upgradeItems.add(UpgradeItem
                         .builder()
                         .id(id)
@@ -108,6 +109,7 @@ public class PartManager {
                         .luong(luong)
                         .isOnlyLuong(onlyLuong)
                         .xu(xu)
+                        .scores(scores)
                         .item(new Item(itemId))
                         .build()
                 );

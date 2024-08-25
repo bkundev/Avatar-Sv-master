@@ -1,6 +1,13 @@
 package avatar.message;
 
 import java.io.IOException;
+import java.util.List;
+
+import avatar.constants.NpcName;
+import avatar.handler.NpcHandler;
+import avatar.item.Item;
+import avatar.model.Menu;
+import avatar.model.Npc;
 import avatar.network.Message;
 import avatar.network.Session;
 import avatar.service.FarmService;
@@ -54,7 +61,35 @@ public class FarmMsgHandler extends MessageHandler {
                     this.service.getImgFarm(mss);
                     break;
                 }
-
+                case Cmd.REQUEST_FRIENDLIST: {
+                    this.service.serverDialog("Ăn trộm đang xây dựng");
+                    break;
+                }
+                case Cmd.REQUEST_CHARGE_MONEY_INFO: {
+                    this.service.serverDialog("Pay To Win hả");
+                    break;
+                }
+                case Cmd.GET_CARD: {
+                    this.service.serverDialog("LAI BUON chưa có vốn mua vui lòng quay lại sau");
+                    break;
+                }
+                case Cmd.UPDATE_FARM_CATTLE: {
+                    this.service.serverDialog("Mở rộng nông trại đang xây dựng vui lòng quay lại sau");
+                    break;
+                }
+                case Cmd.UPDATE_FARM_FISH: {
+                    this.service.serverDialog("Mở rộng nuôi cá đang xây dựng");
+                    break;
+                }
+                case Cmd.COOKING: {
+                    this.service.serverDialog("Hủy Nấu Ăn Nhanh tutu");
+                    break;
+                }
+                case Cmd.COMMUNICATE: {
+                    // this.service.serverDialog("lãi buôn");
+                    NpcHandler.handlerCommunicate(Npc.ID_ADD+NpcName.LAI_BUON,this.client.user);
+                    break;
+                }
                 default:
                     super.onMessage(mss);
                     break;

@@ -43,7 +43,14 @@ public class Message {
     }
 
     public byte[] getData() {
-        return this.os.toByteArray();
+        if (this.os != null) {
+            return this.os.toByteArray();
+        } else {
+            // Trường hợp này có thể xảy ra nếu `os` không được khởi tạo
+            // Trả về một mảng byte trống hoặc null, hoặc báo lỗi tùy theo nhu cầu của bạn
+            System.err.println("ByteArrayOutputStream (os) is null.");
+            return new byte[0]; // hoặc return null;
+        }
     }
 
     public DataInputStream reader() {

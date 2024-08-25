@@ -5,6 +5,7 @@
  */
 package avatar.server;
 
+import avatar.model.Boss;
 import avatar.model.User;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class UserManager {
     }
     
     public static final List<User> users = new LinkedList<>();
-    
+    public static final List<Boss> boss = new LinkedList<>();
     public void add(User us) {
         synchronized(users) {
             users.add(us);
@@ -44,5 +45,15 @@ public class UserManager {
             }
         }
         return null;
+    }
+    public Boss findBoss(int id) {
+        synchronized(boss) {
+            for (Boss boss : boss) {
+                if (boss.getId() == id) {
+                    return boss;
+                }
+            }
+        }
+        return null;  // Trả về null nếu không tìm thấy Boss nào với ID đó
     }
 }
