@@ -418,7 +418,7 @@ public class Session implements ISession {
             case 6: {
                 ms = new Message(-10);
                 DataOutputStream ds = ms.writer();
-                ds.writeUTF(String.format("Bạn đang đăng nhập vào thành phố %s. Dân số %d  người.", ServerManager.cityName, ServerManager.clients.size()));
+                ds.writeUTF(String.format("Bạn đang đăng nhập vào thành phố %s. Dân số %d  người.", ServerManager.cityName, ServerManager.numClients));
                 ds.flush();
                 this.sendMessage(ms);
                 break;
@@ -551,8 +551,7 @@ public class Session implements ISession {
                 this.user.getService().serverMessage("Có lỗi xảy ra, vui lòng liên hệ admin. Mã lỗi: buyItemShopWrongType");
                 return;
             }
-            int useChestSlot = user.chests.size();
-            if(useChestSlot>=user.chests.size())
+            if(user.getChestSlot() <= user.chests.size())
             {
                 getAvatarService().serverDialog("Rương đồ đã đầy");
                 return;
@@ -753,7 +752,7 @@ public class Session implements ISession {
                                             Boss boss = new Boss();
                                             Zone randomZone = zones.get(0);//random.nextInt(zones.size()));
                                             try {
-                                                boss.addBossToZone(randomZone,(short) 0,(short) 0,(int)1000);
+                                                boss.addBossToZone(randomZone,(short) 0,(short) 0,(int)10);
                                                 //ServerManager.initZombie();
                                             } catch (IOException e) {
                                                 throw new RuntimeException(e);
@@ -878,8 +877,7 @@ public class Session implements ISession {
     private void doFinalEventShop(UpgradeItem Eventitem) {
         if(user.getScores()> Eventitem.getScores()){
             Eventitem.getItem().setExpired(-1);
-            int useChestSlot = user.chests.size();
-            if(useChestSlot>=user.chests.size())
+            if(user.getChestSlot() <= user.chests.size())
             {
                 getAvatarService().serverDialog("Rương đồ đã đầy");
                 return;

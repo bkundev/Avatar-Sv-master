@@ -109,7 +109,7 @@ public class Boss extends User {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }, 5, TimeUnit.SECONDS);// 2 giây trễ trước khi boss rời khỏi zone
+        }, 4, TimeUnit.SECONDS);// 2 giây trễ trước khi boss rời khỏi zone
         // boss.getZone().leave(boss);
         boss.getZone().getPlayers().forEach(u -> {
             EffectService.createEffect()
@@ -124,6 +124,16 @@ public class Boss extends User {
                     .send();
         });
 
+    }
+    public synchronized void hanlderNhatHopQua(Boss boss, User us) throws IOException {
+        us.getAvatarService().serverDialog("bạn đã nhặt được hộp quà");
+        Item hopqua = new Item(683,30,1);
+        us.addItemToChests(hopqua);
+        //boss.getZone().leave(boss);
+        boss.setLoadDataFinish(true);
+        boss.session.connected = true;
+        boss.session.login = true;
+        boss.session.close();
     }
     public void addBossToZone(Zone zone, short x, short y,int hp) throws IOException {
         if (bossCount >= TOTAL_BOSSES) {

@@ -6,11 +6,14 @@ import avatar.item.Item;
 import avatar.item.PartManager;
 import avatar.item.Part;
 import avatar.lucky.DialLuckyManager;
+import avatar.message.MessageHandler;
+import avatar.message.ParkMsgHandler;
 import avatar.model.*;
 import avatar.server.Avatar;
 import avatar.server.ServerManager;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import avatar.constants.Cmd;
 import avatar.network.Message;
@@ -913,6 +916,16 @@ public class AvatarService extends Service {
                                 .idPlayer(us.getId())
                                 .send();
                     });
+                    break;
+                case 10:
+                    ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
+                    try (DataOutputStream dos1 = new DataOutputStream(baos1)) {
+                        dos1.writeInt(0);//x
+                        dos1.flush();
+                        byte[] data1 = baos1.toByteArray();
+                        MessageHandler msgHandler = new MessageHandler(us.session);
+                        msgHandler.onMessage(new Message(Cmd.CONTAINER, data1));
+                    }
                     break;
             }
 

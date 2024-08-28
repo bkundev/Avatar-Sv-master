@@ -90,13 +90,11 @@ public class NpcHandler {
 
         } else if (npcIdCase >= 10000) {
             Boss boss = z.findBoss(npcId);
-            boss.updatespam(-1);
-            if(boss.getSpam()<0){
-                us.getAvatarService().serverDialog("bạn đã nhặt được hộp quà");
-                Item hopqua = new Item(683,30,1);
-                us.addItemToChests(hopqua);
-                boss.close();
+            if(boss.isSpam()){
+                us.getAvatarService().serverDialog("hộp này đã nhặt");
+                return;
             }
+            us.updateSpam(-1,boss,us);
         }else {
             switch (npcIdCase) {
                 case NpcName.SuKien:

@@ -57,7 +57,7 @@ public class GlobalHandler {
         System.out.println("userId = " + userId + ", menuId = " + menuId + ", select = " + select);
         menuOptionHandle(userId, menuId, select);
         if (userId >= 2000000000 || userId == 7) {
-            NpcHandler.handlerAction(this.us, userId, menuId, select);
+            //NpcHandler.handlerAction(this.us, userId, menuId, select);
             return;
         } else{
             switch (userId) {
@@ -184,7 +184,21 @@ public class GlobalHandler {
                     if (us.getId() == 7) {
                         if (Integer.parseInt(text) == 1) {
                             for (int i = 0; i < lst.stream().count(); i++) {
-                                lst.get(i).getAvatarService().serverInfo((String.format("ad : thành phố  %s. có %d  đang online. chúc mọi người vui vẻ", ServerManager.cityName, ServerManager.clients.size())));
+                                lst.get(i).getAvatarService().serverInfo((String.format("ad : thành phố  %s. có %d  đang online. chúc mọi người vui vẻ", ServerManager.cityName, ServerManager.numClients)));
+                            }
+                        }
+                    }
+
+                } catch (NumberFormatException e) {
+                    us.getAvatarService().serverDialog("invalid input, item code must be number");
+                }
+                break;
+            case 12:
+                try {
+                    if (us.getId() == 7) {
+                        if (Integer.parseInt(text) == 1) {
+                            for (int i = 0; i < lst.stream().count(); i++) {
+                                lst.get(i).getAvatarService().serverInfo((String.format("ad : thành phố  %s. có %d  đang online. chúc mọi người vui vẻ", ServerManager.cityName, ServerManager.numClients)));
                             }
                         }
                     }

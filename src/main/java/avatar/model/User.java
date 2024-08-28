@@ -47,6 +47,7 @@ public class User {
     public int spam;
     public int HP;
     private boolean isDefeated;
+    private boolean isSpam;
     private int storedXuUpdate; // Biến lưu trữ xu đã cập nhật
     private static final Logger logger = Logger.getLogger(User.class);
     public Session session;
@@ -102,6 +103,7 @@ public class User {
         this.listCmd = new ArrayList<>();
         this.listCmdRotate = new ArrayList<>();
         this.isDefeated = false;
+        this.isSpam = false;
     }
 
     public AvatarService getAvatarService() {
@@ -181,11 +183,23 @@ public class User {
             }
         }
     }
+    public synchronized void updateSpam(long spams,Boss boss, User us) throws IOException {
+        boss.spam += spams;
+        System.out.println("Spam " + boss.getSpam());
+        if (boss.getSpam() <= 0) {
+            boss.spam = 0;
+            isSpam = false;
+            if (!isSpam) {
+                isSpam = true;
+                boss.hanlderNhatHopQua(boss,us);
+            }
+        }
+    }
+    public boolean isSpam() {
+        return isSpam;
+    }
     public boolean isDefeated() {
         return isDefeated;
-    }
-    public synchronized void updatespam(long dame) {
-        this.spam += dame;
     }
 
 
@@ -365,6 +379,7 @@ public class User {
         listCmdRotate.add(new Command((short) 47, "Pháo hạnh phúc (5 lượng)", 242, (byte) 0));
         listCmdRotate.add(new Command((short) 8, "Pháo thịnh vượng (5 lượng)", 241, (byte) 0));
         listCmdRotate.add(new Command((short) 9, "triệu hồi con chim k nhớ tên", 1082, (byte) 0));
+        listCmdRotate.add(new Command((short) 10, "Rương chỉ sử dụng không được bỏ(sẽ bị xóa item ở rương gốc)", 2, (byte) 0));
         listCmdRotate.add(new Command((short) 23, "Cuốc", 869, (byte) 0));
         listCmdRotate.add(new Command((short) 36, "Hẹn hò", 1096, (byte) 1));
     }
@@ -397,8 +412,16 @@ public class User {
         return (byte) (this.expMain * 100 / getExpMax());
     }
 
-    public void viewChest(Message ms) {
-//        int type = ms.reader();
+    public void viewChest(Message ms) throws IOException {
+        int type = ms.reader().readInt();
+        if(type!=7)
+        {
+            List<Item> _chests = chests.stream().filter(item -> {
+                return item.getPart().getZOrder() == 30 || item.getPart().getZOrder() == 40;
+            }).collect(Collectors.toList());
+            getAvatarService().viewChest(_chests);
+            return;
+        }
         List<Item> _chests = chests.stream().filter(item -> {
             return item.getPart().getZOrder() != 30 && item.getPart().getZOrder() != 40;
         }).collect(Collectors.toList());
@@ -514,10 +537,10 @@ public class User {
 
     public void addItemToChests(Item item) {
         synchronized (chests) {
-            int useChestSlot = this.chests.size();
-            if(useChestSlot>=this.chests.size())
+            if(this.chestSlot <=this.chests.size())
             {
                 getAvatarService().serverDialog("Rương đồ đã đầy");
+                return;
             }
             Item itm = findItemInChests(item.getId());
             if (itm != null) {

@@ -49,7 +49,7 @@ public class ServerManager {
     public static int objectVersion;
     public static String resHDPath;
     public static String resMediumPath;
-    protected static int numClients;
+    public static int numClients;
     public static ArrayList<Session> clients;
     protected static ServerSocket server;
     protected static boolean start;
