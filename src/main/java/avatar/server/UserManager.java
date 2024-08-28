@@ -46,6 +46,11 @@ public class UserManager {
         }
         return null;
     }
+    public void removeBoss(Boss us) {
+        synchronized (boss) {
+            boss.remove(us);
+        }
+    }
     public Boss findBoss(int id) {
         synchronized(boss) {
             for (Boss boss : boss) {

@@ -118,7 +118,7 @@ public class ServerManager {
         FoodManager.getInstance().load();
         int numMap = 60;
         for (int i = 0; i < numMap; ++i) {
-            MapManager.getInstance().add(new Map(i, 0, 30));
+            MapManager.getInstance().add(new Map(i, 0, 10));
         }
         System.out.println("Load NPC data start ...");
         loadNpcData();
@@ -153,8 +153,13 @@ public class ServerManager {
                 }
                 Map m = MapManager.getInstance().find(map);
                 if (m != null) {
+                    int zoneCount = 0;
                     List<Zone> zones = m.getZones();
                     for (Zone z : zones) {
+                        zoneCount++;
+                        if (zoneCount >= 3) {
+                            break; // Dừng vòng lặp khi đã xử lý đủ 3 khu vực
+                        }
                         Npc npc = Npc.builder()
                                 .id(botID)
                                 .name(botName)

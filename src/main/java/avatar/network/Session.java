@@ -184,6 +184,12 @@ public class Session implements ISession {
         try {
             if (this.user != null) {
                 this.user.close();
+                if(this.user.getId()>1000000)
+                {
+                    UserManager.getInstance().removeBoss((Boss)user);
+                    ServerManager.disconnect(user.getSession());
+                    this.cleanNetwork();
+                }
                 UserManager.getInstance().remove(user);
             }
             ServerManager.disconnect(this);
@@ -527,7 +533,7 @@ public class Session implements ISession {
         if (this.messageHandler instanceof FarmMsgHandler) {
             return;
         }
-        byte numKhuVuc = 24;
+        byte numKhuVuc = 10;
         byte map = ms.reader().readByte();
         ms = new Message(60);
         DataOutputStream ds = ms.writer();
@@ -706,6 +712,9 @@ public class Session implements ISession {
                                     }).build(),
                                     Menu.builder().name("infor").action(() -> {
                                         user.getAvatarService().sendTextBoxPopup(user.getId(), 11, "infor", 1);
+                                    }).build(),
+                                    Menu.builder().name("thread?").action(() -> {
+                                        user.getAvatarService().sendTextBoxPopup(user.getId(), 12, "thread", 1);
                                     }).build(),
                                     Menu.builder().name("pem").action(() -> {
                                         if(user.getId() == 7||user.getId() == 97){

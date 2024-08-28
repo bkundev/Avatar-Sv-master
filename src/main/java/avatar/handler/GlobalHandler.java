@@ -1,5 +1,6 @@
 package avatar.handler;
-
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import avatar.constants.NpcName;
 import avatar.db.DbManager;
 import avatar.item.Item;
@@ -200,6 +201,20 @@ public class GlobalHandler {
                             for (int i = 0; i < lst.stream().count(); i++) {
                                 lst.get(i).getAvatarService().serverInfo((String.format("ad : thành phố  %s. có %d  đang online. chúc mọi người vui vẻ", ServerManager.cityName, ServerManager.numClients)));
                             }
+                        }
+                    }
+
+                } catch (NumberFormatException e) {
+                    us.getAvatarService().serverDialog("invalid input, item code must be number");
+                }
+            case 13:
+                try {
+                    if (us.getId() == 7) {
+                        if (Integer.parseInt(text) == 1) {
+                            ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+                            int threadCount = threadMXBean.getThreadCount();
+                            System.out.println("Number of threads: " + threadCount);
+                            us.getAvatarService().serverDialog("theard = "+threadCount);
                         }
                     }
 
