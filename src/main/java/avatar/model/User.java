@@ -179,10 +179,11 @@ public class User {
             if (!isDefeated) {
                 isDefeated = true;
                 // Chỉ thực hiện xử lý khi boss chưa bị đánh bại
-                boss.handleBossDefeat(boss,us); // Gọi với đối tượng User thực tế
+                boss.handleBossDefeat(boss,us);
             }
         }
     }
+
     public synchronized void updateSpam(long spams,Boss boss, User us) throws IOException {
         boss.spam += spams;
         System.out.println("Spam " + boss.getSpam());

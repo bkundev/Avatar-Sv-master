@@ -75,9 +75,9 @@ public class NpcHandler {
             return;
         }
         int npcIdCase = npcId - Npc.ID_ADD;
+        User boss = z.find(npcId);
         if (npcIdCase > 1000 && npcIdCase<=9999)
         {
-            Boss boss = z.findBoss(npcId);
             if (boss.isDefeated()) {
                 us.getAvatarService().serverDialog("boss đã chết");
                 return;
@@ -86,15 +86,14 @@ public class NpcHandler {
             us.getAvatarService().updateMoney(0);
             List<User> lstUs = us.getZone().getPlayers();
             us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)25,(byte)26);
-            boss.updateHP(-10,boss, us);
+            boss.updateHP(-10,(Boss)boss, us);
 
         } else if (npcIdCase >= 10000) {
-            Boss boss = z.findBoss(npcId);
             if(boss.isSpam()){
                 us.getAvatarService().serverDialog("hộp này đã nhặt");
                 return;
             }
-            us.updateSpam(-1,boss,us);
+            us.updateSpam(-1,(Boss)boss,us);
         }else {
             switch (npcIdCase) {
                 case NpcName.SuKien:
@@ -124,16 +123,6 @@ public class NpcHandler {
                     break;
                 case NpcName.CHU_DAU_TU:
                     break;
-                case boss:{
-                    List<Menu> list = List.of(
-                            Menu.builder().name("damage").action(() -> {
-                                us.getAvatarService().serverMessage("boss id");
-                            }).build()
-                    );
-                    us.setMenus(list);
-                    us.getAvatarService().openUIMenu(npcId, 0, list, "boss", "hp tao:");
-                    break;
-                }
                 case NpcName.em_Thinh:{
                     List<Menu> list = new ArrayList<>();
                     List<Item> Items1 = new ArrayList<>();

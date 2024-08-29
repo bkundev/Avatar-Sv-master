@@ -251,7 +251,7 @@ public class ServerManager {
 
     public static void joinAreaMessage(User us, Message ms) throws IOException {
         byte map = 11;
-        byte area =-1;
+        byte area = -1;
         short x = us.getX();
         short y = us.getY();
         if (ms != null && ms.reader() != null) {
@@ -267,7 +267,6 @@ public class ServerManager {
                 // Bạn có thể đặt các giá trị mặc định hoặc thông báo lỗi ở đây nếu cần
             }
         }
-        System.out.println("map: " + map + " area: " + area + " x: " + x + " y: " + y);
         if (area < 0) {
             area = joinAreaAutoNumber(map);
         }
@@ -276,6 +275,7 @@ public class ServerManager {
             List<Zone> zones = m.getZones();
             Zone zone = zones.get(area);
             zone.enter(us, x, y);
+            System.out.println("map: " + map + " area: " + area + " x: " + x + " y: " + y);
         }
     }
 

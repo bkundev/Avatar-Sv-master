@@ -184,12 +184,6 @@ public class Session implements ISession {
         try {
             if (this.user != null) {
                 this.user.close();
-                if(this.user.getId()>1000000)
-                {
-                    UserManager.getInstance().removeBoss((Boss)user);
-                    ServerManager.disconnect(user.getSession());
-                    this.cleanNetwork();
-                }
                 UserManager.getInstance().remove(user);
             }
             ServerManager.disconnect(this);
@@ -759,7 +753,7 @@ public class Session implements ISession {
                                             Map m = MapManager.getInstance().find(11);
                                             List<Zone> zones = m.getZones();
                                             Boss boss = new Boss();
-                                            Zone randomZone = zones.get(0);//random.nextInt(zones.size()));
+                                            Zone randomZone = zones.get(random.nextInt(zones.size()));
                                             try {
                                                 boss.addBossToZone(randomZone,(short) 0,(short) 0,(int)10);
                                                 //ServerManager.initZombie();
