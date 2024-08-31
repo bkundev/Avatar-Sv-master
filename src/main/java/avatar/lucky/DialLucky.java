@@ -128,5 +128,41 @@ public class DialLucky {
         }
         us.getMapService().dialLucky(us, (short) degree, gifts);
     }
+    public  void doDialBoxGift(User us) {
+        List<Gift> gifts = new ArrayList<>();
+        byte type = randomType.next(); // Chọn ngẫu nhiên một loại quà
+        Gift gift = new Gift();
+        gift.setType((byte) type);
+
+        if (type == ITEM) {
+            Item item = randomItem.next();
+            item = ItemConverter.getInstance().newItem(item);
+            gift.setId(item.getId());
+
+            int time = Utils.getRandomInArray(new int[]{3, 7, 15, 30});
+            item.setExpired(System.currentTimeMillis() + (86400000L * time));
+            gift.setExpireDay(time); // Đặt thời gian hết hạn cho vật phẩm
+
+            us.addItemToChests(item); // Thêm vật phẩm vào kho của người dùng
+        } else if (type == XU) {
+            int xu = Utils.nextInt(1, 10) * 1000;
+            gift.setXu(xu);
+            us.updateXu(xu); // Cập nhật xu cho người dùng
+        } else if (type == XP) {
+            int xp = Utils.nextInt(1, 10) * 10;
+            gift.setXp(xp);
+            us.addExp(xp); // Cộng điểm kinh nghiệm cho người dùng
+        } else if (type == LUONG) {
+            int luong = Utils.nextInt(1, 5);
+            gift.setLuong(luong);
+            us.updateLuongKhoa(luong); // Cập nhật lương khóa cho người dùng
+        }
+
+        gifts.add(gift); // Thêm món quà đã tạo vào danh sách quà
+
+        // Gọi phương thức để thông báo quà tặng cho người chơi
+        us.getMapService().dialLucky(us, (short) 3, gifts);
+    }
+
 
 }

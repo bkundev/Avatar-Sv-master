@@ -5,6 +5,7 @@ import avatar.db.DbManager;
 import avatar.item.Item;
 import avatar.item.Part;
 import avatar.lucky.DialLucky;
+import avatar.lucky.GiftBox;
 import avatar.network.Session;
 
 import java.io.DataOutput;
@@ -158,6 +159,9 @@ public class User {
         this.updateXu(storedXuUpdate * 30); // Cộng dồn số xu ba lần
         this.Updatexu_from_boss(storedXuUpdate * 30);
         this.storedXuUpdate = 0; // Reset xu đã lưu trữ
+    }
+    public synchronized void updateXP(int XP) {
+        this.expMain += XP;
     }
     public synchronized void Updatexu_from_boss(int xu_from_boss) {
         this.xu_from_boss += xu_from_boss;
@@ -683,7 +687,13 @@ public class User {
                     sortWearing();
                     getMapService().usingPart(id, itemID);
                 } else if (pType == -2) {
-                    getService().serverMessage(String.format("Số lượng: %,d", item.getQuantity()));
+                    if(item.getId()==683)
+                    {
+                        removeItem(item.getId(), 1);
+                        GiftBox giftBox = new GiftBox();
+                        giftBox.open(this);
+                        getService().serverMessage(String.format("Số lượng: %,d", item.getQuantity()));
+                    }
                 } else {
                     item = findItemInWearing(itemID);
                     removeItemFromWearing(item);

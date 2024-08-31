@@ -121,8 +121,16 @@ public class Boss extends User {
 
     public synchronized void hanlderNhatHopQua(User boss, User us) throws IOException {
         us.getAvatarService().serverDialog("bạn đã nhặt được hộp quà");
+        //int time = Utils.getRandomInArray(new int[]{3, 7, 15, 30});
         Item hopqua = new Item(683,-1,1);
-        us.addItemToChests(hopqua);
+        //hopqua.setExpired(System.currentTimeMillis() + (86400000L * time));
+
+        if(us.findItemInChests(683) !=null){
+            int quantity = us.findItemInChests(683).getQuantity();
+            us.findItemInChests(683).setQuantity(quantity+1);
+        }else {
+            us.addItemToChests(hopqua);
+        }
         boss.setLoadDataFinish(true);
         boss.session.connected = true;
         boss.session.login = true;
