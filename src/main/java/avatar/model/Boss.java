@@ -78,10 +78,9 @@ public class Boss extends User {
         us.applyStoredXuUpdate();
         us.getAvatarService().updateMoney(1);
 
-        // Lấy tên người dùng và tạo tin nhắn
         String username = us.getUsername();  // Lấy tên người dùng
-        String message = String.format("Khá lắm bạn %s đã kill được %s", username, boss.getUsername().substring(6, boss.getUsername().length() - 6));
-        List<String> newMessages = Arrays.asList("Ta sẽ quay lại sau!!!", message);
+        String message = String.format("Khá lắm bạn %s đã kill được %s", username, boss.getUsername().substring(3, boss.getUsername().length() - 6));
+        List<String> newMessages = Arrays.asList(message,"Ta sẽ quay lại sau!!!");
         this.textChats = new ArrayList<>(newMessages);
 
         // Gửi tin nhắn chat ngay lập tức trước khi boss rời khu vực
@@ -90,7 +89,6 @@ public class Boss extends User {
             textChats.remove(chatMessage);
         }
 
-        // Thực hiện các hành động khác sau khi gửi tin nhắn chat
         scheduler.schedule(() -> {
             try {
                 createNearbyGiftBoxes(boss, boss.getZone(), boss.getX(), boss.getY(), Boss.currentBossId + 10000);
@@ -100,7 +98,7 @@ public class Boss extends User {
                 avatar.play.Map m = MapManager.getInstance().find(11);
                 List<Zone> zones = m.getZones();
                 Zone randomZone = zones.get(random.nextInt(zones.size()));
-                boss.addBossToZone(randomZone,(short) 0,(short) 0,Utils.nextInt(10000,2000));
+                addBossToZone(randomZone,(short) 0,(short) 0,Utils.nextInt(2000,10000));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -123,14 +121,14 @@ public class Boss extends User {
 
     public synchronized void hanlderNhatHopQua(User boss, User us) throws IOException {
         us.getAvatarService().serverDialog("bạn đã nhặt được hộp quà");
-        Item hopqua = new Item(683,30,1);
+        Item hopqua = new Item(683,-1,1);
         us.addItemToChests(hopqua);
-        //boss.getZone().leave(boss);
         boss.setLoadDataFinish(true);
         boss.session.connected = true;
         boss.session.login = true;
         boss.session.close();
     }
+
     public void addBossToZone(Zone zone, short x, short y,int hp) throws IOException {
         if (bossCount >= TOTAL_BOSSES) {
             return; // Dừng nếu đã tạo đủ số lượng Boss
@@ -169,10 +167,10 @@ public class Boss extends User {
         boss.setY(y);
         return boss;
     }
+
     private void createGiftBox(Zone zone, short x, short y, int giftId) throws IOException {
         User giftBox = createBoss(x, y, giftId);
         assignGiftItemToBoss(giftBox);// Gán item cho hộp quà
-       // giftBox.setIdImg((short) 243);
         giftBox.setUsername("");
         giftBox.session = createSession(giftBox);
         giftBox.setSpam(10);
@@ -180,6 +178,7 @@ public class Boss extends User {
         addGiftToZone(giftBox,zone);
         moveGift(giftBox);
     }
+
     public void createNearbyGiftBoxes(User boss, Zone zone, short x, short y, int baseGiftId) throws IOException {
         // Tạo hộp quà ở các vị trí gần Boss
         createGiftBox(zone, (short) (boss.getX()+(short)20),(short) (boss.getY()+(short)20),baseGiftId);
@@ -217,7 +216,7 @@ public class Boss extends User {
             Item item = new Item(itemId);
             boss.addItemToWearing(item);
         }
-        String bossUsername = generateRandomUsername(6).toLowerCase();
+        String bossUsername = generateRandomUsername(3).toLowerCase();
         String bossUsername1 = generateRandomUsername(6).toLowerCase();;
         boss.setUsername(bossUsername+bossName+bossUsername1);
     }
@@ -253,7 +252,6 @@ public class Boss extends User {
         }
     }
 
-
     private void moveBoss(User boss) throws IOException {
         ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
         try (DataOutputStream dos1 = new DataOutputStream(baos1)) {
@@ -269,6 +267,7 @@ public class Boss extends User {
             System.out.println("boss move : X = " + boss.getX() + ", y = " + boss.getY());
         }
     }
+
     private void addGiftToZone(User gift,Zone zone) {
         ByteArrayOutputStream joinPank = new ByteArrayOutputStream();
         try (DataOutputStream dos2 = new DataOutputStream(joinPank)) {
@@ -284,6 +283,7 @@ public class Boss extends User {
             throw new RuntimeException(e);
         }
     }
+
     private void moveGift(User boss) throws IOException {
         ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
         try (DataOutputStream dos1 = new DataOutputStream(baos1)) {
@@ -298,6 +298,7 @@ public class Boss extends User {
             System.out.println("gift move : X = " + boss.getX() + ", y = " + boss.getY());
         }
     }
+
     private void moveBossXY(User boss,int x,int y) throws IOException {
         ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
         try (DataOutputStream dos1 = new DataOutputStream(baos1)) {
@@ -311,6 +312,7 @@ public class Boss extends User {
             System.out.println("boss move : X = " + boss.getX() + ", y = " + boss.getY());
         }
     }
+
     public Session createSession(User boss){
         //Cmd.SET_PROVIDER
         try {
@@ -331,10 +333,12 @@ public class Boss extends User {
         return null;
     }
     @Builder
+
+
+
     public void addChat(String chat) {
         textChats.add(chat);
     }
-
     @Override
     public void sendMessage(Message ms) {
 

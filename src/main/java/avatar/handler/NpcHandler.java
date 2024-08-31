@@ -83,6 +83,7 @@ public class NpcHandler {
                 return;
             }
             us.updateXu(-10);
+            us.updateXuKillBoss(+10);
             us.getAvatarService().updateMoney(0);
             List<User> lstUs = us.getZone().getPlayers();
             us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)25,(byte)26);
@@ -96,7 +97,7 @@ public class NpcHandler {
             us.updateSpam(-1,(Boss)boss,us);
         }else {
             switch (npcIdCase) {
-                case NpcName.SuKien:
+                case NpcName.bunma:
                     List<Menu> list1 = new ArrayList<>();
                     Menu Event = Menu.builder().name("Đổi Quà").action(() -> {
                         ShopEventHandler.displayUI(us, 2040,3506,2620,2577,5539,2618, 2619, 3987,3455,3456,3457,4995,3988,3989,3990,5573);
@@ -110,6 +111,26 @@ public class NpcHandler {
                     list1.add(Menu.builder().name("Thành tích bản thân")
                             .action(() -> {
                                 us.getAvatarService().serverDialog("Bạn có đang "+us.getScores()+" điểm sự kiện");
+                            })
+                            .build());
+                    list1.add(Menu.builder().name("Bảng xếp hạng kiếm xu từ boss")
+                            .action(() -> {
+                                List<User> topPlayers = us.getService().getTop10PlayersByXuFromBoss();
+                                StringBuilder result = new StringBuilder();
+                                int rank = 1; // Biến đếm để theo dõi thứ hạng
+
+                                for (User player : topPlayers) {
+                                    if (player.getXu_from_boss() > 0) {
+                                        result.append("Top ").append(rank).append(" : ")
+                                                .append(player.getUsername())
+                                                .append("xu kiếm được : ")
+                                                .append(player.getXu_from_boss())
+                                                .append("\n");
+                                        rank++; // Tăng thứ hạng sau mỗi lần thêm người chơi vào kết quả
+                                    }
+                                }
+
+                                us.getAvatarService().customTab("Top 10", result.toString());
                             })
                             .build());
                     list1.add(Menu.builder().name("Xem hướng dẫn")

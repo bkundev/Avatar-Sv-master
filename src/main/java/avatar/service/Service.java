@@ -1,11 +1,20 @@
 package avatar.service;
 
 import avatar.constants.Cmd;
+import avatar.db.DbManager;
+import avatar.model.Food;
+import avatar.model.User;
 import avatar.network.Message;
 import avatar.network.Session;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -95,6 +104,33 @@ public class Service {
         } catch (IOException ex) {
             logger.error("weather() ", ex);
         }
+    }
+
+    public List<User> getTop10PlayersByXuFromBoss() {
+        List<User> topPlayers = new ArrayList<>();
+        String sql = "SELECT u.username, p.xu_from_boss " +
+                "FROM players p " +
+                "JOIN users u ON p.user_id = u.id " +
+                "ORDER BY p.xu_from_boss DESC " +
+                "LIMIT 10";
+
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                String username = rs.getString("username");
+                int xuFromBoss = rs.getInt("xu_from_boss");
+
+                // In ra giá trị đọc từ ResultSet để kiểm tra
+                System.out.println("Username: " + username + ", Xu From Boss: " + xuFromBoss);
+
+                User player = new User(username, xuFromBoss);
+                topPlayers.add(player);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Xử lý ngoại lệ khi truy vấn thất bại
+        }
+        return topPlayers;
     }
 
     public void sendMessage(Message ms) {

@@ -33,7 +33,7 @@ public class ShopEventHandler {
         us.setBossShopItems(EventShop);
         service.openUIShopEvent(
                 BossShop.builder()
-                        .idBoss(NpcName.SuKien + Npc.ID_ADD)
+                        .idBoss(NpcName.bunma + Npc.ID_ADD)
                         .idShop((byte) 0)
                         .typeShop((byte) 0)
                         .name("Event")

@@ -866,7 +866,7 @@ public class Session implements ISession {
 
 
         ///Shop Sự Kiện EventShop
-        if (idBoss == Npc.ID_ADD + NpcName.SuKien && user.getBossShopItems() != null) {
+        if (idBoss == Npc.ID_ADD + NpcName.bunma && user.getBossShopItems() != null) {
             System.out.println(MessageFormat.format("do Event item boss shop {0}, {1}, {2},"
                     , idBoss, type, indexItem));
             UpgradeItem EventItem = (UpgradeItem) user.getBossShopItems().get(indexItem);
@@ -892,7 +892,7 @@ public class Session implements ISession {
             getService().serverDialog("Chúc mừng bạn đã đổi thành công");
             Zone z = user.getZone();
             if (z != null) {
-                Npc npc = NpcManager.getInstance().find(z.getMap().getId(), z.getId(), NpcName.SuKien + Npc.ID_ADD);
+                Npc npc = NpcManager.getInstance().find(z.getMap().getId(), z.getId(), NpcName.bunma + Npc.ID_ADD);
                 if (npc == null) {
                     return;
                 }

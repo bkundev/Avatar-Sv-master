@@ -46,6 +46,7 @@ public class User {
 
     public int spam;
     public int HP;
+    public int xu_from_boss;
     private boolean isDefeated;
     private boolean isSpam;
     private int storedXuUpdate; // Biến lưu trữ xu đã cập nhật
@@ -106,6 +107,11 @@ public class User {
         this.isSpam = false;
     }
 
+    public User(String username, int xuFromBoss) {
+        this.username = username;
+        this.xu_from_boss = xuFromBoss;
+    }
+
     public AvatarService getAvatarService() {
         return session.getAvatarService();
     }
@@ -144,11 +150,17 @@ public class User {
 
     public synchronized void updateXu(long xuUp) {
         this.xu += xuUp;
-        this.storedXuUpdate += xuUp; // Lưu xu vào biến tạm thời
+    }
+    public synchronized void updateXuKillBoss(int dame) {
+        this.storedXuUpdate += dame; // Lưu xu vào biến tạm thời
     }
     public void applyStoredXuUpdate() {
-        this.xu += storedXuUpdate * 30; // Cộng dồn số xu ba lần
+        this.updateXu(storedXuUpdate * 30); // Cộng dồn số xu ba lần
+        this.Updatexu_from_boss(storedXuUpdate * 30);
         this.storedXuUpdate = 0; // Reset xu đã lưu trữ
+    }
+    public synchronized void Updatexu_from_boss(int xu_from_boss) {
+        this.xu_from_boss += xu_from_boss;
     }
     public synchronized void updateLuong(int luongUp) {
         this.luong += luongUp;
@@ -211,8 +223,8 @@ public class User {
     protected void saveData() {
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `gender` = ?, `friendly` = ?, `crazy` = ?, `stylish` = ?, `happy` = ?, `hunger` = ?, `chest_slot` = ? WHERE `user_id` = ? LIMIT 1;",
                 this.gender, this.friendly, this.crazy, this.stylish, this.happy, this.hunger,this.chestSlot, this.id);
-        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ?,`scores` = ? WHERE `user_id` = ? LIMIT 1;",
-                this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain,this.scores, this.id);
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ?,`scores` = ? , `xu_from_boss` = ? WHERE `user_id` = ? LIMIT 1;",
+                this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain,this.scores,this.xu_from_boss, this.id);
         JSONArray jChests = new JSONArray();
         for (Item item : this.chests) {
             JSONObject obj = new JSONObject();
@@ -320,6 +332,7 @@ public class User {
                     this.hunger = res.getByte("hunger");
                     this.star = res.getByte("star");
                     this.scores = res.getInt("scores");
+                    this.xu_from_boss = res.getInt("xu_from_boss");
 
                     this.chests = new ArrayList<>();
                     JSONArray chests = (JSONArray) JSONValue.parse(res.getString("chests"));
