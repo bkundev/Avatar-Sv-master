@@ -100,7 +100,7 @@ public class NpcHandler {
                 case NpcName.bunma:
                     List<Menu> list1 = new ArrayList<>();
                     Menu Event = Menu.builder().name("Đổi Quà").action(() -> {
-                        ShopEventHandler.displayUI(us, 2040,3506,2620,2577,5539,2618, 2619, 3987,3455,3456,3457,4995,3988,3989,3990,5573);
+                        ShopEventHandler.displayUI(us, bunma,2040,3506,2620,2577,5539,2618, 2619, 3987,3455,3456,3457,4995,3988,3989,3990,5573,6772,6773,6774);
                     }).build();
                     list1.add(Event);
                     list1.add(Menu.builder().name("Góp ....")
@@ -142,6 +142,19 @@ public class NpcHandler {
                     us.setMenus(list1);
                     us.getAvatarService().openMenuOption(npcId, 0, list1);
                     break;
+                case NpcName.Vegeta:
+                    List<Menu> lstVegeta = new ArrayList<>();
+                    Menu vegenta = Menu.builder().name("Quà Thẻ VIP").action(() -> {
+                        ShopEventHandler.displayUI(us, Vegeta,608,620,2090,6541,2052,2053);
+                    }).build();
+                    lstVegeta.add(Menu.builder().name("Quà Thẻ VIP cao cấp").action(() -> {
+                        ShopEventHandler.displayUI(us, Vegeta, 2034,6161,4299,4300);
+                    }).build());
+                    lstVegeta.add(vegenta);
+                    lstVegeta.add(Menu.builder().name("Thoát").id(npcId).build());
+                    us.setMenus(lstVegeta);
+                    us.getAvatarService().openMenuOption(npcId, 0, lstVegeta);
+                    break;
                 case NpcName.CHU_DAU_TU:
                     break;
                 case NpcName.em_Thinh:{
@@ -150,7 +163,7 @@ public class NpcHandler {
                     Menu quaySo1 = Menu.builder().name("vật phẩm").menus(
                                     List.of(
                                             Menu.builder().name("demo item").action(() -> {
-                                                for (int i = 2000; i < 6676; i++) {
+                                                for (int i = 2000; i < 6796; i++) {
                                                     Item item = new Item((short) i);
                                                     Items1.add(item);
                                                 }

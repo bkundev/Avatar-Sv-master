@@ -11,6 +11,8 @@ import avatar.network.Session;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.sql.*;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.Date;
 
 import avatar.service.*;
@@ -397,7 +399,7 @@ public class User {
         listCmdRotate.add(new Command((short) 47, "Pháo hạnh phúc (5 lượng)", 242, (byte) 0));
         listCmdRotate.add(new Command((short) 8, "Pháo thịnh vượng (5 lượng)", 241, (byte) 0));
         listCmdRotate.add(new Command((short) 9, "triệu hồi con chim k nhớ tên", 1082, (byte) 0));
-        listCmdRotate.add(new Command((short) 10, "Rương chỉ sử dụng không được bỏ(sẽ bị xóa item ở rương gốc)", 2, (byte) 0));
+        listCmdRotate.add(new Command((short) 10, "Rương chỉ sử dụng không được bỏ(sẽ bị xóa item ở rương gốc)", 1204, (byte) 0));
         listCmdRotate.add(new Command((short) 23, "Cuốc", 869, (byte) 0));
         listCmdRotate.add(new Command((short) 36, "Hẹn hò", 1096, (byte) 1));
     }
@@ -409,6 +411,12 @@ public class User {
             User us = UserManager.getInstance().find(idTo);
             switch (action) {
                 case 101:
+                    DayOfWeek dayOfWeek = LocalDate.now().getDayOfWeek();
+                    int dayIndex = dayOfWeek.getValue(); // 1 = Monday, 7 = Sunday
+                    if (dayIndex == 6 || dayIndex == 7) {
+                        getMapService().doAction(id, idTo, action);
+                        break;
+                    }
                     if(gender== us.gender) {
                         this.getAvatarService().serverDialog("làm gì vậy bro đồng loại mà = ))");
                         break;
@@ -432,7 +440,7 @@ public class User {
 
     public void viewChest(Message ms) throws IOException {
         int type = ms.reader().readInt();
-        if(type!=7)
+        if(type!=id)
         {
             List<Item> _chests = chests.stream().filter(item -> {
                 return item.getPart().getZOrder() == 30 || item.getPart().getZOrder() == 40;

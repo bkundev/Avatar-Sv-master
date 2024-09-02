@@ -466,7 +466,7 @@ public class Session implements ISession {
             UserManager.getInstance().add(user);
             getAvatarService().onLoginSuccess();
             getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thanh Pho lo");
-            getAvatarService().serverInfo("cư dân thông catm server game cùi hơi lag sẽ cập nhật sớm nhất có thể.");
+            getAvatarService().serverInfo("wellcome locity");
         } else {
             if (isCharCreatedPopup) {
                 getAvatarService().serverDialog("Có lỗi xảy ra!");
@@ -871,34 +871,67 @@ public class Session implements ISession {
                     , idBoss, type, indexItem));
             UpgradeItem EventItem = (UpgradeItem) user.getBossShopItems().get(indexItem);
             if (EventItem != null) {
-                doFinalEventShop(EventItem);
+                doFinalEventShop(EventItem,NpcName.bunma);
+                return;
+            }
+        }
+        if (idBoss == Npc.ID_ADD + NpcName.Vegeta && user.getBossShopItems() != null) {
+            System.out.println(MessageFormat.format("do Event item boss shop vegenta {0}, {1}, {2},"
+                    , idBoss, type, indexItem));
+            UpgradeItem EventItem = (UpgradeItem) user.getBossShopItems().get(indexItem);
+            if (EventItem != null) {
+                doFinalEventShop(EventItem,NpcName.Vegeta);
                 return;
             }
         }
     }
 
-    private void doFinalEventShop(UpgradeItem Eventitem) {
-        if(user.getScores()> Eventitem.getScores()){
-            Eventitem.getItem().setExpired(-1);
-            if(user.getChestSlot() <= user.chests.size())
-            {
-                getAvatarService().serverDialog("Rương đồ đã đầy");
+    private void doFinalEventShop(UpgradeItem Eventitem,int npcId) {
+        Zone z = user.getZone();
+        if (z != null) {
+            User u = z.find(npcId+Npc.ID_ADD);
+            if (u == null) {
                 return;
             }
-            user.addItemToChests(Eventitem.getItem());
-            user.setStylish((byte) (user.getStylish() - 1));
-            user.updateScores(-Eventitem.getScores());
-            getAvatarService().requestYourInfo(user);
-            getService().serverDialog("Chúc mừng bạn đã đổi thành công");
-            Zone z = user.getZone();
-            if (z != null) {
-                Npc npc = NpcManager.getInstance().find(z.getMap().getId(), z.getId(), NpcName.bunma + Npc.ID_ADD);
-                if (npc == null) {
-                    return;
-                }
-            }
         } else {
-            getService().serverDialog("Bạn chưa đủ điểm để đổi");
+            return;
+        }
+        switch (npcId) {
+            case NpcName.bunma:
+                if(user.getScores()> Eventitem.getScores()){
+                    Eventitem.getItem().setExpired(-1);
+                    if(user.getChestSlot() <= user.chests.size())
+                    {
+                        getAvatarService().serverDialog("Rương đồ đã đầy");
+                        return;
+                    }
+                    user.addItemToChests(Eventitem.getItem());
+                    user.setStylish((byte) (user.getStylish() - 1));
+                    user.updateScores(-Eventitem.getScores());
+                    getAvatarService().requestYourInfo(user);
+                    getService().serverDialog("Chúc mừng bạn đã đổi thành công");
+                } else {
+                    getService().serverDialog("Bạn chưa đủ điểm để đổi");
+                }
+                break;
+            case NpcName.Vegeta:
+                Item TheVip = user.findItemInChests(Eventitem.getItemNeed());
+                if(TheVip!=null){
+                    Eventitem.getItem().setExpired(-1);
+                    if(user.getChestSlot() <= user.chests.size())
+                    {
+                        getAvatarService().serverDialog("Rương đồ đã đầy");
+                        return;
+                    }
+                    user.addItemToChests(Eventitem.getItem());
+                    user.setStylish((byte) (user.getStylish() - 1));
+                    user.removeItemFromChests(TheVip);
+                    getAvatarService().requestYourInfo(user);
+                    getService().serverDialog(String.format("Chúc mừng bạn đã đổi thành công %s",Eventitem.getItem().getPart().getName()));
+                } else {
+                    getService().serverDialog(String.format("Bạn không có  %s để đổi",Eventitem.getItemNeed()));
+                }
+                break;
         }
     }
 

@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 
 public class ShopEventHandler {
 
-    public static void displayUI(User us, int... itemIds) {
+    public static void displayUI(User us,int npcID, int... itemIds) {
         AvatarService service = us.getAvatarService();
         List<Integer> itemIdList = IntStream.of(itemIds)
                 .boxed()
@@ -33,7 +33,7 @@ public class ShopEventHandler {
         us.setBossShopItems(EventShop);
         service.openUIShopEvent(
                 BossShop.builder()
-                        .idBoss(NpcName.bunma + Npc.ID_ADD)
+                        .idBoss(npcID + Npc.ID_ADD)
                         .idShop((byte) 0)
                         .typeShop((byte) 0)
                         .name("Event")

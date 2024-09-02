@@ -137,7 +137,7 @@ public class GlobalHandler {
                         this.us.addItemToChests(item);
                         us.getAvatarService().serverDialog("added " + item.getPart().getName() + " into my chests");
                     }else{
-                        us.getAvatarService().serverDialog("id lớn hơn 2000 và nhỏ hơn 6675");
+                        us.getAvatarService().serverDialog("id lớn hơn 2000 và nhỏ hơn 6795");
                     }
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("invalid input, item code must be number");

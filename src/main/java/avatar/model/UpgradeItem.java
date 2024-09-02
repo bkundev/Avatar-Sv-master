@@ -33,6 +33,14 @@ public class UpgradeItem extends BossShopItem {
 
             );
         }
+        else if (bossShop.getIdBoss() == NpcName.Vegeta+Npc.ID_ADD) {
+            return MessageFormat.format(
+                    "Bạn có muốn đổi {0} bằng {1} không?",
+                    super.getItem().getPart().getName(),
+                    PartManager.getInstance().findPartById(itemNeed).getName()
+
+            );
+        }
         return MessageFormat.format(
                 "Bạn có muốn ghép 1 {0}+{1} để lấy 1 {2}(xác suất {3})",
                 PartManager.getInstance().findPartById(itemNeed).getName(),
