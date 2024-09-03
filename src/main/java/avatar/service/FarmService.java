@@ -5,6 +5,8 @@ import avatar.model.GameData;
 import avatar.model.ImageInfo;
 import avatar.constants.Cmd;
 import avatar.model.User;
+
+import java.io.EOFException;
 import java.util.Vector;
 import avatar.server.Avatar;
 import java.io.IOException;
@@ -22,9 +24,71 @@ public class FarmService extends Service {
         super(cl);
     }
 
+    int land = 47;
+    //trồng cây
+    public void plandSeed(Message ms) throws IOException {
+        int idUser = ms.reader().readInt();
+        int indexCell = ms.reader().readByte();
+        int idSeed = ms.reader().readByte();
+        ms = new Message(Cmd.PLANT_SEED);
+        DataOutputStream ds = ms.writer();
+        ds.writeInt(idUser);
+        ds.writeInt(indexCell);
+        ds.writeInt(3);
+        this.session.sendMessage(ms);
+    }
+
+
+    //thu hoạch
+    public void treeHarvest(Message ms) throws IOException {
+        byte indexCell3 = ms.reader().readByte();
+        short number2 = ms.reader().readShort();
+        ms = new Message(Cmd.TREE_HARVEST);
+        DataOutputStream ds = ms.writer();
+        ds.writeByte(indexCell3);
+        ds.writeShort(number2);
+        this.session.sendMessage(ms);
+    }
+
+   // mở ô đất
+    public void doRequestslot(Message ms) throws IOException {
+        int id = ms.reader().readInt();//id user
+        ms = new Message(Cmd.REQUEST_SLOT);
+        DataOutputStream ds = ms.writer();
+        ds.writeUTF("Bạn có muốn mở ô đất @ với giá @ xu hoặc @ lượng không ?");
+        this.session.sendMessage(ms);
+    }
+
+
+//mở ô đất
+    public void openLand(Message ms) throws IOException {
+        int id = ms.reader().readInt();//id farm
+        byte typebuy = ms.reader().readByte();//id user
+
+        ms = new Message(Cmd.OPEN_LAND);
+        DataOutputStream ds = ms.writer();
+        ds.writeInt(id);
+        ds.writeInt(1);
+        ds.writeByte(typebuy);
+        ds.writeUTF("đã bu");
+        ds.writeInt(2);
+        ds.writeInt(3);
+        ds.writeInt(4);
+        land++;
+        this.session.sendMessage(ms);
+    }
+
+
+
+
+
+
+
+
+
     public void setBigFarm(Message ms) throws IOException {
-        byte id = ms.reader().readByte();
-        System.out.println("id = " + id);
+
+
         ms = new Message(51);
         DataOutputStream ds = ms.writer();
         int[] images = {99, 206};
@@ -37,6 +101,25 @@ public class FarmService extends Service {
         ds.writeInt(62724);
         ds.flush();
         this.session.sendMessage(ms);
+
+
+        //apk goc
+//        ms = new Message(51);
+//        DataOutputStream ds = ms.writer();
+//        short b19 = 2;
+//        ds.writeByte(b19);
+//        short[] array2 = {0, 1};
+//        for (short value : array2) {
+//            ds.writeShort(value);
+//        }
+//        short[] array3 = {66, 6};
+//        for (short value : array3) {
+//            ds.writeShort(value);
+//        }
+//        ds.writeInt(15378);
+//        ds.writeInt(59669);
+//        ds.flush();
+//        this.session.sendMessage(ms);
     }
 
     public void getBigFarm(Message ms) throws IOException {
@@ -96,15 +179,15 @@ public class FarmService extends Service {
         Vector<KeyValue<Integer, Integer>> hatgiong = new Vector<>();
         hatgiong.add(new KeyValue(34, 10));
         Vector<KeyValue<Integer, Integer>> nongsan = new Vector<>();
-        nongsan.add(new KeyValue(9, 23684));
-        nongsan.add(new KeyValue(50, 4000));
+        nongsan.add(new KeyValue(9, 23684));//23684 kho hàng(nông sản) hoa hướng dương
+        nongsan.add(new KeyValue(50, 4000));//trứng gà
         Vector<KeyValue<Integer, Integer>> phanbon = new Vector<>();
         phanbon.add(new KeyValue<Integer, Integer>(118, 70));
-        phanbon.add(new KeyValue<Integer, Integer>(119, 78));
+        phanbon.add(new KeyValue<Integer, Integer>(119, 78));//kho giống(phân bón thức ăn)
         Vector<KeyValue<Integer, Integer>> nongsandacbiet = new Vector<>();
-        nongsandacbiet.add(new KeyValue(255, 20));
-        nongsandacbiet.add(new KeyValue(215, 680));
-        nongsandacbiet.add(new KeyValue(214, 4));
+        nongsandacbiet.add(new KeyValue(255, 20));//thit ca
+        nongsandacbiet.add(new KeyValue(215, 680));//khe
+        nongsandacbiet.add(new KeyValue(214, 4));//tinh dau huong duong
         ms = new Message(60);
         DataOutputStream ds = ms.writer();
         ds.writeByte(hatgiong.size());
@@ -168,16 +251,17 @@ public class FarmService extends Service {
         ds.writeBoolean(true);
     }
 
+
     public void joinFarm(Message ms) throws IOException {
         int userId = ms.reader().readInt();
         boolean exitsTree = true;
         ms = new Message(61);
         DataOutputStream ds = ms.writer();
         ds.writeInt(userId);
-        ds.writeByte(48);
-        for (int i = 0; i < 48; ++i) {
+        ds.writeByte(land);//số ô đất
+        for (int i = 0; i < land; ++i) {
             if (exitsTree) {
-                ds.writeByte(5);
+                ds.writeByte(8);//id cây
                 this.writeInfoCell(ds);
             } else {
                 ds.writeByte(-1);
@@ -190,14 +274,14 @@ public class FarmService extends Service {
         }
         ds.writeByte(10);
         ds.writeByte(8);
-        ds.writeShort(5000);
+        ds.writeShort(5000);//lv cây khế
         ds.writeShort(43);
         ds.writeShort(46);
-        ds.writeShort(170);
+        ds.writeShort(180);//số khế có thể thu
         ds.writeShort(170);
         ds.writeShort(0);
         ds.writeShort(0);
-        for (int i = 0; i < 48; ++i) {
+        for (int i = 0; i < land; ++i) {
             ds.writeByte(1);
         }
         ds.writeShort(1);

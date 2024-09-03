@@ -38,7 +38,7 @@ public class Boss extends User {
         autoChatBot.start();
     }
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    private static final int TOTAL_BOSSES = 40; // Tổng số Boss muốn tạo
+    private static final int TOTAL_BOSSES = 400000000; // Tổng số Boss muốn tạo
     public static int currentBossId = 1001 + Npc.ID_ADD; // ID bắt đầu cho Boss
     private static int bossCount = 0; // Đếm số lượng Boss đã được tạo
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

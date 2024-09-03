@@ -101,9 +101,10 @@ public class DialLucky {
             gift.setType((byte) type);
             if (type == ITEM) {
                 Item item = randomItem.next();
-                item = ItemConverter.getInstance().newItem(item);
+                item = ItemConverter.getInstance().newItem(item);//Item item = new Item(itemCode, -1, 0)
                 gift.setId(item.getId());
                 if (item.getId() == itemID) {
+                    item.setExpired(-1);
                     gift.setExpireDay(-1);
                 } else {
                     int time = Utils.getRandomInArray(new int[]{3, 7, 15, 30});
@@ -111,6 +112,7 @@ public class DialLucky {
                     gift.setExpireDay(time);
                 }
                 us.addItemToChests(item);
+
             } else if (type == XU) {
                 int xu = Utils.nextInt(1, 10) * 1000;
                 gift.setXu(xu);

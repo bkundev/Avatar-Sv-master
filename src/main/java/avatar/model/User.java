@@ -418,7 +418,7 @@ public class User {
                         break;
                     }
                     if(gender== us.gender) {
-                        this.getAvatarService().serverDialog("làm gì vậy bro đồng loại mà = ))");
+                        this.getAvatarService().serverDialog("làm gì vậy bro, đồng giới thì thứ 6 thứ 7");
                         break;
                     }
                 default:

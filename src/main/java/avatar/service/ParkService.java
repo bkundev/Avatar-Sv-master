@@ -21,28 +21,15 @@ public class ParkService extends Service {
         super(cl);
     }
 
-    public void handleAddFriendRequest(Message message) {
+    public void handleAddFriendRequest(Message ms) {
         try {
-            // Đọc ID của người nhận từ thông điệp
-            int receiverId = message.reader().readInt();
-            int senderId = this.session.user.getId(); // ID của người gửi yêu cầu
-            // Tìm kiếm người gửi và người nhận
-            User sender = UserManager.getInstance().find(senderId);
-            User receiver = UserManager.getInstance().find(receiverId);
-            if (sender != null && receiver != null) {
-                // Tạo thông báo lời mời kết bạn cho người nhận
-                Message friendRequestMessage = new Message(Cmd.ADD_FRIEND);
-                DataOutputStream dos = friendRequestMessage.writer();
-                dos.writeInt(senderId); // Gửi ID của người gửi
-                receiver.getAvatarService().chatTo(sender.getUsername(), ":gui kb 1",1);
-                dos.writeUTF(sender.getUsername());  // Tên người gửi
-                dos.flush();
-                sendMessage(message);
-                // Xác nhận gửi lời mời kết bạn đến người gửi
-            } else {
-                // Xử lý trường hợp người dùng không tồn tạ
-                this.session.user.getAvatarService().serverDialog("kb");
-            }
+
+            int userId = ms.reader().readInt(); // id người nhận
+            ms = new Message(Cmd.AVATAR_REQUEST_ADD_FRIEND);
+            DataOutputStream ds = ms.writer();
+            ds.writeInt(this.session.user.getId());
+            ds.flush();
+            this.session.sendMessage(ms);
         } catch (IOException e) {
             e.printStackTrace();
         }

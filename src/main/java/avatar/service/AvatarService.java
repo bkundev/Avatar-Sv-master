@@ -347,6 +347,21 @@ public class AvatarService extends Service {
      *
      * @param ms
      */
+    public void requestJoinAny(Message ms) throws IOException {
+        byte id = ms.reader().readByte();
+        byte idSelectedMini = ms.reader().readByte();
+        short idJoin = ms.reader().readShort();
+
+        ms = new Message(Cmd.JOIN_ONGAME_MINI);
+        DataOutputStream ds = ms.writer();
+//        ds.writeByte(1);
+//        ds.writeByte(0);
+//        ds.writeShort(4);
+        this.session.sendMessage(ms);
+
+
+
+    }
     public void requestPartDynaMic(Message ms) {
         try {
             short itemID = ms.reader().readShort();

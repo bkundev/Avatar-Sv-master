@@ -289,9 +289,16 @@ public class Session implements ISession {
     public void getHandler(Message ms) throws IOException {
         byte index = ms.reader().readByte();
         System.out.println("getHandler: " + index);
+
         if (index == 8) {
             Zone zone = user.getZone();
             zone.leave(user);
+        }
+        if(index == 3 ){
+           // ms = new Message(Cmd.JOIN_ROOM_RACE);
+            DataOutputStream ds = ms.writer();
+            this.sendMessage(ms);
+            return;
         }
         ms = new Message(Cmd.GET_HANDLER);
         DataOutputStream ds2 = ms.writer();
@@ -954,7 +961,23 @@ public class Session implements ISession {
             getAvatarService().updateMoney(0);
             user.setStylish((byte) (user.getStylish() - 1));
             getAvatarService().requestYourInfo(user);
+            List<User> players = this.user.getZone().getPlayers();
+            for (User player : players) {
+                EffectService.createEffect()
+                        .session(player.session)
+                        .id((byte)16)
+                        .style((byte) 0)
+                        .loopLimit((byte) 5)
+                        .loop((short) 3)
+                        .loopType((byte) 1)
+                        .radius((short) 1)
+                        .idPlayer(NpcName.THO_KIM_HOAN+Npc.ID_ADD)
+                        .send();
+            };
+
+
             getService().serverDialog("Chúc mừng bạn đã ghép đồ thành công");
+
             Zone z = user.getZone();
             if (z != null) {
                 Npc npc = NpcManager.getInstance().find(z.getMap().getId(), z.getId(), NpcName.THO_KIM_HOAN + Npc.ID_ADD);

@@ -61,6 +61,29 @@ public class FarmMsgHandler extends MessageHandler {
                     this.service.getImgFarm(mss);
                     break;
                 }
+                case Cmd.REQUEST_SLOT: {
+                    this.service.doRequestslot(mss);
+                    break;
+                }
+                case Cmd.TREE_HARVEST: {
+                    this.service.treeHarvest(mss);
+                    break;
+                }
+
+                case Cmd.OPEN_LAND: {
+                    this.service.openLand(mss);
+                    break;
+                }
+
+                case Cmd.PLANT_SEED: {
+                    this.service.plandSeed(mss);
+                    break;
+                }
+
+
+
+
+
                 case Cmd.REQUEST_FRIENDLIST: {
                     this.service.serverDialog("Ăn trộm đang xây dựng");
                     break;

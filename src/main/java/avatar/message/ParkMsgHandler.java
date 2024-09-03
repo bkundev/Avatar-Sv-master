@@ -52,7 +52,7 @@ public class ParkMsgHandler extends MessageHandler {
                     this.client.getAvatarService().requestPartDynaMic(mss);
                     break;
                 case Cmd.REQUEST_JOIN_ANY:
-                    this.client.getAvatarService().serverDialog("Công trình Hawai trong đang xây dựng");
+                    this.client.getAvatarService().requestJoinAny(mss);
                     break;
                 case Cmd.START_CAU_CA: //86
                     this.client.getParkService().handleStartFishing(mss);
