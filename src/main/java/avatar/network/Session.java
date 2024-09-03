@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.text.MessageFormat;
 import java.util.*;
 
+import avatar.message.*;
 import avatar.model.*;
 import avatar.play.*;
 import avatar.play.Map;
@@ -25,14 +26,8 @@ import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import avatar.message.HomeMsgHandler;
-import avatar.message.FarmMsgHandler;
-import avatar.message.ParkMsgHandler;
-import avatar.message.AvatarMsgHandler;
-
 import java.io.IOException;
 
-import avatar.message.MessageHandler;
 import avatar.server.Avatar;
 import avatar.server.ServerManager;
 import avatar.play.offline.AbsMapOffline;
@@ -294,18 +289,15 @@ public class Session implements ISession {
             Zone zone = user.getZone();
             zone.leave(user);
         }
-        if(index == 3 ){
-           // ms = new Message(Cmd.JOIN_ROOM_RACE);
-            DataOutputStream ds = ms.writer();
-            this.sendMessage(ms);
-            return;
-        }
         ms = new Message(Cmd.GET_HANDLER);
         DataOutputStream ds2 = ms.writer();
         ds2.writeByte(index);
         ds2.flush();
         this.sendMessage(ms);
         switch (index) {
+            case 3:
+                setHandler(new CasinoMsgHandler(this));
+                break;
             case 8: {
                 setHandler(new AvatarMsgHandler(this));
                 break;
