@@ -200,7 +200,7 @@ public class AvatarService extends Service {
                 ds.writeUTF(itm.expiredString());
             }
             //ds.writeShort(us.getIdImg());
-            ds.writeShort(us.getClanID()); // id img clan
+            ds.writeShort(-1); // id img clan
             ds.writeByte(listCmd.size());
             for (Command cmd : listCmd) {
                 ds.writeUTF(cmd.getName());

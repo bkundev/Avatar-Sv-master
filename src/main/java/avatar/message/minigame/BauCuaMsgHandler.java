@@ -13,9 +13,12 @@ public class BauCuaMsgHandler extends Service {
         super(cl);
     }
 
-
-
     public void joinCasino(Message ms) throws IOException {
-        this.session.sendMessage(ms);
+
+        ms = new Message(61);
+        DataOutputStream ds = ms.writer();
+        ds.writeByte(22);
+        ds.flush();
+        this.session.user.sendMessage(ms);
     }
 }

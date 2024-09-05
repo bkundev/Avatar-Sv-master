@@ -35,6 +35,7 @@ public class FarmService extends Service {
         ds.writeInt(idUser);
         ds.writeInt(indexCell);
         ds.writeInt(3);
+        ds.flush();
         this.session.sendMessage(ms);
     }
 
@@ -47,6 +48,7 @@ public class FarmService extends Service {
         DataOutputStream ds = ms.writer();
         ds.writeByte(indexCell3);
         ds.writeShort(number2);
+        ds.flush();
         this.session.sendMessage(ms);
     }
 
@@ -56,6 +58,7 @@ public class FarmService extends Service {
         ms = new Message(Cmd.REQUEST_SLOT);
         DataOutputStream ds = ms.writer();
         ds.writeUTF("Bạn có muốn mở ô đất @ với giá @ xu hoặc @ lượng không ?");
+        ds.flush();
         this.session.sendMessage(ms);
     }
 
@@ -74,6 +77,7 @@ public class FarmService extends Service {
         ds.writeInt(2);
         ds.writeInt(3);
         ds.writeInt(4);
+        ds.flush();
         land++;
         this.session.sendMessage(ms);
     }
@@ -157,6 +161,7 @@ public class FarmService extends Service {
             }
             ds.flush();
             this.sendMessage(ms);
+
         } catch (IOException e) {
             logger.debug("getImageData: " + e.getMessage());
         }

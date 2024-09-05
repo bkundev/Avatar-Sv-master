@@ -277,6 +277,7 @@ public class MessageHandler implements IMessageHandler {
                     case Cmd.MOVE_PARK: {
                         if (this.client.user != null) {
                             this.client.user.move(mss);
+                            System.out.println("55:  ");
                             break;
                         }
                         break;
@@ -284,6 +285,7 @@ public class MessageHandler implements IMessageHandler {
                     case Cmd.CHAT_PARK: {
                         if (this.client.user != null) {
                             this.client.user.chat(mss);
+                            System.out.println("551:  ");
                             break;
                         }
                         break;
