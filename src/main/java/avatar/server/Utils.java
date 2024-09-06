@@ -34,6 +34,9 @@ public class Utils {
     private static final char[] SOURCE_CHARACTERS;
     private static final char[] DESTINATION_CHARACTERS;
 
+    public static double distanceBetween(int x1, int y1, int x2, int y2) {
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    }
     public static final int sin(int arg) {
         if ((arg = toArg0_360(arg)) >= 0 && arg < 90) {
             return Utils.sinData[arg];

@@ -164,8 +164,8 @@ public class User {
         this.storedXuUpdate += dame; // Lưu xu vào biến tạm thời
     }
     public void applyStoredXuUpdate() {
-        this.updateXu(storedXuUpdate * 30); // Cộng dồn số xu ba lần
-        this.Updatexu_from_boss(storedXuUpdate * 30);
+        this.updateXu(storedXuUpdate * 5); // Cộng dồn số xu ba lần
+        this.Updatexu_from_boss(storedXuUpdate * 5);
         this.storedXuUpdate = 0; // Reset xu đã lưu trữ
     }
     public synchronized void updateXP(int XP) {

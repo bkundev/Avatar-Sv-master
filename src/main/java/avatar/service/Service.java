@@ -112,7 +112,7 @@ public class Service {
                 "FROM players p " +
                 "JOIN users u ON p.user_id = u.id " +
                 "ORDER BY p.xu_from_boss DESC " +
-                "LIMIT 8";
+                "LIMIT 10";
 
         try (Connection connection = DbManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(sql);
@@ -138,7 +138,7 @@ public class Service {
                 "FROM players p " +
                 "JOIN users u ON p.user_id = u.id " +
                 "ORDER BY p.TopPhaoLuong DESC " +
-                "LIMIT 8";
+                "LIMIT 10";
 
         try (Connection connection = DbManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(sql);

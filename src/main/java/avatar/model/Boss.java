@@ -33,9 +33,30 @@ public class Boss extends User {
     @Getter
     @Setter
     private List<String> textChats;
-
+    private Map<Integer, List<int[]>> zoneCoordinates = new HashMap<>();//tọa độ boss di chuyển trong map
+    private int mapId;
     public Boss() {
         super();
+        List<int[]> map11 = Arrays.asList(
+                new int[]{182, 121},
+                new int[]{282, 142},
+                new int[]{282, 88},
+                new int[]{326, 150}
+        );
+        zoneCoordinates.put(11, map11);
+        List<int[]> map7 = Arrays.asList(
+                new int[]{212, 90},
+                new int[]{112, 118},
+                new int[]{292, 118}
+        );
+        zoneCoordinates.put(7, map7);
+        List<int[]> map1 = Arrays.asList(
+                new int[]{80, 105},
+                new int[]{244, 109},
+                new int[]{172, 154}
+        );
+        zoneCoordinates.put(1, map1);
+
         autoChatBot.start();
     }
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -68,9 +89,22 @@ public class Boss extends User {
                     int randomIndex = rand.nextInt(pairs.length);
                     int[] selectedPair = pairs[randomIndex];
                     BossSkillRanDomUser((byte)selectedPair[0], (byte)selectedPair[1]);
+
+                    // Tạo đối tượng Random để chọn tọa độ ngẫu nhiên
+                    int mapId = this.getZone().getMap().getId();
+                    List<int[]> coordinates = zoneCoordinates.get(mapId);
+                    if (coordinates != null && !coordinates.isEmpty()) {
+                        int[] randomCoordinate = coordinates.get(new Random().nextInt(coordinates.size()));
+                        moveBossXY(this, randomCoordinate[0], randomCoordinate[1]);
+                    } else {
+                        // Nếu không có tọa độ nào, có thể xử lý trường hợp này ở đây
+                        System.err.println("Không có tọa độ cho bản đồ ID " + mapId);
+                    }
                 }
             } catch (InterruptedException ignored) {
                 Thread.currentThread().interrupt(); // Đảm bảo xử lý gián đoạn
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     });
@@ -153,13 +187,21 @@ public class Boss extends User {
         boss.session = createSession(boss);
         sendAndHandleMessages(boss);
         moveBoss(boss);
-        moveBossXY(boss,282,88);
         bossCount++; // Tăng số lượng Boss đã tạo
+        int mapId = zone.getMap().getId();
+        List<int[]> coordinates = zoneCoordinates.get(mapId);
+        if (coordinates != null && !coordinates.isEmpty()) {
+            int[] randomCoordinate = coordinates.get(new Random().nextInt(coordinates.size()));
+            moveBossXY(boss, randomCoordinate[0], randomCoordinate[1]);
+        } else {
+            // Nếu không có tọa độ nào, có thể xử lý trường hợp này ở đây
+            System.err.println("Không có tọa độ cho bản đồ ID " + mapId);
+        }
     }
     private void MoveArea(User boss) throws IOException {
         ByteArrayOutputStream joinPank = new ByteArrayOutputStream();
         try (DataOutputStream dos2 = new DataOutputStream(joinPank)) {
-            dos2.writeByte(11);
+            dos2.writeByte(this.mapId);
             dos2.writeByte(Utils.nextInt(9));
             dos2.writeShort(boss.getX());//x
             dos2.writeShort(boss.getY());//y
@@ -276,14 +318,14 @@ public class Boss extends User {
             ParkMsgHandler parkMsgHandler1 = new ParkMsgHandler(boss.session);
             parkMsgHandler1.onMessage(new Message(Cmd.MOVE_PARK, data1));
             getMapService().chat(this, "ta đến rồi đây");
-            System.out.println("boss move : X = " + boss.getX() + ", y = " + boss.getY());
+            //System.out.println("boss move : X = " + boss.getX() + ", y = " + boss.getY());
         }
     }
 
     private void addGiftToZone(User gift,Zone zone) {
         ByteArrayOutputStream joinPank = new ByteArrayOutputStream();
         try (DataOutputStream dos2 = new DataOutputStream(joinPank)) {
-            dos2.writeByte(11);
+            dos2.writeByte(zone.getMap().getId());
             dos2.writeByte(zone.getId());
             dos2.writeShort(gift.getX());//x
             dos2.writeShort(gift.getY());//y
@@ -307,7 +349,7 @@ public class Boss extends User {
             ParkMsgHandler parkMsgHandler1 = new ParkMsgHandler(boss.session);
             parkMsgHandler1.onMessage(new Message(Cmd.MOVE_PARK, data1));
             getMapService().chat(this, "ta đến rồi đây");
-            System.out.println("gift move : X = " + boss.getX() + ", y = " + boss.getY());
+            //System.out.println("gift move : X = " + boss.getX() + ", y = " + boss.getY());
         }
     }
 
@@ -321,7 +363,7 @@ public class Boss extends User {
             byte[] data1 = baos1.toByteArray();
             ParkMsgHandler parkMsgHandler1 = new ParkMsgHandler(boss.session);
             parkMsgHandler1.onMessage(new Message(Cmd.MOVE_PARK, data1));
-            System.out.println("boss move : X = " + boss.getX() + ", y = " + boss.getY());
+            //System.out.println("boss move : X = " + boss.getX() + ", y = " + boss.getY());
         }
     }
 
@@ -397,5 +439,22 @@ public class Boss extends User {
             sb.append(CHARACTERS.charAt(randomIndex));
         }
         return sb.toString();
+    }
+
+    public static void spawnBossesForMap(int mapId, int numBosses) {
+        Utils random = null;
+        avatar.play.Map m = MapManager.getInstance().find(mapId);
+        List<Zone> zones = m.getZones();
+        for (int i = 0; i < numBosses; i++) {
+            Boss boss = new Boss(); // Tạo boss mới
+            boss.mapId = mapId;
+            Zone randomZone = zones.get(random.nextInt(zones.size()));
+            try {
+                boss.addBossToZone(randomZone, (short) 50, (short) 50, (int) 2000);
+                System.out.println("Boss " + i + " khu " + randomZone.getId() + " map " + mapId);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

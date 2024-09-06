@@ -44,6 +44,7 @@ import avatar.play.Map;
 import avatar.play.MapManager;
 import avatar.play.NpcManager;
 import static avatar.constants.NpcName.boss;
+import static avatar.model.Boss.spawnBossesForMap;
 
 public class Session implements ISession {
 
@@ -745,19 +746,11 @@ public class Session implements ISession {
                                             user.getAvatarService().serverDialog("ad mới bật được b ơi");
                                         }
                                     }).build(),
-                                    Menu.builder().name("addBoss").action(() -> {
+                                    Menu.builder().name("addBoss3Map").action(() -> {
                                         if(user.getId() == 7){
-                                            List<User> players = user.getZone().getPlayers();
-                                            Utils random = null;
-                                            Map m = MapManager.getInstance().find(11);
-                                            List<Zone> zones = m.getZones();
-                                            Boss boss = new Boss();
-                                            Zone randomZone = zones.get(random.nextInt(zones.size()));
-                                            try {
-                                                boss.addBossToZone(randomZone,(short) 0,(short) 0,(int)10);
-                                                //ServerManager.initZombie();
-                                            } catch (IOException e) {
-                                                throw new RuntimeException(e);
+                                            List<Integer> mapIds = List.of(11, 1, 7);
+                                            for (int mapId : mapIds) {
+                                                spawnBossesForMap(mapId, 2);
                                             }
                                         }else{
                                             user.getAvatarService().serverDialog("ad mới bật được b ơi");

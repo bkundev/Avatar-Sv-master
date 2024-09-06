@@ -82,6 +82,18 @@ public class NpcHandler {
                 us.getAvatarService().serverDialog("boss đã chết");
                 return;
             }
+            double maxDistance = 55.0;
+            int playerX = us.getX();
+            int playerY = us.getY();
+            int bossX = boss.getX();
+            int bossY = boss.getY();
+            double distance = Utils.distanceBetween(playerX, playerY, bossX, bossY);
+
+            if (distance > maxDistance) {
+                us.getAvatarService().serverDialog("Bạn đứng xa rồi : v");
+                return;
+            }
+
             us.updateXu(-10);
             us.updateXuKillBoss(+10);
             us.getAvatarService().updateMoney(0);
@@ -139,15 +151,14 @@ public class NpcHandler {
                                 int rank = 1; // Biến đếm để theo dõi thứ hạng
 
                                 for (User player : topPlayers) {
-                                    if (player.getXu_from_boss() > 0) {
+                                    if (player.getTopPhaoLuong() > 0) {
                                         result.append(player.getUsername())
                                                 .append(" Top ").append(rank).append(" : ")
-                                                .append(player.getXu_from_boss())
-                                                .append(" \n");
+                                                .append(player.getTopPhaoLuong())
+                                                .append("\n");
                                         rank++; // Tăng thứ hạng sau mỗi lần thêm người chơi vào kết quả
                                     }
                                 }
-
                                 us.getAvatarService().customTab("Top 10", result.toString());
                             })
                             .build());
