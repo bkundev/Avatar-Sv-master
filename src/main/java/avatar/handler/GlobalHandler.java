@@ -185,7 +185,7 @@ public class GlobalHandler {
                     if (us.getId() == 7) {
                         if (Integer.parseInt(text) == 1) {
                             for (int i = 0; i < lst.stream().count(); i++) {
-                                lst.get(i).getAvatarService().serverInfo((String.format("ad : thành phố  %s. có %d  đang online. chúc mọi người vui vẻ", ServerManager.cityName, ServerManager.numClients)));
+                                lst.get(i).getAvatarService().serverInfo((String.format("ad : thành phố  %s. có %d  đang online. chúc mọi người vui vẻ", ServerManager.cityName, ServerManager.clients.size())));
                             }
                         }
                     }
@@ -199,7 +199,7 @@ public class GlobalHandler {
                     if (us.getId() == 7) {
                         if (Integer.parseInt(text) == 1) {
                             for (int i = 0; i < lst.stream().count(); i++) {
-                                lst.get(i).getAvatarService().serverInfo((String.format("ad : thành phố  %s. có %d  đang online. chúc mọi người vui vẻ", ServerManager.cityName, ServerManager.numClients)));
+                                lst.get(i).getAvatarService().serverInfo((String.format("ad : thành phố  %s. có %d  đang online. chúc mọi người vui vẻ", ServerManager.cityName, ServerManager.clients.size())));
                             }
                         }
                     }

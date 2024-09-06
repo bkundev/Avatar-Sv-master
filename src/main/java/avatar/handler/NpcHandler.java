@@ -74,21 +74,24 @@ public class NpcHandler {
         } else {
             return;
         }
+
         int npcIdCase = npcId - Npc.ID_ADD;
         User boss = z.find(npcId);
+
+        double maxDistance = 55.0;
+        int playerX = us.getX();
+        int playerY = us.getY();
+        int bossX = boss.getX();
+        int bossY = boss.getY();
+        double distance = Utils.distanceBetween(playerX, playerY, bossX, bossY);
+
+
         if (npcIdCase > 1000 && npcIdCase<=9999)
         {
             if (boss.isDefeated()) {
                 us.getAvatarService().serverDialog("boss đã chết");
                 return;
             }
-            double maxDistance = 55.0;
-            int playerX = us.getX();
-            int playerY = us.getY();
-            int bossX = boss.getX();
-            int bossY = boss.getY();
-            double distance = Utils.distanceBetween(playerX, playerY, bossX, bossY);
-
             if (distance > maxDistance) {
                 us.getAvatarService().serverDialog("Bạn đứng xa rồi : v");
                 return;
@@ -102,6 +105,10 @@ public class NpcHandler {
             boss.updateHP(-10,(Boss)boss, us);
 
         } else if (npcIdCase >= 10000) {
+            if (distance > maxDistance) {
+                us.getAvatarService().serverDialog("Bạn đứng xa rồi : v");
+                return;
+            }
             if(boss.isSpam()){
                 us.getAvatarService().serverDialog("hộp này đã nhặt");
                 return;

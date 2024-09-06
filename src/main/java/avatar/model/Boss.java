@@ -23,6 +23,8 @@ import java.util.Arrays;
 import avatar.network.Session;
 import avatar.play.MapManager;
 import avatar.play.Zone;
+import avatar.server.ServerManager;
+import avatar.server.UserManager;
 import avatar.server.Utils;
 import avatar.service.EffectService;
 import lombok.Builder;
@@ -34,7 +36,6 @@ public class Boss extends User {
     @Setter
     private List<String> textChats;
     private Map<Integer, List<int[]>> zoneCoordinates = new HashMap<>();//tọa độ boss di chuyển trong map
-    private int mapId;
     public Boss() {
         super();
         List<int[]> map11 = Arrays.asList(
@@ -130,13 +131,15 @@ public class Boss extends User {
         scheduler.schedule(() -> {
             try {
                 createNearbyGiftBoxes(boss, boss.getZone(), boss.getX(), boss.getY(), Boss.currentBossId + 10000);
-                boss.getZone().leave(boss);
-                boss.session.close();
+                ServerManager.clients.remove(boss.getUsername());
+                ServerManager.disconnect(boss.session);
+                UserManager.getInstance().remove(boss);
+                boss.close();
                 Utils random = null;
-                avatar.play.Map m = MapManager.getInstance().find(11);
+                avatar.play.Map m = MapManager.getInstance().find(boss.getBossMapId());
                 List<Zone> zones = m.getZones();
                 Zone randomZone = zones.get(random.nextInt(zones.size()));
-                addBossToZone(randomZone,(short) 0,(short) 0,Utils.nextInt(2000,10000));
+                addBossToZone(boss.bossMapId,randomZone,(short) 0,(short) 0,Utils.nextInt(2000,10000));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -169,19 +172,20 @@ public class Boss extends User {
         }else {
             us.addItemToChests(hopqua);
         }
-        boss.setLoadDataFinish(true);
-        boss.session.connected = true;
-        boss.session.login = true;
-        boss.session.close();
+        ServerManager.clients.remove(boss.getUsername());
+        ServerManager.disconnect(boss.session);
+        UserManager.getInstance().remove(boss);
+        boss.close();
     }
 
-    public void addBossToZone(Zone zone, short x, short y,int hp) throws IOException {
+    public void addBossToZone(int Map ,Zone zone, short x, short y,int hp) throws IOException {
         if (bossCount >= TOTAL_BOSSES) {
             return; // Dừng nếu đã tạo đủ số lượng Boss
         }
         User boss = createBoss(x, y, currentBossId++);
         assignRandomItemToBoss(boss);
         boss.setHP(hp);
+        boss.bossMapId = Map;
         List<String> chatMessages = Arrays.asList("YAAAA", "YOOOO");
         ((Boss) boss).setTextChats(chatMessages);
         boss.session = createSession(boss);
@@ -201,7 +205,8 @@ public class Boss extends User {
     private void MoveArea(User boss) throws IOException {
         ByteArrayOutputStream joinPank = new ByteArrayOutputStream();
         try (DataOutputStream dos2 = new DataOutputStream(joinPank)) {
-            dos2.writeByte(this.mapId);
+            dos2.writeByte(boss.bossMapId);
+            System.err.println("joinmaopboss " + boss.bossMapId);
             dos2.writeByte(Utils.nextInt(9));
             dos2.writeShort(boss.getX());//x
             dos2.writeShort(boss.getY());//y
@@ -447,10 +452,9 @@ public class Boss extends User {
         List<Zone> zones = m.getZones();
         for (int i = 0; i < numBosses; i++) {
             Boss boss = new Boss(); // Tạo boss mới
-            boss.mapId = mapId;
             Zone randomZone = zones.get(random.nextInt(zones.size()));
             try {
-                boss.addBossToZone(randomZone, (short) 50, (short) 50, (int) 2000);
+                boss.addBossToZone(mapId,randomZone, (short) 50, (short) 50, (int) 10);
                 System.out.println("Boss " + i + " khu " + randomZone.getId() + " map " + mapId);
             } catch (IOException e) {
                 throw new RuntimeException(e);
