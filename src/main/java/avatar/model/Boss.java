@@ -1,6 +1,7 @@
 package avatar.model;
 
 import avatar.constants.Cmd;
+import avatar.db.DbManager;
 import avatar.item.Item;
 import avatar.message.MessageHandler;
 import avatar.message.ParkMsgHandler;
@@ -75,9 +76,12 @@ public class Boss extends User {
     });
 
     public synchronized void handleBossDefeat(Boss boss, User us) throws IOException {
+
         us.applyStoredXuUpdate();
         us.getAvatarService().updateMoney(1);
-
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu_from_boss` = ? WHERE `user_id` = ? LIMIT 1;",
+                us.xu_from_boss, us.getId());
+        System.out.println("Save data user " + this.getUsername());
         String username = us.getUsername();  // Lấy tên người dùng
         String message = String.format("Khá lắm bạn %s đã kill được %s", username, boss.getUsername().substring(3, boss.getUsername().length() - 6));
         List<String> newMessages = Arrays.asList(message,"Ta sẽ quay lại sau!!!");

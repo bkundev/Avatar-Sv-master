@@ -112,7 +112,7 @@ public class Service {
                 "FROM players p " +
                 "JOIN users u ON p.user_id = u.id " +
                 "ORDER BY p.xu_from_boss DESC " +
-                "LIMIT 10";
+                "LIMIT 8";
 
         try (Connection connection = DbManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(sql);
@@ -132,7 +132,32 @@ public class Service {
         }
         return topPlayers;
     }
+    public List<User> getTopPhaoLuong() {
+        List<User> topPlayers = new ArrayList<>();
+        String sql = "SELECT u.username, p.TopPhaoLuong " +
+                "FROM players p " +
+                "JOIN users u ON p.user_id = u.id " +
+                "ORDER BY p.TopPhaoLuong DESC " +
+                "LIMIT 8";
 
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                String username = rs.getString("username");
+                int TopPhaoLuong  = rs.getInt("TopPhaoLuong");
+
+                // In ra giá trị đọc từ ResultSet để kiểm tra
+                System.out.println("Username: " + username + ", phao luong " + TopPhaoLuong);
+
+                User player = new User(username,0,TopPhaoLuong );
+                topPlayers.add(player);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Xử lý ngoại lệ khi truy vấn thất bại
+        }
+        return topPlayers;
+    }
     public void sendMessage(Message ms) {
         session.sendMessage(ms);
     }

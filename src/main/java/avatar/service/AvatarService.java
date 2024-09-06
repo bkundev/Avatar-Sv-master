@@ -2,6 +2,7 @@ package avatar.service;
 import java.io.*;
 import java.lang.reflect.Field;
 import avatar.common.BossShopItem;
+import avatar.db.DbManager;
 import avatar.item.Item;
 import avatar.item.PartManager;
 import avatar.item.Part;
@@ -863,6 +864,10 @@ public class AvatarService extends Service {
                     });
                     break;
                 case 8:
+                    if(us.getLuong()<5){
+                        us.getAvatarService().serverDialog("B phải có trên 5 Lượng");
+                        return;
+                    }
                     us.getZone().getPlayers().forEach(u -> {
                         EffectService.createEffect()
                                 .session(u.session)
@@ -875,6 +880,8 @@ public class AvatarService extends Service {
                                 .idPlayer(us.getId())
                                 .send();
                     });
+                    us.updateTopPhaoLuong(-5);
+                    us.getAvatarService().updateMoney(0);
                     break;
                 case 35:
                     us.getZone().getPlayers().forEach(u -> {

@@ -47,6 +47,8 @@ public class User {
     private static final int[] UPGRADE_COST_COINS = {0, 0,0,20000, 50000, 100000, 200000 ,200000,500000,600000,70000,0,1000000,1200000,1500000,1700000,2000000,2500000,2700000,3000000,4000000,5000000};
     private static final int[] UPGRADE_COST_GOLD = {0, 0, 0, 0, 0, 0, 0, 200,500,600,700,1000,1000 ,1200 ,1500 ,1700 ,2000 ,2500 ,2700 ,3000 ,4000 ,5000 };
 
+
+    public int TopPhaoLuong;
     public int spam;
     public int HP;
     public int xu_from_boss;
@@ -114,7 +116,11 @@ public class User {
         this.username = username;
         this.xu_from_boss = xuFromBoss;
     }
-
+    public User(String username, int xeng, int TopPhaoLuong) {
+        this.username = username;
+        this.xeng = xeng;
+        this.TopPhaoLuong = TopPhaoLuong;
+    }
     public AvatarService getAvatarService() {
         return session.getAvatarService();
     }
@@ -222,6 +228,14 @@ public class User {
     }
 
 
+
+    public synchronized void updateTopPhaoLuong(int luongThaPhao) {
+        this.luong += luongThaPhao;
+        this.TopPhaoLuong += 1;
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `TopPhaoLuong` = ? WHERE `user_id` = ? LIMIT 1;",
+                this.TopPhaoLuong, this.id);
+    }
+
     public void sendMessage(Message ms) {
         this.session.sendMessage(ms);
     }
@@ -229,8 +243,8 @@ public class User {
     protected void saveData() {
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `gender` = ?, `friendly` = ?, `crazy` = ?, `stylish` = ?, `happy` = ?, `hunger` = ?, `chest_slot` = ? WHERE `user_id` = ? LIMIT 1;",
                 this.gender, this.friendly, this.crazy, this.stylish, this.happy, this.hunger,this.chestSlot, this.id);
-        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ?,`scores` = ? , `xu_from_boss` = ? WHERE `user_id` = ? LIMIT 1;",
-                this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain,this.scores,this.xu_from_boss, this.id);
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ?,`scores` = ? , `xu_from_boss` = ? , `TopPhaoLuong` = ? WHERE `user_id` = ? LIMIT 1;",
+                this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain,this.scores,this.xu_from_boss,this.TopPhaoLuong, this.id);
         JSONArray jChests = new JSONArray();
         for (Item item : this.chests) {
             JSONObject obj = new JSONObject();
@@ -339,6 +353,7 @@ public class User {
                     this.star = res.getByte("star");
                     this.scores = res.getInt("scores");
                     this.xu_from_boss = res.getInt("xu_from_boss");
+                    this.TopPhaoLuong = res.getInt("TopPhaoLuong");
 
                     this.chests = new ArrayList<>();
                     JSONArray chests = (JSONArray) JSONValue.parse(res.getString("chests"));
@@ -392,13 +407,13 @@ public class User {
         listCmd.add(new Command("Chức năng", 2));
         listCmdRotate.add(new Command((short) 0, "Hội nhóm", 41, (byte) 1));
         listCmdRotate.add(new Command((short) 4, "Oan Tu Xi", 44, (byte) 1));
-        listCmdRotate.add(new Command((short) 33, "Hô phong hoán vũ", 1053, (byte) 0));
-        listCmdRotate.add(new Command((short) 34, "Triệu hồi bia mộ", 1053, (byte) 0));
+        //listCmdRotate.add(new Command((short) 33, "Hô phong hoán vũ", 1053, (byte) 0));
+        //listCmdRotate.add(new Command((short) 34, "Triệu hồi bia mộ", 1053, (byte) 0));
         listCmdRotate.add(new Command((short) 35, "Cánh thần hiển linh", 1055, (byte) 0));
-        listCmdRotate.add(new Command((short) 48, "pháo sinh nhật(5 lượng)", 1115, (byte) 0));
-        listCmdRotate.add(new Command((short) 47, "Pháo hạnh phúc (5 lượng)", 242, (byte) 0));
+        //listCmdRotate.add(new Command((short) 48, "pháo sinh nhật(5 lượng)", 1115, (byte) 0));
+        //listCmdRotate.add(new Command((short) 47, "Pháo hạnh phúc (5 lượng)", 242, (byte) 0));
         listCmdRotate.add(new Command((short) 8, "Pháo thịnh vượng (5 lượng)", 241, (byte) 0));
-        listCmdRotate.add(new Command((short) 9, "triệu hồi con chim k nhớ tên", 1082, (byte) 0));
+        //listCmdRotate.add(new Command((short) 9, "triệu hồi con chim k nhớ tên", 1082, (byte) 0));
         listCmdRotate.add(new Command((short) 10, "Rương chỉ sử dụng không được bỏ(sẽ bị xóa item ở rương gốc)", 1204, (byte) 0));
         listCmdRotate.add(new Command((short) 23, "Cuốc", 869, (byte) 0));
         listCmdRotate.add(new Command((short) 36, "Hẹn hò", 1096, (byte) 1));

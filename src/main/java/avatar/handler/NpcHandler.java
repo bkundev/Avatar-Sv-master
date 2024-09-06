@@ -121,11 +121,29 @@ public class NpcHandler {
 
                                 for (User player : topPlayers) {
                                     if (player.getXu_from_boss() > 0) {
-                                        result.append("Top ").append(rank).append(" : ")
-                                                .append(player.getUsername())
-                                                .append("xu kiếm được : ")
+                                        result.append(player.getUsername())
+                                                .append(" Top ").append(rank).append(" : ")
                                                 .append(player.getXu_from_boss())
-                                                .append("\n");
+                                                .append(" xu\n");
+                                        rank++; // Tăng thứ hạng sau mỗi lần thêm người chơi vào kết quả
+                                    }
+                                }
+
+                                us.getAvatarService().customTab("Top 10", result.toString());
+                            })
+                            .build());
+                    list1.add(Menu.builder().name("Bảng xếp hạng thả pháo lượng")
+                            .action(() -> {
+                                List<User> topPlayers = us.getService().getTopPhaoLuong();
+                                StringBuilder result = new StringBuilder();
+                                int rank = 1; // Biến đếm để theo dõi thứ hạng
+
+                                for (User player : topPlayers) {
+                                    if (player.getXu_from_boss() > 0) {
+                                        result.append(player.getUsername())
+                                                .append(" Top ").append(rank).append(" : ")
+                                                .append(player.getXu_from_boss())
+                                                .append(" \n");
                                         rank++; // Tăng thứ hạng sau mỗi lần thêm người chơi vào kết quả
                                     }
                                 }
