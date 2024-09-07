@@ -561,7 +561,7 @@ public class User {
             this.y = y;
             this.direct = direct;
             getMapService().move(this);
-            //System.out.println("move " + x + ", y = " + y);
+            System.out.println("move " + x + ", y = " + y);
         } catch (IOException e) {
             e.printStackTrace();
         }

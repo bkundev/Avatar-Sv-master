@@ -40,4 +40,5 @@ public class NpcName {
     public static final int boss = 999;
     public static final int bunma = 858;
     public static final int Vegeta = 859;
+    public static final int Tien_chi_mu_Lovanga = 860;
 }

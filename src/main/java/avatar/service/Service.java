@@ -2,7 +2,6 @@ package avatar.service;
 
 import avatar.constants.Cmd;
 import avatar.db.DbManager;
-import avatar.model.Food;
 import avatar.model.User;
 import avatar.network.Message;
 import avatar.network.Session;
@@ -16,6 +15,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import avatar.play.Map;
+import avatar.server.UserManager;
+import avatar.server.Utils;
 import org.apache.log4j.Logger;
 
 public class Service {
@@ -244,6 +246,98 @@ public class Service {
         }
 
         return -1; // Nếu người dùng không có mặt trong danh sách
+    }
+
+    public String DuDoanNY(User us){
+
+        List<User> lstUs = UserManager.users;
+        String result = "";
+        byte gender = us.getGender();
+        int randomIndex = Utils.nextInt(lstUs.size());
+        User ulove = lstUs.get(randomIndex);
+        String map = checkNameMap(ulove.getZone().getMap());
+        if(gender == 1){
+            if(ulove.getGender() == gender){
+                result = ulove.getUsername() + " (cú có gai) đang ở" +
+                        " Map : " + map + " Khu :" + ulove.getZone().getId();
+            }else
+                result = ulove.getUsername() + " (girl) đang ở" +
+                        " Map : " + map + " Khu :" + ulove.getZone().getId();
+        }else
+        {
+            if(ulove.getGender() == gender){
+                result = ulove.getUsername() + "(Gái đó : v) đang ở" +
+                        " Map : " + map + " Khu :" + ulove.getZone().getId();
+            }else
+                result = ulove.getUsername() + " (boy nè) đang ở" +
+                        " Map : " + map + " Khu :" + ulove.getZone().getId();
+        }
+        return result;
+    }
+
+    public String checkNameMap(Map m){
+        int mapid = m.getId();
+        String Map = "";
+        switch (mapid) {
+            case 0:
+                Map = "Khu Mặt trời";
+                break;
+            case 1:
+                Map = "Khu quay số cũ";
+                break;
+            case 2:
+                Map = "Khu đấu giá cũ";
+                break;
+            case 3:
+                Map = "Khu ăn xin trái";
+                break;
+            case 4:
+                Map = "Khu cưới , clan";
+                break;
+            case 5:
+                Map = "Khu ăn xin phải";
+                break;
+            case 6:
+                Map = "Khu cô giáo";
+                break;
+            case 7:
+                Map = "Khu dưới cô giáo";
+                break;
+            case 9:
+                Map = "Khu giải trí";
+                break;
+            case 10:
+                Map = "Khu lễ đường";
+                break;
+            case 11:
+                Map = "Bến xe công viên";
+                break;
+            case 13:
+                Map = "Khu sinh thái";
+                break;
+            case 14:
+                Map = "Khu câu cá rô";
+                break;
+            case 15:
+                Map = "Khu câu cá lóc";
+                break;
+            case 16:
+                Map = "Khu câu cá mập";
+                break;
+            case 17:
+                Map = "Khu ngoại ô";
+                break;
+            case 18:
+                Map = "Trong nhà tù";
+                break;
+            case 19:
+                Map = "Trong lễ đường";
+                break;
+            case 23:
+                Map = "Khu mua sắm";
+                break;
+        }
+        return Map;
     }
 
     public void sendMessage(Message ms) {

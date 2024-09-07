@@ -116,6 +116,22 @@ public class NpcHandler {
             us.updateSpam(-1,(Boss)boss,us);
         }else {
             switch (npcIdCase) {
+                case NpcName.Tien_chi_mu_Lovanga:
+                    List<Menu> list = new ArrayList<>();
+                    Menu tienchi = Menu.builder().name("Dự đoán vị trí người yêu").action(() -> {
+                        us.getService().serverDialog(us.getService().DuDoanNY(us));
+                                            }).build();
+                    list.add(tienchi);
+                    list.add(Menu.builder().name("Dự đoán kết quả sổ số").action(() -> {
+                        us.getService().serverDialog("Dự đoán kết quả : Comingsion");
+                    }).build());
+                    list.add(Menu.builder().name("Dự đoán kết quả Tài Xỉu").action(() -> {
+                        us.getService().serverDialog("Dự đoán kết quả : Comingsion");
+                    }).build());
+                    list.add(Menu.builder().name("Thoát").build());
+                    us.setMenus(list);
+                    us.getAvatarService().openMenuOption(npcId, 0, list);
+                    break;
                 case NpcName.bunma:
                     List<Menu> list1 = new ArrayList<>();
                     Menu Event = Menu.builder().name("Đổi Quà").action(() -> {
@@ -201,7 +217,7 @@ public class NpcHandler {
                 case NpcName.CHU_DAU_TU:
                     break;
                 case NpcName.em_Thinh:{
-                    List<Menu> list = new ArrayList<>();
+                    List<Menu> emth = new ArrayList<>();
                     List<Item> Items1 = new ArrayList<>();
                     Menu quaySo1 = Menu.builder().name("vật phẩm").menus(
                                     List.of(
@@ -217,17 +233,17 @@ public class NpcHandler {
                             .npcName("donate đi")
                             .npcChat("show Item")
                             .build();
-                    list.add(quaySo1);
-                    list.add(Menu.builder().name("Hướng dẫn").action(() -> {
+                    emth.add(quaySo1);
+                    emth.add(Menu.builder().name("Hướng dẫn").action(() -> {
                         us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
                     }).build());
-                    list.add(Menu.builder().name("Thoát").build());
-                    us.setMenus(list);
-                    us.getAvatarService().openUIMenu(npcId, 0, list, "donate đi", "");
+                    emth.add(Menu.builder().name("Thoát").build());
+                    us.setMenus(emth);
+                    us.getAvatarService().openUIMenu(npcId, 0, emth, "donate đi", "");
                     break;
                 }
                 case NpcName.QUAY_SO: {
-                    List<Menu> list = new ArrayList<>();
+                    List<Menu> qs = new ArrayList<>();
                     Menu quaySo1 = Menu.builder().name("Quay số").menus(
                                     List.of(
                                             Menu.builder().name("5 lượng").action(() -> {
@@ -248,18 +264,18 @@ public class NpcHandler {
                                     ))
                             .id(npcId)
                             .build();
-                    list.add(quaySo1);
-                    list.add(Menu.builder().name("Xem hướng dẫn").action(() -> {
+                    qs.add(quaySo1);
+                    qs.add(Menu.builder().name("Xem hướng dẫn").action(() -> {
                         System.out.println("Action for Xem hướng dẫn triggered");
                         us.getAvatarService().customTab("Hướng dẫn", "Để tham gia quay số bạn phải có ít nhất 5 lượng hoặc 25 ngàn xu trong tài khoản và 3 ô trống trong rương\n Bạn sẽ nhận được danh sách những món đồ đặc biệt mà bạn muốn quay. Những món đồ đặc biệt này bạn sẽ không thể tìm thấy trong bất cứ shop nào của thành phố.\n Sau khi chọn được món đồ muốn quay bạn sẽ bắt đầu chỉnh vòng quay để quay\n Khi quay bạn giữ phím 5 để chỉnh lực quay sau đó thả ra để bắt đầu quay\n Khi quay bạn sẽ có cơ hội trúng từ 1 đến 3 món quà\n Quà của bạn nhận được có thể là vật phẩm bất kì, xu, hoặc điểm kinh nghiệm\n Bạn có thể quay được những bộ đồ bán bằng lượng như đồ hiệp sĩ, pháp sư...\n Tuy nhiên vật phẩm bạn quay được sẽ có hạn sử dụng trong một số ngày nhất định.\n Nếu bạn quay được đúng món đồ mà bạn đã chọn thì bạn sẽ được sở hữu món đồ đó vĩnh viễn.\n Hãy thử vận may để sở hữa các món đồ cực khủng nào !!!");
                     }).build());
-                    list.add(Menu.builder().name("Thoát").build());
-                    us.setMenus(list);
-                    us.getAvatarService().openMenuOption(npcId, 0, list);
+                    qs.add(Menu.builder().name("Thoát").build());
+                    us.setMenus(qs);
+                    us.getAvatarService().openMenuOption(npcId, 0, qs);
                     break;
                 }
                 case NpcName.THO_KIM_HOAN: {
-                    List<Menu> list = new ArrayList<>();
+                    List<Menu> nangcap = new ArrayList<>();
                     String npcName = "Thợ KH";
                     String npcChat = "Muốn nâng cấp đồ thì vào đây";
                     Menu upgrade = Menu.builder().name("Nâng cấp").id(npcId).npcName(npcName).npcChat(npcChat).menus(
@@ -275,36 +291,36 @@ public class NpcHandler {
                                     )
                             )
                             .build();
-                    list.add(upgrade);
-                    list.add(Menu.builder().name("Xem hướng dẫn")
+                    nangcap.add(upgrade);
+                    nangcap.add(Menu.builder().name("Xem hướng dẫn")
                             .action(() -> {
                                 us.getAvatarService().customTab("Hướng dẫn", "Nâng thì nâng không nâng thì cút!");
                             })
                             .build());
-                    list.add(Menu.builder().name("Thoát").id(npcId).build());
-                    us.setMenus(list);
-                    us.getAvatarService().openUIMenu(npcId, 0, list, npcName, npcChat);
+                    nangcap.add(Menu.builder().name("Thoát").id(npcId).build());
+                    us.setMenus(nangcap);
+                    us.getAvatarService().openUIMenu(npcId, 0, nangcap, npcName, npcChat);
                     break;
                 }
                 case NpcName.LAI_BUON: {
-                    List<Menu> list = new ArrayList<>();
+                    List<Menu> laibuon = new ArrayList<>();
                     Menu LAI_BUON = Menu.builder().name("Điểm Danh").action(() -> {
                         Item item = new Item(593, -1, 1);
                         //us.addItemToChests(item);
                         //us.addExp(5);
                         us.getService().serverMessage("đang xây dựng");//Bạn nhận được 5 điểm exp + 1 thẻ quay số miễn phí");
                     }).build();
-                    list.add(LAI_BUON);
-                    list.add(Menu.builder().name("Xem hướng dẫn").action(() -> {
+                    laibuon.add(LAI_BUON);
+                    laibuon.add(Menu.builder().name("Xem hướng dẫn").action(() -> {
                         us.getAvatarService().customTab("Hướng dẫn", "Đăng nhập mỗi ngày để nhận quà.\nDùng điểm chuyên cần để nhận đucợ những món quà có giá trị trong tương lai");
                     }).build());
-                    list.add(Menu.builder().name("Thoát").build());
-                    us.setMenus(list);
-                    us.getAvatarService().openMenuOption(npcId, 0, list);
+                    laibuon.add(Menu.builder().name("Thoát").build());
+                    us.setMenus(laibuon);
+                    us.getAvatarService().openMenuOption(npcId, 0, laibuon);
                     break;
                 }
                 case NpcName.THO_CAU:
-                    List<Menu> list = new ArrayList<>();
+                    List<Menu> thocau = new ArrayList<>();
                     Menu thoCau = Menu.builder().name("Câu cá").action(() -> {
                         List<Item> Items1 = new ArrayList<>();
                         Item item = new Item(446,30,0);//câu vip
@@ -316,20 +332,20 @@ public class NpcHandler {
                         us.getAvatarService().openUIShop(npcId,"Trùm Câu Cá,",Items1);
                         us.getAvatarService().updateMoney(0);
                     }).build();
-                    list.add(thoCau);
-                    list.add(Menu.builder().name("Bán cá").action(() -> {
+                    thocau.add(thoCau);
+                    thocau.add(Menu.builder().name("Bán cá").action(() -> {
                         try {
                             sellFish(us);
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
                     }).build());
-                    list.add(Menu.builder().name("Xem hướng dẫn").action(() -> {
+                    thocau.add(Menu.builder().name("Xem hướng dẫn").action(() -> {
                         us.getAvatarService().customTab("Hướng dẫn", "Câu cá kiếm được nhiều xu bản auto lên thanhpholo.com");
                     }).build());
-                    list.add(Menu.builder().name("Thoát").build());
-                    us.setMenus(list);
-                    us.getAvatarService().openMenuOption(npcId,0,  list);
+                    thocau.add(Menu.builder().name("Thoát").build());
+                    us.setMenus(thocau);
+                    us.getAvatarService().openMenuOption(npcId,0,  thocau);
                     break;
             }
         }
