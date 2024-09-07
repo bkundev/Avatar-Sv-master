@@ -119,17 +119,24 @@ public class NpcHandler {
                 case NpcName.bunma:
                     List<Menu> list1 = new ArrayList<>();
                     Menu Event = Menu.builder().name("Đổi Quà").action(() -> {
-                        ShopEventHandler.displayUI(us, bunma,2040,3506,2620,2577,5539,2618, 2619, 3987,3455,3456,3457,4995,3988,3989,3990,5573,6772,6773,6774);
+                        ShopEventHandler.displayUI(us, bunma,2040,3506,2620,2577,5539,2618, 2619, 3987,3455,3456,3457,4995,6772,6773,6774);
                     }).build();
                     list1.add(Event);
-                    list1.add(Menu.builder().name("Góp ....")
+                    list1.add(Menu.builder().name("Góp Ngọc Rồng Lỏ")
                             .action(() -> {
                                 GopDiemSK(us);
                             })
                             .build());
                     list1.add(Menu.builder().name("Thành tích bản thân")
                             .action(() -> {
-                                us.getAvatarService().serverDialog("Bạn có đang "+us.getScores()+" điểm sự kiện");
+                                StringBuilder detailedMessage = new StringBuilder("Thành tích bản thân");
+                                detailedMessage.append(String.format("\n Bạn đang có %d điểm sự kiện", us.getScores()));
+                                int rankPhaoLuong = us.getService().getUserRankPhaoLuong(us);
+                                detailedMessage.append(String.format("\n Bạn đang ở top %d thả pháo lượng : %d", rankPhaoLuong,us.getTopPhaoLuong()));
+
+                                int rankXuboss = us.getService().getUserRankXuBoss(us);
+                                detailedMessage.append(String.format("\n Bạn đang ở top %d xu boss : %d", rankXuboss, us.getXu_from_boss()));
+                                us.getAvatarService().serverDialog(detailedMessage.toString());
                             })
                             .build());
                     list1.add(Menu.builder().name("Bảng xếp hạng kiếm xu từ boss")
@@ -181,10 +188,10 @@ public class NpcHandler {
                 case NpcName.Vegeta:
                     List<Menu> lstVegeta = new ArrayList<>();
                     Menu vegenta = Menu.builder().name("Quà Thẻ VIP").action(() -> {
-                        ShopEventHandler.displayUI(us, Vegeta,608,620,2090,6541,2052,2053);
+                        ShopEventHandler.displayUI(us, Vegeta,620,2090,6541,2052,2053,3636,3638);
                     }).build();
                     lstVegeta.add(Menu.builder().name("Quà Thẻ VIP cao cấp").action(() -> {
-                        ShopEventHandler.displayUI(us, Vegeta, 2034,6161,4299,4300);
+                        ShopEventHandler.displayUI(us, Vegeta, 2034,6161);
                     }).build());
                     lstVegeta.add(vegenta);
                     lstVegeta.add(Menu.builder().name("Thoát").id(npcId).build());
@@ -345,26 +352,33 @@ public class NpcHandler {
 
     public static void GopDiemSK(User us){
         java.util.Map<Integer, Integer> itemsToProcess = new HashMap<>();
-        itemsToProcess.put(3085, 1);
-        itemsToProcess.put(3086, 2);
-        itemsToProcess.put(3087, 3);
+        itemsToProcess.put(4081, 1);
+        itemsToProcess.put(4082, 2);
+        itemsToProcess.put(4083, 3);
+        itemsToProcess.put(4084, 4);
+        itemsToProcess.put(4085, 5);
+        itemsToProcess.put(4086, 6);
+        itemsToProcess.put(4087, 7);
         int addscores = 0;
 // Lặp qua từng cặp ID và số lượng
+
+        StringBuilder detailedMessage = new StringBuilder("Bạn đã đổi thành công:");
         for (java.util.Map.Entry<Integer, Integer> entry : itemsToProcess.entrySet()) {
             int itemId = entry.getKey();
             int scores = entry.getValue();
             Item item = us.findItemInChests(itemId);
             if (item != null && item.getQuantity() > 0) {
                 addscores += item.getQuantity()*scores;
+                detailedMessage.append(String.format("\n%s :(Điểm %d) Số lượng %d  x  tong %d điểm", item.getPart().getName(), scores, item.getQuantity(), item.getQuantity()*scores));
                 us.updateScores(+addscores);
                 us.removeItem(itemId, item.getQuantity());
-
             }
         }
         if(addscores > 0){
-            us.getAvatarService().serverDialog("Bạn đã đổi thành công : " + addscores + " điểm sự kiện");
+            detailedMessage.append(String.format("\n Tổng tất cả %d",addscores) +" điểm");
+            us.getAvatarService().serverDialog(detailedMessage.toString());
         }else {
-            us.getAvatarService().serverDialog("Bạn không đủ dây tơ để góp");
+            us.getAvatarService().serverDialog("Bạn không còn ngọc rồng");
         }
     }
 

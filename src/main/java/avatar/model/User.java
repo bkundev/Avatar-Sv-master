@@ -714,7 +714,11 @@ public class User {
                     {
                         removeItem(item.getId(), 1);
                         GiftBox giftBox = new GiftBox();
-                        giftBox.open(this);
+                        giftBox.open(this,item);
+                        //getService().serverMessage(String.format("Số lượng: %,d", item.getQuantity()));
+                    }
+
+                    else {
                         getService().serverMessage(String.format("Số lượng: %,d", item.getQuantity()));
                     }
                 } else {
