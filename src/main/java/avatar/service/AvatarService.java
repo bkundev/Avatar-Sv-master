@@ -246,6 +246,8 @@ public class AvatarService extends Service {
             ds.flush();
             sendMessage(ms5);
 
+            us.getAvatarService().SendTabmsg("welcome locity");
+
         } catch (IOException ex) {
             logger.error("onLoginSuccess err", ex);
         }

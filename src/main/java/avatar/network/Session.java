@@ -40,6 +40,9 @@ import java.net.InetSocketAddress;
 import java.io.DataOutputStream;
 import java.io.DataInputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import avatar.play.Map;
 import avatar.play.MapManager;
 import avatar.play.NpcManager;
@@ -467,6 +470,23 @@ public class Session implements ISession {
             getAvatarService().onLoginSuccess();
             getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thanh Pho lo");
             getAvatarService().serverInfo("wellcome locity");
+            String checkNap = "SELECT tongnap,ThuongNapLanDau FROM users WHERE id = ? LIMIT 1;";
+            // Executing the query
+            try (Connection connection = DbManager.getInstance().getConnection();
+                 PreparedStatement ps = connection.prepareStatement(checkNap);) {
+                ps.setInt(1, user.getId());
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    int tongnap = rs.getInt("tongnap");
+                    boolean napLanDau = rs.getBoolean("ThuongNapLanDau");
+                    if(!napLanDau && tongnap>=20000){
+                        ThuongLapLanDau();
+                    }
+                }
+                rs.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             if (isCharCreatedPopup) {
                 getAvatarService().serverDialog("Có lỗi xảy ra!");
@@ -478,6 +498,23 @@ public class Session implements ISession {
             enter();
         }
     }
+
+    private void ThuongLapLanDau(){
+        try {
+            user.getAvatarService().SendTabmsg("Bạn vừa nạp lần đầu trên 20k nhận được 5.000.000 xu và 10.000 lượng và 200 thẻ quay số miễn phí");
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        DbManager.getInstance().executeUpdate("UPDATE `users` SET `ThuongNapLanDau` = ? WHERE `id` = ? LIMIT 1;",
+                1, user.getId());
+        user.updateLuong(+10000);
+        user.updateXu(+5000000);
+        user.getAvatarService().updateMoney(0);
+        Item item = new Item(593, -1, 200);
+        user.addItemToChests(item);
+    }
+
 
     public boolean isNewVersion() {
         return true;
@@ -512,8 +549,6 @@ public class Session implements ISession {
             this.sendMessage(ms);
             return;
         }
-        Item item = new Item(593, -1, 100);
-        user.addItemToChests(item);
         user.setGender(gender);
         user.setWearing(items);
         ms = new Message(-35);

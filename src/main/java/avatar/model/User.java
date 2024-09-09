@@ -84,6 +84,7 @@ public class User {
     private byte chestHomeSlot;
     private int scores;
     private List<Item> wearing;
+
     public List<Item> chests;
     private Zone zone;
     private short x, y;
