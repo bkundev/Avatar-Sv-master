@@ -171,7 +171,7 @@ public class Boss extends User {
         }else {
             us.addItemToChests(hopqua);
         }
-        //ServerManager.disconnect(boss.session);
+        ServerManager.disconnect(boss.session);
         boss.session.close();
         //UserManager.getInstance().remove(boss);
         //boss.close();
@@ -181,8 +181,8 @@ public class Boss extends User {
         if (bossCount >= TOTAL_BOSSES) {
             return; // Dừng nếu đã tạo đủ số lượng Boss
         }
+        boss.setId(currentBossId++);
         boss.setDefeated(false);
-
         List<String> chatMessages = Arrays.asList("YAAAA", "YOOOO");
         ((Boss) boss).setTextChats(chatMessages);
         assignRandomItemToBoss(boss);
@@ -449,7 +449,6 @@ public class Boss extends User {
         List<Zone> zones = m.getZones();
         for (int i = 0; i < numBosses; i++) {
             Boss boss = new Boss(); // Tạo boss mới
-            boss.setId(5000+Npc.ID_ADD);
             List<String> chatMessages = Arrays.asList("YAAAA", "YOOOO");
             ((Boss) boss).setTextChats(chatMessages);
             boss.session = createSession(boss);
