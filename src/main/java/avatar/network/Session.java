@@ -929,6 +929,10 @@ public class Session implements ISession {
 
 
     private void doFinalUpgrade(UpgradeItem item, Item itemOld) {
+        if(itemOld.getExpired()!=-1){
+            user.getAvatarService().serverDialog("Bạn cần có vật phẩm "+itemOld.getPart().getName()+ " vĩnh viễn");
+            return;
+        }
         int ratio = item.getRatio();
         boolean isUpgradeSuccess = false;
         if (ratio > 0) {
@@ -952,7 +956,7 @@ public class Session implements ISession {
                         .id((byte)16)
                         .style((byte) 0)
                         .loopLimit((byte) 5)
-                        .loop((short) 3)
+                        .loop((short) 1)
                         .loopType((byte) 1)
                         .radius((short) 1)
                         .idPlayer(NpcName.THO_KIM_HOAN+Npc.ID_ADD)
@@ -994,7 +998,7 @@ public class Session implements ISession {
                 if (user.getXu() < 15000) {
                     return;
                 }
-                user.updateXu(-15000);
+                user.updateXu(-25000);
             }
             if (dl.getType() == DialLuckyManager.LUONG) {
                 if (user.getLuong() < 5) {

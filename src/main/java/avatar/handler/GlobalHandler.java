@@ -173,11 +173,16 @@ public class GlobalHandler {
                         if (Integer.parseInt(text) == 1)
                             for (int i = 0; i < lst.stream().count(); i++) {
                                 lst.get(i).getAvatarService().serverDialog("server sẽ bảo trì sau 2 phút.vui lòng off để tránh mất đồ");
+                                Thread.sleep(120000);
+                                List<User> lstUs = UserManager.users;
+                                lstUs.forEach(u -> {u.session.close();});
                             }
                     }
 
                 } catch (NumberFormatException e) {
                     us.getAvatarService().serverDialog("invalid input, item code must be number");
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
                 break;
             case 11:

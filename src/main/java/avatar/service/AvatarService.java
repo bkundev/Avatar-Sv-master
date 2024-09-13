@@ -219,7 +219,10 @@ public class AvatarService extends Service {
             }
             ds.writeByte(1);
             ds.writeShort(us.getLeverMain());
-            ds.writeShort(9);
+            if(us.getGender() == 1){
+                ds.writeShort(49);
+            }else
+                ds.writeShort(48);
             ds.writeBoolean(session.isNewVersion());//new version
             if (session.isNewVersion()) {
                 ds.writeInt(us.getXeng());

@@ -269,7 +269,7 @@ public class User {
 
     public synchronized boolean login() {
         if (!ServerManager.active) {
-            getService().serverMessage("Máy chủ đang bảo trì. Vui lòng quay lại sau!");
+            getService().serverMessage("Máy chủ đang bảo trì. Vui lòng quay lại sau : v");
             return false;
         }
         String ACCOUNT_LOGIN = "SELECT * FROM `users` WHERE `username` = ? AND `password` = ? LIMIT 1;";
@@ -429,7 +429,7 @@ public class User {
                 case 101:
                     DayOfWeek dayOfWeek = LocalDate.now().getDayOfWeek();
                     int dayIndex = dayOfWeek.getValue(); // 1 = Monday, 7 = Sunday
-                    if (dayIndex == 6 || dayIndex == 7) {
+                    if (dayIndex == 5 || dayIndex == 6) {
                         getMapService().doAction(id, idTo, action);
                         break;
                     }
@@ -713,6 +713,10 @@ public class User {
                 } else if (pType == -2) {
                     if(item.getId()==683)
                     {
+                        if((this.chests.size() >= this.getChestSlot())){
+                            getService().serverMessage("Bạn phải có ít nhất 1 ô trống");
+                            return;
+                        }
                         removeItem(item.getId(), 1);
                         GiftBox giftBox = new GiftBox();
                         giftBox.open(this,item);

@@ -69,7 +69,7 @@ public class GiftBox {
             case Items:
                 RandomCollection<Integer> chosenItemCollection = chooseItemCollection();
                 int idItems = chosenItemCollection.next();
-                if( idItems >= 4081 || idItems <= 4087){
+                if( idItems >= 4081 && idItems <= 4087){
 
                     Item Nro = new Item(idItems,-1,1);
                     if(us.findItemInChests(idItems) !=null){
@@ -81,9 +81,16 @@ public class GiftBox {
                     us.getAvatarService().serverDialog("Bạn nhận được "+ Nro.getPart().getName()  + String.format(" Số lượng còn lại: %,d", item.getQuantity()));
                     break;
                 }
-                Item rewardItem  = new Item(idItems, -1, 0);
+                Item rewardItem  = new Item(idItems);
+                int ok =  (Utils.nextInt(100) < 80) ? 1 : 0;
+                if(ok==0){
+                    us.addItemToChests(rewardItem);
+                    us.getAvatarService().serverDialog("Bạn nhận được "+ rewardItem.getPart().getName()  + String.format(" Vĩnh viễn Số lượng còn lại: %,d", item.getQuantity()));
+                    break;
+                }
+                rewardItem.setExpired(System.currentTimeMillis() + (86400000L * 30));
                 us.addItemToChests(rewardItem);
-                us.getAvatarService().serverDialog("Bạn nhận được "+ rewardItem.getPart().getName()  + String.format(" Số lượng còn lại: %,d", item.getQuantity()));
+                us.getAvatarService().serverDialog("Bạn nhận được "+ rewardItem.getPart().getName()  + String.format(" 30 ngày, Số lượng còn lại: %,d", item.getQuantity()));
                 break;
             case XU:
                 int xu = Utils.nextInt(1, 10) * 1000;

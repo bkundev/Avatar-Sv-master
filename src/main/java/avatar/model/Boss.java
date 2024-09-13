@@ -116,7 +116,6 @@ public class Boss extends User {
         us.getAvatarService().updateMoney(1);
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu_from_boss` = ? WHERE `user_id` = ? LIMIT 1;",
                 us.xu_from_boss, us.getId());
-        System.out.println("Save data user " + this.getUsername());
         String username = us.getUsername();  // Lấy tên người dùng
         String message = String.format("Khá lắm bạn %s đã kill được %s", username, boss.getUsername().substring(3, boss.getUsername().length() - 6));
         List<String> newMessages = Arrays.asList(message,"Ta sẽ quay lại sau!!!");
@@ -131,15 +130,15 @@ public class Boss extends User {
         scheduler.schedule(() -> {
             try {
                 createNearbyGiftBoxes(boss, boss.getZone(), boss.getX(), boss.getY(), Boss.currentBossId + 10000);
-                ServerManager.clients.remove(boss.getUsername());
-                ServerManager.disconnect(boss.session);
-                UserManager.getInstance().remove(boss);
-                boss.close();
+                //ServerManager.clients.remove(boss.getUsername());
+                //ServerManager.disconnect(boss.session);
+                //UserManager.getInstance().remove(boss);
+                //boss.close();
                 Utils random = null;
                 avatar.play.Map m = MapManager.getInstance().find(boss.getBossMapId());
                 List<Zone> zones = m.getZones();
                 Zone randomZone = zones.get(random.nextInt(zones.size()));
-                addBossToZone(boss.bossMapId,randomZone,(short) 0,(short) 0,Utils.nextInt(2000,10000));
+                addBossToZone(boss,boss.bossMapId,randomZone,(short) 0,(short) 0,Utils.nextInt(2000,10000));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -172,26 +171,26 @@ public class Boss extends User {
         }else {
             us.addItemToChests(hopqua);
         }
-        ServerManager.clients.remove(boss.getUsername());
-        ServerManager.disconnect(boss.session);
-        UserManager.getInstance().remove(boss);
-        boss.close();
+        //ServerManager.disconnect(boss.session);
+        boss.session.close();
+        //UserManager.getInstance().remove(boss);
+        //boss.close();
     }
 
-    public void addBossToZone(int Map ,Zone zone, short x, short y,int hp) throws IOException {
+    public void addBossToZone(User boss,int Map ,Zone zone, short x, short y,int hp) throws IOException {
         if (bossCount >= TOTAL_BOSSES) {
             return; // Dừng nếu đã tạo đủ số lượng Boss
         }
-        User boss = createBoss(x, y, currentBossId++);
+        boss.setDefeated(false);
+
+        List<String> chatMessages = Arrays.asList("YAAAA", "YOOOO");
+        ((Boss) boss).setTextChats(chatMessages);
         assignRandomItemToBoss(boss);
         boss.setHP(hp);
         boss.bossMapId = Map;
-        List<String> chatMessages = Arrays.asList("YAAAA", "YOOOO");
-        ((Boss) boss).setTextChats(chatMessages);
-        boss.session = createSession(boss);
+        bossCount++; // Tăng số lượng Boss đã tạo
         sendAndHandleMessages(boss);
         moveBoss(boss);
-        bossCount++; // Tăng số lượng Boss đã tạo
         int mapId = zone.getMap().getId();
         List<int[]> coordinates = zoneCoordinates.get(mapId);
         if (coordinates != null && !coordinates.isEmpty()) {
@@ -253,8 +252,8 @@ public class Boss extends User {
         boss.addItemToWearing(new Item(randomItemId));
     }
 
-    private void assignRandomItemToBoss(User boss) {
 
+    private void assignRandomItemToBoss(User boss) {
         List<Integer> itemIds = Arrays.asList(0,8,2033, 4121, 4122, 4123);//sen bo hung
         List<Integer> itemIds1 = Arrays.asList(8,2034, 2035, 2036);//ma bu
         List<Integer> itemIds2 = Arrays.asList(6161, 6162, 6163);//ma bu map
@@ -321,9 +320,7 @@ public class Boss extends User {
             dos1.flush();
             byte[] data1 = baos1.toByteArray();
             ParkMsgHandler parkMsgHandler1 = new ParkMsgHandler(boss.session);
-            parkMsgHandler1.onMessage(new Message(Cmd.MOVE_PARK, data1));
-            getMapService().chat(this, "ta đến rồi đây");
-            //System.out.println("boss move : X = " + boss.getX() + ", y = " + boss.getY());
+            parkMsgHandler1.onMessage(new Message(Cmd.MOVE_PARK, data1));;
         }
     }
 
@@ -372,13 +369,13 @@ public class Boss extends User {
         }
     }
 
-    public Session createSession(User boss){
+    public static Session createSession(User boss){
         //Cmd.SET_PROVIDER
         try {
             // Tạo một Socket (thay thế bằng thông tin kết nối thực tế)
             Socket socket = new Socket();
             socket.connect(new InetSocketAddress("localhost", 19128)); // Thay thế bằng địa chỉ IP và cổng thực tế
-            int sessionId = 9999; // Ví dụ về ID, có thể là bất kỳ giá trị nào phù hợp
+            int sessionId = boss.getId(); // Ví dụ về ID, có thể là bất kỳ giá trị nào phù hợp
             Session session = new Session(socket, sessionId);
             session.ip = "127.0.0.1";
             session.user = boss;
@@ -452,9 +449,14 @@ public class Boss extends User {
         List<Zone> zones = m.getZones();
         for (int i = 0; i < numBosses; i++) {
             Boss boss = new Boss(); // Tạo boss mới
+            boss.setId(5000+Npc.ID_ADD);
+            List<String> chatMessages = Arrays.asList("YAAAA", "YOOOO");
+            ((Boss) boss).setTextChats(chatMessages);
+            boss.session = createSession(boss);
+
             Zone randomZone = zones.get(random.nextInt(zones.size()));
             try {
-                boss.addBossToZone(mapId,randomZone, (short) 50, (short) 50, (int) 10);
+                boss.addBossToZone(boss,mapId,randomZone, (short) 50, (short) 50, (int) 10);
                 System.out.println("Boss " + i + " khu " + randomZone.getId() + " map " + mapId);
             } catch (IOException e) {
                 throw new RuntimeException(e);

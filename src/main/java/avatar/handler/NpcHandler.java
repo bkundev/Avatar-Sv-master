@@ -38,8 +38,13 @@ import static avatar.constants.NpcName.boss;
 public class NpcHandler {
     public static void handleDiaLucky(User us, byte type) {
         DialLucky dl = DialLuckyManager.getInstance().find(type);
+
         if (dl != null) {
             if (dl.getType() == DialLuckyManager.MIEN_PHI) {
+                if(us.chests.size() >= us.getChestSlot()-2){
+                    us.getAvatarService().serverDialog("Bạn phải có ít nhất 3 ô trống trong rương đồ");
+                    return;
+                }
                 Item itm = us.findItemInChests(593);
                 if (itm == null || itm.getQuantity() <= 0) {
                     us.getAvatarService().serverDialog("Bạn không có Vé quay số miễn phí!");
@@ -47,12 +52,20 @@ public class NpcHandler {
                 }
             }
             if (dl.getType() == DialLuckyManager.XU) {
+                if(us.chests.size() >= us.getChestSlot()-2){
+                    us.getAvatarService().serverDialog("Bạn phải có ít nhất 3 ô trống trong rương đồ");
+                    return;
+                }
                 if (us.getXu() < 15000) {
                     us.getAvatarService().serverDialog("Bạn không đủ xu!");
                     return;
                 }
             }
             if (dl.getType() == DialLuckyManager.LUONG) {
+                if(us.chests.size() >= us.getChestSlot()-2){
+                    us.getAvatarService().serverDialog("Bạn phải có ít nhất 3 ô trống trong rương đồ");
+                    return;
+                }
                 if (us.getLuong() < 5) {
                     us.getAvatarService().serverDialog("Bạn không đủ lượng!!");
                     return;
@@ -62,7 +75,6 @@ public class NpcHandler {
         us.setDialLucky(dl);
         dl.show(us);
     }
-
 
     public static void handlerCommunicate(int npcId, User us) throws IOException {
         Zone z = us.getZone();
@@ -250,7 +262,7 @@ public class NpcHandler {
                                                 System.out.println("Action for 5 lượng triggered");
                                                 handleDiaLucky(us, DialLuckyManager.LUONG);
                                             }).build(),
-                                            Menu.builder().name("15.000 xu").action(() -> {
+                                            Menu.builder().name("25.000 xu").action(() -> {
                                                 System.out.println("Action for 15.000 xu triggered");
                                                 handleDiaLucky(us, DialLuckyManager.XU);
                                             }).build(),
@@ -358,7 +370,7 @@ public class NpcHandler {
             if (item != null && item.getQuantity() > 0) {
                 int sell = item.getQuantity()*item.getPart().getCoin();
                 String message = String.format("Bạn vừa bán %d %s với giá %d x %d con = %d xu.", item.getQuantity(), item.getPart().getName(),item.getPart().getCoin(),item.getQuantity(), sell);
-                us.removeItem(item.getId(), item.getQuantity());
+                us.removeItem(item.getId(), item.getQuantity()+1);
                 us.updateXu(+sell);
                 us.getAvatarService().updateMoney(0);
                 us.getAvatarService().SendTabmsg(message);
@@ -399,10 +411,10 @@ public class NpcHandler {
     }
 
     public static List<Menu> listItemUpgrade(int npcId, User us, byte type) {
-        String npcName = "Thợ KH";
-        String npcChat = "Muốn đồ đang mặc đẹp hơn không? Ta có thể giúp bạn đấy";
+        //String npcName = "Thợ KH";
+        //String npcChat = "Muốn đồ đang mặc đẹp hơn không? Ta có thể giúp bạn đấy";
         return List.of(
-                Menu.builder().name("Quà cầm tay").id(npcId).npcName(npcName).npcChat(npcChat)
+                Menu.builder().name("Quà cầm tay").id(npcId)
                         .menus(List.of(
                                         Menu.builder().name("Hoa hồng phong thần").action(() -> {
                                             BossShopHandler.displayUI(us, type, 5321, 5322, 5323);
@@ -422,7 +434,7 @@ public class NpcHandler {
                                 )
                         )
                         .build(),
-                Menu.builder().name("Nón").npcName(npcName).npcChat(npcChat).menus(List.of(
+                Menu.builder().name("Nón").menus(List.of(
                                 Menu.builder().name("Tôi thấy hoa vàng trên cỏ xanh").action(() -> {
                                     BossShopHandler.displayUI(us, type, 3266, 3267, 3268, 3269, 3954);
                                 }).build(),
@@ -434,7 +446,7 @@ public class NpcHandler {
                                 }).build()
                         ))
                         .build(),
-                Menu.builder().name("Trang phục").npcName(npcName).npcChat(npcChat)
+                Menu.builder().name("Trang phục")
                         .menus(
                                 List.of(
                                         Menu.builder().name("Danh gia vọng tộc").action(() -> {
@@ -455,7 +467,7 @@ public class NpcHandler {
                                 )
                         )
                         .build(),
-                Menu.builder().name("Cánh").npcName(npcName).npcChat(npcChat)
+                Menu.builder().name("Cánh")
                         .menus(
                                 List.of(
                                         Menu.builder().name("Cánh tiểu thần phong linh").action(() -> {
@@ -497,7 +509,7 @@ public class NpcHandler {
                                 )
                         )
                         .build(),
-                Menu.builder().name("Thú cưng").npcName(npcName).npcChat(npcChat)
+                Menu.builder().name("Thú cưng")
                         .menus(List.of(
 //                                Menu.builder().name("Lang thần lãnh nguyên").action(() -> {
 //                                    BossShopHandler.displayUI(us, type, 5517, 5518);

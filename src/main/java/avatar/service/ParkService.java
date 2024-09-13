@@ -2,11 +2,14 @@ package avatar.service;
 
 import avatar.constants.Cmd;
 import avatar.item.Item;
+import avatar.lib.RandomCollection;
+import avatar.lucky.GiftBox;
 import avatar.model.Fish;
 import avatar.model.User;
 import avatar.network.Message;
 import avatar.network.Session;
 import avatar.server.UserManager;
+import avatar.server.Utils;
 import org.apache.log4j.Logger;
 
 import java.io.DataOutputStream;
@@ -14,11 +17,19 @@ import java.io.IOException;
 import java.util.Random;
 
 public class ParkService extends Service {
+    private final RandomCollection<Integer> randomItemList1 = new RandomCollection<>();
     short time;
     private static final Logger logger = Logger.getLogger(AvatarService.class);
     private static final Fish a = new Fish();
     public ParkService(Session cl) {
         super(cl);
+        randomItemList1.add(30, 4081);//nro
+        randomItemList1.add(20, 4082);
+        randomItemList1.add(10, 4083);
+        randomItemList1.add(10, 4084);
+        randomItemList1.add(10, 4085);
+        randomItemList1.add(10, 4086);
+        randomItemList1.add(10, 4087);
     }
 
     public void handleAddFriendRequest(Message ms) {
@@ -163,6 +174,7 @@ public class ParkService extends Service {
             if(IDFISH>0){
                 Item item = new Item(IDFISH,-1,1);
                 this.session.user.addItemToChests(item);
+                addVatPhamSuKienFish(this.session.user);
             }
             ds.flush();
             this.sendMessage(ms);
@@ -170,6 +182,27 @@ public class ParkService extends Service {
         } catch (IOException ex) {
             logger.error("handleStartFishing() ", ex);
         }
+    }
+    private void addVatPhamSuKienFish(User us) throws IOException {
+        int ok =  (Utils.nextInt(100) < 70) ? 1 : 0;
+        if(ok==1){
+
+            RandomCollection<Integer> chosenItemCollection = chooseItemCollection();
+            int idItems = chosenItemCollection.next();
+            Item Nro = new Item(idItems,-1,1);
+            if(us.findItemInChests(idItems) !=null){
+                int quantity = us.findItemInChests(idItems).getQuantity();
+                us.findItemInChests(idItems).setQuantity(quantity+1);
+            }else {
+                us.addItemToChests(Nro);
+            }
+            us.getAvatarService().SendTabmsg("Bạn vừa nhận được 1 "+ " " + Nro.getPart().getName());
+        }
+    }
+    private RandomCollection<Integer> chooseItemCollection() {
+        RandomCollection<RandomCollection<Integer>> itemCollections = new RandomCollection<>();
+        itemCollections.add(100, randomItemList1);
+        return itemCollections.next();
     }
 
     public void onInfoFish() {
