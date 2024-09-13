@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.security.SecureRandom;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -129,16 +130,31 @@ public class Boss extends User {
 
         scheduler.schedule(() -> {
             try {
-                createNearbyGiftBoxes(boss, boss.getZone(), boss.getX(), boss.getY(), Boss.currentBossId + 10000);
-                //ServerManager.clients.remove(boss.getUsername());
-                //ServerManager.disconnect(boss.session);
-                //UserManager.getInstance().remove(boss);
-                //boss.close();
-                Utils random = null;
-                avatar.play.Map m = MapManager.getInstance().find(boss.getBossMapId());
-                List<Zone> zones = m.getZones();
-                Zone randomZone = zones.get(random.nextInt(zones.size()));
-                addBossToZone(boss,boss.bossMapId,randomZone,(short) 0,(short) 0,Utils.nextInt(2000,10000));
+                LocalTime now = LocalTime.now();
+                LocalTime tenAM = LocalTime.of(10, 0);
+                LocalTime twoPM = LocalTime.of(14, 0);
+                LocalTime sevenPM = LocalTime.of(19, 0);
+                LocalTime elevenPM = LocalTime.of(23, 0);
+
+                //tạo qu trong time
+                if ((now.isAfter(tenAM) && now.isBefore(twoPM)) || (now.isAfter(sevenPM) && now.isBefore(elevenPM))) {
+                    createNearbyGiftBoxes(boss, boss.getZone(), boss.getX(), boss.getY(), Boss.currentBossId + 10000);
+                }
+
+
+                LocalTime sixAM = LocalTime.of(6, 0);
+                LocalTime twelvePM = LocalTime.of(23, 59);
+
+                if (now.isAfter(sixAM) && now.isBefore(twelvePM)) {
+                    //boss.session.close();
+                    Utils random = null;
+                    avatar.play.Map m = MapManager.getInstance().find(boss.getBossMapId());
+                    List<Zone> zones = m.getZones();
+                    Zone randomZone = zones.get(random.nextInt(zones.size()));
+                    boss.getZone().leave(boss);
+                    addBossToZone(boss,boss.bossMapId,randomZone,(short) 0,(short) 0,Utils.nextInt(2000,10000));
+                }
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -181,6 +197,7 @@ public class Boss extends User {
         if (bossCount >= TOTAL_BOSSES) {
             return; // Dừng nếu đã tạo đủ số lượng Boss
         }
+
         boss.setId(currentBossId++);
         boss.setDefeated(false);
         List<String> chatMessages = Arrays.asList("YAAAA", "YOOOO");
