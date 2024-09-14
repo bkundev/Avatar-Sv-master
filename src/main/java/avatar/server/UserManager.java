@@ -45,4 +45,15 @@ public class UserManager {
         }
         return null;
     }
+
+    public User findByName(String name) {
+        synchronized(users) {
+            for (User us : users) {
+                if (us.getUsername() == name) {
+                    return us;
+                }
+            }
+        }
+        return null;
+    }
 }

@@ -104,18 +104,20 @@ public class DialLucky {
                 Item item = randomItem.next();
                 item = ItemConverter.getInstance().newItem(item);//Item item = new Item(itemCode, -1, 0)
                 gift.setId(item.getId());
+
+                Item itemchestUser = us.findItemInChests(item.getId());
+                if (itemchestUser!=null && itemchestUser.getExpired() == -1) {
+                    item.setExpired(item.getExpired());
+                }
+
                 if (item.getId() == itemID) {
                     item.setExpired(-1);
                     gift.setExpireDay(-1);
                 } else {
-                    Item itemchestUser = us.findItemInChests(item.getId());
-                    if (itemchestUser!=null && itemchestUser.getExpired() == -1) {
-                        item.setExpired(item.getExpired());
-                    }else {
-                        int time = Utils.getRandomInArray(new int[]{3, 7, 15, 30});
-                        item.setExpired(System.currentTimeMillis() + (86400000L * time));
-                        gift.setExpireDay(time);
-                    }
+                    int time = Utils.getRandomInArray(new int[]{3, 7, 15, 30});
+                    item.setExpired(System.currentTimeMillis() + (86400000L * time));
+                    gift.setExpireDay(time);
+
                 }
                 us.addItemToChests(item);
 

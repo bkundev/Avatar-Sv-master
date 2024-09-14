@@ -131,11 +131,28 @@ public class GlobalHandler {
                 break;
             case 7:
                 try {
-                    short itemCode = Short.parseShort(text);
-                    if((short) itemCode>0 && (short) itemCode<9999){
-                        Item item = new Item(itemCode, -1, 0);
-                        this.us.addItemToChests(item);
-                        us.getAvatarService().serverDialog("added " + item.getPart().getName() + " into my chests");
+                    // Tách id và username
+                    String[] idAndName = text.split(" ");  // Tách phần trước và sau dấu cách
+                    String idPart = idAndName[0];          // Phần chứa id
+                    String usernamePart = idAndName[1];    // Phần chứa username
+                    // Chuyển đổi id từ chuỗi sang số ngắn (short)
+                    short idItem = Short.parseShort(idPart);
+                    // In kết quả
+                    System.out.println("ID: " + idItem);
+                    System.out.println("Username: " + usernamePart);
+
+                    if((short) idItem>0 && (short) idItem<9999){
+                        Item item = new Item(idItem, -1, 0);
+                        for (int i = 0; i < lst.stream().count(); i++) {
+                            if(lst.get(i).getUsername().equals(usernamePart)){
+                                lst.get(i).addItemToChests(item);
+                                String content = "admin : Bạn được tặng item " + item.getPart().getName();
+                                lst.get(i).getAvatarService().SendTabmsg(content);
+                                lst.get(i).getAvatarService().serverDialog("added " + item.getPart().getName() + " into chests");
+                                lst.get(i).getAvatarService().serverInfo(content);
+                                us.getAvatarService().serverDialog("added " + item.getPart().getName() + " into my chests");
+                            }
+                        }
                     }else{
                         us.getAvatarService().serverDialog("id lớn hơn 2000 và nhỏ hơn 6795");
                     }
