@@ -5,20 +5,17 @@ import avatar.constants.Cmd;
 import avatar.constants.NpcName;
 import avatar.item.Item;
 import avatar.model.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+
+import java.util.*;
 import java.math.BigInteger;
 
 import avatar.lucky.DialLucky;
 import avatar.lucky.DialLuckyManager;
 
-import java.util.Arrays;
-import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.io.IOException;
 import java.util.concurrent.*;
 import avatar.network.Message;
-import avatar.play.Map;
 import avatar.play.MapManager;
 import avatar.play.NpcManager;
 import avatar.play.Zone;
@@ -29,13 +26,20 @@ import avatar.service.AvatarService;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import static avatar.constants.NpcName.*;
 import static avatar.constants.NpcName.boss;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
 public class NpcHandler {
+
+    private static final Map<Integer, Long> lastActionTimes = new HashMap<>();
+    private static final long ACTION_COOLDOWN_MS = 400; // 2 giây cooldown
+
+
     public static void handleDiaLucky(User us, byte type) {
         DialLucky dl = DialLuckyManager.getInstance().find(type);
 
@@ -86,6 +90,17 @@ public class NpcHandler {
         } else {
             return;
         }
+
+        long currentTime = System.currentTimeMillis();
+        long lastActionTime = lastActionTimes.getOrDefault(us.getId(), 0L);
+
+        if (currentTime - lastActionTime < ACTION_COOLDOWN_MS) {
+            us.getAvatarService().serverDialog("pem từ thôi sếp");
+            return;
+        }
+
+        // Cập nhật thời gian thực hiện hành động
+        lastActionTimes.put(us.getId(), currentTime);
 
         int npcIdCase = npcId - Npc.ID_ADD;
         User boss = z.find(npcId);
