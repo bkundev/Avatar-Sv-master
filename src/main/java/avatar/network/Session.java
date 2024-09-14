@@ -563,14 +563,22 @@ public class Session implements ISession {
             return;
         }
         byte numKhuVuc = 10;
-        byte map = ms.reader().readByte();
+        byte mapid = ms.reader().readByte();
+        Map m = MapManager.getInstance().find(mapid);
         ms = new Message(60);
         DataOutputStream ds = ms.writer();
         ds.writeByte(numKhuVuc);
-        for (int i = 0; i < numKhuVuc; ++i) {
-            ds.writeByte(2);
+        for (Zone zone : m.getZones()) {
+            if (zone.getPlayers().size() >= 9) {
+                ds.writeByte(0);
+            } else if (zone.getPlayers().size() >= 4) {
+                ds.writeByte(1);
+            } else {
+                ds.writeByte(2);
+            }
         }
         ds.flush();
+        ds.close();
         this.sendMessage(ms);
     }
 

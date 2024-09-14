@@ -284,7 +284,10 @@ public class ServerManager {
         List<Zone> zones = m.getZones();
         int i = 0;
         for (Zone z : zones) {
-            if (z.getPlayers().size() <= 15) {
+            if (z.getPlayers().size() <= 10) {
+                if (z.getPlayers().size() > 2) {
+                    //getAvatarService().serverDialog("Khu vực đã đầy");
+                }
                 return (byte) i;
             }
             i++;
