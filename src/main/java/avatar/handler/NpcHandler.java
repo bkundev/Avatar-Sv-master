@@ -434,8 +434,23 @@ public class NpcHandler {
         return List.of(
                 Menu.builder().name("Quà cầm tay").id(npcId)
                         .menus(List.of(
+                                        Menu.builder().name("Bông hoa cổ tích").action(() -> {
+                                            BossShopHandler.displayUI(us, type, 6212, 6213, 6214);
+                                        }).build(),
                                         Menu.builder().name("Hoa hồng phong thần").action(() -> {
                                             BossShopHandler.displayUI(us, type, 5321, 5322, 5323);
+                                        }).build(),
+                                        Menu.builder().name("Hoa hồng xanh pha lê thần thoại").action(() -> {
+                                            BossShopHandler.displayUI(us, type, 5286, 5287, 5288);
+                                        }).build(),
+                                        Menu.builder().name("Mộc thảo hồ điệp").action(() -> {
+                                            BossShopHandler.displayUI(us, type, 4160, 4161, 4162, 4163, 5050);
+                                        }).build(),
+                                        Menu.builder().name("Cung thần tình yêu thần thoại").action(() -> {
+                                            BossShopHandler.displayUI(us, type, 4893, 4894, 4895);
+                                        }).build(),
+                                        Menu.builder().name("Cung xanh thần thoại").action(() -> {
+                                            BossShopHandler.displayUI(us, type, 4890, 4891, 4892);
                                         }).build(),
                                         Menu.builder().name("Gậy thả thính mê hoặc").action(() -> {
                                             BossShopHandler.displayUI(us, type, 3507, 4218);
@@ -445,14 +460,21 @@ public class NpcHandler {
                                         }).build(),
                                         Menu.builder().name("Cục vàng huyền thoại").action(() -> {
                                             BossShopHandler.displayUI(us, type, 2217, 2218, 2219, 2220, 2221, 2222, 2223);
-                                        }).build(),
-                                        Menu.builder().name("Bông hoa cổ tích").action(() -> {
-                                            BossShopHandler.displayUI(us, type, 6212, 6213, 6214);
                                         }).build()
+
                                 )
                         )
                         .build(),
                 Menu.builder().name("Nón").menus(List.of(
+                                Menu.builder().name("Nón phù thuỷ hoả ngục truyền thuyết").action(() -> {
+                                    BossShopHandler.displayUI(us, type, 2411, 2412, 2413, 2414, 5503, 5504);
+                                }).build(),
+                                Menu.builder().name("Vương miện hoàng thân").action(() -> {
+                                    BossShopHandler.displayUI(us, type, 5394);
+                                }).build(),
+                                Menu.builder().name("Vương miện hoàng thân").action(() -> {
+                                    BossShopHandler.displayUI(us, type, 5391);
+                                }).build(),
                                 Menu.builder().name("Tôi thấy hoa vàng trên cỏ xanh").action(() -> {
                                     BossShopHandler.displayUI(us, type, 3266, 3267, 3268, 3269, 3954);
                                 }).build(),
@@ -461,6 +483,9 @@ public class NpcHandler {
                                 }).build(),
                                 Menu.builder().name("Mũ ảo thuật tinh anh").action(() -> {
                                     BossShopHandler.displayUI(us, type, 2899, 2900, 2901, 2902, 2903, 3037, 3038, 3039);
+                                }).build(),
+                                Menu.builder().name("Cửu vỹ hồ ly").action(() -> {
+                                    BossShopHandler.displayUI(us, type, 4724, 4728, 4729);
                                 }).build()
                         ))
                         .build(),
@@ -515,9 +540,9 @@ public class NpcHandler {
 //                                        Menu.builder().name("Cánh bướm đêm huyền thoại").action(() -> {
 //                                            BossShopHandler.displayUI(us, type, 3366, 3379);
 //                                        }).build(),
-//                                        Menu.builder().name("Cánh băng giá huyền thoại").action(() -> {
-//                                            BossShopHandler.displayUI(us, type, 3365, 3378);
-//                                        }).build(),
+                                        Menu.builder().name("Cánh băng giá huyền thoại").action(() -> {
+                                            BossShopHandler.displayUI(us, type, 3365, 3378);
+                                        }).build(),
                                         Menu.builder().name("Cánh phép màu ước mơ").action(() -> {
                                             BossShopHandler.displayUI(us, type, 2793, 2794, 2795, 2796);
                                         }).build(),

@@ -43,8 +43,8 @@ public class DialLucky {
     private final RandomCollection<Item> randomItem2 = new RandomCollection<>();
     public DialLucky(byte type) {
         this.type = type;
-        randomType.add(55, ITEM2);
-        randomType.add(15, ITEM);
+        randomType.add(40, ITEM2);
+        randomType.add(30, ITEM);
         randomType.add(15, XU);
         randomType.add(14, XP);
         randomType.add(1, LUONG);

@@ -725,14 +725,17 @@ public class User {
                         removeItem(item.getId(), 1);
                         GiftBox giftBox = new GiftBox();
                         giftBox.open(this,item);
-                        //getService().serverMessage(String.format("Số lượng: %,d", item.getQuantity()));
                     }
 
                     else {
                         getService().serverMessage(String.format("Số lượng: %,d", item.getQuantity()));
                     }
                 } else {
-                    getService().serverDialog("Vật phẩm shop Loi, sẽ sớm fix");
+                    item = findItemInWearing(itemID);
+                    removeItemFromWearing(item);
+                    addItemToChests(item);
+                    getMapService().usingPart(id, itemID);
+                    //getService().serverDialog("Vật phẩm shop Loi, sẽ sớm fix");
                 }
             } else {
                 Item item = findItemInWearing(itemID);
