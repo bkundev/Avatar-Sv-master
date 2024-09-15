@@ -82,8 +82,9 @@ public class GiftBox {
                     break;
                 }
                 Item rewardItem  = new Item(idItems);
-                int ok =  (Utils.nextInt(100) < 80) ? 1 : 0;
-                if(ok==0){
+                boolean ok =  (Utils.nextInt(100) < 80) ? true : false;
+                if(ok){
+                    rewardItem.setExpired(-1);
                     us.addItemToChests(rewardItem);
                     us.getAvatarService().serverDialog("Bạn nhận được "+ rewardItem.getPart().getName()  + String.format(" Vĩnh viễn Số lượng còn lại: %,d", item.getQuantity()));
                     break;

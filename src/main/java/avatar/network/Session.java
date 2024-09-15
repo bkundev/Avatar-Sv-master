@@ -578,8 +578,9 @@ public class Session implements ISession {
             }
         }
         ds.flush();
-        ds.close();
         this.sendMessage(ms);
+
+        ds.close();
     }
 
     public void doJoinHouse4(Message ms) throws IOException {

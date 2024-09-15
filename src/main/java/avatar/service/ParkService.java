@@ -174,6 +174,11 @@ public class ParkService extends Service {
             if(IDFISH>0){
                 Item item = new Item(IDFISH,-1,1);
                 this.session.user.addItemToChests(item);
+                if(IDFISH == 457) {
+                    UserManager.users.forEach(user -> {
+                        user.getAvatarService().serverInfo("Chúc mừng bạn : " + this.session.user.getUsername()+" đã câu được 1 Cá Mập");
+                    });
+                }
                 addVatPhamSuKienFish(this.session.user);
             }
             ds.flush();

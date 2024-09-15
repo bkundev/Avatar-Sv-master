@@ -35,18 +35,24 @@ public class DialLucky {
     public static final byte XU = 2;
     public static final byte XP = 3;
     public static final byte LUONG = 4;
-
+    public static final byte ITEM2 = 5;
     @Getter
     private byte type;
     private final RandomCollection<Byte> randomType = new RandomCollection<>();
     private final RandomCollection<Item> randomItem = new RandomCollection<>();
-
+    private final RandomCollection<Item> randomItem2 = new RandomCollection<>();
     public DialLucky(byte type) {
         this.type = type;
-        randomType.add(70, ITEM);
+        randomType.add(55, ITEM2);
+        randomType.add(15, ITEM);
         randomType.add(15, XU);
         randomType.add(14, XP);
         randomType.add(1, LUONG);
+
+        for (int i = 2006; i < 2014; i++) {
+            Item item = new Item(i);
+            randomItem2.add(1, item);//Item add qs shop
+        }
         load();
     }
 
@@ -100,14 +106,25 @@ public class DialLucky {
             byte type = randomType.next();
             Gift gift = new Gift();
             gift.setType((byte) type);
-            if (type == ITEM) {
+
+
+            if (type == ITEM2) {
+
+                Item item = randomItem.next();
+                item = ItemConverter.getInstance().newItem(item);//Item item = new Item(itemCode, -1, 0)
+                gift.setId(item.getId());
+                int time = Utils.getRandomInArray(new int[]{3, 7, 15, 30});
+                item.setExpired(System.currentTimeMillis() + (86400000L * time));
+                gift.setExpireDay(time);
+                us.addItemToChests(item);
+            }else if (type == ITEM) {
                 Item item = randomItem.next();
                 item = ItemConverter.getInstance().newItem(item);//Item item = new Item(itemCode, -1, 0)
                 gift.setId(item.getId());
 
                 Item itemchestUser = us.findItemInChests(item.getId());
                 if (itemchestUser!=null && itemchestUser.getExpired() == -1) {
-                    item.setExpired(item.getExpired());
+                    break;
                 }
 
                 if (item.getId() == itemID) {
@@ -117,7 +134,6 @@ public class DialLucky {
                     int time = Utils.getRandomInArray(new int[]{3, 7, 15, 30});
                     item.setExpired(System.currentTimeMillis() + (86400000L * time));
                     gift.setExpireDay(time);
-
                 }
                 us.addItemToChests(item);
 
@@ -134,6 +150,7 @@ public class DialLucky {
                 gift.setLuong(luong);
                 us.updateLuongKhoa(luong);
             }
+
             gifts.add(gift);
         }
         us.getMapService().dialLucky(us, (short) degree, gifts);

@@ -39,6 +39,7 @@ public class Boss extends User {
     private Map<Integer, List<int[]>> zoneCoordinates = new HashMap<>();//tọa độ boss di chuyển trong map
     public Boss() {
         super();
+         //tọa độ boss dichuyeeren
         List<int[]> map11 = Arrays.asList(
                 new int[]{182, 121},
                 new int[]{282, 142},
@@ -114,7 +115,6 @@ public class Boss extends User {
     public synchronized void handleBossDefeat(Boss boss, User us) throws IOException {
 
         us.applyStoredXuUpdate();
-        us.getAvatarService().updateMoney(1);
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu_from_boss` = ? WHERE `user_id` = ? LIMIT 1;",
                 us.xu_from_boss, us.getId());
         String username = us.getUsername();  // Lấy tên người dùng
@@ -133,8 +133,8 @@ public class Boss extends User {
                 LocalTime now = LocalTime.now();
                 LocalTime tenAM = LocalTime.of(10, 0);
                 LocalTime twoPM = LocalTime.of(14, 0);
-                LocalTime sevenPM = LocalTime.of(19, 0);
-                LocalTime elevenPM = LocalTime.of(23, 0);
+                LocalTime sevenPM = LocalTime.of(17, 0);
+                LocalTime elevenPM = LocalTime.of(22, 0);
 
                 //tạo qu trong time
                 if ((now.isAfter(tenAM) && now.isBefore(twoPM)) || (now.isAfter(sevenPM) && now.isBefore(elevenPM))) {

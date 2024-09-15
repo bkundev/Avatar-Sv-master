@@ -165,7 +165,7 @@ public class User {
         this.storedXuUpdate += dame; // Lưu xu vào biến tạm thời
     }
     public void applyStoredXuUpdate() {
-        this.updateXu(storedXuUpdate * 5); // Cộng dồn số xu ba lần
+        //this.updateXu(storedXuUpdate * 5); // Cộng dồn số xu ba lần
         this.Updatexu_from_boss(storedXuUpdate * 5);
         this.storedXuUpdate = 0; // Reset xu đã lưu trữ
     }
@@ -425,6 +425,11 @@ public class User {
             int idTo = ms.reader().readInt();
             short action = ms.reader().readShort();
             User us = UserManager.getInstance().find(idTo);
+
+            if(this.getZone().getMap().getId() == 16){
+                this.getAvatarService().serverDialog("Bạn không thể hành động ở đây !");
+                return;
+            }
             switch (action) {
                 case 101:
                     DayOfWeek dayOfWeek = LocalDate.now().getDayOfWeek();
@@ -727,11 +732,7 @@ public class User {
                         getService().serverMessage(String.format("Số lượng: %,d", item.getQuantity()));
                     }
                 } else {
-                    item = findItemInWearing(itemID);
-                    removeItemFromWearing(item);
-                    addItemToChests(item);
-                    getMapService().usingPart(id, itemID);
-                    // getService().serverDialog("Vật phẩm lỗi, không thể sử dụng");
+                    getService().serverDialog("Vật phẩm shop Loi, sẽ sớm fix");
                 }
             } else {
                 Item item = findItemInWearing(itemID);

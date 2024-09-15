@@ -122,6 +122,7 @@ public class MapService extends Service {
             } else {
                 ds.writeShort(10);
             }
+            ds.flush();
             sendMessage(ms);
         } catch (IOException e) {
             logger.error("doAction()", e);

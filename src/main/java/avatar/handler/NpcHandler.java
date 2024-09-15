@@ -37,7 +37,7 @@ import java.util.List;
 public class NpcHandler {
 
     private static final Map<Integer, Long> lastActionTimes = new HashMap<>();
-    private static final long ACTION_COOLDOWN_MS = 400; // 2 giây cooldown
+    private static final long ACTION_COOLDOWN_MS = 90; // 2 giây cooldown
 
 
     public static void handleDiaLucky(User us, byte type) {
@@ -95,7 +95,7 @@ public class NpcHandler {
         long lastActionTime = lastActionTimes.getOrDefault(us.getId(), 0L);
 
         if (currentTime - lastActionTime < ACTION_COOLDOWN_MS) {
-            us.getAvatarService().serverDialog("pem từ thôi sếp");
+            us.getAvatarService().serverDialog("Từ từ thôi bạn!");
             return;
         }
 
@@ -124,8 +124,8 @@ public class NpcHandler {
                 return;
             }
 
-            us.updateXu(-10);
             us.updateXuKillBoss(+10);
+            us.updateXu(+60);
             us.getAvatarService().updateMoney(0);
             List<User> lstUs = us.getZone().getPlayers();
             us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)25,(byte)26);
@@ -249,9 +249,12 @@ public class NpcHandler {
                     Menu quaySo1 = Menu.builder().name("vật phẩm").menus(
                                     List.of(
                                             Menu.builder().name("demo item").action(() -> {
-                                                for (int i = 2000; i < 6796; i++) {
+                                                for (int i = 14; i < 703; i++) {
                                                     Item item = new Item((short) i);
-                                                    Items1.add(item);
+                                                    if((item.getPart().getCoin()!=0 || item.getPart().getGold()!=0) && item.getPart().getGender() == 0 || item.getPart().getGender() == us.getGender())
+                                                    {
+                                                        Items1.add(item);
+                                                    }
                                                 }
                                                 us.getAvatarService().openUIShop(-49,"em.Thinh",Items1);
                                             }).build()

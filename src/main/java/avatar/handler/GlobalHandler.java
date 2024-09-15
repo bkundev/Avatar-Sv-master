@@ -203,9 +203,9 @@ public class GlobalHandler {
                 try {
                     if (us.getId() == 7) {
                         if (Integer.parseInt(text) == 1) {
-                            for (int i = 0; i < lst.stream().count(); i++) {
-                                lst.get(i).getAvatarService().serverInfo((String.format("ad : thành phố  %s. có %d  đang online. chúc mọi người vui vẻ", ServerManager.cityName, ServerManager.clients.size())));
-                            }
+                            UserManager.users.forEach(user -> {
+                                user.getAvatarService().serverInfo((String.format("ad : thành phố  %s. có %d  đang online. chúc mọi người vui vẻ", ServerManager.cityName, ServerManager.clients.size())));
+                            });
                         }
                     }
 
