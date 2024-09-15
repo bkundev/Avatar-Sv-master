@@ -39,26 +39,44 @@ public class Boss extends User {
     private Map<Integer, List<int[]>> zoneCoordinates = new HashMap<>();//tọa độ boss di chuyển trong map
     public Boss() {
         super();
-         //tọa độ boss dichuyeeren
+
         List<int[]> map11 = Arrays.asList(
-                new int[]{182, 121},
-                new int[]{282, 142},
-                new int[]{282, 88},
-                new int[]{326, 150}
+                new int[]{270, 100}
         );
         zoneCoordinates.put(11, map11);
+
         List<int[]> map7 = Arrays.asList(
-                new int[]{212, 90},
-                new int[]{112, 118},
-                new int[]{292, 118}
+                new int[]{216, 97}
         );
         zoneCoordinates.put(7, map7);
+
         List<int[]> map1 = Arrays.asList(
-                new int[]{80, 105},
-                new int[]{244, 109},
-                new int[]{172, 154}
+                new int[]{165, 100}
         );
         zoneCoordinates.put(1, map1);
+
+
+
+         //tọa độ boss dichuyeeren
+//        List<int[]> map11 = Arrays.asList(
+//                new int[]{182, 121},
+//                new int[]{282, 142},
+//                new int[]{282, 88},
+//                new int[]{326, 150}
+//        );
+//        zoneCoordinates.put(11, map11);
+//        List<int[]> map7 = Arrays.asList(
+//                new int[]{212, 90},
+//                new int[]{112, 118},
+//                new int[]{292, 118}
+//        );
+//        zoneCoordinates.put(7, map7);
+//        List<int[]> map1 = Arrays.asList(
+//                new int[]{80, 105},
+//                new int[]{244, 109},
+//                new int[]{172, 154}
+//        );
+//        zoneCoordinates.put(1, map1);
 
         autoChatBot.start();
     }
@@ -82,35 +100,37 @@ public class Boss extends User {
                 if (textChats == null || textChats.size() == 0) {
                     Thread.sleep(10000);
                 }
-                int[][] pairs = {
-                        {23, 24},
-                        {25, 26},
-                };
-                if(this.getHP()>0)
-                {
-                    Random rand = new Random();
-                    int randomIndex = rand.nextInt(pairs.length);
-                    int[] selectedPair = pairs[randomIndex];
-                    BossSkillRanDomUser((byte)selectedPair[0], (byte)selectedPair[1]);
-
-                    // Tạo đối tượng Random để chọn tọa độ ngẫu nhiên
-                    int mapId = this.getZone().getMap().getId();
-                    List<int[]> coordinates = zoneCoordinates.get(mapId);
-                    if (coordinates != null && !coordinates.isEmpty()) {
-                        int[] randomCoordinate = coordinates.get(new Random().nextInt(coordinates.size()));
-                        moveBossXY(this, randomCoordinate[0], randomCoordinate[1]);
-                    } else {
-                        // Nếu không có tọa độ nào, có thể xử lý trường hợp này ở đây
-                        System.err.println("Không có tọa độ cho bản đồ ID " + mapId);
-                    }
-                }
+//                int[][] pairs = {
+//                        {23, 24},
+//                        {25, 26},
+//                };
+//                if(this.getHP()>0)
+//                {
+//                    Random rand = new Random();
+//                    int randomIndex = rand.nextInt(pairs.length);
+//                    int[] selectedPair = pairs[randomIndex];
+//                    BossSkillRanDomUser((byte)selectedPair[0], (byte)selectedPair[1]);
+//
+//                    // Tạo đối tượng Random để chọn tọa độ ngẫu nhiên
+//                    int mapId = this.getZone().getMap().getId();
+//                    List<int[]> coordinates = zoneCoordinates.get(mapId);
+//                    if (coordinates != null && !coordinates.isEmpty()) {
+//                        int[] randomCoordinate = coordinates.get(new Random().nextInt(coordinates.size()));
+//                        moveBossXY(this, randomCoordinate[0], randomCoordinate[1]);
+//                    } else {
+//                        // Nếu không có tọa độ nào, có thể xử lý trường hợp này ở đây
+//                        System.err.println("Không có tọa độ cho bản đồ ID " + mapId);
+//                    }
+//                }
             } catch (InterruptedException ignored) {
                 Thread.currentThread().interrupt(); // Đảm bảo xử lý gián đoạn
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+        }}
     });
+
+
 
     public synchronized void handleBossDefeat(Boss boss, User us) throws IOException {
 
@@ -161,18 +181,18 @@ public class Boss extends User {
         }, 4, TimeUnit.SECONDS); // 4 giây trễ trước khi thực hiện các hành động khác
 
         // Gửi hiệu ứng cho người chơi trong khu vực
-        boss.getZone().getPlayers().forEach(u -> {
-            EffectService.createEffect()
-                    .session(u.session)
-                    .id((byte) 45)
-                    .style((byte) 0)
-                    .loopLimit((byte) 6)
-                    .loop((short) 1) // Số lần lặp lại
-                    .loopType((byte) 1)
-                    .radius((short) 5)
-                    .idPlayer(boss.getId())
-                    .send();
-        });
+//        boss.getZone().getPlayers().forEach(u -> {
+//            EffectService.createEffect()
+//                    .session(u.session)
+//                    .id((byte) 45)
+//                    .style((byte) 0)
+//                    .loopLimit((byte) 6)
+//                    .loop((short) 1) // Số lần lặp lại
+//                    .loopType((byte) 1)
+//                    .radius((short) 5)
+//                    .idPlayer(boss.getId())
+//                    .send();
+//        });
     }
 
     public synchronized void hanlderNhatHopQua(User boss, User us) throws IOException {
@@ -209,6 +229,7 @@ public class Boss extends User {
         sendAndHandleMessages(boss);
         moveBoss(boss);
         int mapId = zone.getMap().getId();
+///
         List<int[]> coordinates = zoneCoordinates.get(mapId);
         if (coordinates != null && !coordinates.isEmpty()) {
             int[] randomCoordinate = coordinates.get(new Random().nextInt(coordinates.size()));
