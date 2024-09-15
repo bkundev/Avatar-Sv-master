@@ -715,9 +715,11 @@ public class Session implements ISession {
             if (userId == 0) {
                 // hiện thị menu chức năng
                 List<Menu> menus = new ArrayList<>(List.of(
+                        Menu.builder().name("Mã quà tặng").action(() -> {
+                            user.getAvatarService().sendTextBoxPopup(user.getId(), 20, "Item code", 1);
+                        }).build(),
                         Menu.builder().name("Mã Giới Thiệu").build(),
-                        Menu.builder().name("Diễn Đàn").build(),
-                        Menu.builder().name("Mã quà tặng").build()
+                        Menu.builder().name("Diễn Đàn").build()
                 ));
                 if (user.getId() == 7) {
                     menus.add(0, Menu.builder().name("Admin")

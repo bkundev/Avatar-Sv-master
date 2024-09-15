@@ -4,6 +4,7 @@ import java.lang.management.ThreadMXBean;
 import avatar.constants.NpcName;
 import avatar.db.DbManager;
 import avatar.item.Item;
+import avatar.model.GiftCodeService;
 import avatar.model.Menu;
 import avatar.model.Npc;
 import avatar.model.User;
@@ -45,7 +46,6 @@ import org.json.simple.JSONValue;
 
 public class GlobalHandler {
     private User us;
-
     public GlobalHandler(User user) {
         this.us = user;
     }
@@ -106,12 +106,20 @@ public class GlobalHandler {
     }
 
 
+
+
+
     public void handleTextBox(Message ms) throws IOException {
         int userId = ms.reader().readInt();
         byte menuId = ms.reader().readByte();
         String text = ms.reader().readUTF();
         List<User> lst = UserManager.users;
         switch (menuId) {
+            case 20:
+                GiftCodeService giftCodeService = new GiftCodeService();
+                giftCodeService.useGiftCode(this.us.getId(), text);
+                break;
+
             case 99:
                 String[] parts = text.split(" ");
                 byte value1 = Byte.parseByte(parts[0]);
