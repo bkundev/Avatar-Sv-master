@@ -188,11 +188,20 @@ public class GlobalHandler {
                 try {
                     if (us.getId() == 7) {
                         if (Integer.parseInt(text) == 1)
-                            for (int i = 0; i < lst.stream().count(); i++) {
-                                lst.get(i).getAvatarService().serverDialog("server sẽ bảo trì .vui lòng off để tránh mất đồ");
-                                List<User> lstUs = UserManager.users;
-                                lstUs.forEach(u -> {u.session.close();});
+
+                            for (int i = 0; i < lst.size(); i++) {
+                                try {
+
+                                    lst.get(i).getAvatarService().serverDialog("server sẽ bảo trì .vui lòng off để tránh mất đồ");
+                                    lst.get(i).session.close();
+
+                                } catch (Exception e) {
+                                    // Xử lý lỗi khi thực hiện việc duyệt qua danh sách người dùng
+                                    System.err.println("Lỗi khi duyệt danh sách người dùng: " + e.getMessage());
+                                    // Có thể ghi log hoặc thực hiện các thao tác khôi phục
+                                }
                             }
+
                     }
 
                 } catch (NumberFormatException e) {
