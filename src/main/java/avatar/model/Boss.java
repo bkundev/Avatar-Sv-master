@@ -39,22 +39,7 @@ public class Boss extends User {
     private Map<Integer, List<int[]>> zoneCoordinates = new HashMap<>();//tọa độ boss di chuyển trong map
     public Boss() {
         super();
-
-        List<int[]> map11 = Arrays.asList(
-                new int[]{270, 100}
-        );
-        zoneCoordinates.put(11, map11);
-
-        List<int[]> map7 = Arrays.asList(
-                new int[]{216, 97}
-        );
-        zoneCoordinates.put(7, map7);
-
-        List<int[]> map1 = Arrays.asList(
-                new int[]{165, 100}
-        );
-        zoneCoordinates.put(1, map1);
-
+        initializeCoordinates();
 
 
          //tọa độ boss dichuyeeren
@@ -78,7 +63,24 @@ public class Boss extends User {
 //        );
 //        zoneCoordinates.put(1, map1);
 
-        autoChatBot.start();
+        //autoChatBot.start();
+    }
+
+    private void initializeCoordinates() {
+        List<int[]> map11 = Arrays.asList(
+                new int[]{270, 100}
+        );
+        zoneCoordinates.put(11, map11);
+
+        List<int[]> map7 = Arrays.asList(
+                new int[]{216, 97}
+        );
+        zoneCoordinates.put(7, map7);
+
+        List<int[]> map1 = Arrays.asList(
+                new int[]{165, 100}
+        );
+        zoneCoordinates.put(1, map1);
     }
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private static final int TOTAL_BOSSES = 400000000; // Tổng số Boss muốn tạo
@@ -207,10 +209,7 @@ public class Boss extends User {
         }else {
             us.addItemToChests(hopqua);
         }
-        ServerManager.disconnect(boss.session);
         boss.session.close();
-        //UserManager.getInstance().remove(boss);
-        //boss.close();
     }
 
     public void addBossToZone(User boss,int Map ,Zone zone, short x, short y,int hp) throws IOException {
@@ -220,8 +219,8 @@ public class Boss extends User {
 
         boss.setId(currentBossId++);
         boss.setDefeated(false);
-        List<String> chatMessages = Arrays.asList("YAAAA", "YOOOO");
-        ((Boss) boss).setTextChats(chatMessages);
+//        List<String> chatMessages = Arrays.asList("YAAAA", "YOOOO");
+//        ((Boss) boss).setTextChats(chatMessages);
         assignRandomItemToBoss(boss);
         boss.setHP(hp);
         boss.bossMapId = Map;
@@ -388,7 +387,7 @@ public class Boss extends User {
             byte[] data1 = baos1.toByteArray();
             ParkMsgHandler parkMsgHandler1 = new ParkMsgHandler(boss.session);
             parkMsgHandler1.onMessage(new Message(Cmd.MOVE_PARK, data1));
-            getMapService().chat(this, "ta đến rồi đây");
+            //getMapService().chat(this, "ta đến rồi đây");
             //System.out.println("gift move : X = " + boss.getX() + ", y = " + boss.getY());
         }
     }
@@ -493,7 +492,7 @@ public class Boss extends User {
 
             Zone randomZone = zones.get(random.nextInt(zones.size()));
             try {
-                boss.addBossToZone(boss,mapId,randomZone, (short) 50, (short) 50, (int) 10);
+                boss.addBossToZone(boss,mapId,randomZone, (short) 50, (short) 50, (int) 2000);
                 System.out.println("Boss " + i + " khu " + randomZone.getId() + " map " + mapId);
             } catch (IOException e) {
                 throw new RuntimeException(e);

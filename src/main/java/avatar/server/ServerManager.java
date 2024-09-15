@@ -1,11 +1,9 @@
 package avatar.server;
 
-import avatar.model.User;
+import avatar.model.*;
 import avatar.db.DbManager;
 import avatar.item.Item;
 import avatar.item.PartManager;
-import avatar.model.FoodManager;
-import avatar.model.GameData;
 import avatar.network.Session;
 import avatar.play.Zone;
 
@@ -15,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 
 import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
-import avatar.model.Npc;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -192,6 +189,10 @@ public class ServerManager {
             ServerManager.numClients = 0;
             ServerManager.start = true;
             System.out.println("Start server Success !");
+            List<Integer> mapIds = List.of(11, 1, 7);
+            for (int mapId : mapIds) {
+                Boss.spawnBossesForMap(mapId, 2);
+            }
             while (ServerManager.start) {
                 try {
                     Socket client = ServerManager.server.accept();
