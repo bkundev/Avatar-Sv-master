@@ -243,35 +243,35 @@ public class NpcHandler {
                     break;
                 case NpcName.CHU_DAU_TU:
                     break;
-                case NpcName.em_Thinh:{
-                    List<Menu> emth = new ArrayList<>();
-                    List<Item> Items1 = new ArrayList<>();
-                    Menu quaySo1 = Menu.builder().name("vật phẩm").menus(
-                                    List.of(
-                                            Menu.builder().name("demo item").action(() -> {
-                                                for (int i = 14; i < 703; i++) {
-                                                    Item item = new Item((short) i);
-                                                    if((item.getPart().getCoin()!=0 || item.getPart().getGold()!=0) && item.getPart().getGender() == 0 || item.getPart().getGender() == us.getGender())
-                                                    {
-                                                        Items1.add(item);
-                                                    }
-                                                }
-                                                us.getAvatarService().openUIShop(-49,"em.Thinh",Items1);
-                                            }).build()
-                                    ))
-                            .id(npcId)
-                            .npcName("donate đi")
-                            .npcChat("show Item")
-                            .build();
-                    emth.add(quaySo1);
-                    emth.add(Menu.builder().name("Hướng dẫn").action(() -> {
-                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
-                    }).build());
-                    emth.add(Menu.builder().name("Thoát").build());
-                    us.setMenus(emth);
-                    us.getAvatarService().openUIMenu(npcId, 0, emth, "donate đi", "");
-                    break;
-                }
+//                case NpcName.em_Thinh:{
+//                    List<Menu> emth = new ArrayList<>();
+//                    List<Item> Items1 = new ArrayList<>();
+//                    Menu quaySo1 = Menu.builder().name("vật phẩm").menus(
+//                                    List.of(
+//                                            Menu.builder().name("demo item").action(() -> {
+//                                                for (int i = 14; i < 703; i++) {
+//                                                    Item item = new Item((short) i);
+//                                                    if((item.getPart().getCoin()!=0 || item.getPart().getGold()!=0) && item.getPart().getGender() == 0 || item.getPart().getGender() == us.getGender())
+//                                                    {
+//                                                        Items1.add(item);
+//                                                    }
+//                                                }
+//                                                us.getAvatarService().openUIShop(-49,"em.Thinh",Items1);
+//                                            }).build()
+//                                    ))
+//                            .id(npcId)
+//                            .npcName("donate đi")
+//                            .npcChat("show Item")
+//                            .build();
+//                    emth.add(quaySo1);
+//                    emth.add(Menu.builder().name("Hướng dẫn").action(() -> {
+//                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
+//                    }).build());
+//                    emth.add(Menu.builder().name("Thoát").build());
+//                    us.setMenus(emth);
+//                    us.getAvatarService().openUIMenu(npcId, 0, emth, "donate đi", "");
+//                    break;
+//                }
                 case NpcName.QUAY_SO: {
                     List<Menu> qs = new ArrayList<>();
                     Menu quaySo1 = Menu.builder().name("Quay số").menus(
