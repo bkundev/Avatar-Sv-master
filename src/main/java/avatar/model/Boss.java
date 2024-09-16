@@ -101,6 +101,7 @@ public class Boss extends User {
         );
         zoneCoordinates.put(8, map8);
 
+
     }
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private static final int TOTAL_BOSSES = 400000000; // Tổng số Boss muốn tạo
@@ -203,7 +204,7 @@ public class Boss extends User {
                     List<Zone> zones = m.getZones();
                     Zone randomZone = zones.get(random.nextInt(zones.size()));
                     boss.getZone().leave(boss);
-                    addBossToZone(boss,boss.bossMapId,randomZone,(short) 0,(short) 0,Utils.nextInt(2000,10000));
+                    addBossToZone(boss,boss.bossMapId,randomZone,(short) 0,(short) 0,Utils.nextInt(5000,20000));
                 }
 
             } catch (IOException e) {
@@ -524,7 +525,7 @@ public class Boss extends User {
 
             Zone randomZone = zones.get(random.nextInt(zones.size()));
             try {
-                boss.addBossToZone(boss,mapId,randomZone, (short) 50, (short) 50, (int) 2000);
+                boss.addBossToZone(boss,mapId,randomZone, (short) 50, (short) 50, (int) 5000);
                 System.out.println("Boss " + i + " khu " + randomZone.getId() + " map " + mapId);
             } catch (IOException e) {
                 throw new RuntimeException(e);

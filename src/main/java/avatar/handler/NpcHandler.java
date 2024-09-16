@@ -124,12 +124,14 @@ public class NpcHandler {
                 return;
             }
 
-            us.updateXuKillBoss(+10);
+            us.updateXuKillBoss(+us.getDameToXu());
             us.updateXu(+us.getDameToXu());
+
             us.getAvatarService().updateMoney(0);
+
             List<User> lstUs = us.getZone().getPlayers();
             us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)25,(byte)26);
-            boss.updateHP(-10,(Boss)boss, us);
+            boss.updateHP(-us.getDameToXu(),(Boss)boss, us);
 
         } else if (npcIdCase >= 10000) {
             if (distance > maxDistance) {

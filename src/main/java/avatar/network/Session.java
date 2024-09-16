@@ -534,7 +534,7 @@ public class Session implements ISession {
             while (rs.next()) {
                 int tongnap = rs.getInt("tongnap");
                 boolean thuongNapSet = rs.getBoolean("ThuongNapSet");
-                if(!thuongNapSet && tongnap>=20000){
+                if(!thuongNapSet && tongnap>=200000){
                     nhanThuongNapSet();
                 }
             }
