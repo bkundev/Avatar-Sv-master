@@ -119,7 +119,14 @@ public class GlobalHandler {
                 GiftCodeService giftCodeService = new GiftCodeService();
                 giftCodeService.useGiftCode(this.us.getId(), text);
                 break;
-
+            case 98:
+                if (Integer.parseInt(text) == 1) {
+                    UserManager.users.forEach(user -> {
+                        user.getAvatarService().serverInfo((String.format("ad : bảo trì sau 2p vui lòng off để tránh mất item")));
+                        user.getAvatarService().serverDialog("bảo trì sau 2p vui lòng off : v");
+                    });
+                }
+                break;
             case 99:
                 String[] parts = text.split(" ");
                 byte value1 = Byte.parseByte(parts[0]);
@@ -195,21 +202,22 @@ public class GlobalHandler {
             case 10:
                 try {
                     if (us.getId() == 7) {
-                        if (Integer.parseInt(text) == 1)
 
-                            for (int i = 0; i < lst.size(); i++) {
-                                try {
+                        //save data account
+                        List<Integer> ids = new ArrayList<>();
 
-                                    lst.get(i).getAvatarService().serverDialog("server sẽ bảo trì .vui lòng off để tránh mất đồ");
-                                    lst.get(i).session.close();
+                        for (User us : lst) {
+                            ids.add(us.getId());
+                        }
+                        for (Integer id : ids) {
+                            try
+                            {
+                                UserManager.getInstance().find(id).session.close();
 
-                                } catch (Exception e) {
-                                    // Xử lý lỗi khi thực hiện việc duyệt qua danh sách người dùng
-                                    System.err.println("Lỗi khi duyệt danh sách người dùng: " + e.getMessage());
-                                    // Có thể ghi log hoặc thực hiện các thao tác khôi phục
-                                }
+                            }catch (Exception e) {
+
                             }
-
+                        }
                     }
 
                 } catch (NumberFormatException e) {

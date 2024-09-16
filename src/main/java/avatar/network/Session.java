@@ -469,24 +469,12 @@ public class Session implements ISession {
             UserManager.getInstance().add(user);
             getAvatarService().onLoginSuccess();
             getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thanh Pho lo");
-            getAvatarService().serverInfo("wellcome locity");
-            String checkNap = "SELECT tongnap,ThuongNapLanDau FROM users WHERE id = ? LIMIT 1;";
-            // Executing the query
-            try (Connection connection = DbManager.getInstance().getConnection();
-                 PreparedStatement ps = connection.prepareStatement(checkNap);) {
-                ps.setInt(1, user.getId());
-                ResultSet rs = ps.executeQuery();
-                while (rs.next()) {
-                    int tongnap = rs.getInt("tongnap");
-                    boolean napLanDau = rs.getBoolean("ThuongNapLanDau");
-                    if(!napLanDau && tongnap>=20000){
-                        ThuongLapLanDau();
-                    }
-                }
-                rs.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            getAvatarService().serverInfo("từ ngày 16-9-2024 đến hết ngày 19-9-2024 nạp trên 100k sẽ nhận thêm set IRON MAN Vĩnh Viễn và được khuyến mại x2");
+
+
+            checkThuongNapLanDau();
+            checkThuongNapSet();
+
         } else {
             if (isCharCreatedPopup) {
                 getAvatarService().serverDialog("Có lỗi xảy ra!");
@@ -499,7 +487,28 @@ public class Session implements ISession {
         }
     }
 
-    private void ThuongLapLanDau(){
+    private void checkThuongNapLanDau(){
+        String checkNap = "SELECT tongnap,ThuongNapLanDau FROM users WHERE id = ? LIMIT 1;";
+        // Executing the query
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(checkNap);) {
+            ps.setInt(1, user.getId());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int tongnap = rs.getInt("tongnap");
+                boolean napLanDau = rs.getBoolean("ThuongNapLanDau");
+                if(!napLanDau && tongnap>=20000){
+                    nhanThuongLanDau();
+                }
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+
+    private void nhanThuongLanDau(){
         try {
             user.getAvatarService().SendTabmsg("Bạn vừa nạp lần đầu trên 20k nhận được 5.000.000 xu và 10.000 lượng và 200 thẻ quay số miễn phí");
 
@@ -513,6 +522,45 @@ public class Session implements ISession {
         user.getAvatarService().updateMoney(0);
         Item item = new Item(593, -1, 200);
         user.addItemToChests(item);
+    }
+
+    private void checkThuongNapSet(){
+        String checkNap = "SELECT tongnap,ThuongNapSet FROM users WHERE id = ? LIMIT 1;";
+        // Executing the query
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(checkNap);) {
+            ps.setInt(1, user.getId());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int tongnap = rs.getInt("tongnap");
+                boolean thuongNapSet = rs.getBoolean("ThuongNapSet");
+                if(!thuongNapSet && tongnap>=20000){
+                    nhanThuongNapSet();
+                }
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+
+    private void nhanThuongNapSet(){
+        try {
+            user.getAvatarService().SendTabmsg("Bạn nhận được set IronMan dame = 100");
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        DbManager.getInstance().executeUpdate("UPDATE `users` SET `ThuongNapSet` = ? WHERE `id` = ? LIMIT 1;",
+                1, user.getId());
+
+        Item itemNon = new Item(3174,-1,1);
+        user.addItemToChests(itemNon);
+        Item itemAo = new Item(3176, -1, 1);
+        user.addItemToChests(itemAo);
+        Item itemQuan = new Item(3177, -1, 1);
+        user.addItemToChests(itemQuan);
     }
 
 
@@ -644,7 +692,6 @@ public class Session implements ISession {
                 ds.writeUTF("Bạn đã mua vật phẩm thành công.");
                 ds.writeInt(Math.toIntExact(user.getXu()));
                 ds.writeInt(user.getLuong());
-                ds.writeInt(user.getLuongKhoa());
                 ds.flush();
                 this.sendMessage(ms);
             } else {
@@ -792,15 +839,8 @@ public class Session implements ISession {
                                             user.getAvatarService().serverDialog("ad mới bật được b ơi");
                                         }
                                     }).build(),
-                                    Menu.builder().name("addBoss3Map").action(() -> {
-                                        if(user.getId() == 7){
-                                            List<Integer> mapIds = List.of(11, 1, 7);
-                                            for (int mapId : mapIds) {
-                                                spawnBossesForMap(mapId, 2);
-                                            }
-                                        }else{
-                                            user.getAvatarService().serverDialog("ad mới bật được b ơi");
-                                        }
+                                    Menu.builder().name("Menu sentb bao tri").action(() -> {
+                                        user.getAvatarService().sendTextBoxPopup(user.getId(), 98, "bao tri sau 2p", 1);
                                     }).build(),
                                     Menu.builder().name("EFFECT").action(() -> {
                                         if(user.getId() == 7){

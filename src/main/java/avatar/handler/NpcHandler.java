@@ -125,7 +125,7 @@ public class NpcHandler {
             }
 
             us.updateXuKillBoss(+10);
-            us.updateXu(+60);
+            us.updateXu(+us.getDameToXu());
             us.getAvatarService().updateMoney(0);
             List<User> lstUs = us.getZone().getPlayers();
             us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)25,(byte)26);

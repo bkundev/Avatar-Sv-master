@@ -41,7 +41,6 @@ public class Boss extends User {
         super();
         initializeCoordinates();
 
-
          //tọa độ boss dichuyeeren
 //        List<int[]> map11 = Arrays.asList(
 //                new int[]{182, 121},
@@ -81,6 +80,27 @@ public class Boss extends User {
                 new int[]{165, 100}
         );
         zoneCoordinates.put(1, map1);
+
+        List<int[]> map2 = Arrays.asList(
+                new int[]{204, 85}
+        );
+        zoneCoordinates.put(2, map2);
+
+        List<int[]> map3 = Arrays.asList(
+                new int[]{288, 97}
+        );
+        zoneCoordinates.put(3, map3);
+
+        List<int[]> map5 = Arrays.asList(
+                new int[]{188, 89}
+        );
+        zoneCoordinates.put(5, map5);
+
+        List<int[]> map8 = Arrays.asList(
+                new int[]{264, 69}
+        );
+        zoneCoordinates.put(8, map8);
+
     }
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private static final int TOTAL_BOSSES = 400000000; // Tổng số Boss muốn tạo
@@ -139,12 +159,21 @@ public class Boss extends User {
         us.applyStoredXuUpdate();
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu_from_boss` = ? WHERE `user_id` = ? LIMIT 1;",
                 us.xu_from_boss, us.getId());
-        String username = us.getUsername();  // Lấy tên người dùng
+        String username = us.getUsername();
+
+        Item hopqua = new Item(683,-1,1);
+        //hopqua.setExpired(System.currentTimeMillis() + (86400000L * time));
+        if(us.findItemInChests(683) !=null){
+            int quantity = us.findItemInChests(683).getQuantity();
+            us.findItemInChests(683).setQuantity(quantity+1);
+        }else {
+            us.addItemToChests(hopqua);
+        }
+
         String message = String.format("Khá lắm bạn %s đã kill được %s", username, boss.getUsername().substring(3, boss.getUsername().length() - 6));
         List<String> newMessages = Arrays.asList(message,"Ta sẽ quay lại sau!!!");
         this.textChats = new ArrayList<>(newMessages);
 
-        // Gửi tin nhắn chat ngay lập tức trước khi boss rời khu vực
         for (String chatMessage : textChats) {
             getMapService().chat(boss, chatMessage);
             textChats.remove(chatMessage);
@@ -217,11 +246,14 @@ public class Boss extends User {
             return; // Dừng nếu đã tạo đủ số lượng Boss
         }
 
+        boss.getWearing().clear();
+
         boss.setId(currentBossId++);
         boss.setDefeated(false);
 //        List<String> chatMessages = Arrays.asList("YAAAA", "YOOOO");
 //        ((Boss) boss).setTextChats(chatMessages);
         assignRandomItemToBoss(boss);
+
         boss.setHP(hp);
         boss.bossMapId = Map;
         bossCount++; // Tăng số lượng Boss đã tạo
@@ -311,8 +343,8 @@ public class Boss extends User {
             Item item = new Item(itemId);
             boss.addItemToWearing(item);
         }
-        String bossUsername = generateRandomUsername(3).toLowerCase();
-        String bossUsername1 = generateRandomUsername(6).toLowerCase();;
+        String bossUsername = generateRandomUsername(4).toLowerCase();
+        String bossUsername1 = generateRandomUsername(4).toLowerCase();;
         boss.setUsername(bossUsername+bossName+bossUsername1);
     }
 
