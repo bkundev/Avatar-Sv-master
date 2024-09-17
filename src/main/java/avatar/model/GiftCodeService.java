@@ -165,6 +165,26 @@ public class GiftCodeService {
 //                Item useGift = new Item(itemId,-1,100);
 //                UserManager.getInstance().find(userId).addItemToChests(useGift);
                 break;
+            case "trungthu":
+
+                Item hopquatt = new Item(683,-1,200);
+                //hopqua.setExpired(System.currentTimeMillis() + (86400000L * time));
+                User us1 = UserManager.getInstance().find(userId);
+                if(us1.findItemInChests(683) !=null){
+                    int quantity = us1.findItemInChests(683).getQuantity();
+                    us1.findItemInChests(683).setQuantity(200);
+                }else {
+                    us1.addItemToChests(hopquatt);
+                }
+                Item itemqs1 = new Item(593, -1, 400);
+                us1.addItemToChests(itemqs1);
+                us1.getAvatarService().serverDialog("denbu bạn nhận được 100 hộp quà, và 400 thẻ quay số");
+//                String[] data = giftCode.data.split(":");// Ví dụ data = "itemId:quantity"
+//                int itemId = Integer.parseInt(data[0]);
+//                int quantity = Integer.parseInt(data[1]);
+//                Item useGift = new Item(itemId,-1,100);
+//                UserManager.getInstance().find(userId).addItemToChests(useGift);
+                break;
             default:
                 System.out.println("Loại quà tặng không hợp lệ.");
                 // Có thể thêm thông báo cho người chơi hoặc ghi log lỗi

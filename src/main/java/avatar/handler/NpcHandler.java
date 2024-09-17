@@ -130,8 +130,17 @@ public class NpcHandler {
             us.getAvatarService().updateMoney(0);
 
             List<User> lstUs = us.getZone().getPlayers();
-            us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)25,(byte)26);
-            boss.updateHP(-us.getDameToXu(),(Boss)boss, us);
+
+            if (us.findItemInWearing(6652)!=null){
+                us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)23,(byte)42);
+                boss.updateHP(-us.getDameToXu(),(Boss)boss, us);
+            }else if (us.findItemInWearing(4715)!=null) {
+                us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)38,(byte)39);
+                boss.updateHP(-us.getDameToXu(),(Boss)boss, us);
+            }else {
+                us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)25,(byte)26);
+                boss.updateHP(-us.getDameToXu(),(Boss)boss, us);
+            }
 
         } else if (npcIdCase >= 10000) {
             if (distance > maxDistance) {
@@ -238,7 +247,7 @@ public class NpcHandler {
                         ShopEventHandler.displayUI(us, Vegeta,5822,6450,6314);
                     }).build();
                     lstVegeta.add(Menu.builder().name("Quà Thẻ VIP CAO CẤP").action(() -> {
-                        ShopEventHandler.displayUI(us, Vegeta, 5822,6314,6450);
+                        ShopEventHandler.displayUI(us, Vegeta, 5822,6553);
                     }).build());
                     lstVegeta.add(vegenta);
 

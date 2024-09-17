@@ -180,7 +180,7 @@ public class User {
     }
     public void applyStoredXuUpdate() {
         //this.updateXu(storedXuUpdate * 5); // Cộng dồn số xu ba lần
-        this.Updatexu_from_boss(storedXuUpdate * 5);
+        this.Updatexu_from_boss(storedXuUpdate);
         this.storedXuUpdate = 0; // Reset xu đã lưu trữ
     }
     public synchronized void updateXP(int XP) {
