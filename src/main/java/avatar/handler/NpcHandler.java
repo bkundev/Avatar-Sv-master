@@ -164,7 +164,7 @@ public class NpcHandler {
                 case NpcName.bunma:
                     List<Menu> list1 = new ArrayList<>();
                     Menu Event = Menu.builder().name("Đổi Quà").action(() -> {
-                        ShopEventHandler.displayUI(us, bunma,2040,3506,2620,2577,5539,2618, 2619, 3987,3455,3456,3457,4995,6772,6773,6774);
+                        ShopEventHandler.displayUI(us, bunma,2034,2035,2036,2040,3506,2620,2577,5539,2618, 2619, 3987,3455,3456,3457,4995,6772,6773,6774);
                     }).build();
                     list1.add(Event);
                     list1.add(Menu.builder().name("Góp Ngọc Rồng Lỏ")
@@ -232,46 +232,56 @@ public class NpcHandler {
                     break;
                 case NpcName.Vegeta:
                     List<Menu> lstVegeta = new ArrayList<>();
-                    Menu vegenta = Menu.builder().name("Quà Thẻ VIP").action(() -> {
-                        ShopEventHandler.displayUI(us, Vegeta,620,2090,6541,2052,2053,3636,3638);
+
+
+                    Menu vegenta = Menu.builder().name("Quà Thẻ VIP PREMIUM").action(() -> {
+                        ShopEventHandler.displayUI(us, Vegeta,5822,6450,6314);
                     }).build();
-                    lstVegeta.add(Menu.builder().name("Quà Thẻ VIP cao cấp").action(() -> {
-                        ShopEventHandler.displayUI(us, Vegeta, 2034,6161);
+                    lstVegeta.add(Menu.builder().name("Quà Thẻ VIP CAO CẤP").action(() -> {
+                        ShopEventHandler.displayUI(us, Vegeta, 5822,6314,6450);
                     }).build());
                     lstVegeta.add(vegenta);
+
+                    lstVegeta.add(Menu.builder().name("Quà Thẻ VIP").action(() -> {
+                        ShopEventHandler.displayUI(us, Vegeta, 3638 , 3636, 620,2090,6541,2052,2053,3636,3638);
+                    }).build());
+
+                    lstVegeta.add(Menu.builder().name("Xem hướng dẫn")
+                            .action(() -> {
+                                us.getAvatarService().customTab("Hướng dẫn", "từ hôm nay đến hết 04 tháng 10 năm 2024 TOP 5 thả lượng sẽ được set Xên Bọ Hung Vĩnh Viễn(120 dame)  ở TOP 3 thì thêm 1 Thẻ Vip Cao Cấp, riêng TOP 1 nhận thêm thẻ VIP PREMIUM, TOP 5 XU từ BOSS Sẽ nhận được tóc Tóc Siêu Xaya cấp 2 TOP 3 XU Từ boss sẽ được 1 thẻ VIP, và 1 set Super Saiyan Rose(120 dame) riêng top 1 thêm tóc Super Saiyan Blue 6");
+                            })
+                            .build());
                     lstVegeta.add(Menu.builder().name("Thoát").id(npcId).build());
                     us.setMenus(lstVegeta);
+
                     us.getAvatarService().openMenuOption(npcId, 0, lstVegeta);
                     break;
                 case NpcName.CHU_DAU_TU:
                     break;
 //                case NpcName.em_Thinh:{
-//                    List<Menu> emth = new ArrayList<>();
-//                    List<Item> Items1 = new ArrayList<>();
-//                    Menu quaySo1 = Menu.builder().name("vật phẩm").menus(
+//                    List<Menu> listet = new ArrayList<>();
+//                    List<Item> Items = new ArrayList<>();
+//                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
 //                                    List.of(
 //                                            Menu.builder().name("demo item").action(() -> {
-//                                                for (int i = 14; i < 703; i++) {
+//                                                for (int i = 2000; i < 6676; i++) {
 //                                                    Item item = new Item((short) i);
-//                                                    if((item.getPart().getCoin()!=0 || item.getPart().getGold()!=0) && item.getPart().getGender() == 0 || item.getPart().getGender() == us.getGender())
-//                                                    {
-//                                                        Items1.add(item);
-//                                                    }
+//                                                    Items.add(item);
 //                                                }
-//                                                us.getAvatarService().openUIShop(-49,"em.Thinh",Items1);
+//                                                us.getAvatarService().openUIShop(-49,"em.Thinh",Items);
 //                                            }).build()
 //                                    ))
 //                            .id(npcId)
 //                            .npcName("donate đi")
 //                            .npcChat("show Item")
 //                            .build();
-//                    emth.add(quaySo1);
-//                    emth.add(Menu.builder().name("Hướng dẫn").action(() -> {
+//                    listet.add(quaySo);
+//                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
 //                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
 //                    }).build());
-//                    emth.add(Menu.builder().name("Thoát").build());
-//                    us.setMenus(emth);
-//                    us.getAvatarService().openUIMenu(npcId, 0, emth, "donate đi", "");
+//                    listet.add(Menu.builder().name("Thoát").build());
+//                    us.setMenus(listet);
+//                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
 //                    break;
 //                }
                 case NpcName.QUAY_SO: {
@@ -488,6 +498,9 @@ public class NpcHandler {
                                 }).build(),
                                 Menu.builder().name("Cửu vỹ hồ ly").action(() -> {
                                     BossShopHandler.displayUI(us, type, 4724, 4728, 4729);
+                                }).build(),
+                                Menu.builder().name("Vương miện huyền vũ").action(() -> {
+                                    BossShopHandler.displayUI(us, type, 2997, 2998, 2999);
                                 }).build()
                         ))
                         .build(),

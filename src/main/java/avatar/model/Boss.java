@@ -204,7 +204,7 @@ public class Boss extends User {
                     List<Zone> zones = m.getZones();
                     Zone randomZone = zones.get(random.nextInt(zones.size()));
                     boss.getZone().leave(boss);
-                    addBossToZone(boss,boss.bossMapId,randomZone,(short) 0,(short) 0,Utils.nextInt(5000,20000));
+                    addBossToZone(boss,boss.bossMapId,randomZone,(short) 0,(short) 0,Utils.nextInt(50000,100000));
                 }
 
             } catch (IOException e) {
@@ -271,6 +271,8 @@ public class Boss extends User {
             System.err.println("Không có tọa độ cho bản đồ ID " + mapId);
         }
     }
+
+
     private void MoveArea(User boss) throws IOException {
         ByteArrayOutputStream joinPank = new ByteArrayOutputStream();
         try (DataOutputStream dos2 = new DataOutputStream(joinPank)) {
@@ -422,6 +424,15 @@ public class Boss extends User {
             parkMsgHandler1.onMessage(new Message(Cmd.MOVE_PARK, data1));
             //getMapService().chat(this, "ta đến rồi đây");
             //System.out.println("gift move : X = " + boss.getX() + ", y = " + boss.getY());
+
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    boss.session.close();
+                }
+            }, 120000); // 2 phút = 120000 ms
+
         }
     }
 
