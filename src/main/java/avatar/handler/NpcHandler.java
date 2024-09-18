@@ -264,10 +264,10 @@ public class NpcHandler {
 
 
                     Menu vegenta = Menu.builder().name("Quà Thẻ VIP PREMIUM").action(() -> {
-                        ShopEventHandler.displayUI(us, Vegeta,5822,6450,6314);
+                        ShopEventHandler.displayUI(us, Vegeta,4560,5822,6450,6314);
                     }).build();
                     lstVegeta.add(Menu.builder().name("Quà Thẻ VIP Cao Cấp").action(() -> {
-                        ShopEventHandler.displayUI(us, Vegeta, 6113,6553);
+                        ShopEventHandler.displayUI(us, Vegeta, 4562,4563,4561,6113,6553);
                     }).build());
                     lstVegeta.add(vegenta);
 
@@ -287,32 +287,32 @@ public class NpcHandler {
                     break;
                 case NpcName.CHU_DAU_TU:
                     break;
-//                case NpcName.em_Thinh:{
-//                    List<Menu> listet = new ArrayList<>();
-//                    List<Item> Items = new ArrayList<>();
-//                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
-//                                    List.of(
-//                                            Menu.builder().name("demo item").action(() -> {
-//                                                for (int i = 2000; i < 6676; i++) {
-//                                                    Item item = new Item((short) i);
-//                                                    Items.add(item);
-//                                                }
-//                                                us.getAvatarService().openUIShop(-49,"em.Thinh",Items);
-//                                            }).build()
-//                                    ))
-//                            .id(npcId)
-//                            .npcName("donate đi")
-//                            .npcChat("show Item")
-//                            .build();
-//                    listet.add(quaySo);
-//                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
-//                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
-//                    }).build());
-//                    listet.add(Menu.builder().name("Thoát").build());
-//                    us.setMenus(listet);
-//                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
-//                    break;
-//                }
+                case NpcName.em_Thinh:{
+                    List<Menu> listet = new ArrayList<>();
+                    List<Item> Items = new ArrayList<>();
+                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
+                                    List.of(
+                                            Menu.builder().name("demo item").action(() -> {
+                                                for (int i = 2000; i < 6676; i++) {
+                                                    Item item = new Item((short) i);
+                                                    Items.add(item);
+                                                }
+                                                us.getAvatarService().openUIShop(-49,"em.Thinh",Items);
+                                            }).build()
+                                    ))
+                            .id(npcId)
+                            .npcName("donate đi")
+                            .npcChat("show Item")
+                            .build();
+                    listet.add(quaySo);
+                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
+                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
+                    }).build());
+                    listet.add(Menu.builder().name("Thoát").build());
+                    us.setMenus(listet);
+                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
+                    break;
+                }
                 case NpcName.QUAY_SO: {
                     List<Menu> qs = new ArrayList<>();
                     Menu quaySo1 = Menu.builder().name("Quay số").menus(
