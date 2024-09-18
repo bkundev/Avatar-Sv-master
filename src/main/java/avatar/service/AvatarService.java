@@ -245,7 +245,8 @@ public class AvatarService extends Service {
             ds.flush();
             sendMessage(ms5);
 
-            us.getAvatarService().SendTabmsg("nạp lần đầu trên 20k nhận được 5.000.000 xu và 10.000 lượng và 200 thẻ quay số miễn phí");
+            us.getAvatarService().SendTabmsg("nạp lần đầu trên 20k nhận được 5.000.000 xu và 10.000 lượng và 200 thẻ quay số miễn phí" +
+                    " Và Auto Câu Cá");
 
         } catch (IOException ex) {
             logger.error("onLoginSuccess err", ex);

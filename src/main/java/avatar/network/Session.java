@@ -765,8 +765,26 @@ public class Session implements ISession {
                         Menu.builder().name("Auto Câu Cá").menus(
                                         List.of(
                                                 Menu.builder().name("Kích hoạt Auto Câu Cá").action(() -> {
-                                                    this.user.getAvatarService().serverDialog("Bạn Đã Kích Hoạt Auto Câu Cá Thành Công");
-                                                    this.user.setAutoFish(true);
+                                                    String checkNap = "SELECT tongnap FROM users WHERE id = ? LIMIT 1;";
+                                                    try (Connection connection = DbManager.getInstance().getConnection();
+                                                         PreparedStatement ps = connection.prepareStatement(checkNap);) {
+                                                        ps.setInt(1, user.getId());
+                                                        ResultSet rs = ps.executeQuery();
+                                                        while (rs.next()) {
+                                                            int tongnap = rs.getInt("tongnap");
+                                                            if(tongnap>=20000){
+                                                                this.user.getAvatarService().serverDialog("Bạn Đã Kích Hoạt Auto Câu Cá Thành Công");
+                                                                this.user.setAutoFish(true);
+                                                            }
+                                                            else {
+                                                                this.user.getAvatarService().serverDialog("Treo câu thì nạp lần đầu nha : v");
+                                                                this.user.setAutoFish(false);
+                                                            }
+                                                        }
+                                                        rs.close();
+                                                    } catch (SQLException ex) {
+                                                        Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+                                                    }
                                                 }).build(),
                                                 Menu.builder().name("Tắt Auto Câu Cá").action(() -> {
                                                     this.user.getAvatarService().serverDialog("Bạn Đã Tắt Auto Câu Cá");
