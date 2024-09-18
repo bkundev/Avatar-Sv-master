@@ -287,32 +287,32 @@ public class NpcHandler {
                     break;
                 case NpcName.CHU_DAU_TU:
                     break;
-                case NpcName.em_Thinh:{
-                    List<Menu> listet = new ArrayList<>();
-                    List<Item> Items = new ArrayList<>();
-                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
-                                    List.of(
-                                            Menu.builder().name("demo item").action(() -> {
-                                                for (int i = 2000; i < 6676; i++) {
-                                                    Item item = new Item((short) i);
-                                                    Items.add(item);
-                                                }
-                                                us.getAvatarService().openUIShop(-49,"em.Thinh",Items);
-                                            }).build()
-                                    ))
-                            .id(npcId)
-                            .npcName("donate đi")
-                            .npcChat("show Item")
-                            .build();
-                    listet.add(quaySo);
-                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
-                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
-                    }).build());
-                    listet.add(Menu.builder().name("Thoát").build());
-                    us.setMenus(listet);
-                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
-                    break;
-                }
+//                case NpcName.em_Thinh:{
+//                    List<Menu> listet = new ArrayList<>();
+//                    List<Item> Items = new ArrayList<>();
+//                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
+//                                    List.of(
+//                                            Menu.builder().name("demo item").action(() -> {
+//                                                for (int i = 2000; i < 6676; i++) {
+//                                                    Item item = new Item((short) i);
+//                                                    Items.add(item);
+//                                                }
+//                                                us.getAvatarService().openUIShop(-49,"em.Thinh",Items);
+//                                            }).build()
+//                                    ))
+//                            .id(npcId)
+//                            .npcName("donate đi")
+//                            .npcChat("show Item")
+//                            .build();
+//                    listet.add(quaySo);
+//                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
+//                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
+//                    }).build());
+//                    listet.add(Menu.builder().name("Thoát").build());
+//                    us.setMenus(listet);
+//                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
+//                    break;
+//                }
                 case NpcName.QUAY_SO: {
                     List<Menu> qs = new ArrayList<>();
                     Menu quaySo1 = Menu.builder().name("Quay số").menus(
