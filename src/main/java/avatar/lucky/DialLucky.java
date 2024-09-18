@@ -44,8 +44,8 @@ public class DialLucky {
     public DialLucky(byte type) {
         this.type = type;
         //randomType.add(55, ITEM2);
-        randomType.add(25, ITEM);
-        randomType.add(50, XU);
+        randomType.add(20, ITEM);
+        randomType.add(55, XU);
         randomType.add(24, XP);
         randomType.add(1, LUONG);
 
@@ -129,7 +129,7 @@ public class DialLucky {
                 us.addItemToChests(item);
 
             } else if (type == XU) {
-                int xu = Utils.nextInt(1, 10) * 100;
+                int xu = Utils.nextInt(1, 500) * 100;
 
                 gift.setXu(xu);
                 us.updateXu(xu);

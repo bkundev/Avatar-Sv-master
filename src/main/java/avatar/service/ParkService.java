@@ -4,6 +4,7 @@ import avatar.constants.Cmd;
 import avatar.item.Item;
 import avatar.lib.RandomCollection;
 import avatar.lucky.GiftBox;
+import avatar.message.ParkMsgHandler;
 import avatar.model.Fish;
 import avatar.model.User;
 import avatar.network.Message;
@@ -12,6 +13,7 @@ import avatar.server.UserManager;
 import avatar.server.Utils;
 import org.apache.log4j.Logger;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Random;
@@ -54,6 +56,20 @@ public class ParkService extends Service {
             if(!CheckItemAreaFish(446,"bạn phải có cần câu vip")){
                 return;
             }
+
+            if(this.session.user.AutoFish){
+                ByteArrayOutputStream sendFish = new ByteArrayOutputStream();
+                try (DataOutputStream dos2 = new DataOutputStream(sendFish)) {
+
+                    dos2.flush();
+                    byte[] dataQuangCau = sendFish.toByteArray();
+                    ParkMsgHandler parkMsgHandler1 = new ParkMsgHandler(this.session);
+                    parkMsgHandler1.onMessage(new Message(Cmd.QUANG_CAU, dataQuangCau));
+                }
+            }
+
+
+
 //            if(!CheckItemAreaFish(448,"bạn phải có mồi câu cá")){
 //                return;
 //            }
@@ -95,10 +111,18 @@ public class ParkService extends Service {
 
     public void handleQuangCau(Message ms) {
         try {
+
             Item item = this.session.user.findItemInChests(448);
             if(item==null){
-                this.session.user.getAvatarService().serverDialog("Hết mồi rồi sếp");
-                return;
+                if(this.session.user.AutoFish)
+                {
+                    this.session.user.addItemQuatyToChest(448);
+                    this.session.user.updateXu(-30);
+                    this.session.user.getAvatarService().updateMoney(0);
+                }else {
+                    this.session.user.getAvatarService().serverDialog("Hết mồi rồi sếp");
+                    return;
+                }
             }
             this.session.user.removeItemFromChests(item);
             int userID = this.session.user.getId();
@@ -130,11 +154,14 @@ public class ParkService extends Service {
 
     public void onCanCau() {
         try {
-            Thread.sleep(7000);
+
             //us = UserManager.getInstance().find(this.session.user.getId());
             short idFish = (short) a.getRandomFishID();
             this.session.user.setIdFish(idFish);
             time = 3000;
+            if(this.session.user.AutoFish){
+                time = 20;
+            }
             if(idFish<0)
             {
                 time = -1;
@@ -159,12 +186,12 @@ public class ParkService extends Service {
 
         } catch (IOException ex) {
             logger.error("handleStartFishing() ", ex);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
     }
+
     public void CauThanhCong() {
         try {
+
             int userID = this.session.user.getId();
             Message ms = new Message(Cmd.CAU_THANH_CONG);
             DataOutputStream ds = ms.writer();
@@ -174,6 +201,7 @@ public class ParkService extends Service {
             if(IDFISH>0){
                 Item item = new Item(IDFISH,-1,1);
                 this.session.user.addItemToChests(item);
+                this.session.user.getAvatarService().sellFish(this.session.user,item.getId());
                 if(IDFISH == 457) {
                     UserManager.users.forEach(user -> {
                         user.getAvatarService().serverInfo("Chúc mừng bạn : " + this.session.user.getUsername()+" đã câu được 1 Cá Mập");
@@ -184,10 +212,23 @@ public class ParkService extends Service {
             ds.flush();
             this.sendMessage(ms);
 
+            if(this.session.user.AutoFish)
+            {
+                CauCaXong();
+                ByteArrayOutputStream sendFish = new ByteArrayOutputStream();
+                try (DataOutputStream dos2 = new DataOutputStream(sendFish)) {
+
+                    dos2.flush();
+                    byte[] dataQuangCau = sendFish.toByteArray();
+                    ParkMsgHandler parkMsgHandler1 = new ParkMsgHandler(this.session);
+                    parkMsgHandler1.onMessage(new Message(Cmd.QUANG_CAU, dataQuangCau));
+                }
+            }
         } catch (IOException ex) {
             logger.error("handleStartFishing() ", ex);
         }
     }
+
     private void addVatPhamSuKienFish(User us) throws IOException {
         int ok =  (Utils.nextInt(100) < 70) ? 1 : 0;
         if(ok==1){
@@ -204,11 +245,15 @@ public class ParkService extends Service {
             us.getAvatarService().SendTabmsg("Bạn vừa nhận được 1 "+ " " + Nro.getPart().getName());
         }
     }
+
+
     private RandomCollection<Integer> chooseItemCollection() {
         RandomCollection<RandomCollection<Integer>> itemCollections = new RandomCollection<>();
         itemCollections.add(100, randomItemList1);
         return itemCollections.next();
     }
+
+
 
     public void onInfoFish() {
         try {
@@ -226,6 +271,8 @@ public class ParkService extends Service {
             logger.error("handleStartFishing() ", ex);
         }
     }
+
+
     public void CauCaXong() {
         try {
             int userID = this.session.user.getId();
@@ -240,7 +287,5 @@ public class ParkService extends Service {
             logger.error("handleStartFishing() ", ex);
         }
     }
-
-
 
 }

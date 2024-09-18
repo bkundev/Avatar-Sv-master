@@ -762,6 +762,18 @@ public class Session implements ISession {
             if (userId == 0) {
                 // hiện thị menu chức năng
                 List<Menu> menus = new ArrayList<>(List.of(
+                        Menu.builder().name("Auto Câu Cá").menus(
+                                        List.of(
+                                                Menu.builder().name("Kích hoạt Auto Câu Cá").action(() -> {
+                                                    this.user.getAvatarService().serverDialog("Bạn Đã Kích Hoạt Auto Câu Cá Thành Công");
+                                                    this.user.setAutoFish(true);
+                                                }).build(),
+                                                Menu.builder().name("Tắt Auto Câu Cá").action(() -> {
+                                                    this.user.getAvatarService().serverDialog("Bạn Đã Tắt Auto Câu Cá");
+                                                    this.user.setAutoFish(false);
+                                                }).build()
+                                        ))
+                                .build(),
                         Menu.builder().name("Mã quà tặng").action(() -> {
                             user.getAvatarService().sendTextBoxPopup(user.getId(), 20, "Item code", 1);
                         }).build(),

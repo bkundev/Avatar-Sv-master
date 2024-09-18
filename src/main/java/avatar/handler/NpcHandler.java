@@ -34,6 +34,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+
+import java.time.LocalTime;
+
 public class NpcHandler {
 
     private static final Map<Integer, Long> lastActionTimes = new HashMap<>();
@@ -98,7 +101,6 @@ public class NpcHandler {
             us.getAvatarService().serverDialog("Từ từ thôi bạn!");
             return;
         }
-
         // Cập nhật thời gian thực hiện hành động
         lastActionTimes.put(us.getId(), currentTime);
 
@@ -115,6 +117,7 @@ public class NpcHandler {
 
         if (npcIdCase > 1000 && npcIdCase<=9999)
         {
+
             if (boss.isDefeated()) {
                 us.getAvatarService().serverDialog("boss đã chết");
                 return;
@@ -123,22 +126,36 @@ public class NpcHandler {
                 us.getAvatarService().serverDialog("Bạn đứng xa rồi : v");
                 return;
             }
+            LocalTime now = LocalTime.now();
 
-            us.updateXuKillBoss(+us.getDameToXu());
+            // Đặt khoảng thời gian hợp lệ
+            LocalTime startTime = LocalTime.of(6, 0); // 6h sáng
+            LocalTime endTime = LocalTime.of(23, 59);  // 11h đêm
+
+            // Kiểm tra nếu thời gian hiện tại nằm trong khoảng
+            if (now.isAfter(startTime) && now.isBefore(endTime)) {
+                us.updateXuKillBoss(+us.getDameToXu());
+            } else {
+                // Xử lý nếu thời gian không nằm trong khoảng
+                System.out.println("Hàm không được kích hoạt ngoài khoảng thời gian từ 6h sáng đến 11h đêm.");
+            }
+
+
+
             us.updateXu(+us.getDameToXu());
 
             us.getAvatarService().updateMoney(0);
 
             List<User> lstUs = us.getZone().getPlayers();
 
-            if (us.findItemInWearing(6652)!=null){
-                us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)23,(byte)42);
+            if (us.findItemInWearing(3174)!=null){
+                us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)25,(byte)26);
                 boss.updateHP(-us.getDameToXu(),(Boss)boss, us);
             }else if (us.findItemInWearing(4715)!=null) {
                 us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)38,(byte)39);
                 boss.updateHP(-us.getDameToXu(),(Boss)boss, us);
             }else {
-                us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)25,(byte)26);
+                us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)23,(byte)24);
                 boss.updateHP(-us.getDameToXu(),(Boss)boss, us);
             }
 
@@ -152,6 +169,9 @@ public class NpcHandler {
                 return;
             }
             us.updateSpam(-1,(Boss)boss,us);
+
+
+
         }else {
             switch (npcIdCase) {
                 case NpcName.Tien_chi_mu_Lovanga:
@@ -246,8 +266,8 @@ public class NpcHandler {
                     Menu vegenta = Menu.builder().name("Quà Thẻ VIP PREMIUM").action(() -> {
                         ShopEventHandler.displayUI(us, Vegeta,5822,6450,6314);
                     }).build();
-                    lstVegeta.add(Menu.builder().name("Quà Thẻ VIP CAO CẤP").action(() -> {
-                        ShopEventHandler.displayUI(us, Vegeta, 5822,6553);
+                    lstVegeta.add(Menu.builder().name("Quà Thẻ VIP Cao Cấp").action(() -> {
+                        ShopEventHandler.displayUI(us, Vegeta, 6113,6553);
                     }).build());
                     lstVegeta.add(vegenta);
 
@@ -404,15 +424,23 @@ public class NpcHandler {
 
     public static void sellFish(User us) throws IOException {
         int[] array = {2130,2131,2132,454,455,456,457};
-        for (int  i = 0; i < array.length; i++) {
-            Item item = us.findItemInChests(array[i]);
-            if (item != null && item.getQuantity() > 0) {
-                int sell = item.getQuantity()*item.getPart().getCoin();
-                String message = String.format("Bạn vừa bán %d %s với giá %d x %d con = %d xu.", item.getQuantity(), item.getPart().getName(),item.getPart().getCoin(),item.getQuantity(), sell);
-                us.removeItem(item.getId(), item.getQuantity()+1);
-                us.updateXu(+sell);
-                us.getAvatarService().updateMoney(0);
-                us.getAvatarService().SendTabmsg(message);
+
+        for (int idFish : array) {
+            Item item = us.findItemInChests(idFish); // Tìm item trong rương theo idFish
+
+            // Nếu không tìm thấy item, tiếp tục với ID tiếp theo
+            while (item != null && item.getQuantity() > 0) {
+                int sellPrice = item.getPart().getCoin(); // Giá bán 1 món đồ
+                String message = String.format("Bạn vừa bán 1 %s với giá = %d xu.", item.getPart().getName(), sellPrice);
+
+                us.removeItemFromChests(item);
+                us.updateXu(sellPrice); // Cập nhật xu
+
+                us.getAvatarService().updateMoney(0); // Cập nhật tiền tệ
+                us.getAvatarService().SendTabmsg(message); // Gửi thông báo bán hàng
+
+                // Cập nhật lại item để kiểm tra số lượng
+                item = us.findItemInChests(idFish);
             }
         }
     }

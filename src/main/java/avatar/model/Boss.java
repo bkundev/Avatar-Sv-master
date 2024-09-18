@@ -194,23 +194,19 @@ public class Boss extends User {
                 }
 
 
-                LocalTime sixAM = LocalTime.of(6, 0);
-                LocalTime twelvePM = LocalTime.of(23, 59);
 
-                if (now.isAfter(sixAM) && now.isBefore(twelvePM)) {
                     //boss.session.close();
-                    Utils random = null;
-                    avatar.play.Map m = MapManager.getInstance().find(boss.getBossMapId());
-                    List<Zone> zones = m.getZones();
-                    Zone randomZone = zones.get(random.nextInt(zones.size()));
-                    boss.getZone().leave(boss);
-                    addBossToZone(boss,boss.bossMapId,randomZone,(short) 0,(short) 0,Utils.nextInt(50000,100000));
-                }
+                Utils random = null;
+                avatar.play.Map m = MapManager.getInstance().find(boss.getBossMapId());
+                List<Zone> zones = m.getZones();
+                Zone randomZone = zones.get(random.nextInt(zones.size()));
+                boss.getZone().leave(boss);
+                addBossToZone(boss,boss.bossMapId,randomZone,(short) 0,(short) 0,Utils.nextInt(50000,100000));
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }, 4, TimeUnit.SECONDS); // 4 giây trễ trước khi thực hiện các hành động khác
+        }, 5, TimeUnit.SECONDS); // 4 giây trễ trước khi thực hiện các hành động khác
 
         // Gửi hiệu ứng cho người chơi trong khu vực
 //        boss.getZone().getPlayers().forEach(u -> {

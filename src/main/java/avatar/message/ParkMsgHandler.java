@@ -5,6 +5,7 @@ import avatar.constants.Cmd;
 import avatar.network.Message;
 import avatar.network.Session;
 import avatar.server.ServerManager;
+import avatar.server.Utils;
 import avatar.service.ParkService;
 
 public class ParkMsgHandler extends MessageHandler {
@@ -59,6 +60,14 @@ public class ParkMsgHandler extends MessageHandler {
                     break;
                 case Cmd.QUANG_CAU: //82
                     this.client.getParkService().handleQuangCau(mss);//82
+
+                    long startTime = System.currentTimeMillis();
+                    System.out.println("Waiting started at: " + startTime);
+                    Thread.sleep(Utils.nextInt(12000,18000));
+
+                    long endTime = System.currentTimeMillis();
+                    System.out.println("Waiting ended at: " + endTime);
+                    System.out.println("Elapsed time: " + (endTime - startTime) + " ms");
                     this.client.getParkService().onCanCau(); // 91
                     break;
                 case Cmd.CAU_CA_XONG: //85

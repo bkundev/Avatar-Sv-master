@@ -52,8 +52,6 @@ public class AvatarService extends Service {
         }
     }
 
-
-
     public void openUIShopEvent(BossShop bossShop, List<BossShopItem> items) {
         try {
             System.out.println("openShop bossShop: " + items.size());
@@ -312,6 +310,7 @@ public class AvatarService extends Service {
         }
     }
 
+
     public void inspectMessageData(Message message) {
         DataInputStream dis = message.reader();
         if (dis != null) {
@@ -366,6 +365,8 @@ public class AvatarService extends Service {
 
 
     }
+
+
     public void requestPartDynaMic(Message ms) {
         try {
             short itemID = ms.reader().readShort();
@@ -788,6 +789,18 @@ public class AvatarService extends Service {
             sendMessage(ms);
         } catch (IOException ex) {
             logger.error("customTab ", ex);
+        }
+    }
+
+    public void sellFish(User us,int idFIsh) throws IOException {
+        Item item = us.findItemInChests(idFIsh);
+        if (item != null && item.getQuantity() > 0) {
+            int sell = item.getPart().getCoin();//*item.getQuantity()
+            String message = String.format("Bạn vừa bán %d %s với giá = %d xu.", item.getQuantity(), item.getPart().getName(),item.getPart().getCoin(),item.getQuantity(), sell);
+            us.removeItem(item.getId(), item.getQuantity());
+            us.updateXu(+sell);
+            us.getAvatarService().updateMoney(0);
+            us.getAvatarService().SendTabmsg(message);
         }
     }
 
