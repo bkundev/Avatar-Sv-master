@@ -438,6 +438,30 @@ public class NpcHandler {
                     us.setMenus(thocau);
                     us.getAvatarService().openMenuOption(npcId,0,  thocau);
                     break;
+                case NpcName.CUA_HANG:
+                {
+                    List<Menu> listet = new ArrayList<>();
+                    List<Item> Items = new ArrayList<>();
+
+                    Menu quaySo = Menu.builder().name("shop noname").action(() ->{
+                        for (int i = 2000; i < 6304; i++) {//470
+                            Item item = new Item((short) i);
+                            if (item.getPart().getSell() == 14||item.getPart().getSell() == 16)
+                            {
+                                Items.add(item);
+                            }
+                        }
+                        us.getAvatarService().openUIShop(npcId,"shop hawai",Items);
+                    }).build();
+                    listet.add(quaySo);
+                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
+                        us.getAvatarService().customTab("Hướng dẫn", "chua co huong dan");
+                    }).build());
+                    listet.add(Menu.builder().name("Thoát").build());
+                    us.setMenus(listet);
+                    us.getAvatarService().openUIMenu(npcId, 0, listet, "text 1", "text2");
+                    break;
+                }
             }
         }
     }

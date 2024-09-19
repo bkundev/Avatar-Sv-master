@@ -644,6 +644,12 @@ public class Session implements ISession {
                 return;
             }
             Part part = PartManager.getInstance().findPartByID(partID);
+
+            if (((part.getGender() == 2 || part.getGender() == 1) && (user.getGender() != part.getGender())))
+            {
+                user.getAvatarService().serverDialog("gioi tinh khong phu hop");
+                return;
+            }
             if (part.getName() == null){
                 user.getAvatarService().serverDialog("ITEM lỗi mua item khác tạm đi bro");
                 return;

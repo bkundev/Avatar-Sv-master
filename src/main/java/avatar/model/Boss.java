@@ -193,8 +193,6 @@ public class Boss extends User {
                     createNearbyGiftBoxes(boss, boss.getZone(), boss.getX(), boss.getY(), Boss.currentBossId + 10000);
                 }
 
-
-
                     //boss.session.close();
                 Utils random = null;
                 avatar.play.Map m = MapManager.getInstance().find(boss.getBossMapId());
