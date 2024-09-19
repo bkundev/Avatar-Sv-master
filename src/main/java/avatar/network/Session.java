@@ -823,7 +823,7 @@ public class Session implements ISession {
                                                 }).build()
                                         ))
                                 .build(),
-                        Menu.builder().name("Mã quà tặng").action(() -> {
+                        Menu.builder().name("Mã quà tặng(gift code)").action(() -> {
                             user.getAvatarService().sendTextBoxPopup(user.getId(), 20, "Item code", 1);
                         }).build(),
                         Menu.builder().name("Mã Giới Thiệu").build(),

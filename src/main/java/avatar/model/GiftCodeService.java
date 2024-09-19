@@ -185,17 +185,43 @@ public class GiftCodeService {
                 break;
             case "100tv":
 
-                Item hopquask = new Item(683,-1,100);
+                Item hopquask = new Item(683,-1,200);
                 //hopqua.setExpired(System.currentTimeMillis() + (86400000L * time));
                 if(us.findItemInChests(683) !=null){
                     int quantity = us.findItemInChests(683).getQuantity();
-                    us.findItemInChests(683).setQuantity(quantity+100);
+                    us.findItemInChests(683).setQuantity(quantity+200);
                 }else {
                     us.addItemToChests(hopquask);
                 }
-                Item qs = new Item(593, -1, 120);
+                Item qs = new Item(593, -1, 200);
                 us.addItemToChests(qs);
-                us.getAvatarService().serverDialog("100tv bạn nhận được 100 hộp quà, và 120 thẻ quay số miễn phí");
+                us.getAvatarService().serverDialog("100tv bạn nhận được 100 hộp quà và");
+                if(us.getGender() == 2)
+                {
+                    Item nuhoangparty1 = new Item(3271);
+                    nuhoangparty1.setExpired(System.currentTimeMillis() + (86400000L * 10));
+                    Item nuhoangparty2 = new Item(3270);
+                    nuhoangparty2.setExpired(System.currentTimeMillis() + (86400000L * 10));
+
+                    Item nuhoangparty3 = new Item(2288);
+                    nuhoangparty3.setExpired(System.currentTimeMillis() + (86400000L * 30));
+
+                    us.addItemToChests(nuhoangparty1);
+                    us.addItemToChests(nuhoangparty2);
+                    us.addItemToChests(nuhoangparty3);
+
+                }else {
+                    Item onghoangparty1 = new Item(3276);
+                    onghoangparty1.setExpired(System.currentTimeMillis() + (86400000L * 7));
+                    Item onghoangparty2 = new Item(3277);
+                    onghoangparty2.setExpired(System.currentTimeMillis() + (86400000L * 7));
+                    Item onghoangparty3 = new Item(2288);
+                    onghoangparty3.setExpired(System.currentTimeMillis() + (86400000L * 30));
+
+                    us.addItemToChests(onghoangparty1);
+                    us.addItemToChests(onghoangparty2);
+                    us.addItemToChests(onghoangparty3);
+                }
 
                 break;
             default:
