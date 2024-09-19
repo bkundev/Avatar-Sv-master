@@ -643,12 +643,11 @@ public class Session implements ISession {
                 this.user.getService().serverMessage("Có lỗi xảy ra, vui lòng liên hệ admin. Mã lỗi: buyItemShopWrongType");
                 return;
             }
-            if(user.getChestSlot() <= user.chests.size())
-            {
-                getAvatarService().serverDialog("Rương đồ đã đầy");
+            Part part = PartManager.getInstance().findPartByID(partID);
+            if (part.getName() == null){
+                user.getAvatarService().serverDialog("ITEM lỗi mua item khác tạm đi bro");
                 return;
             }
-            Part part = PartManager.getInstance().findPartByID(partID);
             if (part != null) {
                 int priceXu = part.getCoin();
                 int priceLuong = part.getGold();
@@ -681,7 +680,32 @@ public class Session implements ISession {
                         .expired(expired)
                         .build();
                 System.out.println("expired: " + expired);
-                user.addItemToChests(item);
+
+                int zOrder = part.getZOrder();
+                Item w = user.findItemWearingByZOrder(zOrder);
+                if (w != null) {
+                    user.removeItemFromWearing(w);
+                    user.addItemToChests(w);
+                }
+                user.addItemToWearing(item);
+                user.removeItemFromChests(item);
+                user.sortWearing();
+                user.getMapService().usingPart(id, (short) item.getId());
+//                if(item.getPart().getZOrder() == 30){
+//                    Item item30 = user.findItemWearingByZOrder(30);
+//                    user.addItemToChests(item30);
+//                    user.addItemToChests(item);
+//                    user.getAvatarService().serverInfo("Mắt mua sẽ được thêm vào NPC SAITAMA để quản lý");
+//                }else if(item.getPart().getZOrder() == 40){
+//
+//                    Item item40 = user.findItemWearingByZOrder(40);
+//                    user.addItemToChests(item40);
+//                    user.addItemToChests(item);
+//                    user.getAvatarService().serverInfo("Mặt mua sẽ được thêm vào NPC SAITAMA để quản lý");
+//                }
+//                else{
+//                    user.addItemToChests(item);
+//                }
                 ms = new Message(-24);
                 DataOutputStream ds = ms.writer();
                 ds.writeShort(partID);
@@ -692,6 +716,7 @@ public class Session implements ISession {
                 ds.writeUTF("Bạn đã mua vật phẩm thành công.");
                 ds.writeInt(Math.toIntExact(user.getXu()));
                 ds.writeInt(user.getLuong());
+                ds.writeInt(user.getLuongKhoa());
                 ds.flush();
                 this.sendMessage(ms);
             } else {
@@ -1001,7 +1026,7 @@ public class Session implements ISession {
                     getAvatarService().requestYourInfo(user);
                     getService().serverDialog(String.format("Chúc mừng bạn đã đổi thành công %s",Eventitem.getItem().getPart().getName()));
                 } else {
-                    getService().serverDialog(String.format("Bạn không có  %s để đổi",Eventitem.getItemNeed()));
+                    getService().serverDialog(String.format("Bạn không có %s để đổi",Eventitem.getItemNeed()));
                 }
                 break;
         }

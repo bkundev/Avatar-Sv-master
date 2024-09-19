@@ -36,6 +36,7 @@ import java.util.List;
 
 
 import java.time.LocalTime;
+import java.util.stream.Collectors;
 
 public class NpcHandler {
 
@@ -189,6 +190,25 @@ public class NpcHandler {
                     list.add(Menu.builder().name("Thoát").build());
                     us.setMenus(list);
                     us.getAvatarService().openMenuOption(npcId, 0, list);
+                    break;
+                case NpcName.SAITAMA:
+                    List<Menu> QuanLyItem = new ArrayList<>();
+                    Menu QuanLyeye = Menu.builder().name("Quản Lý Mặt").action(() -> {
+                        List<Item> _chests = us.chests.stream().filter(item -> {
+                            return item.getPart().getZOrder() == 30;
+                        }).collect(Collectors.toList());
+                        us.getAvatarService().viewChest(_chests);
+                    }).build();
+                    QuanLyItem.add(QuanLyeye);
+                    QuanLyItem.add(Menu.builder().name("Quản Lý Mắt").action(() -> {
+                        List<Item> _chests = us.chests.stream().filter(item -> {
+                            return item.getPart().getZOrder() == 40;
+                        }).collect(Collectors.toList());
+                        us.getAvatarService().viewChest(_chests);
+                    }).build());
+                    QuanLyItem.add(Menu.builder().name("Thoát").build());
+                    us.setMenus(QuanLyItem);
+                    us.getAvatarService().openMenuOption(npcId, 0, QuanLyItem);
                     break;
                 case NpcName.bunma:
                     List<Menu> list1 = new ArrayList<>();
