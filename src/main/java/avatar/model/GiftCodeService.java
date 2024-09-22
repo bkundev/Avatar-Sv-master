@@ -145,6 +145,19 @@ public class GiftCodeService {
         User us = UserManager.getInstance().find(userId);
 
         switch (MaCode) {
+
+            case "tanthu":
+
+                Item canCau = new Item(446);
+                canCau.setExpired(System.currentTimeMillis() + (86400000L * 30));
+                us.addItemToChests(canCau);
+
+                Item NcRuong = new Item(3861,System.currentTimeMillis() + (86400000L * 30),1);
+                us.addItemToChests(NcRuong);
+                us.getAvatarService().serverDialog("tanthu bạn nhận được 1 thẻ nâng cấp rương 30 ngày, và 1 cần câu vip 30 ngày");
+                break;
+
+
             case "denbu":
 
                 Item hopqua = new Item(683,-1,100);

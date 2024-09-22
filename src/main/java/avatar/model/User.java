@@ -439,7 +439,7 @@ public class User {
         //listCmdRotate.add(new Command((short) 47, "Pháo hạnh phúc (5 lượng)", 242, (byte) 0));
         listCmdRotate.add(new Command((short) 8, "Pháo thịnh vượng (5 lượng)", 241, (byte) 0));
         //listCmdRotate.add(new Command((short) 9, "triệu hồi con chim k nhớ tên", 1082, (byte) 0));
-        listCmdRotate.add(new Command((short) 10, "Rương chỉ sử dụng không được bỏ(sẽ bị xóa item ở rương gốc)", 1204, (byte) 0));
+        //listCmdRotate.add(new Command((short) 10, "Rương chỉ sử dụng không được bỏ(sẽ bị xóa item ở rương gốc)", 1204, (byte) 0));
         listCmdRotate.add(new Command((short) 23, "Cuốc", 869, (byte) 0));
         //listCmdRotate.add(new Command((short) 36, "Hẹn hò", 1096, (byte) 1));
     }
@@ -523,16 +523,28 @@ public class User {
         int coinCost = UPGRADE_COST_COINS[nextLevel];
         int goldCost = UPGRADE_COST_GOLD[nextLevel];
 
-        if (xu >= coinCost && luong >= goldCost) {
-            updateXu(-coinCost);
-            updateLuong(-goldCost);
-            updateChestSlot(+5);
-            getAvatarService().updateMoney(0);
+        Item theNangCap = findItemInChests(3861);
+        if(theNangCap != null) {
+            this.removeItem(3861,1);
+            this.updateChestSlot(+5);
             return String.format(
                     "chúc mừng bạn đã nâng cấp thành công rương cấp %d và có %d ô rương.",
                     nextLevel-2, this.getChestSlot()
             );
         }
+
+        if (xu >= coinCost && luong >= goldCost) {
+            this.updateXu(-coinCost);
+            this.updateLuong(-goldCost);
+            this.updateChestSlot(+5);
+            this.getAvatarService().updateMoney(0);
+            return String.format(
+                    "chúc mừng bạn đã nâng cấp thành công rương cấp %d và có %d ô rương.",
+                    nextLevel-2, this.getChestSlot()
+            );
+        }
+
+
         return "không đủ xu hoặc lượng";
     }
     public void requestYourInfo(Message ms) {
@@ -540,7 +552,7 @@ public class User {
             int userId = ms.reader().readInt();
             User us = UserManager.getInstance().find(userId);
             if (us != null) {
-                getAvatarService().requestYourInfo(us);
+                this.getAvatarService().requestYourInfo(us);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -554,7 +566,7 @@ public class User {
             }
             byte idFeel = ms.reader().readByte();
             System.out.println("doAvatarFeel msg 57 = " + idFeel + " ");
-            getMapService().doAvatarFeel(id, idFeel);
+            this.getMapService().doAvatarFeel(id, idFeel);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -119,6 +119,17 @@ public class NpcHandler {
         if (npcIdCase > 1000 && npcIdCase<=9999)
         {
 
+
+            if(us.getSession().isResourceHD()){
+                List<Menu> listmenuboss = new ArrayList<>();
+                Menu bossmenu = Menu.builder().name(" Đánh ").action(() -> {
+                    us.getAvatarService().serverDialog("OK !");
+                }).build();
+                listmenuboss.add(bossmenu);
+                us.setMenus(listmenuboss);
+                us.getAvatarService().openMenuOption(npcId, 0, listmenuboss);
+            }
+
             if (boss.isDefeated()) {
                 us.getAvatarService().serverDialog("boss đã chết");
                 return;
@@ -446,6 +457,10 @@ public class NpcHandler {
                     Menu quaySo = Menu.builder().name("shop noname").action(() ->{
                         for (int i = 2000; i < 6304; i++) {//470
                             Item item = new Item((short) i);
+                            if(i == 2539 || i == 2540|| i == 2541)
+                            {
+                                Items.add(item);
+                            }
                             if (item.getPart().getSell() == 14||item.getPart().getSell() == 16)
                             {
                                 Items.add(item);
