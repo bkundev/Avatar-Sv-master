@@ -259,7 +259,6 @@ public class NpcHandler {
                                         rank++; // Tăng thứ hạng sau mỗi lần thêm người chơi vào kết quả
                                     }
                                 }
-
                                 us.getAvatarService().customTab("Top 10", result.toString());
                             })
                             .build());

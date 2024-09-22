@@ -2,16 +2,19 @@ package avatar.server;
 
 import avatar.db.DbManager;
 
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import avatar.model.User;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
-import java.io.IOException;
-import java.io.DataInputStream;
-import java.io.ByteArrayInputStream;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.security.NoSuchAlgorithmException;
@@ -33,6 +36,28 @@ public class Utils {
     private static Pattern userNamePattern;
     private static final char[] SOURCE_CHARACTERS;
     private static final char[] DESTINATION_CHARACTERS;
+
+
+
+
+    private static final String LOG_DIRECTORY = "logs/";
+
+
+    public static void writeLog(User user, String message) {
+        String username = user.getUsername();
+        String logFilePath = LOG_DIRECTORY + username + "_log.txt"; // Tên file log theo username
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFilePath, true))) {
+            LocalDateTime currentTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            writer.write(currentTime.format(formatter) + " - " + message);
+            writer.newLine(); // Xuống dòng sau mỗi log
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public static double distanceBetween(int x1, int y1, int x2, int y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));

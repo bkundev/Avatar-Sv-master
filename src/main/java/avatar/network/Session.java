@@ -461,7 +461,7 @@ public class Session implements ISession {
 
     private boolean isCharCreatedPopup;
 
-    private void enter() {
+    private void enter() throws IOException {
         if (user.loadData()) {
             DbManager.getInstance().executeUpdate("UPDATE `players` SET `is_online` = ?, `client_id` = ? WHERE `user_id` = ? LIMIT 1;", 1, this.id, user.getId());
             user.initAvatar();
@@ -469,11 +469,16 @@ public class Session implements ISession {
             UserManager.getInstance().add(user);
             getAvatarService().onLoginSuccess();
             getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thanh Pho lo");
-            getAvatarService().serverInfo("từ ngày 16-9-2024 đến hết ngày 19-9-2024 nạp trên 100k sẽ nhận thêm set IRON MAN Vĩnh Viễn và được khuyến mại x2");
+            getAvatarService().serverInfo("notification");
 
 
             checkThuongNapLanDau();
+
             checkThuongNapSet();
+
+            NhanThuongEventluong();
+
+            NhanThuongEventXuBoss();
 
         } else {
             if (isCharCreatedPopup) {
@@ -487,6 +492,227 @@ public class Session implements ISession {
         }
     }
 
+    private void NhanThuongEventXuBoss() throws IOException {
+
+        int TopXuboss = this.user.getService().getUserRankXuBoss(user);
+
+        if (checkXemNhanThuongXuboss(user)) {
+            System.out.println("Người chơi " + user.getUsername() + " đã nhận thưởng.");
+            return; // Nếu đã nhận thưởng, kết thúc hàm
+        }
+
+        if(TopXuboss > 5) {
+            return;
+        };
+
+
+        List<Item> TOP5XUBOSS = new ArrayList<>();
+        TOP5XUBOSS.add(new Item(2018,-1,1));
+
+        List<Item> TOP3SET = new ArrayList<>();
+        TOP3SET.add(new Item(4442,-1,1));
+        TOP3SET.add(new Item(4443,-1,1));
+        TOP3SET.add(new Item(4444,-1,1));
+
+
+
+
+        if (TopXuboss == 1) {
+            // Trao thưởng top 1
+            if(user.chests.size() >= user.getChestSlot()-5){
+                user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 6 ô trống trong rương đồ để nhận thưởng top 1");
+                return;
+            }
+
+            List<Item> phanThuongTop1boss = new ArrayList<>();
+            phanThuongTop1boss.add(new  Item(2740,System.currentTimeMillis() + (86400000L * 7),1));//the vip
+            phanThuongTop1boss.add(new  Item(6142,-1,1));//tóc superblue6
+
+            Utils.writeLog(user,"Nhận Thưởng TOP 1 XU BOSS : ");
+            for (Item item : TOP3SET) {
+                this.user.addItemToChests(item);
+                Utils.writeLog(user,item.getPart().getName());
+            }
+            for (Item item : phanThuongTop1boss){
+                this.user.addItemToChests(item);
+                Utils.writeLog(user,item.getPart().getName());
+            }
+            for (Item item : TOP5XUBOSS){
+                this.user.addItemToChests(item);
+                Utils.writeLog(user,item.getPart().getName());
+            }
+            System.out.println("Username: " + user.getUsername() + ", rank" + TopXuboss);
+
+        } else if (TopXuboss == 2 || TopXuboss == 3) {
+
+            if(user.chests.size() >= user.getChestSlot()-4){
+                user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 5 ô trống trong rương đồ để nhận thưởng top lượng "+TopXuboss);
+                return;
+            }
+
+            Utils.writeLog(user,"Nhận Thưởng TOP 2or3 xu boss :");
+            Item theCaoCao =  new  Item(2740,System.currentTimeMillis() + (86400000L * 7),1);
+            user.addItemToChests(theCaoCao);
+            Utils.writeLog(user,theCaoCao.getPart().getName());
+
+            System.out.println("Username: " + user.getUsername() + ", rank3" + TopXuboss);
+            for (Item item : TOP5XUBOSS){
+                this.user.addItemToChests(item);
+                Utils.writeLog(user,item.getPart().getName());
+            }
+            for (Item item : TOP3SET) {
+                this.user.addItemToChests(item);
+                Utils.writeLog(user,item.getPart().getName());
+            }
+
+        } else if (TopXuboss == 4 || TopXuboss == 5) {
+            if(user.chests.size() >= user.getChestSlot()-1){
+                user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 2 ô trống trong rương đồ để nhận thưởng top lượng "+TopXuboss);
+                return;
+            }
+            Utils.writeLog(user,"Nhận Thưởng TOP 4or5 Pháo Lượng :");
+            for (Item item : TOP5XUBOSS){
+                this.user.addItemToChests(item);
+                Utils.writeLog(user,item.getPart().getName());
+            }
+        }
+        UpdateDaNhanThuongEventXuboss(user);
+        user.getAvatarService().SendTabmsg("Bạn đã Nhận thưởng top "+TopXuboss);
+    }
+
+    private void UpdateDaNhanThuongEventXuboss(User us) {
+        String sql = "UPDATE players SET XubossTop = TRUE WHERE user_id = ?";
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, us.getId()); // Sử dụng user_id để cập nhật
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean checkXemNhanThuongXuboss(User us) {
+        String sql = "SELECT XubossTop FROM players WHERE user_id = ?";
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, us.getId()); // Sử dụng user_id để truy vấn
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBoolean("XubossTop");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Mặc định trả về false nếu có lỗi
+    }
+
+
+    private void NhanThuongEventluong() throws IOException {
+
+        int rankPhaoLuong = this.user.getService().getUserRankPhaoLuong(user);
+
+        if (checkXemNhanThuongTopLuong(user)) {
+            System.out.println("Người chơi " + user.getUsername() + " đã nhận thưởng.");
+            return; // Nếu đã nhận thưởng, kết thúc hàm
+        }
+
+        if(rankPhaoLuong > 5) {
+            return;
+        };
+
+        int slotChest = 5;
+
+        List<Item> TOP5Luong = new ArrayList<>();
+        TOP5Luong.add(new Item(4121,-1,1));
+        TOP5Luong.add(new Item(4122,-1,1));
+        TOP5Luong.add(new Item(4123,-1,1));
+
+
+        if (rankPhaoLuong == 1) {
+            // Trao thưởng top 1
+            if(user.chests.size() >= user.getChestSlot()-4){
+                user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 5 ô trống trong rương đồ để nhận thưởng top 1");
+                return;
+            }
+
+            List<Item> phanThuongTop1 = new ArrayList<>();
+            phanThuongTop1.add(new  Item(2742,System.currentTimeMillis() + (86400000L * 7),1));//preium
+            phanThuongTop1.add(new  Item(2741,System.currentTimeMillis() + (86400000L * 7),1));//cao cấp
+
+            Utils.writeLog(user,"Nhận Thưởng TOP 1 Pháo Lượng : ");
+            for (Item item : phanThuongTop1){
+                this.user.addItemToChests(item);
+                Utils.writeLog(user,item.getPart().getName());
+            }
+            for (Item item : TOP5Luong){
+                this.user.addItemToChests(item);
+                Utils.writeLog(user,item.getPart().getName());
+            }
+            System.out.println("Username: " + user.getUsername() + ", rank" + rankPhaoLuong);
+
+        } else if (rankPhaoLuong == 2 || rankPhaoLuong == 3) {
+
+            if(user.chests.size() >= user.getChestSlot()-3){
+                user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 4 ô trống trong rương đồ để nhận thưởng top lượng "+rankPhaoLuong);
+                return;
+            }
+
+            Utils.writeLog(user,"Nhận Thưởng TOP 2or3 Pháo Lượng :");
+            Item theCaoCao =  new  Item(2741,System.currentTimeMillis() + (86400000L * 7),1);
+            user.addItemToChests(theCaoCao);
+            Utils.writeLog(user,theCaoCao.getPart().getName());
+
+            System.out.println("Username: " + user.getUsername() + ", rank3" + rankPhaoLuong);
+            for (Item item : TOP5Luong){
+                this.user.addItemToChests(item);
+                Utils.writeLog(user,item.getPart().getName());
+            }
+
+
+        } else if (rankPhaoLuong == 4 || rankPhaoLuong == 5) {
+            if(user.chests.size() >= user.getChestSlot()-2){
+                user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 3 ô trống trong rương đồ để nhận thưởng top lượng "+rankPhaoLuong);
+                return;
+            }
+            Utils.writeLog(user,"Nhận Thưởng TOP 4or5 Pháo Lượng :");
+            for (Item item : TOP5Luong){
+                this.user.addItemToChests(item);
+                Utils.writeLog(user,item.getPart().getName());
+            }
+        }
+        UpdateDaNhanThuongEventluong(user);
+        user.getAvatarService().SendTabmsg("Bạn đã Nhận thưởng top "+rankPhaoLuong);
+    }
+
+    private void UpdateDaNhanThuongEventluong(User us) {
+        String sql = "UPDATE players SET has_received_reward = TRUE WHERE user_id = ?";
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, us.getId()); // Sử dụng user_id để cập nhật
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean checkXemNhanThuongTopLuong(User us) {
+        String sql = "SELECT has_received_reward FROM players WHERE user_id = ?";
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, us.getId()); // Sử dụng user_id để truy vấn
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBoolean("has_received_reward");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Mặc định trả về false nếu có lỗi
+    }
+
+    ////////
     private void checkThuongNapLanDau(){
         String checkNap = "SELECT tongnap,ThuongNapLanDau FROM users WHERE id = ? LIMIT 1;";
         // Executing the query
@@ -507,10 +733,9 @@ public class Session implements ISession {
         }
     }
 
-
     private void nhanThuongLanDau(){
         try {
-            user.getAvatarService().SendTabmsg("Bạn vừa nạp lần đầu trên 20k nhận được 5.000.000 xu và 10.000 lượng và 200 thẻ quay số miễn phí");
+            user.getAvatarService().SendTabmsg("Bạn vừa donate lần đầu trên 20k nhận được 5.000.000 xu và 10.000 lượng và 200 thẻ quay số miễn phí");
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -523,6 +748,8 @@ public class Session implements ISession {
         Item item = new Item(593, -1, 200);
         user.addItemToChests(item);
     }
+
+    ///////////
 
     private void checkThuongNapSet(){
         String checkNap = "SELECT tongnap,ThuongNapSet FROM users WHERE id = ? LIMIT 1;";
@@ -544,7 +771,6 @@ public class Session implements ISession {
         }
     }
 
-
     private void nhanThuongNapSet(){
         try {
             user.getAvatarService().SendTabmsg("Bạn nhận được set IronMan dame = 100");
@@ -562,7 +788,6 @@ public class Session implements ISession {
         Item itemQuan = new Item(3177, -1, 1);
         user.addItemToChests(itemQuan);
     }
-
 
     public boolean isNewVersion() {
         return true;
@@ -808,7 +1033,7 @@ public class Session implements ISession {
                                                                 this.user.setAutoFish(true);
                                                             }
                                                             else {
-                                                                this.user.getAvatarService().serverDialog("Treo câu thì nạp lần đầu nha : v");
+                                                                this.user.getAvatarService().serverDialog("Treo câu thì donate lần đầu nha : v");
                                                                 this.user.setAutoFish(false);
                                                             }
                                                         }
