@@ -251,11 +251,11 @@ public class HomeService extends Service {
 
         ds.writeInt(this.session.user.chests.size());
         for (Item chestPart : this.session.user.chests) {
-            ds.writeShort((short) chestPart.getId());
+            ds.writeShort((short) chestPart.getPart().getId());
         }
 
-        ds.writeInt(1); // Ghi số tiền trên rương
-        ds.writeByte(2); // Ghi cấp độ của rương
+        ds.writeInt(0); // Ghi số tiền trên rương
+        ds.writeByte(1); // Ghi cấp độ của rương
         ds.flush();
 
         this.session.sendMessage(ms); // Gửi thông điệp tới client
