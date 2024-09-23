@@ -1,10 +1,12 @@
 package avatar.service;
 
+import avatar.constants.Cmd;
 import avatar.db.DbManager;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 
+import avatar.item.Item;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
 
@@ -237,6 +239,28 @@ public class HomeService extends Service {
         ds.flush();
         this.session.sendMessage(ms);
     }
+
+    public void onCustomChest(Message ms) throws IOException {
+
+        ms = new Message(Cmd.CUSTOM_CHEST); // Mã messenger cho onCustomChest
+        DataOutputStream ds = ms.writer();
+        ds.writeInt(this.session.user.chests.size()); //
+        for (Item itm : this.session.user.chests) {
+            ds.writeShort((short) itm.getId());
+        }
+
+        ds.writeInt(this.session.user.chests.size());
+        for (Item chestPart : this.session.user.chests) {
+            ds.writeShort((short) chestPart.getId());
+        }
+
+        ds.writeInt(1); // Ghi số tiền trên rương
+        ds.writeByte(2); // Ghi cấp độ của rương
+        ds.flush();
+
+        this.session.sendMessage(ms); // Gửi thông điệp tới client
+    }
+
 
     class Tile {
 

@@ -49,6 +49,10 @@ public class HomeMsgHandler extends MessageHandler {
                     this.service.getImgObjInfo(mss);
                     break;
                 }
+                case Cmd.CUSTOM_CHEST: {
+                    this.service.onCustomChest(mss);
+                    break;
+                }
 
                 default:
                     System.out.println("HomeMsgHandler: " + mss.getCommand());

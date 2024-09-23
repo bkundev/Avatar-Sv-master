@@ -432,7 +432,7 @@ public class User {
                             this.wearing.add(item);
                         }
                     }
-                    this.chests = new ArrayList<>();
+                    this.chestsHome = new ArrayList<>();
                     JSONArray chestshome = (JSONArray) JSONValue.parse(res.getString("chests_home"));
                     for (Object chest : chestshome) {
                         JSONObject obj = (JSONObject) chest;
@@ -684,7 +684,7 @@ public class User {
     }
 
     public void addItemToChestsHome(Item item) {
-        synchronized (chests) {
+        synchronized (chestsHome) {
 
             Item itm = findItemInChests(item.getId());
             if (itm != null) {
@@ -693,16 +693,16 @@ public class User {
                 } else {
                     setReliabilityForItem(itm, item);
                 }
-                this.chests.add(item);
+                this.chestsHome.add(item);
                 return;
             } else {
-                itm = findItemInWearing(item.getId());
+                itm = findItemInChests(item.getId());
                 if (itm != null) {
                     setReliabilityForItem(itm, item);
                     return;
                 }
             }
-            this.chests.add(item);
+            this.chestsHome.add(item);
         }
 
     }

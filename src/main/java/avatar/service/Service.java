@@ -47,6 +47,8 @@ public class Service {
 
     }
 
+
+
     public void serverDialog(String message) {
         try {
             Message ms = new Message(Cmd.SET_MONEY_ERROR);
