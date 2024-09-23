@@ -186,7 +186,7 @@ public class Boss extends User {
                 LocalTime tenAM = LocalTime.of(10, 0);
                 LocalTime twoPM = LocalTime.of(14, 0);
                 LocalTime sevenPM = LocalTime.of(17, 0);
-                LocalTime elevenPM = LocalTime.of(22, 0);
+                LocalTime elevenPM = LocalTime.of(23, 0);
 
                 //tạo qu trong time
                 if ((now.isAfter(tenAM) && now.isBefore(twoPM)) || (now.isAfter(sevenPM) && now.isBefore(elevenPM))) {

@@ -31,9 +31,9 @@ public class ObjPet extends AbsMapOffline {
         pet.addItemToWearing(new Item(0));
         pet.addItemToWearing(new Item(4));
         pet.addItemToWearing(new Item(3077));
-        pet.addChat("Chào mừng bạn đến với shop thú cưng");
-        pet.addChat("Các con thú thật dễ tương phải không nào");
-        pet.addChat("Mời bạn lại xem");
+        //pet.addChat("Chào mừng bạn đến với shop thú cưng");
+        //pet.addChat("Các con thú thật dễ tương phải không nào");
+        //pet.addChat("Mời bạn lại xem");
         addNpc(pet);
     }
 

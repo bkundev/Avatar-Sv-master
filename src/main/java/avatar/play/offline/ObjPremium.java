@@ -32,8 +32,8 @@ public class ObjPremium extends AbsMapOffline {
         thuongNhan.addItemToWearing(new Item(0));
         thuongNhan.addItemToWearing(new Item(4));
         thuongNhan.addItemToWearing(new Item(3077));
-        thuongNhan.addChat("Chào mừng các bạn đến với shop premium");
-        thuongNhan.addChat("Mời các bạn xem hàng");
+        //thuongNhan.addChat("Chào mừng các bạn đến với shop premium");
+        //thuongNhan.addChat("Mời các bạn xem hàng");
         addNpc(thuongNhan);
         Npc shopDong = Npc.builder().id(1212)
                 .name("shop dong")
@@ -45,8 +45,8 @@ public class ObjPremium extends AbsMapOffline {
         shopDong.addItemToWearing(new Item(0));
         shopDong.addItemToWearing(new Item(4));
         shopDong.addItemToWearing(new Item(3077));
-        shopDong.addChat("Shop xèng đê");
-        shopDong.addChat("Xèng đê, xèng đê");
+        //shopDong.addChat("Shop xèng đê");
+        //shopDong.addChat("Xèng đê, xèng đê");
         addNpc(shopDong);
     }
 

@@ -46,8 +46,6 @@ public class User {
     private static int chestLevel;
     private static final int[] UPGRADE_COST_COINS = {0, 0,0,20000, 50000, 100000, 200000 ,200000,500000,600000,70000,0,1000000,1200000,1500000,1700000,2000000,2500000,2700000,3000000,4000000,5000000};
     private static final int[] UPGRADE_COST_GOLD = {0, 0, 0, 0, 0, 0, 0, 200,500,600,700,1000,1000 ,1200 ,1500 ,1700 ,2000 ,2500 ,2700 ,3000 ,4000 ,5000 };
-
-
     public boolean AutoFish;
     public int bossMapId;
     public int TopPhaoLuong;
@@ -92,6 +90,13 @@ public class User {
     private List<Item> wearing;
 
     public List<Item> chests;
+
+
+    public List<Item> chestsHome;
+
+
+
+
     private Zone zone;
     private short x, y;
     private byte direct;
@@ -218,6 +223,10 @@ public class User {
         this.chestSlot += (byte) chestslot;
     }
 
+    public synchronized void updateChest_homeSlot(int chestslot) {
+        this.chestHomeSlot += (byte) chestslot;
+    }
+
     public synchronized void updateHP(long dame,Boss boss,User us) throws IOException {
         this.HP += dame;
         if (HP <= 0) {
@@ -283,8 +292,18 @@ public class User {
             obj.put("quantity", item.getQuantity());
             jWearing.add(obj);
         }
-        DbManager.getInstance().executeUpdate("UPDATE `players` SET `chests` = ?, `wearing` = ? WHERE `user_id` = ? LIMIT 1;",
-                jChests.toJSONString(), jWearing.toJSONString(), this.id);
+
+        JSONArray jChestsHome = new JSONArray();
+        for (Item item : this.chestsHome) {
+            JSONObject obj = new JSONObject();
+            obj.put("id", item.getId());
+            obj.put("expired", item.getExpired());
+            obj.put("quantity", item.getQuantity());
+            jChestsHome.add(obj);
+        }
+
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `chests` = ?, `wearing` = ?, `chests_home` = ? WHERE `user_id` = ? LIMIT 1;",
+                jChests.toJSONString(), jWearing.toJSONString(),jChestsHome.toJSONString(), this.id);
         System.out.println("Save data user " + this.getUsername());
     }
 
@@ -411,6 +430,24 @@ public class User {
                                 .build();
                         if (item.reliability() > 0) {
                             this.wearing.add(item);
+                        }
+                    }
+                    this.chests = new ArrayList<>();
+                    JSONArray chestshome = (JSONArray) JSONValue.parse(res.getString("chests_home"));
+                    for (Object chest : chestshome) {
+                        JSONObject obj = (JSONObject) chest;
+                        int id = ((Long) obj.get("id")).intValue();
+                        long expired = ((Long) obj.get("expired"));
+                        int quantity = 1;
+                        if (obj.containsKey("quantity")) {
+                            quantity = ((Long) obj.get("quantity")).intValue();
+                        }
+                        Item item = Item.builder().id(id)
+                                .quantity(quantity)
+                                .expired(expired)
+                                .build();
+                        if (item.reliability() > 0) {
+                            this.chestsHome.add(item);
                         }
                     }
 
@@ -645,6 +682,31 @@ public class User {
         }
 
     }
+
+    public void addItemToChestsHome(Item item) {
+        synchronized (chests) {
+
+            Item itm = findItemInChests(item.getId());
+            if (itm != null) {
+                if (itm.getPart().getType() == -2) {
+                    itm.increase(item.getQuantity());
+                } else {
+                    setReliabilityForItem(itm, item);
+                }
+                this.chests.add(item);
+                return;
+            } else {
+                itm = findItemInWearing(item.getId());
+                if (itm != null) {
+                    setReliabilityForItem(itm, item);
+                    return;
+                }
+            }
+            this.chests.add(item);
+        }
+
+    }
+
 
     public void setReliabilityForItem(Item old, Item newI) {
         // item expired == -1;

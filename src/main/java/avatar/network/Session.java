@@ -476,9 +476,9 @@ public class Session implements ISession {
 
             checkThuongNapSet();
 
-            NhanThuongEventluong();
+            //NhanThuongEventluong();
 
-            NhanThuongEventXuBoss();
+            //NhanThuongEventXuBoss();
 
         } else {
             if (isCharCreatedPopup) {
@@ -606,7 +606,6 @@ public class Session implements ISession {
         }
         return false; // Mặc định trả về false nếu có lỗi
     }
-
 
     private void NhanThuongEventluong() throws IOException {
 

@@ -155,6 +155,9 @@ public class GiftCodeService {
                 Item NcRuong = new Item(3861,System.currentTimeMillis() + (86400000L * 30),1);
                 us.addItemToChests(NcRuong);
                 us.getAvatarService().serverDialog("tanthu bạn nhận được 1 thẻ nâng cấp rương 30 ngày, và 1 cần câu vip 30 ngày");
+
+                Item vecau = new Item(460,System.currentTimeMillis() + (86400000L * 30),1);
+                us.addItemToChests(vecau);
                 break;
 
 
