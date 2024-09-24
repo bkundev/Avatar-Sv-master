@@ -58,7 +58,7 @@ public class HomeMsgHandler extends MessageHandler {
                     break;
                 }
                 case Cmd.UPGRADE_CHEST: {
-                    this.service.upgradeChest(mss);
+                    this.service.upgradeChestHome(mss);
                     break;
                 }
                 default:

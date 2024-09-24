@@ -260,6 +260,37 @@ public class User {
 
 
 
+    public int getChestLevel() {
+        int chestSlotHome = this.getChestHomeSlot(); // Lấy số ô của rương hiện tại
+
+        if (chestSlotHome <= 10) {
+            return 1; // Cấp 1 với 10 ô
+        } else if (chestSlotHome <= 15) {
+            return 2; // Cấp 2 với 15 ô
+        } else if (chestSlotHome <= 20) {
+            return 3; // Cấp 3 với 20 ô
+        } else if (chestSlotHome <= 25) {
+            return 4; // Cấp 4 với 25 ô
+        } else if (chestSlotHome <= 30) {
+            return 5; // Cấp 4 với 25 ô
+        } else if (chestSlotHome <= 35) {
+            return 6; // Cấp 4 với 25 ô
+        } else if (chestSlotHome <= 40) {
+            return 7; // Cấp 4 với 25 ô
+        } else if (chestSlotHome <= 45) {
+            return 8; // Cấp 4 với 25 ô
+        } else if (chestSlotHome <= 50) {
+            return 9; // Cấp 4 với 25 ô
+        } else if (chestSlotHome <= 55) {
+            return 10; // Cấp 4 với 25 ô
+        }
+
+        return -1; // Trường hợp không hợp lệ
+    }
+
+
+
+
     public synchronized void updateTopPhaoLuong(int luongThaPhao) {
         this.luong += luongThaPhao;
         this.TopPhaoLuong += 1;
@@ -272,8 +303,8 @@ public class User {
     }
 
     protected void saveData() {
-        DbManager.getInstance().executeUpdate("UPDATE `players` SET `gender` = ?, `friendly` = ?, `crazy` = ?, `stylish` = ?, `happy` = ?, `hunger` = ?, `chest_slot` = ? WHERE `user_id` = ? LIMIT 1;",
-                this.gender, this.friendly, this.crazy, this.stylish, this.happy, this.hunger,this.chestSlot, this.id);
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `gender` = ?, `friendly` = ?, `crazy` = ?, `stylish` = ?, `happy` = ?, `hunger` = ?, `chest_slot` = ? , `chest_home_slot` = ? WHERE `user_id` = ? LIMIT 1;",
+                this.gender, this.friendly, this.crazy, this.stylish, this.happy, this.hunger,this.chestSlot,this.chestHomeSlot, this.id);
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ?,`scores` = ? , `xu_from_boss` = ? , `TopPhaoLuong` = ? WHERE `user_id` = ? LIMIT 1;",
                 this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain,this.scores,this.xu_from_boss,this.TopPhaoLuong, this.id);
         JSONArray jChests = new JSONArray();

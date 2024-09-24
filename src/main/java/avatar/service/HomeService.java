@@ -289,7 +289,7 @@ public class HomeService extends Service {
             ms = new Message(Cmd.TRANS_PART_CHEST);
             DataOutputStream ds = ms.writer();
             ds.writeBoolean(Slot);
-            ds.writeUTF("Rương đã đầy !");
+            ds.writeUTF("Rương nhà đã đầy !");
             ds.flush();
             this.session.sendMessage(ms); // Gửi thông điệp tới client
         }else{
@@ -302,19 +302,63 @@ public class HomeService extends Service {
             ms = new Message(Cmd.TRANS_PART_CHEST);
             DataOutputStream ds = ms.writer();
             ds.writeBoolean(Slot);
-            ds.writeUTF("Rương đã đầy !");
+            ds.writeUTF("Rương đồ đã đầy !");
             ds.flush();
             this.session.sendMessage(ms); // Gửi thông điệp tới client
         }
 
     }
 
-    public void upgradeChest(Message ms) throws IOException {
+    public void upgradeChestHome(Message ms) throws IOException {
 
-        byte i = ms.reader().readByte();// 0 chest to chesthome , 1 = chestHomeToChest
 
-        short ii = ms.reader().readShort();
+        int[] chestSlots = {10, 15, 20, 25, 30,35,40,45,50,55}; // Cấp 1 = 10 ô, cấp 2 = 15 ô, ..., cấp 5 = 30 ô
+        int[] chestUpgradeCostXu = {10000, 20000, 50000, 100000,200000,500000,1000000,2000000,3000000,5000000}; // Chi phí nâng cấp bằng xu cho từng cấp
+        int[] chestUpgradeCostLuong = {10, 20, 30, 40,50,100,200,500,800,1200}; // Chi phí nâng cấp bằng lượng cho từng cấp
 
+        // Giả sử bạn có phương thức để lấy cấp độ rương hiện tại
+
+        int currentChestLevel = this.session.user.getChestLevel(); // Ví dụ: cấp 1, 2, 3, ...
+
+        if (currentChestLevel >= chestSlots.length-1) {
+            this.session.getAvatarService().serverDialog("Rương của bạn đã được nâng cấp tối đa!");
+            return;
+        }
+
+        byte type = ms.reader().readByte();
+        if(type == 0){
+            int nextLevel = currentChestLevel + 1; // Cấp độ rương tiếp theo
+            int nextSlots = chestSlots[nextLevel - 1]; // Số ô sau khi nâng cấp
+            int upgradeCostXu = chestUpgradeCostXu[nextLevel - 1]; // Giá xu cần nâng cấp
+            int upgradeCostLuong = chestUpgradeCostLuong[nextLevel - 1]; // Giá lượng cần nâ
+
+            ms = new Message(Cmd.UPGRADE_CHEST);
+            DataOutputStream ds = ms.writer();
+            ds.writeByte(0);
+            ds.writeUTF("Bạn có muốn nâng cấp rương nhà từ cấp " + currentChestLevel + " lên cấp " + nextLevel +
+                    " (" + nextSlots + " ô) bằng " + upgradeCostXu + " xu và " + upgradeCostLuong + " lượng không?");
+            ds.flush();
+            this.session.sendMessage(ms); // Gửi thông điệp tới client
+
+        }else {
+
+            // Kiểm tra cấp độ rương hiện tại
+
+            int upgradeCostXu = chestUpgradeCostXu[currentChestLevel]; // Giá xu cần nâng cấp
+            int upgradeCostLuong = chestUpgradeCostLuong[currentChestLevel]; // Giá lượng cần nâng cấp
+
+            // Kiểm tra người chơi có đủ xu hoặc lượng để nâng cấp không
+            if (this.session.user.xu >= upgradeCostXu && this.session.user.luong >= upgradeCostLuong) {
+                this.session.user.updateXu(- upgradeCostXu); // Trừ xu người chơi
+                this.session.user.updateLuong(- upgradeCostLuong); // Trừ xu người chơi
+                this.session.user.getAvatarService().updateMoney(0);
+                this.session.user.updateChest_homeSlot(+5);
+                this.session.getAvatarService().serverDialog("Đã nâng cấp thành công rương cấp " + (currentChestLevel + 1) + " (" + chestSlots[currentChestLevel] + " ô)");
+
+            } else {
+                this.session.getAvatarService().serverDialog("Bạn không đủ xu hoặc lượng để nâng cấp rương!");
+            }
+        }
     }
 
 
