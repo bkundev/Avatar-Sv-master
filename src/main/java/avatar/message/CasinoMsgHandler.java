@@ -42,6 +42,8 @@ public class CasinoMsgHandler extends MessageHandler {
                     break;
                 case 8:
                     joinBoard(mss,this.client.user);
+                case 20:
+                    Start(mss);
                 default:
                     System.out.println("casino mess: " + mss.getCommand());
                     break;
@@ -72,11 +74,11 @@ public class CasinoMsgHandler extends MessageHandler {
         ms = new Message(Cmd.REQUEST_BOARDLIST);
         DataOutputStream ds = ms.writer();
         ds.writeByte(id);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 2; i++) {
             ds.writeByte(0+i);//board id
             ds.writeByte(80);//num3
-            ds.writeByte(0+i);//num4
-            ds.writeInt(0+i);//money
+            ds.writeByte(0);//num4
+            ds.writeInt(0);//money
         }
         ds.flush();
 
@@ -92,35 +94,67 @@ public class CasinoMsgHandler extends MessageHandler {
         ms = new Message(Cmd.JOIN_BOARD);
         DataOutputStream ds = ms.writer();
 
-        ds.writeByte(roomID); // Kiểm tra roomID
-        ds.writeByte(boardID); // Kiểm tra boardID
-        ds.writeInt(us.getId()); // Kiểm tra user ID
-        ds.writeInt(0); // money2 mặc định
+
+        ds.writeByte(roomID);
+        ds.writeByte(boardID);
+        ds.writeInt(us.getId()); // ID user hoặc ID bàn
+        ds.writeInt(0); // số tiền
 
         List<User> avatars = UserManager.users;
-
-        System.out.println("Số lượng avatars: " + avatars.size());
-        ds.writeByte(avatars.size());
+        //ds.writeByte(avatars.size()); // Số lượng avatars
 
         for (User avatar : avatars) {
-            System.out.println("Gửi thông tin avatar ID: " + avatar.getId() + ", Username: " + avatar.getUsername());
-            ds.writeInt(avatar.getId()); // IDDB
-            ds.writeUTF(avatar.getUsername()); // Tên
-            ds.writeInt(9999); // Số tiền
-            System.out.println("Số lượng phần mặc: " + avatar.getWearing().size());
-            ds.writeByte(avatar.getWearing().size()); // Số lượng phần
-            for (int j = 0; j < avatar.getWearing().size(); j++) {
-                short idItem = (short) avatar.getWearing().get(j).getId();
-                System.out.println("Gửi ID item: " + idItem);
-                ds.writeShort(idItem);
+            for (int i = 0; i < 5; i++)
+            {
+                if(i == 0)
+                {
+                    ds.writeInt(avatar.getId()); // IDDB
+                    ds.writeUTF(avatar.getUsername()); // Username
+                    ds.writeInt(0); // Số tiền
+
+                    ds.writeByte(avatar.getWearing().size()); // Số phần mặc
+                    for (Item item : avatar.getWearing()) {
+                        ds.writeShort(item.getId()); // ID item
+                    }
+
+                    ds.writeInt(10); // Kinh nghiệm
+                    ds.writeBoolean(false); // Trạng thái sẵn sàng
+                    ds.writeShort(avatar.getIdImg()); // ID hình ảnh
+                }else{
+                    ds.writeInt(0); // IDDB
+                    ds.writeUTF(""); // Username
+                    ds.writeInt(0); // Số tiền
+
+                    ds.writeByte(avatar.getWearing().size()); // Số phần mặc
+                    for (Item item : avatar.getWearing()) {
+                        ds.writeShort(item.getId()); // ID item
+                    }
+
+                    ds.writeInt(10); // Kinh nghiệm
+                    ds.writeBoolean(true); // Trạng thái sẵn sàng
+                    ds.writeShort(avatar.getIdImg()); // ID hình ảnh
+                }
             }
-            ds.writeInt(0); // Kinh nghiệm
-            ds.writeBoolean(false); // Trạng thái sẵn sàng
-            ds.writeShort(-1); // ID hình ảnh
         }
         ds.flush();
         this.client.user.sendMessage(ms);
 
     }
+
+    private void Start(Message ms) throws IOException {
+        byte roomID = ms.reader().readByte();
+        byte boardID = ms.reader().readByte();
+        ms = new Message(Cmd.START);
+        DataOutputStream ds = ms.writer();
+
+        ds.writeByte(roomID);
+        ds.writeByte(boardID);
+        ds.writeByte(10); // ID user hoặc ID bàn
+        ds.flush();
+        this.client.user.sendMessage(ms);
+
+    }
+
+
 
 }
