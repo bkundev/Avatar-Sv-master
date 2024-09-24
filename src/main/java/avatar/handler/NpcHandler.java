@@ -316,6 +316,17 @@ public class NpcHandler {
                     us.getAvatarService().openMenuOption(npcId, 0, lstVegeta);
                     break;
                 case NpcName.CHU_DAU_TU:
+                    List<Menu> chudautu = new ArrayList<>();
+                    Menu chuDautu = Menu.builder().name("Mua biệt thự").action(() -> {
+                        try {
+                            us.session.BuyHouse();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }).build();
+                    chudautu.add(chuDautu);
+                    us.setMenus(chudautu);
+                    us.getAvatarService().openMenuOption(npcId, 0, chudautu);
                     break;
 //                case NpcName.em_Thinh:{
 //                    List<Menu> listet = new ArrayList<>();

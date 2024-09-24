@@ -381,6 +381,7 @@ public class User {
                     this.expMain = res.getInt("exp_main");
                     this.gender = res.getByte("gender");
                     this.chestSlot = res.getByte("chest_slot");
+                    this.chestHomeSlot = res.getByte("chest_home_slot");
                     this.xu = res.getLong("xu");
                     this.luong = res.getInt("luong");
                     this.luongKhoa = res.getInt("luong_khoa");
@@ -655,13 +656,20 @@ public class User {
         }
     }
 
+    public boolean checkFullSlotChest(){
+        System.out.println("chestSlot: " + this.chestSlot);
+        System.out.println("chests.size(): " + this.chests.size());
+        if(this.getChestSlot() <= this.getChests().size())
+        {
+            getAvatarService().serverDialog("Rương đồ đã đầy");
+            return true;
+        }
+        return false;
+    }
+
     public void addItemToChests(Item item) {
         synchronized (chests) {
-            if(this.chestSlot <=this.chests.size()-1)
-            {
-                getAvatarService().serverDialog("Rương đồ đã đầy");
-                return;
-            }
+
             Item itm = findItemInChests(item.getId());
             if (itm != null) {
                 if (itm.getPart().getType() == -2) {
@@ -723,6 +731,13 @@ public class User {
         }
     }
 
+    public void removeItemFromChestsHome(Item item) {
+        synchronized (chestsHome) {
+            this.chestsHome.remove(item);
+        }
+    }
+
+
     public void addItemToWearing(Item item) {
         synchronized (wearing) {
             this.wearing.add(item);
@@ -751,6 +766,17 @@ public class User {
     public Item findItemInWearing(int id) {
         synchronized (wearing) {
             for (Item item : wearing) {
+                if (item.getId() == id) {
+                    return item;
+                }
+            }
+            return null;
+        }
+    }
+
+    public Item findItemInChestsHome(int id) {
+        synchronized (chestsHome) {
+            for (Item item : chestsHome) {
                 if (item.getId() == id) {
                     return item;
                 }

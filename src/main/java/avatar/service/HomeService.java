@@ -10,6 +10,8 @@ import avatar.item.Item;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import java.io.IOException;
 import java.io.DataOutputStream;
@@ -242,23 +244,77 @@ public class HomeService extends Service {
 
     public void onCustomChest(Message ms) throws IOException {
 
-        ms = new Message(Cmd.CUSTOM_CHEST); // Mã messenger cho onCustomChest
+        List<Item> lstChest = this.session.user.chests;
+
+        List<Item> lstChestHome = this.session.user.chestsHome;
+
+        ms = new Message(Cmd.CUSTOM_CHEST);
         DataOutputStream ds = ms.writer();
-        ds.writeInt(this.session.user.chests.size()); //
-        for (Item itm : this.session.user.chests) {
-            ds.writeShort((short) itm.getId());
+        ds.writeShort(lstChest.size());
+        for (Item item : lstChest) {
+            ds.writeShort(item.getId());
+            ds.writeByte(0);
+            ds.writeUTF("");
+        }
+        ds.writeInt(0);
+        ds.writeByte(1);
+
+        ds.writeShort(lstChestHome.size());
+        for (Item item : lstChestHome) {
+            ds.writeShort(item.getId());
+            ds.writeByte(0);
+            ds.writeUTF("");
         }
 
-        ds.writeInt(this.session.user.chests.size());
-        for (Item chestPart : this.session.user.chests) {
-            ds.writeShort((short) chestPart.getPart().getId());
-        }
-
-        ds.writeInt(0); // Ghi số tiền trên rương
-        ds.writeByte(1); // Ghi cấp độ của rương
         ds.flush();
-
         this.session.sendMessage(ms); // Gửi thông điệp tới client
+    }
+
+    public void transPartChest(Message ms) throws IOException {
+
+        byte i = ms.reader().readByte();// 0 chest to chesthome , 1 = chestHomeToChest
+        short ii = ms.reader().readShort();// index
+        short Itemid = ms.reader().readShort();
+
+
+
+        if(i == 0){
+            Item itm = this.session.user.findItemInChests(Itemid);
+            Boolean Slot = this.session.user.getChestHomeSlot() <= this.session.user.chestsHome.size() ? false : true;
+            if(Slot){
+                this.session.user.removeItemFromChests(itm);
+                this.session.user.addItemToChestsHome(itm);
+            }
+
+            ms = new Message(Cmd.TRANS_PART_CHEST);
+            DataOutputStream ds = ms.writer();
+            ds.writeBoolean(Slot);
+            ds.writeUTF("Rương đã đầy !");
+            ds.flush();
+            this.session.sendMessage(ms); // Gửi thông điệp tới client
+        }else{
+            Item itm = this.session.user.findItemInChestsHome(Itemid);
+            Boolean Slot = this.session.user.getChestSlot() <= this.session.user.chests.size() ? false : true;
+            if(Slot){
+                this.session.user.removeItemFromChestsHome(itm);
+                this.session.user.addItemToChests(itm);
+            }
+            ms = new Message(Cmd.TRANS_PART_CHEST);
+            DataOutputStream ds = ms.writer();
+            ds.writeBoolean(Slot);
+            ds.writeUTF("Rương đã đầy !");
+            ds.flush();
+            this.session.sendMessage(ms); // Gửi thông điệp tới client
+        }
+
+    }
+
+    public void upgradeChest(Message ms) throws IOException {
+
+        byte i = ms.reader().readByte();// 0 chest to chesthome , 1 = chestHomeToChest
+
+        short ii = ms.reader().readShort();
+
     }
 
 
@@ -274,4 +330,5 @@ public class HomeService extends Service {
             this.luong = luong;
         }
     }
+
 }

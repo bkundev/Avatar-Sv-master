@@ -861,10 +861,14 @@ public class Session implements ISession {
 
     public void buyItemShop(Message ms) {
         try {
+            if(this.user.checkFullSlotChest()) {
+                return;
+            }
+
             short partID = ms.reader().readShort();
             byte type = ms.reader().readByte();
             if (type < 1 || type > 2) {
-                this.user.getService().serverMessage("Có lỗi xảy ra, vui lòng liên hệ admin. Mã lỗi: buyItemShopWrongType");
+                this.user.getService().serverDialog("Có lỗi xảy ra, vui lòng liên hệ admin. Mã lỗi: buyItemShopWrongType");
                 return;
             }
             Part part = PartManager.getInstance().findPartByID(partID);
@@ -917,25 +921,12 @@ public class Session implements ISession {
                     user.removeItemFromWearing(w);
                     user.addItemToChests(w);
                 }
+
                 user.addItemToWearing(item);
                 user.removeItemFromChests(item);
                 user.sortWearing();
                 user.getMapService().usingPart(id, (short) item.getId());
-//                if(item.getPart().getZOrder() == 30){
-//                    Item item30 = user.findItemWearingByZOrder(30);
-//                    user.addItemToChests(item30);
-//                    user.addItemToChests(item);
-//                    user.getAvatarService().serverInfo("Mắt mua sẽ được thêm vào NPC SAITAMA để quản lý");
-//                }else if(item.getPart().getZOrder() == 40){
-//
-//                    Item item40 = user.findItemWearingByZOrder(40);
-//                    user.addItemToChests(item40);
-//                    user.addItemToChests(item);
-//                    user.getAvatarService().serverInfo("Mặt mua sẽ được thêm vào NPC SAITAMA để quản lý");
-//                }
-//                else{
-//                    user.addItemToChests(item);
-//                }
+
                 ms = new Message(-24);
                 DataOutputStream ds = ms.writer();
                 ds.writeShort(partID);
@@ -1454,6 +1445,51 @@ public class Session implements ISession {
             e.printStackTrace();
         }
     }
+
+    public void BuyHouse() throws IOException {
+
+        int userId = this.user.getId();
+        try (Connection connection = DbManager.getInstance().getConnection();) {
+            String GET_HOUSE_DATA = "SELECT * FROM `house_buy` WHERE `user_id` = ? LIMIT 1";
+            PreparedStatement ps = connection.prepareStatement(GET_HOUSE_DATA);
+            ps.setInt(1, userId);
+            ResultSet res = ps.executeQuery();
+
+            if (res.next()) {
+                this.user.session.avatarService.serverDialog("Bạn đã mua nhà rồi !");
+                return;
+            }
+            if(user.xu < 1000000)
+            {
+                this.user.session.avatarService.serverDialog("Bạn không đủ tiền để mua nhà !");
+            }
+
+            this.user.updateXu(-1000000);
+            this.user.getAvatarService().updateMoney(0);
+            // Nếu chưa mua, tiến hành chèn dữ liệu nhà mới
+            String INSERT_HOUSE_DATA = "INSERT INTO `house_buy` (user_id, type, map_data, date_expired) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement insertPs = connection.prepareStatement(INSERT_HOUSE_DATA)) {
+                insertPs.setInt(1, userId);
+                insertPs.setInt(2, 3); // `type`: thay đổi theo logic của bạn
+                insertPs.setString(3, "[39,39,39,39,34,35,35,35,35,35,35,34,35,35,35,34,35,35,35,35,35,35,34,39,39,39,39,39,39,39,39,39,38,25,25,25,25,25,25,36,27,27,27,36,25,25,25,25,25,25,37,39,39,39,39,39,39,39,39,39,38,26,26,26,26,26,26,36,28,28,28,36,26,26,26,26,26,26,37,39,39,39,39,39,39,39,39,39,38,14,14,14,14,14,14,36,3,3,3,36,14,14,14,14,14,14,37,39,39,39,39,39,39,39,39,39,38,14,14,14,14,14,14,25,3,3,3,25,14,14,14,14,14,14,37,39,39,39,39,39,39,39,39,39,38,14,14,14,14,14,14,26,3,3,3,26,14,14,14,14,14,14,37,39,39,39,39,39,39,39,39,39,38,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,37,39,39,39,39,39,39,39,39,39,25,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,37,39,39,39,39,39,34,35,35,35,25,35,35,35,35,35,35,38,14,14,14,14,14,14,14,14,14,14,25,39,39,39,39,39,38,27,27,27,36,23,23,23,23,23,23,36,0,0,35,35,35,35,35,35,35,35,25,35,35,35,35,34,38,28,28,28,36,24,24,24,24,24,24,36,0,0,23,23,23,23,23,23,23,23,36,23,23,23,23,36,38,17,17,17,25,9,9,18,9,9,9,25,0,0,24,24,24,24,24,24,24,24,36,24,24,24,24,36,38,17,17,17,26,9,9,9,9,9,9,26,0,0,9,9,9,9,9,9,9,9,36,9,9,9,9,36,38,17,17,17,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,25,9,9,9,9,36,38,17,17,17,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,26,9,9,9,9,36,35,35,35,35,35,35,35,35,35,35,35,38,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,36,23,23,23,23,23,23,23,23,23,23,23,38,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,36,24,24,24,24,24,24,24,24,24,24,24,35,35,35,35,9,9,9,9,35,35,35,35,35,35,35,35,35,39,39,39,39,39,39,39,39,39,39,39,24,24,24,24,40,40,40,40,24,24,24,24,24,24,24,24,24]"); // `map_data`
+                insertPs.setString(4, "2000-01-01"); // `date_expired`: bạn có thể thay đổi thành giá trị ngày tháng hợp lệ
+
+                int rowsInserted = insertPs.executeUpdate();
+                if (rowsInserted > 0) {
+                    this.user.session.avatarService.serverDialog("Bạn đã mua nhà thành công!");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+
+
 
     public void closeMessage() {
         if (this.isConnected()) {

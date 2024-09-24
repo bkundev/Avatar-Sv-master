@@ -53,7 +53,14 @@ public class HomeMsgHandler extends MessageHandler {
                     this.service.onCustomChest(mss);
                     break;
                 }
-
+                case Cmd.TRANS_PART_CHEST: {
+                    this.service.transPartChest(mss);
+                    break;
+                }
+                case Cmd.UPGRADE_CHEST: {
+                    this.service.upgradeChest(mss);
+                    break;
+                }
                 default:
                     System.out.println("HomeMsgHandler: " + mss.getCommand());
                     super.onMessage(mss);
