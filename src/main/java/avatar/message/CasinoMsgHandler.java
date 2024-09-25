@@ -110,6 +110,27 @@ public class CasinoMsgHandler extends MessageHandler {
 
         BoardInfo board = BoardManager.getInstance().find(boardID);
         BoardManager.getInstance().increaseMaxPlayer(boardID,us);
+        List<User> BoardUs = board.getLstUsers();
+//        if(BoardUs.size() > 1)
+//        {
+//            for (int i = 0; i < BoardUs.size(); i++) {
+//                Message ms1 = new Message(Cmd.SOMEONE_JOINBOARD);
+//                DataOutputStream ds1 = ms1.writer();
+//                ds1.writeByte(1);//seat // vi tri
+//                ds1.writeInt(us.getId());//seat // vi tri
+//                ds1.writeUTF(us.getUsername());//seat // vi tri
+//                ds1.writeInt(10000);// tien
+//
+//                ds1.writeByte(us.getWearing().size()); // Số phần mặc
+//                for (Item item : us.getWearing()) {
+//                    ds1.writeShort(item.getId()); // ID item
+//                }
+//                ds1.writeInt(10000);// tien
+//                ds1.writeInt(1);// tien
+//                ds1.flush();
+//                BoardUs.get(i).session.sendMessage(ms1);
+//            }
+//        }
 
         ms = new Message(Cmd.JOIN_BOARD);
         DataOutputStream ds = ms.writer();
@@ -120,16 +141,14 @@ public class CasinoMsgHandler extends MessageHandler {
         ds.writeInt(us.getId()); // ID user
         ds.writeInt(0); // số tiền
 
-        List<User> BoardUs = board.getLstUsers();
-
-        for (int i = 0; i < BoardUs.size(); i++)
+        for (int i = 0; i < BoardUs.size() ; i++)
         {
-            if(BoardUs.get(i).getId() > 0)
-            {
+
                 ds.writeInt(BoardUs.get(i).getId()); // IDDB
                 ds.writeUTF(BoardUs.get(i).getUsername()); // Username
                 ds.writeInt(0); // Số tiền
-
+                System.out.println("Đang gửi ID người dùng: " + us.getId());
+                System.out.println("Đang gửi room ID: " + roomID + ", board ID: " + boardID);
                 ds.writeByte(BoardUs.get(i).getWearing().size()); // Số phần mặc
                 for (Item item : BoardUs.get(i).getWearing()) {
                     ds.writeShort(item.getId()); // ID item
@@ -138,7 +157,6 @@ public class CasinoMsgHandler extends MessageHandler {
                 ds.writeInt(10); // Kinh nghiệm
                 ds.writeBoolean(false); // Trạng thái sẵn sàng
                 ds.writeShort(BoardUs.get(i).getIdImg()); // ID hình ảnh
-            }
         }
         for (int i = BoardUs.size(); i < 5; i++) {
             ds.writeInt(-1); // IDDB placeholder for empty slots
