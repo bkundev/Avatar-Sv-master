@@ -49,6 +49,9 @@ public class CasinoMsgHandler extends MessageHandler {
                 case 8:
                     joinBoard(mss,this.client.user);
                     break;
+                case 15:
+                    leaveBoard(mss,this.client.user);
+                    break;
                 case 20:
                     Start(mss);
                     break;
@@ -118,12 +121,8 @@ public class CasinoMsgHandler extends MessageHandler {
         ds.writeInt(0); // số tiền
 
         List<User> BoardUs = board.getLstUsers();
-        for (int i = BoardUs.size(); i < 5; i++) {
-            User newUser = new User();
-            BoardUs.add(newUser);
-        }
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < BoardUs.size(); i++)
         {
             if(BoardUs.get(i).getId() > 0)
             {
@@ -139,12 +138,29 @@ public class CasinoMsgHandler extends MessageHandler {
                 ds.writeInt(10); // Kinh nghiệm
                 ds.writeBoolean(false); // Trạng thái sẵn sàng
                 ds.writeShort(BoardUs.get(i).getIdImg()); // ID hình ảnh
-            }else{
-                ds.writeInt(-1); // IDDB
             }
         }
+        for (int i = BoardUs.size(); i < 5; i++) {
+            ds.writeInt(-1); // IDDB placeholder for empty slots
+        }
+
         ds.flush();
         this.client.user.sendMessage(ms);
+    }
+
+    private void leaveBoard(Message ms, User us) throws IOException {//ms 8
+        byte roomID = ms.reader().readByte();
+
+        byte boardID = ms.reader().readByte();
+
+        BoardInfo board = BoardManager.getInstance().find(boardID);
+        board.nPlayer--;
+//        ms = new Message(Cmd.LEAVE_BOARD);
+//        DataOutputStream ds = ms.writer();
+//
+//
+//        ds.flush();
+//        this.client.user.sendMessage(ms);
     }
 
     private void Start(Message ms) throws IOException {//20
