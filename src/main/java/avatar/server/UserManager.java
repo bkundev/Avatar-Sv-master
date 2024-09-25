@@ -23,6 +23,7 @@ public class UserManager {
     }
     
     public static final List<User> users = new LinkedList<>();
+
     public void add(User us) {
         synchronized(users) {
             users.add(us);

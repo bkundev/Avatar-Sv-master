@@ -113,6 +113,7 @@ public class User {
     @Setter
     private List<BossShopItem> bossShopItems;
     private List<Part> ShopEvent;
+    private List<Byte> boardIDs;
 
     public User() {
         this.role = -1;
@@ -123,8 +124,8 @@ public class User {
         this.isDefeated = false;
         this.isSpam = false;
         this.dameToXu = 0;
+        this.boardIDs = new ArrayList<>();
     }
-
 
     public void calculateDameToXu() {
         int totalDamage = 30;

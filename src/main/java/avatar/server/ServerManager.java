@@ -122,7 +122,7 @@ public class ServerManager {
         System.out.println("Reset player online ...");
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `is_online` = 0, `client_id` = -1");
         System.out.println("Reset player online successfully");
-
+        BoardManager.getInstance().initBoards();
 
     }
 

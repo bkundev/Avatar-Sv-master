@@ -356,6 +356,8 @@ public class AvatarService extends Service {
         byte idSelectedMini = ms.reader().readByte();
         short idJoin = ms.reader().readShort();
 
+        this.session.user.getZone().leave(this.session.user);
+
         ms = new Message(Cmd.JOIN_ONGAME_MINI);
         DataOutputStream ds = ms.writer();
 //        ds.writeByte(1);
