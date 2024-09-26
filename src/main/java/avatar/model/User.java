@@ -33,6 +33,7 @@ import avatar.server.UserManager;
 import avatar.server.Utils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
@@ -125,6 +126,10 @@ public class User {
         this.isSpam = false;
         this.dameToXu = 0;
         this.boardIDs = new ArrayList<>();
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); // Sử dụng 'id' nếu đó là tên thuộc tính
     }
 
     public void calculateDameToXu() {

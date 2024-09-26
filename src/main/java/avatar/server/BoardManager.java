@@ -3,10 +3,7 @@ import avatar.message.CasinoMsgHandler;
 import avatar.model.BoardInfo;
 import avatar.model.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 public class BoardManager {
@@ -18,6 +15,8 @@ public class BoardManager {
     }
 
     public static final List<BoardInfo> boardList = new ArrayList<>();
+
+    public static final List<User> users = new LinkedList<>();
 
     public BoardManager() {
     }
@@ -33,17 +32,26 @@ public class BoardManager {
         }
         return null; // Trả về null nếu không tìm thấy
     }
-
-    public void increaseMaxPlayer(int id,User user) {
+    public void increaseMaxPlayer(int id, User user) {
         synchronized (this) {
             for (BoardInfo board : boardList) {
                 if (board.boardID == id) {
-                   board.nPlayer += 1;
-                   board.lstUsers.add(user);
+                    boolean userExists = false;
+                    for (User existingUser : board.lstUsers) {
+                        if (existingUser.getId() == user.getId()) {
+                            userExists = true;
+                            break;
+                        }
+                    }
+                    if (!userExists) {
+                        board.nPlayer += 1;
+                        board.lstUsers.add(user);
+                    }
                 }
             }
         }
     }
+
 
     public void initBoards() {
         for (int i = 0; i < 2; i++) {
@@ -58,6 +66,14 @@ public class BoardManager {
             boardList.add(board);
             System.out.println("create board : " + board.boardID);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true; // Kiểm tra nếu đối tượng so sánh chính là đối tượng hiện tại
+        if (o == null || getClass() != o.getClass()) return false; // Kiểm tra nếu đối tượng null hoặc khác lớp
+        User user = (User) o; // Ép kiểu Object sang User
+        return user.getId() == user.getId(); // So sánh ID của hai đối tượng
     }
 
 }

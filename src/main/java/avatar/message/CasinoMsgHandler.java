@@ -40,20 +40,23 @@ public class CasinoMsgHandler extends MessageHandler {
                 case 61:
                     service.joinCasino(mss);
                     break;
-                case 6:
+                case Cmd.REQUEST_ROOMLIST:
                     requestRoomList();
                     break;
-                case 7:
+                case Cmd.REQUEST_BOARDLIST:
                     BoardList(mss);
                     break;
-                case 8:
+                case Cmd.JOIN_BOARD:
                     joinBoard(mss,this.client.user);
                     break;
-                case 15:
+                case Cmd.LEAVE_BOARD:
                     leaveBoard(mss,this.client.user);
                     break;
-                case 20:
+                case Cmd.START:
                     Start(mss);
+                    break;
+                case Cmd.READY:
+                    Ready(mss,this.client.user);
                     break;
                 default:
                     System.out.println("casino mess: " + mss.getCommand());
@@ -109,28 +112,32 @@ public class CasinoMsgHandler extends MessageHandler {
         String pass = ms.reader().readUTF();
 
         BoardInfo board = BoardManager.getInstance().find(boardID);
+
         BoardManager.getInstance().increaseMaxPlayer(boardID,us);
         List<User> BoardUs = board.getLstUsers();
-//        if(BoardUs.size() > 1)
-//        {
-//            for (int i = 0; i < BoardUs.size(); i++) {
-//                Message ms1 = new Message(Cmd.SOMEONE_JOINBOARD);
-//                DataOutputStream ds1 = ms1.writer();
-//                ds1.writeByte(1);//seat // vi tri
-//                ds1.writeInt(us.getId());//seat // vi tri
-//                ds1.writeUTF(us.getUsername());//seat // vi tri
-//                ds1.writeInt(10000);// tien
-//
-//                ds1.writeByte(us.getWearing().size()); // Số phần mặc
-//                for (Item item : us.getWearing()) {
-//                    ds1.writeShort(item.getId()); // ID item
-//                }
-//                ds1.writeInt(10000);// tien
-//                ds1.writeInt(1);// tien
-//                ds1.flush();
-//                BoardUs.get(i).session.sendMessage(ms1);
-//            }
-//        }
+
+
+        if(BoardUs.size() > 1)
+        {
+            for (int i = 0; i < BoardUs.size(); i++) {
+                Message ms1 = new Message(Cmd.SOMEONE_JOINBOARD);
+                DataOutputStream ds1 = ms1.writer();
+                ds1.writeByte(1);//seat // vi tri
+                ds1.writeInt(us.getId());//seat // vi tri
+                ds1.writeUTF(us.getUsername());//seat // vi tri
+                ds1.writeInt(10000);// tien
+
+                ds1.writeByte(us.getWearing().size()); // Số phần mặc
+                for (Item item : us.getWearing()) {
+                    ds1.writeShort(item.getId()); // ID item
+                }
+                ds1.writeInt(10000);// tien
+                ds1.writeInt(1);// tien
+                ds1.flush();
+                BoardUs.get(i).session.sendMessage(ms1);
+            }
+        }
+
 
         ms = new Message(Cmd.JOIN_BOARD);
         DataOutputStream ds = ms.writer();
@@ -138,26 +145,26 @@ public class CasinoMsgHandler extends MessageHandler {
 
         ds.writeByte(roomID);
         ds.writeByte(boardID);
-        ds.writeInt(us.getId()); // ID user
+        ds.writeInt(BoardUs.get(0).getId()); // ID user
         ds.writeInt(0); // số tiền
 
-        for (int i = 0; i < BoardUs.size() ; i++)
-        {
 
-                ds.writeInt(BoardUs.get(i).getId()); // IDDB
-                ds.writeUTF(BoardUs.get(i).getUsername()); // Username
-                ds.writeInt(0); // Số tiền
-                System.out.println("Đang gửi ID người dùng: " + us.getId());
-                System.out.println("Đang gửi room ID: " + roomID + ", board ID: " + boardID);
-                ds.writeByte(BoardUs.get(i).getWearing().size()); // Số phần mặc
-                for (Item item : BoardUs.get(i).getWearing()) {
-                    ds.writeShort(item.getId()); // ID item
-                }
+        for (User user : BoardUs) {
+            System.out.println("User ID: " + user.getId() + ", HashCode: " + user.hashCode());
+            ds.writeInt(user.getId()); // IDDB
+            ds.writeUTF(user.getUsername()); // Username
+            ds.writeInt(0); // Số tiền
+            System.out.println("Đang xử lý người dùng  ID: " + user.getId());
+            ds.writeByte(user.getWearing().size()); // Số phần mặc
+            for (Item item : user.getWearing()) {
+                ds.writeShort(item.getId()); // ID item
+            }
 
-                ds.writeInt(10); // Kinh nghiệm
-                ds.writeBoolean(false); // Trạng thái sẵn sàng
-                ds.writeShort(BoardUs.get(i).getIdImg()); // ID hình ảnh
+            ds.writeInt(10); // Kinh nghiệm
+            ds.writeBoolean(false); // Trạng thái sẵn sàng
+            ds.writeShort(user.getIdImg()); // ID hình ảnh
         }
+
         for (int i = BoardUs.size(); i < 5; i++) {
             ds.writeInt(-1); // IDDB placeholder for empty slots
         }
@@ -193,6 +200,25 @@ public class CasinoMsgHandler extends MessageHandler {
         ds.flush();
         this.client.user.sendMessage(ms);
 
+    }
+    private void Ready(Message ms,User us) throws IOException {//ms 6
+        byte roomID = ms.reader().readByte();
+        byte boardID = ms.reader().readByte();
+        Boolean isReady = ms.reader().readBoolean();
+
+        BoardInfo board = BoardManager.getInstance().find(boardID);
+        List<User> BoardUs = board.getLstUsers();
+
+        ms = new Message(Cmd.READY);
+        DataOutputStream ds = ms.writer();
+
+        ds.writeInt(us.getId());
+        ds.writeBoolean(isReady);
+        ds.flush();
+        for(User u : BoardUs)
+        {
+            u.sendMessage(ms);
+        }
     }
 
 }
