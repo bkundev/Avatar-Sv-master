@@ -70,6 +70,9 @@ public class CasinoMsgHandler extends MessageHandler {
                 case 65:
                     haPhom(mss,this.client.user);
                     break;
+                case 49:
+                    Skip(mss,this.client.user);
+                    break;
                 default:
                     System.out.println("casino mess: " + mss.getCommand());
                     break;
@@ -334,7 +337,7 @@ public class CasinoMsgHandler extends MessageHandler {
             user.getSession().sendMessage(ms2);
         }
 
-        Thread.sleep(3000);
+        Thread.sleep(2500);
         Message ms3 = new Message(Cmd.FINISH);
         DataOutputStream ds3 = ms3.writer();
         ds3.writeByte(roomID);
@@ -347,6 +350,13 @@ public class CasinoMsgHandler extends MessageHandler {
         for (User user : BoardUs) {
             user.getSession().sendMessage(ms3);
         }
+    }
+
+    private void Skip(Message ms,User us) throws IOException, InterruptedException {//ms 6
+        byte roomID = ms.reader().readByte();
+        byte boardID = ms.reader().readByte();
+        ms = new Message(49);
+        us.sendMessage(ms);
     }
 
 }
