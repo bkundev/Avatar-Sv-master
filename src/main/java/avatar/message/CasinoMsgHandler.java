@@ -43,6 +43,11 @@ public class CasinoMsgHandler extends MessageHandler {
                 case Cmd.REQUEST_ROOMLIST:
                     requestRoomList();
                     break;
+                case Cmd.GET_IMG_ICON: {
+                    if (this.client.user != null) {
+                        this.client.doGetImgIcon(mss);
+                        break;
+                    }}
                 case Cmd.REQUEST_BOARDLIST:
                     BoardList(mss);
                     break;
@@ -57,6 +62,12 @@ public class CasinoMsgHandler extends MessageHandler {
                     break;
                 case Cmd.READY:
                     Ready(mss,this.client.user);
+                    break;
+                case Cmd.TO_XONG:
+                    toXong(mss,this.client.user);
+                    break;
+                case 65:
+                    haPhom(mss,this.client.user);
                     break;
                 default:
                     System.out.println("casino mess: " + mss.getCommand());
@@ -191,6 +202,10 @@ public class CasinoMsgHandler extends MessageHandler {
     private void Start(Message ms) throws IOException {//20
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
+
+        BoardInfo board = BoardManager.getInstance().find(boardID);
+        List<User> BoardUs = board.getLstUsers();
+
         ms = new Message(Cmd.START);
         DataOutputStream ds = ms.writer();
 
@@ -198,8 +213,10 @@ public class CasinoMsgHandler extends MessageHandler {
         ds.writeByte(boardID);
         ds.writeByte(10); // ID user hoặc ID bàn
         ds.flush();
-        this.client.user.sendMessage(ms);
 
+        for (User user : BoardUs) {
+            user.session.sendMessage(ms);
+        }
     }
     private void Ready(Message ms,User us) throws IOException {//ms 6
         byte roomID = ms.reader().readByte();
@@ -215,9 +232,73 @@ public class CasinoMsgHandler extends MessageHandler {
         ds.writeInt(us.getId());
         ds.writeBoolean(isReady);
         ds.flush();
+
         for(User u : BoardUs)
         {
-            u.sendMessage(ms);
+            u.session.sendMessage(ms);
+        }
+    }
+
+    private void toXong(Message ms,User us) throws IOException {//ms 6
+        byte roomID = ms.reader().readByte();
+        byte boardID = ms.reader().readByte();
+
+        BoardInfo board = BoardManager.getInstance().find(boardID);
+        List<User> BoardUs = board.getLstUsers();
+
+        List<Byte> moneyPutList = new ArrayList<>();
+
+        while (ms.reader().available() > 0) {
+            byte moneyPut = ms.reader().readByte();
+            moneyPutList.add(moneyPut);
+        }
+
+        ms = new Message(Cmd.TO_XONG);
+        DataOutputStream ds = ms.writer();
+        ds.writeByte(roomID);
+        ds.writeByte(boardID);
+        ds.writeByte(1);
+        for (Byte moneyPut : moneyPutList) {
+            ds.writeByte(moneyPut);
+        }
+        ds.flush();
+        for (User user : BoardUs) {
+            user.getSession().sendMessage(ms);
+        }
+
+        Message ms1 = new Message(Cmd.SET_TURN);
+        DataOutputStream ds1 = ms1.writer();
+        ds1.writeByte(roomID);
+        ds1.writeByte(boardID);
+        int index = BoardUs.indexOf(us);
+        ds1.writeByte(index);
+        ds1.flush();
+        for (User user : BoardUs) {
+            user.getSession().sendMessage(ms1);
+        }
+    }
+
+    private void haPhom(Message ms,User us) throws IOException {//ms 6
+        byte roomID = ms.reader().readByte();
+        byte boardID = ms.reader().readByte();
+        byte indexFrom = ms.reader().readByte();
+        byte indexTo = ms.reader().readByte();
+
+        BoardInfo board1 = BoardManager.getInstance().find(boardID);
+        List<User> BoardUs = board1.getLstUsers();
+
+        ms = new Message(Cmd.HA_PHOM);
+        DataOutputStream ds = ms.writer();
+        ds.writeByte(roomID);
+        ds.writeByte(boardID);
+        int index = BoardUs.indexOf(us);
+        ds.writeByte(1);
+        ds.writeByte(4);
+        ds.writeByte(indexFrom);
+        ds.writeByte(indexTo);
+        ds.flush();
+        for (User user : BoardUs) {
+            user.getSession().sendMessage(ms);
         }
     }
 
