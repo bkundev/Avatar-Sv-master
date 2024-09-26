@@ -18,6 +18,7 @@ import avatar.network.Session;
 import avatar.server.BoardManager;
 import avatar.server.ServerManager;
 import avatar.server.UserManager;
+import avatar.server.Utils;
 import avatar.service.FarmService;
 import avatar.constants.Cmd;
 
@@ -218,7 +219,7 @@ public class CasinoMsgHandler extends MessageHandler {
             user.session.sendMessage(ms);
         }
     }
-    private void Ready(Message ms,User us) throws IOException {//ms 6
+    private void Ready(Message ms,User us) throws IOException {//ms 20
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
         Boolean isReady = ms.reader().readBoolean();
@@ -239,19 +240,23 @@ public class CasinoMsgHandler extends MessageHandler {
         }
     }
 
-    private void toXong(Message ms,User us) throws IOException {//ms 6
+    private void toXong(Message ms,User us) throws IOException {//ms 21
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
 
         BoardInfo board = BoardManager.getInstance().find(boardID);
         List<User> BoardUs = board.getLstUsers();
-
         List<Byte> moneyPutList = new ArrayList<>();
 
         while (ms.reader().available() > 0) {
             byte moneyPut = ms.reader().readByte();
             moneyPutList.add(moneyPut);
         }
+        if(us.getMoneyPutList()!=null){
+            us.getMoneyPutList().clear();
+        }
+
+        us.setMoneyPutList(moneyPutList);
 
         ms = new Message(Cmd.TO_XONG);
         DataOutputStream ds = ms.writer();
@@ -278,7 +283,7 @@ public class CasinoMsgHandler extends MessageHandler {
         }
     }
 
-    private void haPhom(Message ms,User us) throws IOException {//ms 6
+    private void haPhom(Message ms,User us) throws IOException, InterruptedException {//ms 6
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
         byte indexFrom = ms.reader().readByte();
@@ -291,14 +296,56 @@ public class CasinoMsgHandler extends MessageHandler {
         DataOutputStream ds = ms.writer();
         ds.writeByte(roomID);
         ds.writeByte(boardID);
-        int index = BoardUs.indexOf(us);
-        ds.writeByte(1);
-        ds.writeByte(4);
-        ds.writeByte(indexFrom);
-        ds.writeByte(indexTo);
+
+        ds.writeByte(1);// tả
+        ds.writeByte(indexFrom);// vị trí bắt đầu cược
+        ds.writeByte(indexTo);//vị trí tả
+        ds.writeByte(0);// số lượng đặt
         ds.flush();
         for (User user : BoardUs) {
             user.getSession().sendMessage(ms);
+        }
+
+        Message ms1 = new Message(Cmd.GAME_RESULT);
+
+        DataOutputStream ds1 = ms1.writer();
+        ds1.writeByte(roomID);
+        ds1.writeByte(boardID);
+
+        for (int i = 0; i < 3; i++) {
+            int xn = Utils.nextInt(5);
+            ds1.writeByte(xn);
+        }
+
+        ds1.flush();
+        for (User user : BoardUs) {
+            user.getSession().sendMessage(ms1);
+        }
+
+        Message ms2 = new Message(Cmd.WIN);
+        DataOutputStream ds2 = ms2.writer();
+        ds2.writeByte(roomID);
+        ds2.writeByte(boardID);
+        ds2.writeByte(1);
+        ds2.writeByte(0);
+        ds2.writeByte(999);//money
+        ds2.flush();
+        for (User user : BoardUs) {
+            user.getSession().sendMessage(ms2);
+        }
+
+        Thread.sleep(3000);
+        Message ms3 = new Message(Cmd.FINISH);
+        DataOutputStream ds3 = ms3.writer();
+        ds3.writeByte(roomID);
+        ds3.writeByte(boardID);
+        for (int i = 0; i < 5; i++)
+        {
+            ds3.writeInt(0);
+        }
+        ds3.flush();
+        for (User user : BoardUs) {
+            user.getSession().sendMessage(ms3);
         }
     }
 

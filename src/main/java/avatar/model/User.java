@@ -96,7 +96,7 @@ public class User {
     public List<Item> chestsHome;
 
 
-
+    List<Byte> moneyPutList;
 
     private Zone zone;
     private short x, y;
