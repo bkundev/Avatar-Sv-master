@@ -355,8 +355,48 @@ public class CasinoMsgHandler extends MessageHandler {
     private void Skip(Message ms,User us) throws IOException, InterruptedException {//ms 6
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
-        ms = new Message(49);
+
+        ms = new Message(Cmd.HA_PHOM);
+        DataOutputStream ds = ms.writer();
+        ds.writeByte(roomID);
+        ds.writeByte(boardID);
+
+
+        BoardInfo board1 = BoardManager.getInstance().find(boardID);
+        List<User> BoardUs = board1.getLstUsers();
+        ds.writeByte(1);// tả
+        ds.writeByte(1);// vị trí bắt đầu cược
+        ds.writeByte(1);//vị trí tả
+        ds.writeByte(0);// số lượng đặt
+        ds.flush();
+        for (User user : BoardUs) {
+            user.getSession().sendMessage(ms);
+        }
         us.sendMessage(ms);
+        Message ms2 = new Message(Cmd.WIN);
+        DataOutputStream ds2 = ms2.writer();
+        ds2.writeByte(roomID);
+        ds2.writeByte(boardID);
+        ds2.writeByte(1);
+        ds2.writeByte(0);
+        ds2.writeByte(999);//money
+        ds2.flush();
+        for (User user : BoardUs) {
+            user.getSession().sendMessage(ms2);
+        }
+
+        Message ms3 = new Message(Cmd.FINISH);
+        DataOutputStream ds3 = ms3.writer();
+        ds3.writeByte(roomID);
+        ds3.writeByte(boardID);
+        for (int i = 0; i < 5; i++)
+        {
+            ds3.writeInt(0);
+        }
+        ds3.flush();
+        for (User user : BoardUs) {
+            user.getSession().sendMessage(ms3);
+        }
     }
 
 }
