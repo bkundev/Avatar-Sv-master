@@ -24,6 +24,7 @@ import avatar.service.FarmService;
 import avatar.constants.Cmd;
 
 import static avatar.server.BoardManager.boardList;
+import static avatar.server.BoardManager.users;
 
 public class CasinoMsgHandler extends MessageHandler {
     private BauCuaMsgHandler service;
@@ -287,17 +288,17 @@ public class CasinoMsgHandler extends MessageHandler {
             }
         }
 
-        for (User user : BoardUs) {
-            Message ms1 = new Message(Cmd.SET_TURN);
-            DataOutputStream ds1 = ms1.writer();
-            ds1.writeByte(roomID);
-            ds1.writeByte(boardID);
-            int index = BoardUs.indexOf(us);
-            ds1.writeByte(index);
-            ds1.flush();
-            user.getSession().sendMessage(ms1);
-            user.setHaPhom(true);
-        }
+        User user1 = board.getLstUsers().get(1);
+        System.out.println("turn for "+user1.getUsername());
+        Message ms1 = new Message(Cmd.SET_TURN);
+        DataOutputStream ds1 = ms1.writer();
+        ds1.writeByte(roomID);
+        ds1.writeByte(boardID);
+        int index = BoardUs.indexOf(user1);
+        ds1.writeByte(index);
+        ds1.flush();
+        user1.getSession().sendMessage(ms1);
+        user1.setHaPhom(true);
     }
 
 
@@ -323,12 +324,16 @@ public class CasinoMsgHandler extends MessageHandler {
         ds.writeByte(indexTo);
         ds.writeByte(6);// list + list from to
         ds.flush();
+
+        System.out.println("da ta xong nguoi 1");
         for (User user : BoardUs) {
             user.getSession().sendMessage(ms);
         }
 
+
         for (User user : BoardUs) {
             if (!user.isHaPhom()) { // Nếu có người chơi chưa hạ phỏm
+                System.out.println("co nguoi chua ta xong dang gui luot ta");
                 Message ms1 = new Message(Cmd.SET_TURN);
                 DataOutputStream ds1 = ms1.writer();
                 ds1.writeByte(roomID);
@@ -342,6 +347,12 @@ public class CasinoMsgHandler extends MessageHandler {
             }
         }
 
+
+        for (User user : BoardUs) {
+            if (!user.isHaPhom()) { // Nếu có người chơi chưa hạ phỏm
+                return;
+            }
+        }
         Message ms1 = new Message(Cmd.GAME_RESULT);
 
         DataOutputStream ds1 = ms1.writer();
@@ -378,7 +389,7 @@ public class CasinoMsgHandler extends MessageHandler {
         ds3.writeByte(boardID);
         for (int i = 0; i < 5; i++)
         {
-            ds3.writeInt(0);
+            ds3.writeInt(99999);
         }
         ds3.flush();
 
@@ -394,18 +405,26 @@ public class CasinoMsgHandler extends MessageHandler {
 
 
     private void Skip(Message ms,User us) throws IOException, InterruptedException {//ms 6
+
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
-        Message ms3 = new Message(Cmd.FINISH);
-        DataOutputStream ds3 = ms3.writer();
-        ds3.writeByte(roomID);
-        ds3.writeByte(boardID);
-        for (int i = 0; i < 5; i++)
-        {
-            ds3.writeInt(0);// tieen xong van
+        us.getService().serverDialog("skip dang xay dung");
+        BoardInfo board1 = BoardManager.getInstance().find(boardID);
+        List<User> BoardUs = board1.getLstUsers();
+
+
+        for (User user : BoardUs) {
+            Message ms3 = new Message(Cmd.FINISH);
+            DataOutputStream ds3 = ms3.writer();
+            ds3.writeByte(roomID);
+            ds3.writeByte(boardID);
+            for (int i = 0; i < 5; i++)
+            {
+                ds3.writeInt(0);// tieen xong van
+            }
+            ds3.flush();
+            user.getService().sendMessage(ms3);
         }
-        ds3.flush();
-        this.client.user.sendMessage(ms3);
     }
 
 }
