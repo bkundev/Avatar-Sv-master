@@ -118,6 +118,7 @@ public class User {
     private List<Byte> boardIDs;
     List<Byte> moneyPutList;
     private boolean isToXong = false;
+    private boolean isHaPhom = false;
     public User() {
         this.role = -1;
         this.chests = new ArrayList<>();
@@ -135,6 +136,15 @@ public class User {
         return Objects.hash(id); // Sử dụng 'id' nếu đó là tên thuộc tính
     }
 
+
+    public boolean isHaPhom() {
+        return isHaPhom;
+    }
+
+    public void setHaPhom(boolean isHaPhom) {
+        this.isHaPhom = isHaPhom;
+    }
+
     public boolean isToXong() {
         return isToXong;
     }
@@ -142,6 +152,8 @@ public class User {
     public void setToXong(boolean isToXong) {
         this.isToXong = isToXong;
     }
+
+
     public List<Byte> getMoneyPutList() {
         return this.moneyPutList;
     }
@@ -152,6 +164,7 @@ public class User {
         this.moneyPutList.clear(); // Xóa danh sách cũ (nếu cần)
         this.moneyPutList.addAll(newMoneyPutList); // Thêm các phần tử mới
     }
+
     public synchronized void updateMoneyPutListByIndex(byte indexFrom, byte indexTo) {
         if (this.moneyPutList != null && this.moneyPutList.size() > 0) {
             // Kiểm tra xem indexFrom và indexTo có hợp lệ trong danh sách không
