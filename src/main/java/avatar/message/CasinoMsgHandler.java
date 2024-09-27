@@ -263,7 +263,6 @@ public class CasinoMsgHandler extends MessageHandler {
             while (ms.reader().available() > 0) {
                 byte moneyPut = ms.reader().readByte();
                 moneyPutList.add(moneyPut);
-                System.out.println(us.getUsername() + " " + moneyPut);
             }
             ms = new Message(Cmd.TO_XONG);
             DataOutputStream ds = ms.writer();
@@ -288,17 +287,18 @@ public class CasinoMsgHandler extends MessageHandler {
             }
         }
 
-        User user1 = board.getLstUsers().get(1);
-        System.out.println("turn for "+user1.getUsername());
-        Message ms1 = new Message(Cmd.SET_TURN);
-        DataOutputStream ds1 = ms1.writer();
-        ds1.writeByte(roomID);
-        ds1.writeByte(boardID);
-        int index = BoardUs.indexOf(user1);
-        ds1.writeByte(index);
-        ds1.flush();
-        user1.getSession().sendMessage(ms1);
-        user1.setHaPhom(true);
+        for (User user : BoardUs) {
+            System.out.println("turn for "+user.getUsername());
+            Message ms1 = new Message(Cmd.SET_TURN);
+            DataOutputStream ds1 = ms1.writer();
+            ds1.writeByte(roomID);
+            ds1.writeByte(boardID);
+            int index = BoardUs.indexOf(user);
+            ds1.writeByte(index);
+            ds1.flush();
+            user.getSession().sendMessage(ms1);
+            user.setHaPhom(true);
+        }
     }
 
 
@@ -395,9 +395,6 @@ public class CasinoMsgHandler extends MessageHandler {
 
         for (User user : BoardUs) {
             user.getSession().sendMessage(ms3);
-        }
-
-        for (User user : BoardUs) {
             user.setHaPhom(false);
             us.setToXong(false);
         }
@@ -424,6 +421,8 @@ public class CasinoMsgHandler extends MessageHandler {
             }
             ds3.flush();
             user.getService().sendMessage(ms3);
+            user.setHaPhom(false);
+            us.setToXong(false);
         }
     }
 
