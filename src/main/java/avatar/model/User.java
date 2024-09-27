@@ -96,7 +96,6 @@ public class User {
     public List<Item> chestsHome;
 
 
-    List<Byte> moneyPutList;
 
     private Zone zone;
     private short x, y;
@@ -114,8 +113,11 @@ public class User {
     @Setter
     private List<BossShopItem> bossShopItems;
     private List<Part> ShopEvent;
-    private List<Byte> boardIDs;
 
+
+    private List<Byte> boardIDs;
+    List<Byte> moneyPutList;
+    private boolean isToXong = false;
     public User() {
         this.role = -1;
         this.chests = new ArrayList<>();
@@ -126,10 +128,46 @@ public class User {
         this.isSpam = false;
         this.dameToXu = 0;
         this.boardIDs = new ArrayList<>();
+        this.moneyPutList = new ArrayList<>();
     }
     @Override
     public int hashCode() {
         return Objects.hash(id); // Sử dụng 'id' nếu đó là tên thuộc tính
+    }
+
+    public boolean isToXong() {
+        return isToXong;
+    }
+
+    public void setToXong(boolean isToXong) {
+        this.isToXong = isToXong;
+    }
+    public List<Byte> getMoneyPutList() {
+        return this.moneyPutList;
+    }
+    public synchronized void updateMoneyPutList(List<Byte> newMoneyPutList) {
+        if (this.moneyPutList == null) {
+            this.moneyPutList = new ArrayList<>(); // Khởi tạo danh sách nếu chưa có
+        }
+        this.moneyPutList.clear(); // Xóa danh sách cũ (nếu cần)
+        this.moneyPutList.addAll(newMoneyPutList); // Thêm các phần tử mới
+    }
+    public synchronized void updateMoneyPutListByIndex(byte indexFrom, byte indexTo) {
+        if (this.moneyPutList != null && this.moneyPutList.size() > 0) {
+            // Kiểm tra xem indexFrom và indexTo có hợp lệ trong danh sách không
+            if (indexFrom >= 0 && indexFrom < this.moneyPutList.size() &&
+                    indexTo >= 0 && indexTo < this.moneyPutList.size()) {
+
+                // Lấy giá trị tại vị trí indexFrom
+                Byte valueToMove = this.moneyPutList.get(indexFrom);
+
+                // Xóa phần tử tại vị trí indexFrom
+                this.moneyPutList.remove(indexFrom);
+
+                // Thêm phần tử vào vị trí indexTo
+                this.moneyPutList.add(indexTo, valueToMove);
+            }
+        }
     }
 
     public void calculateDameToXu() {

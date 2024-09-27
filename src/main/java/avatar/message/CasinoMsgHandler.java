@@ -137,16 +137,16 @@ public class CasinoMsgHandler extends MessageHandler {
             for (int i = 0; i < BoardUs.size(); i++) {
                 Message ms1 = new Message(Cmd.SOMEONE_JOINBOARD);
                 DataOutputStream ds1 = ms1.writer();
-                ds1.writeByte(1);//seat // vi tri
+                ds1.writeByte(BoardUs.indexOf(us));//seat // vi tri
                 ds1.writeInt(us.getId());//seat // vi tri
                 ds1.writeUTF(us.getUsername());//seat // vi tri
-                ds1.writeInt(10000);// tien
+                ds1.writeInt(0);// tien
 
                 ds1.writeByte(us.getWearing().size()); // Số phần mặc
                 for (Item item : us.getWearing()) {
                     ds1.writeShort(item.getId()); // ID item
                 }
-                ds1.writeInt(10000);// tien
+                ds1.writeInt(0);// tien
                 ds1.writeInt(1);// tien
                 ds1.flush();
                 BoardUs.get(i).session.sendMessage(ms1);
@@ -206,11 +206,11 @@ public class CasinoMsgHandler extends MessageHandler {
     private void Start(Message ms) throws IOException {//20
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
-
         BoardInfo board = BoardManager.getInstance().find(boardID);
         List<User> BoardUs = board.getLstUsers();
+        BoardUs.get(0).setToXong(true);
 
-        ms = new Message(Cmd.START);
+        ms = new Message(Cmd.START);//20
         DataOutputStream ds = ms.writer();
 
         ds.writeByte(roomID);
@@ -222,6 +222,7 @@ public class CasinoMsgHandler extends MessageHandler {
             user.session.sendMessage(ms);
         }
     }
+
     private void Ready(Message ms,User us) throws IOException {//ms 20
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
@@ -230,7 +231,7 @@ public class CasinoMsgHandler extends MessageHandler {
         BoardInfo board = BoardManager.getInstance().find(boardID);
         List<User> BoardUs = board.getLstUsers();
 
-        ms = new Message(Cmd.READY);
+        ms = new Message(Cmd.READY);//16
         DataOutputStream ds = ms.writer();
 
         ds.writeInt(us.getId());
@@ -249,61 +250,72 @@ public class CasinoMsgHandler extends MessageHandler {
 
         BoardInfo board = BoardManager.getInstance().find(boardID);
         List<User> BoardUs = board.getLstUsers();
-        List<Byte> moneyPutList = new ArrayList<>();
 
-        while (ms.reader().available() > 0) {
-            byte moneyPut = ms.reader().readByte();
-            moneyPutList.add(moneyPut);
-        }
-        if(us.getMoneyPutList()!=null){
-            us.getMoneyPutList().clear();
+        List<Byte> moneyPutList = us.getMoneyPutList();
+        if(moneyPutList.size() <= 0)
+        {
+            while (ms.reader().available() > 0) {
+                byte moneyPut = ms.reader().readByte();
+                moneyPutList.add(moneyPut);
+                System.out.println(us.getUsername() + " " + moneyPut);
+            }
+            ms = new Message(Cmd.TO_XONG);
+            DataOutputStream ds = ms.writer();
+            ds.writeByte(roomID);
+            ds.writeByte(boardID);
+            ds.writeByte(1);
+            for (Byte moneyPut : moneyPutList) {
+                ds.writeByte(moneyPut);
+            }
+            ds.flush();
+            us.setToXong(true);
+            for (User user : BoardUs) {
+                user.getSession().sendMessage(ms);
+            }
         }
 
-        us.setMoneyPutList(moneyPutList);
-
-        ms = new Message(Cmd.TO_XONG);
-        DataOutputStream ds = ms.writer();
-        ds.writeByte(roomID);
-        ds.writeByte(boardID);
-        ds.writeByte(1);
-        for (Byte moneyPut : moneyPutList) {
-            ds.writeByte(moneyPut);
-        }
-        ds.flush();
+        boolean allToXong = true;
         for (User user : BoardUs) {
-            user.getSession().sendMessage(ms);
+            if (!user.isToXong()) {
+                allToXong = false; // Nếu có người chơi chưa tố xong, thoát vòng lặp
+                break;
+            }
         }
-
-        Message ms1 = new Message(Cmd.SET_TURN);
-        DataOutputStream ds1 = ms1.writer();
-        ds1.writeByte(roomID);
-        ds1.writeByte(boardID);
-        int index = BoardUs.indexOf(us);
-        ds1.writeByte(index);
-        ds1.flush();
-        for (User user : BoardUs) {
-            user.getSession().sendMessage(ms1);
+        if (allToXong) {
+            for (User user : BoardUs) {
+                Message ms1 = new Message(Cmd.SET_TURN);
+                DataOutputStream ds1 = ms1.writer();
+                ds1.writeByte(roomID);
+                ds1.writeByte(boardID);
+                int index = BoardUs.indexOf(us);
+                ds1.writeByte(index);
+                ds1.flush();
+                user.getSession().sendMessage(ms1);
+            }
         }
     }
 
-    private void haPhom(Message ms,User us) throws IOException, InterruptedException {//ms 6
+    private void haPhom(Message ms,User us) throws IOException, InterruptedException {//ms 65
+
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
         byte indexFrom = ms.reader().readByte();
         byte indexTo = ms.reader().readByte();
 
+        System.out.print(indexFrom);
+        System.out.print(indexTo);
         BoardInfo board1 = BoardManager.getInstance().find(boardID);
         List<User> BoardUs = board1.getLstUsers();
 
-        ms = new Message(Cmd.HA_PHOM);
+        ms = new Message(Cmd.HA_PHOM);//65
         DataOutputStream ds = ms.writer();
         ds.writeByte(roomID);
         ds.writeByte(boardID);
 
-        ds.writeByte(1);// tả
-        ds.writeByte(indexFrom);// vị trí bắt đầu cược
-        ds.writeByte(indexTo);//vị trí tả
-        ds.writeByte(0);// số lượng đặt
+        ds.writeByte(1);
+        ds.writeByte(indexFrom);
+        ds.writeByte(indexTo);
+        ds.writeByte(4);// list + list from to
         ds.flush();
         for (User user : BoardUs) {
             user.getSession().sendMessage(ms);
@@ -331,7 +343,7 @@ public class CasinoMsgHandler extends MessageHandler {
         ds2.writeByte(boardID);
         ds2.writeByte(1);
         ds2.writeByte(0);
-        ds2.writeByte(999);//money
+        ds2.writeByte(0);//BCBoardScr.me.onSetPlayer(b5, b6, moneyValue);
         ds2.flush();
         for (User user : BoardUs) {
             user.getSession().sendMessage(ms2);
@@ -355,48 +367,16 @@ public class CasinoMsgHandler extends MessageHandler {
     private void Skip(Message ms,User us) throws IOException, InterruptedException {//ms 6
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
-
-        ms = new Message(Cmd.HA_PHOM);
-        DataOutputStream ds = ms.writer();
-        ds.writeByte(roomID);
-        ds.writeByte(boardID);
-
-
-        BoardInfo board1 = BoardManager.getInstance().find(boardID);
-        List<User> BoardUs = board1.getLstUsers();
-        ds.writeByte(1);// tả
-        ds.writeByte(1);// vị trí bắt đầu cược
-        ds.writeByte(1);//vị trí tả
-        ds.writeByte(0);// số lượng đặt
-        ds.flush();
-        for (User user : BoardUs) {
-            user.getSession().sendMessage(ms);
-        }
-        us.sendMessage(ms);
-        Message ms2 = new Message(Cmd.WIN);
-        DataOutputStream ds2 = ms2.writer();
-        ds2.writeByte(roomID);
-        ds2.writeByte(boardID);
-        ds2.writeByte(1);
-        ds2.writeByte(0);
-        ds2.writeByte(999);//money
-        ds2.flush();
-        for (User user : BoardUs) {
-            user.getSession().sendMessage(ms2);
-        }
-
         Message ms3 = new Message(Cmd.FINISH);
         DataOutputStream ds3 = ms3.writer();
         ds3.writeByte(roomID);
         ds3.writeByte(boardID);
         for (int i = 0; i < 5; i++)
         {
-            ds3.writeInt(0);
+            ds3.writeInt(0);// tieen xong van
         }
         ds3.flush();
-        for (User user : BoardUs) {
-            user.getSession().sendMessage(ms3);
-        }
+        this.client.user.sendMessage(ms3);
     }
 
 }
