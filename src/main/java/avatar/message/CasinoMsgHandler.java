@@ -228,6 +228,15 @@ public class CasinoMsgHandler extends MessageHandler {
         byte boardID = ms.reader().readByte();
         BoardInfo board = BoardManager.getInstance().find(boardID);
         List<User> BoardUs = board.getLstUsers();
+        for(User u : BoardUs){
+            List<Byte> moneyPutList = u.getMoneyPutList();
+            moneyPutList.clear();
+            u.setHaPhom(false);
+            u.setToXong(false);
+            u.getMoneyPutList().clear();
+        }
+        BoardUs.get(0).setToXong(true);
+        BoardUs.get(0).setHaPhom(true);
 
         ms = new Message(Cmd.START);//20
         DataOutputStream ds = ms.writer();
@@ -250,12 +259,13 @@ public class CasinoMsgHandler extends MessageHandler {
         BoardInfo board = BoardManager.getInstance().find(boardID);
         List<User> BoardUs = board.getLstUsers();
         List<Byte> moneyPutList = us.getMoneyPutList();
-        moneyPutList.clear();
 
-        if(moneyPutList.size() <= 0 && BoardUs.indexOf(us) != 0) {
+        //neesu chua co putlist thi them pustlist moi
+        if(us.getMoneyPutList().size() <= 0) {
             while (ms.reader().available() > 0) {
                 byte moneyPut = ms.reader().readByte();
                 moneyPutList.add(moneyPut);
+                us.setMoneyPutList(moneyPutList);
             }
             ms = new Message(Cmd.TO_XONG);
             DataOutputStream ds = ms.writer();
@@ -266,9 +276,51 @@ public class CasinoMsgHandler extends MessageHandler {
                 ds.writeByte(moneyPut);
             }
             ds.flush();
+            us.getSession().sendMessage(ms);
+            us.setToXong(true);
+            BoardUs.get(0).getSession().sendMessage(ms);
             System.out.println(us.getUsername() + " đã đặt xong ");
         }
+
+
+
+        Boolean allToXong = true;
+        for (User user : BoardUs) {
+            if (!user.isToXong()){
+                ms = new Message(Cmd.TO_XONG);
+                DataOutputStream ds = ms.writer();
+                ds.writeByte(roomID);
+                ds.writeByte(boardID);
+                ds.writeByte(BoardUs.indexOf(us));
+                for (Byte moneyPut : moneyPutList) {
+                    ds.writeByte(moneyPut);
+                }
+                ds.flush();
+                user.getSession().sendMessage(ms);
+                System.out.println(user.getUsername() + " chua to xong ");
+                allToXong = false;
+                break;
+            }
+        }
+
+        if (allToXong) {
+            for (User user : BoardUs) {
+                ms = new Message(Cmd.TO_XONG);
+                DataOutputStream ds = ms.writer();
+                ds.writeByte(roomID);
+                ds.writeByte(boardID);
+                ds.writeByte(BoardUs.indexOf(us));
+                for (Byte moneyPut : moneyPutList) {
+                    ds.writeByte(moneyPut);
+                }
+                ds.flush();
+                user.getSession().sendMessage(ms);
+            }
+        }
+
+
     }
+
 
 
     private void haPhom(Message ms,User us) throws IOException, InterruptedException {//ms 65
@@ -362,6 +414,23 @@ public class CasinoMsgHandler extends MessageHandler {
             ds3.flush();
             user.getService().sendMessage(ms3);
         }
+    }
+
+
+
+    private void setTurn(List<User> lstus,User us,byte roomID,byte boardID,int index) throws IOException, InterruptedException {
+
+        for (User user : lstus) {
+            Message ms1 = new Message(Cmd.SET_TURN);
+            DataOutputStream ds1 = ms1.writer();
+            ds1.writeByte(roomID);
+            ds1.writeByte(boardID);
+            ds1.writeByte(index);
+            ds1.flush();
+            user.getSession().sendMessage(ms1);
+            us.setHaPhom(true);
+        }
+
     }
 
 }

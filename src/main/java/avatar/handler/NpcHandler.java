@@ -634,18 +634,33 @@ public class NpcHandler {
                 Menu.builder().name("Cánh")
                         .menus(
                                 List.of(
+                                        Menu.builder().name("Cánh chiến thần hắc hoá").action(() -> {
+                                            BossShopHandler.displayUI(us, type, 5971, 5972, 5973, 5974);
+                                        }).build(),
+                                        Menu.builder().name("Cánh quạ đen hoả ngục").action(() -> {
+                                            BossShopHandler.displayUI(us, type, 4332, 5313);
+                                        }).build(),
                                         Menu.builder().name("Cánh tiểu thần phong linh").action(() -> {
                                             BossShopHandler.displayUI(us, type, 2419, 2482, 2483, 2505, 2506, 5252, 5253);
                                         }).build(),
                                         Menu.builder().name("Cửu vỹ hồ ly thần thoại").action(() -> {
                                             BossShopHandler.displayUI(us, type, 4333, 4910, 4911, 4912, 4913, 4914, 4915, 4916, 4334, 4889);
                                         }).build(),
-//                                        Menu.builder().name("Cánh băng hoả thần thoại").action(() -> {
-//                                            BossShopHandler.displayUI(us, type, 3448, 4057, 4375);
-//                                        }).build(),
-//                                        Menu.builder().name("Cánh hoả thần").action(() -> {
-//                                            BossShopHandler.displayUI(us, type, 4311, 4312, 4313);
-//                                        }).build(),
+                                        Menu.builder().name("Cánh vàng ròng đa sắc").action(() -> {
+                                            BossShopHandler.displayUI(us, type, 3376, 3377, 3404, 4897);
+                                        }).build(),
+                                        Menu.builder().name("Cánh thiên thần tiên bướm").action(() -> {
+                                            BossShopHandler.displayUI(us, type, 4056, 4796);
+                                        }).build(),
+                                        Menu.builder().name("Cánh thiên hồ tình yêu vĩnh cửu").action(() -> {
+                                            BossShopHandler.displayUI(us, type, 4196, 4435);
+                                        }).build(),
+                                        Menu.builder().name("Cánh băng hoả thần thoại").action(() -> {
+                                            BossShopHandler.displayUI(us, type, 3448, 4057, 4375);
+                                        }).build(),
+                                        Menu.builder().name("Cánh hoả thần").action(() -> {
+                                            BossShopHandler.displayUI(us, type, 4311, 4312, 4313);
+                                        }).build(),
                                         Menu.builder().name("Cánh thiên sứ tình yêu").action(() -> {
                                             BossShopHandler.displayUI(us, type, 2148, 2149, 2150, 2151, 2152, 3637);
                                         }).build(),
@@ -658,9 +673,9 @@ public class NpcHandler {
                                         Menu.builder().name("Cánh cổng địa ngục").action(() -> {
                                             BossShopHandler.displayUI(us, type, 3522, 3523, 3524, 3525, 3526, 3527);
                                         }).build(),
-//                                        Menu.builder().name("Cánh bướm đêm huyền thoại").action(() -> {
-//                                            BossShopHandler.displayUI(us, type, 3366, 3379);
-//                                        }).build(),
+                                        Menu.builder().name("Cánh bướm đêm huyền thoại").action(() -> {
+                                            BossShopHandler.displayUI(us, type, 3366, 3379);
+                                        }).build(),
                                         Menu.builder().name("Cánh băng giá huyền thoại").action(() -> {
                                             BossShopHandler.displayUI(us, type, 3365, 3378);
                                         }).build(),
@@ -683,6 +698,12 @@ public class NpcHandler {
 //                                }).build(),
                                 Menu.builder().name("Thiên thần hộ mệnh toàn năng").action(() -> {
                                     BossShopHandler.displayUI(us, type, 5224, 5225, 5226);
+                                }).build(),
+                                Menu.builder().name("Cáo tuyết cửu vỹ").action(() -> {
+                                    BossShopHandler.displayUI(us, type, 4904, 4905);
+                                }).build(),
+                                Menu.builder().name("Cửu vỹ hồ ly").action(() -> {
+                                    BossShopHandler.displayUI(us, type, 4724, 4728, 4729);
                                 }).build(),
 //                                Menu.builder().name("Tiểu tiên bướm").action(() -> {
 //                                    BossShopHandler.displayUI(us, type, 4305, 5058);

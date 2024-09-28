@@ -112,6 +112,8 @@ public class User {
 
     private List<Byte> boardIDs;
     List<Byte> moneyPutList;
+    public boolean isToXong;
+    public boolean isHaPhom;
 
     public User() {
         this.role = -1;
@@ -125,6 +127,24 @@ public class User {
         this.boardIDs = new ArrayList<>();
         this.moneyPutList = new ArrayList<>();
     }
+
+
+    public synchronized boolean isHaPhom() {
+        return isHaPhom;
+    }
+
+    public synchronized void setHaPhom(boolean isHaPhom) {
+        this.isHaPhom = isHaPhom;
+    }
+
+    public synchronized boolean isToXong() {
+        return isToXong;
+    }
+
+    public synchronized void setToXong(boolean isToXong) {
+        this.isToXong = isToXong;
+    }
+
 
     public List<Byte> getMoneyPutList() {
         return this.moneyPutList;
