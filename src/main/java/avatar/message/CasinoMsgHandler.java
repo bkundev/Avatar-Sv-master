@@ -3,6 +3,7 @@ package avatar.message;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import avatar.constants.NpcName;
@@ -313,7 +314,17 @@ public class CasinoMsgHandler extends MessageHandler {
         }
 
         if (allToXong) {
-            System.out.println("Tất cả người chơi đã to xong.");
+            for (User user : BoardUs) {
+                if (!user.isHaPhom()) {
+                    System.out.println("luot ta => "+user.getUsername());
+                    try {
+                        setTurn(BoardUs,user,roomID,boardID,BoardUs.indexOf(user));
+                        return;
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
         }
     }
 
@@ -331,15 +342,44 @@ public class CasinoMsgHandler extends MessageHandler {
         BoardInfo board1 = BoardManager.getInstance().find(boardID);
         List<User> BoardUs = board1.getLstUsers();
 
-        ms = new Message(Cmd.HA_PHOM);//65
+
+        // Tạo một danh sách để lưu trữ tổng tiền đặt cược từ các vị trí cụ thể
+        List<Integer> sumList = new ArrayList<>(Collections.nCopies(6, 0));
+
+        // Tính tổng từ danh sách `Money Put List` của mỗi người chơi tại các vị trí cụ thể
+        for (User user : BoardUs) {
+            List<Byte> userMoneyPutList = user.getMoneyPutList();
+
+            // In ra danh sách người chơi và danh sách tiền đặt cược
+            System.out.println("User: " + user.getUsername() + " index: " + BoardUs.indexOf(user));
+            System.out.println("Money Put List: " + userMoneyPutList);
+
+            // Cộng dồn các giá trị tại mỗi vị trí của `Money Put List`
+            for (int i = 0; i < userMoneyPutList.size(); i++) {
+                // Chỉ cộng dồn nếu giá trị không phải là 0
+                if (userMoneyPutList.get(i) != 0) {
+                    sumList.set(i, sumList.get(i) + userMoneyPutList.get(i));
+                }
+            }
+        }
+
+        System.out.println("Sum List: " + sumList); // Kiểm tra tổng tiền từ tất cả các người chơi
+
+        // Lấy tổng tiền cho người chơi từ vị trí `indexFrom`
+        int totalSum = sumList.get(indexFrom);
+
+        System.out.println("Total Sum for indexFrom (" + indexFrom + "): " + totalSum); // Kiểm tra tổng cho indexFrom
+
+        // Gửi lại thông điệp với tổng đã tính toán (totalSum)
+        ms = new Message(Cmd.HA_PHOM); // 65
         DataOutputStream ds = ms.writer();
         ds.writeByte(roomID);
         ds.writeByte(boardID);
 
-        ds.writeByte(BoardUs.indexOf(us));
-        ds.writeByte(indexFrom);
+        ds.writeByte(BoardUs.indexOf(us)); // Ghi lại chỉ số của người chơi hiện tại
+        ds.writeByte(indexFrom); // Ghi giá trị indexFrom
         ds.writeByte(indexTo);
-        ds.writeByte(6);// list + list from to
+        ds.writeByte(totalSum);
         ds.flush();
 
         System.out.println(us.getUsername()+"đã tả thành công ");
@@ -347,6 +387,20 @@ public class CasinoMsgHandler extends MessageHandler {
             user.getSession().sendMessage(ms);
         }
 
+        for(User user : BoardUs) {
+            if (!user.isHaPhom())
+            {
+                System.out.println("luot ta => "+user.getUsername());
+                try {
+                    setTurn(BoardUs,user,roomID,boardID,BoardUs.indexOf(user));
+                    return;
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        System.out.println("game resutl");
         Message ms1 = new Message(Cmd.GAME_RESULT);
 
         DataOutputStream ds1 = ms1.writer();
@@ -369,25 +423,27 @@ public class CasinoMsgHandler extends MessageHandler {
         ds2.writeByte(boardID);
         ds2.writeByte(1);
         ds2.writeByte(0);
-        ds2.writeByte(0);//BCBoardScr.me.onSetPlayer(b5, b6, moneyValue);
+        ds2.writeByte(999);//money
         ds2.flush();
         for (User user : BoardUs) {
             user.getSession().sendMessage(ms2);
         }
 
-
-      //  Thread.sleep(2500);
+        Thread.sleep(2500);
         Message ms3 = new Message(Cmd.FINISH);
         DataOutputStream ds3 = ms3.writer();
         ds3.writeByte(roomID);
         ds3.writeByte(boardID);
         for (int i = 0; i < 5; i++)
         {
-            ds3.writeInt(99999);
+            ds3.writeInt(0);
         }
         ds3.flush();
+        for (User user : BoardUs) {
+            user.getSession().sendMessage(ms3);
+        }
 
-        board1.setPlaying(true);
+        board1.setPlaying(false);
     }
 
 
@@ -419,18 +475,17 @@ public class CasinoMsgHandler extends MessageHandler {
 
 
     private void setTurn(List<User> lstus,User us,byte roomID,byte boardID,int index) throws IOException, InterruptedException {
-
-        for (User user : lstus) {
-            Message ms1 = new Message(Cmd.SET_TURN);
-            DataOutputStream ds1 = ms1.writer();
-            ds1.writeByte(roomID);
-            ds1.writeByte(boardID);
-            ds1.writeByte(index);
-            ds1.flush();
-            user.getSession().sendMessage(ms1);
-            us.setHaPhom(true);
+        Message ms1 = new Message(Cmd.SET_TURN);
+        DataOutputStream ds1 = ms1.writer();
+        ds1.writeByte(roomID);
+        ds1.writeByte(boardID);
+        ds1.writeByte(index);
+        ds1.flush();
+        us.getSession().sendMessage(ms1);
+        us.setHaPhom(true);
+        for (User user1 : lstus) {
+            user1.session.sendMessage(ms1);
         }
-
     }
 
 }
