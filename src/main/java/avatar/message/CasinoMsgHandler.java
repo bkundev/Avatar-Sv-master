@@ -185,6 +185,18 @@ public class CasinoMsgHandler extends MessageHandler {
 
         ds.flush();
         this.client.user.sendMessage(ms);
+
+        if(board.isPlaying()){
+            Message ms2 = new Message(Cmd.PLAYING);
+            DataOutputStream ds2 = ms2.writer();
+            ds2.writeByte(roomID);
+            ds2.writeByte(boardID);
+            ds2.writeByte(10);
+            ds2.flush();
+            us.getSession().sendMessage(ms2);
+            us.setToXong(true);
+            us.setHaPhom(true);
+        }
     }
 
     private void leaveBoard(Message ms, User us) throws IOException {
@@ -201,6 +213,7 @@ public class CasinoMsgHandler extends MessageHandler {
             user.getSession().sendMessage(ms);
         }
     }
+
 
     private void Ready(Message ms,User us) throws IOException {//ms 20
         byte roomID = ms.reader().readByte();
@@ -223,6 +236,7 @@ public class CasinoMsgHandler extends MessageHandler {
         }
     }
 
+
     private void Start(Message ms) throws IOException {//20
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
@@ -237,6 +251,7 @@ public class CasinoMsgHandler extends MessageHandler {
         }
         BoardUs.get(0).setToXong(true);
         BoardUs.get(0).setHaPhom(true);
+        board.setPlaying(true);
 
         ms = new Message(Cmd.START);//20
         DataOutputStream ds = ms.writer();
@@ -297,11 +312,8 @@ public class CasinoMsgHandler extends MessageHandler {
             }
         }
 
-        // Nếu tất cả đã "to xong", thực hiện hành động cần thiết
         if (allToXong) {
             System.out.println("Tất cả người chơi đã to xong.");
-            // Tại đây bạn có thể thực hiện các hành động tiếp theo khi tất cả người chơi đã "to xong"
-            // nhưng không gửi lại TO_XONG cho từng người nữa nếu không cần thiết.
         }
     }
 
@@ -374,6 +386,8 @@ public class CasinoMsgHandler extends MessageHandler {
             ds3.writeInt(99999);
         }
         ds3.flush();
+
+        board1.setPlaying(true);
     }
 
 
@@ -382,8 +396,8 @@ public class CasinoMsgHandler extends MessageHandler {
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
         us.getService().serverDialog("skip dang xay dung");
-        BoardInfo board1 = BoardManager.getInstance().find(boardID);
-        List<User> BoardUs = board1.getLstUsers();
+        BoardInfo board = BoardManager.getInstance().find(boardID);
+        List<User> BoardUs = board.getLstUsers();
 
 
         for (User user : BoardUs) {
@@ -398,6 +412,8 @@ public class CasinoMsgHandler extends MessageHandler {
             ds3.flush();
             user.getService().sendMessage(ms3);
         }
+
+        board.setPlaying(false);
     }
 
 

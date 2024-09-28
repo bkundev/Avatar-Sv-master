@@ -28,4 +28,13 @@ public class BoardInfo
     public List<User> getLstUsers() {
         return lstUsers;
     }
+
+
+    public synchronized boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public synchronized void setPlaying(boolean isPlaying) {
+        this.isPlaying = isPlaying;
+    }
 }
