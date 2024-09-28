@@ -252,7 +252,7 @@ public class CasinoMsgHandler extends MessageHandler {
     }
 
 
-    private void toXong(Message ms,User us) throws IOException {//ms 21
+    private void toXong(Message ms, User us) throws IOException { // ms 21
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
 
@@ -260,65 +260,49 @@ public class CasinoMsgHandler extends MessageHandler {
         List<User> BoardUs = board.getLstUsers();
         List<Byte> moneyPutList = us.getMoneyPutList();
 
-        //neesu chua co putlist thi them pustlist moi
-        if(us.getMoneyPutList().size() <= 0) {
+
+        // Nếu chưa có putlist thì thêm putlist mới
+        if (us.getMoneyPutList().size() <= 0) {
             while (ms.reader().available() > 0) {
                 byte moneyPut = ms.reader().readByte();
                 moneyPutList.add(moneyPut);
-                us.setMoneyPutList(moneyPutList);
             }
+            us.setMoneyPutList(moneyPutList);
             ms = new Message(Cmd.TO_XONG);
             DataOutputStream ds = ms.writer();
+            // Gửi thông điệp TO_XONG cho user hiện tại (us)
             ds.writeByte(roomID);
             ds.writeByte(boardID);
-            ds.writeByte(1);
+            ds.writeByte(BoardUs.indexOf(us)); // Chỉ gửi cho người chơi hiện tại
             for (Byte moneyPut : moneyPutList) {
                 ds.writeByte(moneyPut);
             }
             ds.flush();
-            us.getSession().sendMessage(ms);
-            us.setToXong(true);
-            BoardUs.get(0).getSession().sendMessage(ms);
+            us.getSession().sendMessage(ms); // Gửi thông điệp chỉ cho người hiện tại
+            us.setToXong(true); // Cập nhật trạng thái của người chơi hiện tại
             System.out.println(us.getUsername() + " đã đặt xong ");
+
+            for (User user : BoardUs) {
+                user.session.sendMessage(ms);
+            }
         }
 
-
-
+        // Kiểm tra xem tất cả người chơi đã "to xong" chưa
         Boolean allToXong = true;
         for (User user : BoardUs) {
-            if (!user.isToXong()){
-                ms = new Message(Cmd.TO_XONG);
-                DataOutputStream ds = ms.writer();
-                ds.writeByte(roomID);
-                ds.writeByte(boardID);
-                ds.writeByte(BoardUs.indexOf(us));
-                for (Byte moneyPut : moneyPutList) {
-                    ds.writeByte(moneyPut);
-                }
-                ds.flush();
-                user.getSession().sendMessage(ms);
-                System.out.println(user.getUsername() + " chua to xong ");
+            if (!user.isToXong()) {
+                System.out.println(user.getUsername() + " chưa to xong ");
                 allToXong = false;
-                break;
+                break; // Thoát khỏi vòng lặp nếu có một người chưa to xong
             }
         }
 
+        // Nếu tất cả đã "to xong", thực hiện hành động cần thiết
         if (allToXong) {
-            for (User user : BoardUs) {
-                ms = new Message(Cmd.TO_XONG);
-                DataOutputStream ds = ms.writer();
-                ds.writeByte(roomID);
-                ds.writeByte(boardID);
-                ds.writeByte(BoardUs.indexOf(us));
-                for (Byte moneyPut : moneyPutList) {
-                    ds.writeByte(moneyPut);
-                }
-                ds.flush();
-                user.getSession().sendMessage(ms);
-            }
+            System.out.println("Tất cả người chơi đã to xong.");
+            // Tại đây bạn có thể thực hiện các hành động tiếp theo khi tất cả người chơi đã "to xong"
+            // nhưng không gửi lại TO_XONG cho từng người nữa nếu không cần thiết.
         }
-
-
     }
 
 
