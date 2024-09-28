@@ -89,13 +89,8 @@ public class User {
     private byte chestHomeSlot;
     private int scores;
     private List<Item> wearing;
-
     public List<Item> chests;
-
-
     public List<Item> chestsHome;
-
-
 
     private Zone zone;
     private short x, y;
@@ -117,8 +112,7 @@ public class User {
 
     private List<Byte> boardIDs;
     List<Byte> moneyPutList;
-    private boolean isToXong = false;
-    private boolean isHaPhom = false;
+
     public User() {
         this.role = -1;
         this.chests = new ArrayList<>();
@@ -131,28 +125,6 @@ public class User {
         this.boardIDs = new ArrayList<>();
         this.moneyPutList = new ArrayList<>();
     }
-    @Override
-    public int hashCode() {
-        return Objects.hash(id); // Sử dụng 'id' nếu đó là tên thuộc tính
-    }
-
-
-    public boolean isHaPhom() {
-        return isHaPhom;
-    }
-
-    public void setHaPhom(boolean isHaPhom) {
-        this.isHaPhom = isHaPhom;
-    }
-
-    public boolean isToXong() {
-        return isToXong;
-    }
-
-    public void setToXong(boolean isToXong) {
-        this.isToXong = isToXong;
-    }
-
 
     public List<Byte> getMoneyPutList() {
         return this.moneyPutList;

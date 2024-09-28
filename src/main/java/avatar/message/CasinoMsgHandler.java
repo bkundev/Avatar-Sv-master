@@ -159,19 +159,16 @@ public class CasinoMsgHandler extends MessageHandler {
         ms = new Message(Cmd.JOIN_BOARD);
         DataOutputStream ds = ms.writer();
 
-
         ds.writeByte(roomID);
         ds.writeByte(boardID);
         ds.writeInt(BoardUs.get(0).getId()); // ID user
-        ds.writeInt(0); // số tiền
+        ds.writeInt(0); // số tiền cược ở phòng
 
 
         for (User user : BoardUs) {
-            System.out.println("User ID: " + user.getId() + ", HashCode: " + user.hashCode());
             ds.writeInt(user.getId()); // IDDB
             ds.writeUTF(user.getUsername()); // Username
-            ds.writeInt(0); // Số tiền
-            System.out.println("Đang xử lý người dùng  ID: " + user.getId());
+            ds.writeInt(56789); // Số tiền của user
             ds.writeByte(user.getWearing().size()); // Số phần mặc
             for (Item item : user.getWearing()) {
                 ds.writeShort(item.getId()); // ID item
@@ -190,19 +187,19 @@ public class CasinoMsgHandler extends MessageHandler {
         this.client.user.sendMessage(ms);
     }
 
-    private void leaveBoard(Message ms, User us) throws IOException {//ms 8
+    private void leaveBoard(Message ms, User us) throws IOException {
         byte roomID = ms.reader().readByte();
-
         byte boardID = ms.reader().readByte();
-
         BoardInfo board = BoardManager.getInstance().find(boardID);
         board.nPlayer--;
-//        ms = new Message(Cmd.LEAVE_BOARD);
-//        DataOutputStream ds = ms.writer();
-//
-//
-//        ds.flush();
-//        this.client.user.sendMessage(ms);
+        board.getLstUsers().remove(us);
+        ms = new Message(Cmd.SOMEONE_LEAVEBOARD);//14
+        DataOutputStream ds = ms.writer();
+        ds.writeInt(us.getId());
+        ds.writeInt(board.getLstUsers().get(0).getId());
+        for (User user : board.getLstUsers()) {
+            user.getSession().sendMessage(ms);
+        }
     }
 
     private void Ready(Message ms,User us) throws IOException {//ms 20
@@ -231,8 +228,6 @@ public class CasinoMsgHandler extends MessageHandler {
         byte boardID = ms.reader().readByte();
         BoardInfo board = BoardManager.getInstance().find(boardID);
         List<User> BoardUs = board.getLstUsers();
-        BoardUs.get(0).setToXong(true);
-        BoardUs.get(0).setHaPhom(true);
 
         ms = new Message(Cmd.START);//20
         DataOutputStream ds = ms.writer();
@@ -254,12 +249,10 @@ public class CasinoMsgHandler extends MessageHandler {
 
         BoardInfo board = BoardManager.getInstance().find(boardID);
         List<User> BoardUs = board.getLstUsers();
-
         List<Byte> moneyPutList = us.getMoneyPutList();
         moneyPutList.clear();
 
-        if(moneyPutList.size() <= 0)
-        {
+        if(moneyPutList.size() <= 0 && BoardUs.indexOf(us) != 0) {
             while (ms.reader().available() > 0) {
                 byte moneyPut = ms.reader().readByte();
                 moneyPutList.add(moneyPut);
@@ -273,31 +266,7 @@ public class CasinoMsgHandler extends MessageHandler {
                 ds.writeByte(moneyPut);
             }
             ds.flush();
-            System.out.println(us.getUsername() + " da dat xong ");
-
-            for (User user : BoardUs) {
-                user.getSession().sendMessage(ms);
-            }
-            us.setToXong(true);
-        }
-        for (User user : BoardUs) {
-            if (!user.isToXong()) {
-                System.out.println("cos nguoi chua dat xong");
-                return;
-            }
-        }
-
-        for (User user : BoardUs) {
-            System.out.println("turn for "+user.getUsername());
-            Message ms1 = new Message(Cmd.SET_TURN);
-            DataOutputStream ds1 = ms1.writer();
-            ds1.writeByte(roomID);
-            ds1.writeByte(boardID);
-            int index = BoardUs.indexOf(user);
-            ds1.writeByte(index);
-            ds1.flush();
-            user.getSession().sendMessage(ms1);
-            user.setHaPhom(true);
+            System.out.println(us.getUsername() + " đã đặt xong ");
         }
     }
 
@@ -325,34 +294,11 @@ public class CasinoMsgHandler extends MessageHandler {
         ds.writeByte(6);// list + list from to
         ds.flush();
 
-        System.out.println("da ta xong nguoi 1");
+        System.out.println(us.getUsername()+"đã tả thành công ");
         for (User user : BoardUs) {
             user.getSession().sendMessage(ms);
         }
 
-
-        for (User user : BoardUs) {
-            if (!user.isHaPhom()) { // Nếu có người chơi chưa hạ phỏm
-                System.out.println("co nguoi chua ta xong dang gui luot ta");
-                Message ms1 = new Message(Cmd.SET_TURN);
-                DataOutputStream ds1 = ms1.writer();
-                ds1.writeByte(roomID);
-                ds1.writeByte(boardID);
-                int index = BoardUs.indexOf(us);
-                ds1.writeByte(index);
-                ds1.flush();
-                user.getSession().sendMessage(ms1);
-                user.setHaPhom(true);
-                break;
-            }
-        }
-
-
-        for (User user : BoardUs) {
-            if (!user.isHaPhom()) { // Nếu có người chơi chưa hạ phỏm
-                return;
-            }
-        }
         Message ms1 = new Message(Cmd.GAME_RESULT);
 
         DataOutputStream ds1 = ms1.writer();
@@ -382,7 +328,7 @@ public class CasinoMsgHandler extends MessageHandler {
         }
 
 
-        Thread.sleep(2500);
+      //  Thread.sleep(2500);
         Message ms3 = new Message(Cmd.FINISH);
         DataOutputStream ds3 = ms3.writer();
         ds3.writeByte(roomID);
@@ -392,12 +338,6 @@ public class CasinoMsgHandler extends MessageHandler {
             ds3.writeInt(99999);
         }
         ds3.flush();
-
-        for (User user : BoardUs) {
-            user.getSession().sendMessage(ms3);
-            user.setHaPhom(false);
-            us.setToXong(false);
-        }
     }
 
 
@@ -421,8 +361,6 @@ public class CasinoMsgHandler extends MessageHandler {
             }
             ds3.flush();
             user.getService().sendMessage(ms3);
-            user.setHaPhom(false);
-            us.setToXong(false);
         }
     }
 

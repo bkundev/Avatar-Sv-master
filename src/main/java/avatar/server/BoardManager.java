@@ -32,6 +32,8 @@ public class BoardManager {
         }
         return null; // Trả về null nếu không tìm thấy
     }
+
+
     public void increaseMaxPlayer(int id, User user) {
         synchronized (this) {
             for (BoardInfo board : boardList) {
