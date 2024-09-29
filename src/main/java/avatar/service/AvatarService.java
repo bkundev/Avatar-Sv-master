@@ -191,7 +191,7 @@ public class AvatarService extends Service {
             ds.writeByte(us.getCrazy());
             ds.writeByte(us.getStylish());
             ds.writeByte(us.getHappy());
-            ds.writeByte(us.getDameToXu());
+            ds.writeByte(us.getXeng());
             ds.writeInt(us.getLuong());
             ds.writeByte(us.getStar());
             for (Item itm : wearing) {
@@ -221,7 +221,7 @@ public class AvatarService extends Service {
 
             ds.writeBoolean(session.isNewVersion());//new version
             if (session.isNewVersion()) {
-                ds.writeInt(us.getDameToXu());
+                ds.writeInt(us.getXeng());
             }
             int m = 4;
             ds.writeByte((byte) m);

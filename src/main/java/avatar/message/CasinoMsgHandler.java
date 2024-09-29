@@ -77,6 +77,9 @@ public class CasinoMsgHandler extends MessageHandler {
                 case 49:
                     Skip(mss,this.client.user);
                     break;
+                case Cmd.SET_MONEY:
+                    setMoney(mss,this.client.user);
+                    break;
                 default:
                     System.out.println("casino mess: " + mss.getCommand());
                     break;
@@ -116,7 +119,7 @@ public class CasinoMsgHandler extends MessageHandler {
             ds.writeByte(a.nPlayer);
             if(a.isPass){ds.writeByte(1);}
             else{ds.writeByte(0);}
-            ds.writeInt(0);
+            ds.writeInt(a.getMoney());
         }
         ds.flush();
 
@@ -164,13 +167,13 @@ public class CasinoMsgHandler extends MessageHandler {
         ds.writeByte(roomID);
         ds.writeByte(boardID);
         ds.writeInt(BoardUs.get(0).getId()); // ID user
-        ds.writeInt(0); // số tiền cược ở phòng
+        ds.writeInt(board.getMoney()); // số tiền cược ở phòng
 
 
         for (User user : BoardUs) {
             ds.writeInt(user.getId()); // IDDB
             ds.writeUTF(user.getUsername()); // Username
-            ds.writeInt(56789); // Số tiền của user
+            ds.writeInt(us.getXeng()); // Số tiền của user
             ds.writeByte(user.getWearing().size()); // Số phần mặc
             for (Item item : user.getWearing()) {
                 ds.writeShort(item.getId()); // ID item
@@ -553,5 +556,61 @@ public class CasinoMsgHandler extends MessageHandler {
 
         board.setPlaying(false);
     }
+
+
+
+    private void setMoney(Message ms,User us) throws IOException {
+        byte roomID = ms.reader().readByte();
+        byte boardID = ms.reader().readByte();
+        BoardInfo board = BoardManager.getInstance().find(boardID);
+        List<User> BoardUs = board.getLstUsers();
+
+        int Money = ms.reader().readInt();
+        ms = new Message(Cmd.SET_MONEY);
+
+        if (us.getXeng() < Money*48)
+        {
+            int xengValue = us.getXeng();
+            int result = xengValue / 50;
+            us.getAvatarService().serverDialog("Để đặt được "+Money+" thì bạn cần có số tiền là "+ Money*48);
+            return;
+        }
+        if (Money > 100000)
+        {
+            us.getAvatarService().serverDialog("Vui lòng đặt nhỏ hơn 100.000");
+            return;
+        }
+        for (User user : BoardUs) {
+            board.setMoney(Money);
+            DataOutputStream ds = ms.writer();
+            ds.writeByte(roomID);
+            ds.writeByte(boardID);
+            ds.writeInt(Money);
+            user.getSession().sendMessage(ms);
+        }
+
+//        byte id = ms.reader().readByte();
+//        ms = new Message(Cmd.REQUEST_BOARDLIST);
+//        DataOutputStream ds = ms.writer();
+//        ds.writeByte(id);
+//
+//        List<BoardInfo> boardInfos = BoardManager.getInstance().boardList;
+//
+//
+//        for(BoardInfo a : boardInfos)
+//        {
+//            ds.writeByte(a.boardID);
+//            ds.writeByte(a.nPlayer);
+//            if(a.isPass){ds.writeByte(1);}
+//            else{ds.writeByte(0);}
+//            ds.writeInt(0);
+//        }
+//        ds.flush();
+//
+//        this.client.user.sendMessage(ms);
+//
+
+    }
+
 
 }

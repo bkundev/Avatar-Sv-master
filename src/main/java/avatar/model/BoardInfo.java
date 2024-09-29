@@ -38,8 +38,18 @@ public class BoardInfo
         this.isPlaying = isPlaying;
     }
 
+    public synchronized void setMoney(int Money) {
+        this.money = Money;
+    }
+
+    public synchronized int getMoney() {
+        return money;
+    }
+
+
+
     // Phương thức để cập nhật danh sách người chơi
-    public void setLstUsers(List<User> lstUsers) {
+    public synchronized void setLstUsers(List<User> lstUsers) {
         this.lstUsers = lstUsers;
         this.nPlayer = (byte)lstUsers.size(); // Cập nhật số người chơi
     }
