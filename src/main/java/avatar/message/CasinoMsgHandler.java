@@ -1,5 +1,6 @@
 package avatar.message;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -204,15 +205,79 @@ public class CasinoMsgHandler extends MessageHandler {
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
         BoardInfo board = BoardManager.getInstance().find(boardID);
+
+        List<User> BoardUs = board.getLstUsers();
+        if(board.isPlaying() && BoardUs.size()>1)
+        {
+            us.setToXong(true);
+            us.setHaPhom(true);
+            for(User user : BoardUs) {
+                if (!user.isHaPhom())
+                {
+                    System.out.println("Gửi Lượt Hạ Phỏm "+user.getUsername());
+                    try {
+                        setTurn(BoardUs,user,roomID,boardID,BoardUs.indexOf(user));
+                        board.nPlayer--;
+                        List<User> updatedBoardUs = new ArrayList<>(BoardUs);
+                        updatedBoardUs.remove(us);
+                        board.setLstUsers(updatedBoardUs);
+                        BoardUs = updatedBoardUs;
+                        ms = new Message(Cmd.SOMEONE_LEAVEBOARD);//14
+                        DataOutputStream ds = ms.writer();
+                        ds.writeInt(us.getId());
+                        ds.writeInt(BoardUs.get(0).getId());
+                        for (User user1 : board.getLstUsers()) {
+                            user1.getSession().sendMessage(ms);
+                        }
+
+                        return;
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            try {
+                gameResult(roomID,boardID);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+
         board.nPlayer--;
-        board.getLstUsers().remove(us);
+        List<User> updatedBoardUs = new ArrayList<>(BoardUs);
+        updatedBoardUs.remove(us);
+        board.setLstUsers(updatedBoardUs);
+        BoardUs = updatedBoardUs;
+
+        if(BoardUs.size() == 0)
+        {
+            return;
+        }
+
+
         ms = new Message(Cmd.SOMEONE_LEAVEBOARD);//14
         DataOutputStream ds = ms.writer();
         ds.writeInt(us.getId());
-        ds.writeInt(board.getLstUsers().get(0).getId());
+        ds.writeInt(BoardUs.get(0).getId());
         for (User user : board.getLstUsers()) {
             user.getSession().sendMessage(ms);
         }
+
+        if(board.isPlaying() && BoardUs.size()==1)
+        {
+            Message ms3 = new Message(Cmd.FINISH);
+            DataOutputStream ds3 = ms3.writer();
+            ds3.writeByte(roomID);
+            ds3.writeByte(boardID);
+            for (int i = 0; i < 5; i++)
+            {
+                ds3.writeInt(0);
+            }
+            ds3.flush();
+            BoardUs.get(0).session.sendMessage(ms3);
+        }
+
     }
 
 
@@ -436,7 +501,6 @@ public class CasinoMsgHandler extends MessageHandler {
         for (User user1 : lstus) {
             user1.session.sendMessage(ms1);
         }
-
     }
 
 

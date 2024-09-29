@@ -37,4 +37,10 @@ public class BoardInfo
     public synchronized void setPlaying(boolean isPlaying) {
         this.isPlaying = isPlaying;
     }
+
+    // Phương thức để cập nhật danh sách người chơi
+    public void setLstUsers(List<User> lstUsers) {
+        this.lstUsers = lstUsers;
+        this.nPlayer = (byte)lstUsers.size(); // Cập nhật số người chơi
+    }
 }
