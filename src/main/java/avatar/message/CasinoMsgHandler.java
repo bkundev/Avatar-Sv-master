@@ -398,59 +398,67 @@ public class CasinoMsgHandler extends MessageHandler {
 
 
     private void haPhom(Message ms,User us) throws IOException, InterruptedException {//ms 65
-
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
         byte indexFrom = ms.reader().readByte();
         byte indexTo = ms.reader().readByte();
 
-        System.out.println(indexFrom);
-        System.out.println(indexTo);
+        System.out.println("indexFrom: " + indexFrom);
+        System.out.println("indexTo: " + indexTo);
+
         BoardInfo board1 = BoardManager.getInstance().find(boardID);
-        List<User> BoardUs = board1.getLstUsers();
+        List<User> boardUsers = board1.getLstUsers();
 
-        List<Integer> sumList = new ArrayList<>(Collections.nCopies(6, 0));
+        // Lấy danh sách tiền đã đặt của người chơi hiện tại (us)
+        List<Byte> userMoneyPutList = us.getMoneyPutList();
+        System.out.println("Initial Money Put List for " + us.getUsername() + ": " + userMoneyPutList);
 
-        for (User user : BoardUs) {
-            List<Byte> userMoneyPutList = user.getMoneyPutList();
-            System.out.println("User: " + user.getUsername() + " index: " + BoardUs.indexOf(user));
-            System.out.println("Money Put List: " + userMoneyPutList);
+        // Tổng số tiền cược từ indexFrom đến indexTo
+        int totalSum = 0;
 
-            for (int i = 0; i < userMoneyPutList.size(); i++) {
-                // Chỉ cộng dồn nếu giá trị không phải là 0
-                if (userMoneyPutList.get(i) != 0) {
-                    sumList.set(i, sumList.get(i) + userMoneyPutList.get(i));
-                }
+        // Cộng dồn tổng tiền từ indexFrom đến indexTo
+        if (indexFrom <= indexTo) {
+            for (int i = indexFrom; i <= indexTo; i++) {
+                totalSum += userMoneyPutList.get(i);
+            }
+        } else {
+            for (int i = indexFrom; i >= indexTo; i--) {
+                totalSum += userMoneyPutList.get(i);
             }
         }
 
-        System.out.println("Sum List: " + sumList);
+        System.out.println("Total Sum from indexFrom (" + indexFrom + ") to indexTo (" + indexTo + "): " + totalSum);
 
-        int totalSum = sumList.get(indexFrom);
-        System.out.println("Total Sum for indexFrom (" + indexFrom + "): " + totalSum); // Kiểm tra tổng cho indexFrom
+        // Cập nhật danh sách putMoneyList của người chơi us tại indexTo
+        userMoneyPutList.set(indexTo, (byte) (userMoneyPutList.get(indexTo) + totalSum));
+
+        // Đặt lại tiền ở indexFrom về 0, giữ nguyên tiền ở các vị trí khác
+        userMoneyPutList.set(indexFrom, (byte) 0);
+
+        System.out.println("Updated Money Put List for " + us.getUsername() + ": " + userMoneyPutList);
 
         ms = new Message(Cmd.HA_PHOM); // 65
         DataOutputStream ds = ms.writer();
         ds.writeByte(roomID);
         ds.writeByte(boardID);
 
-        ds.writeByte(BoardUs.indexOf(us)); // Ghi lại chỉ số của người chơi hiện tại
+        ds.writeByte(boardUsers.indexOf(us)); // Ghi lại chỉ số của người chơi hiện tại
         ds.writeByte(indexFrom); // Ghi giá trị indexFrom
         ds.writeByte(indexTo);
-        ds.writeByte(totalSum);
+        ds.writeByte(userMoneyPutList.get(indexTo));
         ds.flush();
 
         System.out.println(us.getUsername()+"đã Hạ Phỏm thành công ");
-        for (User user : BoardUs) {
+        for (User user : boardUsers) {
             user.getSession().sendMessage(ms);
         }
 
-        for(User user : BoardUs) {
+        for(User user : boardUsers) {
             if (!user.isHaPhom())
             {
                 System.out.println("Gửi Lượt Hạ Phỏm "+user.getUsername());
                 try {
-                    setTurn(BoardUs,user,roomID,boardID,BoardUs.indexOf(user));
+                    setTurn(boardUsers,user,roomID,boardID,boardUsers.indexOf(user));
                     return;
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
