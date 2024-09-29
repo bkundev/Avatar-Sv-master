@@ -389,51 +389,7 @@ public class CasinoMsgHandler extends MessageHandler {
                 }
             }
         }
-
-        System.out.println("game resutl");
-        Message ms1 = new Message(Cmd.GAME_RESULT);
-
-        DataOutputStream ds1 = ms1.writer();
-        ds1.writeByte(roomID);
-        ds1.writeByte(boardID);
-
-        for (int i = 0; i < 3; i++) {
-            int xn = Utils.nextInt(5);
-            ds1.writeByte(xn);
-        }
-
-        ds1.flush();
-        for (User user : BoardUs) {
-            user.getSession().sendMessage(ms1);
-        }
-
-        Message ms2 = new Message(Cmd.WIN);
-        DataOutputStream ds2 = ms2.writer();
-        ds2.writeByte(roomID);
-        ds2.writeByte(boardID);
-        ds2.writeByte(1);
-        ds2.writeByte(0);
-        ds2.writeByte(999);//money
-        ds2.flush();
-        for (User user : BoardUs) {
-            user.getSession().sendMessage(ms2);
-        }
-
-        Thread.sleep(2500);
-        Message ms3 = new Message(Cmd.FINISH);
-        DataOutputStream ds3 = ms3.writer();
-        ds3.writeByte(roomID);
-        ds3.writeByte(boardID);
-        for (int i = 0; i < 5; i++)
-        {
-            ds3.writeInt(0);
-        }
-        ds3.flush();
-        for (User user : BoardUs) {
-            user.getSession().sendMessage(ms3);
-        }
-
-        board1.setPlaying(false);
+        gameResult(roomID,boardID);
     }
 
 
@@ -462,6 +418,32 @@ public class CasinoMsgHandler extends MessageHandler {
                 }
             }
         }
+        gameResult(roomID,boardID);
+    }
+
+
+
+    private void setTurn(List<User> lstus,User us,byte roomID,byte boardID,int index) throws IOException, InterruptedException {
+        Message ms1 = new Message(Cmd.SET_TURN);
+        DataOutputStream ds1 = ms1.writer();
+        ds1.writeByte(roomID);
+        ds1.writeByte(boardID);
+        ds1.writeByte(index);
+        ds1.flush();
+        us.getSession().sendMessage(ms1);
+        us.setHaPhom(true);
+        System.out.println("Người chơi "+us.getUsername()+" đang hạ phỏm");
+        for (User user1 : lstus) {
+            user1.session.sendMessage(ms1);
+        }
+
+    }
+
+
+    private void gameResult(byte roomID,byte boardID) throws IOException, InterruptedException {
+
+        BoardInfo board = BoardManager.getInstance().find(boardID);
+        List<User> BoardUs = board.getLstUsers();
         System.out.println("game resutl");
         Message ms1 = new Message(Cmd.GAME_RESULT);
 
@@ -504,36 +486,8 @@ public class CasinoMsgHandler extends MessageHandler {
         for (User user : BoardUs) {
             user.getSession().sendMessage(ms3);
         }
-//        for (User user : BoardUs) {
-//            Message ms3 = new Message(Cmd.FINISH);
-//            DataOutputStream ds3 = ms3.writer();
-//            ds3.writeByte(roomID);
-//            ds3.writeByte(boardID);
-//            for (int i = 0; i < 5; i++)
-//            {
-//                ds3.writeInt(0);// tieen xong van
-//            }
-//            ds3.flush();
-//            user.getService().sendMessage(ms3);
-//        }
+
         board.setPlaying(false);
-    }
-
-
-
-    private void setTurn(List<User> lstus,User us,byte roomID,byte boardID,int index) throws IOException, InterruptedException {
-        Message ms1 = new Message(Cmd.SET_TURN);
-        DataOutputStream ds1 = ms1.writer();
-        ds1.writeByte(roomID);
-        ds1.writeByte(boardID);
-        ds1.writeByte(index);
-        ds1.flush();
-        us.getSession().sendMessage(ms1);
-        us.setHaPhom(true);
-        System.out.println("Người chơi "+us.getUsername()+" đang hạ phỏm");
-        for (User user1 : lstus) {
-            user1.session.sendMessage(ms1);
-        }
     }
 
 }
