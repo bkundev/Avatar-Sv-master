@@ -157,6 +157,19 @@ public class CasinoMsgHandler extends MessageHandler {
                 ds1.writeInt(1);// tien
                 ds1.flush();
                 BoardUs.get(i).session.sendMessage(ms1);
+                for (int j = 1; j < BoardUs.size(); j++) {
+                    ms = new Message(Cmd.READY);//16
+                    DataOutputStream ds = ms.writer();
+
+                    ds.writeInt(BoardUs.get(i).getId());
+                    ds.writeBoolean(false);
+                    ds.flush();
+
+                    for(User u : BoardUs)
+                    {
+                        u.session.sendMessage(ms);
+                    }
+                }
             }
         }
 
@@ -536,26 +549,26 @@ public class CasinoMsgHandler extends MessageHandler {
             user.getSession().sendMessage(ms1);
         }
 
+        Thread.sleep(2500);
         Message ms2 = new Message(Cmd.WIN);
         DataOutputStream ds2 = ms2.writer();
         ds2.writeByte(roomID);
         ds2.writeByte(boardID);
-        ds2.writeByte(1);
-        ds2.writeByte(0);
-        ds2.writeByte(999);//money
-        ds2.flush();
         for (User user : BoardUs) {
+            ds2.writeByte(BoardUs.indexOf(user));
+            ds2.writeByte(1);
+            ds2.writeByte(999);//money
+            ds2.flush();
             user.getSession().sendMessage(ms2);
         }
 
-        Thread.sleep(2500);
         Message ms3 = new Message(Cmd.FINISH);
         DataOutputStream ds3 = ms3.writer();
         ds3.writeByte(roomID);
         ds3.writeByte(boardID);
         for (int i = 0; i < 5; i++)
         {
-            ds3.writeInt(0);
+            ds3.writeInt(999);
         }
         ds3.flush();
         for (User user : BoardUs) {
