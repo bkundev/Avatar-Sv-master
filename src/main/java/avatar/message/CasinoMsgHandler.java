@@ -157,6 +157,7 @@ public class CasinoMsgHandler extends MessageHandler {
                 ds1.writeInt(1);// tien
                 ds1.flush();
                 BoardUs.get(i).session.sendMessage(ms1);
+
                 for (int j = 1; j < BoardUs.size(); j++) {
                     ms = new Message(Cmd.READY);//16
                     DataOutputStream ds = ms.writer();
