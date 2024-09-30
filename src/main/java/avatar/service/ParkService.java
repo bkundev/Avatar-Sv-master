@@ -116,7 +116,8 @@ public class ParkService extends Service {
             if(item==null){
                 if(this.session.user.AutoFish)
                 {
-                    this.session.user.addItemToChests(new Item(448));
+                    Item moi = new Item(448,-1,1);
+                    this.session.user.addItemToChests(moi);
                     this.session.user.updateXu(-30);
                     this.session.user.getAvatarService().updateMoney(0);
                 }else {
