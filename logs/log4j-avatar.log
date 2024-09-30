@@ -201,3 +201,5 @@
 2024-09-30 11:27:02 DEBUG User:945 - Get Type
 2024-09-30 11:27:02 DEBUG User:947 - Type =-2
 2024-09-30 11:30:14 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 11:38:11 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 11:57:58 DEBUG DbManager:93 - DB Connection Pool is shutting down.

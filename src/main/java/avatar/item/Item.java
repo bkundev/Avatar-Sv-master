@@ -72,6 +72,7 @@ public class Item {
 
         // Áp dụng giới hạn số lượng tối đa là 100
         if (this.quantity + quantity > 100) {
+            Utils.writeLog(us, "quantity, increase " + quantity + " by " + itemId);
             this.quantity = 100;
         } else {
             this.quantity += quantity;
