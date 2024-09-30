@@ -132,7 +132,11 @@ public class CasinoMsgHandler extends MessageHandler {
         byte roomID = ms.reader().readByte();
         byte boardID = ms.reader().readByte();
         String pass = ms.reader().readUTF();
-
+        if (this.client.isResourceHD())
+        {
+            this.client.user.getAvatarService().serverDialog("error 0011");
+            return;
+        }
         BoardInfo board = BoardManager.getInstance().find(boardID);
 
         BoardManager.getInstance().increaseMaxPlayer(boardID,us);
