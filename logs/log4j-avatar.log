@@ -954,3 +954,35 @@
 2024-09-30 19:33:40 DEBUG User:964 - Get Type
 2024-09-30 19:33:40 DEBUG User:966 - Type =-2
 2024-09-30 19:34:46 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 19:56:03 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 19:57:42 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 19:57:44 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 19:57:50 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 19:57:52 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 19:59:00 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 20:06:59 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 20:10:04 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 20:10:07 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 20:11:17 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 20:11:21 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 20:12:47 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 20:12:50 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 20:13:29 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 20:13:30 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 20:14:11 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 20:14:15 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 20:14:29 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 20:14:30 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 20:14:38 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 20:14:39 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 20:15:18 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 20:15:19 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 20:15:46 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 20:15:50 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 20:16:13 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 20:16:16 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 20:16:35 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 20:16:36 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 20:17:41 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-09-30 20:17:45 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-09-30 20:18:24 DEBUG DbManager:93 - DB Connection Pool is shutting down.

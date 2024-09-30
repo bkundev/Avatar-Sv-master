@@ -277,15 +277,15 @@ public class HomeService extends Service {
         short ii = ms.reader().readShort();// index
         short Itemid = ms.reader().readShort();
 
-        Item Home = this.session.user.findItemInChestsHome(Itemid);
-        Item chest = this.session.user.findItemInChests(Itemid);
-
-        if(chest.getId() == 2617 || chest.getId() == 683)
-        {
-            this.session.user.getAvatarService().serverDialog("error -004");
-            return;
-        }
         if(i == 0){
+            Item Home = this.session.user.findItemInChestsHome(Itemid);
+            Item chest = this.session.user.findItemInChests(Itemid);
+
+            if(chest==null || chest.getId() == 2617 || chest.getId() == 683)
+            {
+                this.session.user.getAvatarService().serverDialog("error -004");
+                return;
+            }
             if(chest == null)
             {
                 this.session.user.getAvatarService().serverDialog("error -001");
@@ -314,7 +314,8 @@ public class HomeService extends Service {
             ds.flush();
             this.session.sendMessage(ms); // Gửi thông điệp tới client
         }else{
-            Item itm = this.session.user.findItemInChestsHome(Itemid);
+            Item Home = this.session.user.findItemInChestsHome(Itemid);
+            Item chest = this.session.user.findItemInChests(Itemid);
 
             if (chest != null && Home != null) {
                 this.session.user.getAvatarService().serverDialog("error -2");
@@ -322,18 +323,18 @@ public class HomeService extends Service {
             }
 
             Boolean Slot = this.session.user.getChestSlot() <= this.session.user.chests.size() ? false : true;
-            if(Slot){
-                this.session.user.removeItemFromChestsHome(itm);
-                this.session.user.addItemToChests(itm);
+            if (Slot) {
+                this.session.user.removeItemFromChestsHome(Home);
+                this.session.user.addItemToChests(Home);
             }
+
             ms = new Message(Cmd.TRANS_PART_CHEST);
             DataOutputStream ds = ms.writer();
             ds.writeBoolean(Slot);
-            ds.writeUTF("Rương đồ đã đầy !");
+            ds.writeUTF("Rương đồ đã đầy!");
             ds.flush();
             this.session.sendMessage(ms); // Gửi thông điệp tới client
         }
-
     }
 
     public void upgradeChestHome(Message ms) throws IOException {
