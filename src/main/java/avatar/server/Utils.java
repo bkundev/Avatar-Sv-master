@@ -57,6 +57,20 @@ public class Utils {
         }
     }
 
+    public static void writeLogKhoaAcc(User user, String message) {
+        String username = user.getUsername();
+        String logFilePath = LOG_DIRECTORY  + "KhoaAcc.txt"; // Tên file log theo username
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFilePath, true))) {
+            LocalDateTime currentTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            writer.write(currentTime.format(formatter) + " - " + message + " " + username);
+            writer.newLine(); // Xuống dòng sau mỗi log
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     public static double distanceBetween(int x1, int y1, int x2, int y2) {
