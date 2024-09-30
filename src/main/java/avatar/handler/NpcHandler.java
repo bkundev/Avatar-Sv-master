@@ -64,7 +64,7 @@ public class NpcHandler {
                     us.getAvatarService().serverDialog("Bạn phải có ít nhất 3 ô trống trong rương đồ");
                     return;
                 }
-                if (us.getXu() < 15000) {
+                if (us.getXu() < 25000) {
                     us.getAvatarService().serverDialog("Bạn không đủ xu!");
                     return;
                 }
@@ -503,6 +503,7 @@ public class NpcHandler {
                 String message = String.format("Bạn vừa bán 1 %s với giá = %d xu.", item.getPart().getName(), sellPrice);
 
                 us.removeItemFromChests(item);
+                us.checkItemQuantityLog(item,"sellFish bug");
                 us.updateXu(sellPrice); // Cập nhật xu
 
                 us.getAvatarService().updateMoney(0); // Cập nhật tiền tệ

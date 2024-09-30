@@ -8,6 +8,11 @@ package avatar.item;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import avatar.model.User;
+import avatar.server.Utils;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,16 +50,51 @@ public class Item {
     public int getDay() {
         return (int) ((this.expired - System.currentTimeMillis()) / 1000 / 60 / 60 / 24) + 1;
     }
-    
-    public synchronized int increase(int quantity) {
-        this.quantity += quantity;
+
+    private Map<Integer, Long> itemIncreaseTimestamps = new HashMap<>(); // Lưu ID item và thời gian thay đổi gần nhất
+    private final long INCREASE_LIMIT_INTERVAL = 20_000; // 20 giây
+    private final int LARGE_INCREASE_THRESHOLD = 50; // Ngưỡng số lượng lớn để log lại
+
+    public synchronized int increase(User us, int quantity, int itemId) {
+        long currentTime = System.currentTimeMillis();
+        long lastIncreaseTime = itemIncreaseTimestamps.getOrDefault(itemId, 0L);
+
+        // Kiểm tra khoảng thời gian giữa các lần tăng số lượng
+        if (currentTime - lastIncreaseTime < INCREASE_LIMIT_INTERVAL && quantity >= LARGE_INCREASE_THRESHOLD) {
+            // Log lại hành vi tăng số lượng lớn trong thời gian ngắn
+           Utils.writeLog(us, "quantity, increase " + quantity + " by " + itemId);
+        }
+
+        // Kiểm tra nếu số lượng yêu cầu là hợp lệ
+        if (quantity <= 0) {
+            return this.quantity;
+        }
+
+        // Áp dụng giới hạn số lượng tối đa là 100
+        if (this.quantity + quantity > 100) {
+            this.quantity = 100;
+        } else {
+            this.quantity += quantity;
+        }
+
+        // Cập nhật thời gian thay đổi số lượng gần nhất
+        itemIncreaseTimestamps.put(itemId, currentTime);
+
         return this.quantity;
     }
-    
+
+
+
     public synchronized int reduce(int quantity) {
-        return increase(-quantity);
+        if (quantity <= 0 || this.quantity - quantity < 0) {
+            return this.quantity;
+        }
+        this.quantity -= quantity;
+
+        return this.quantity;
     }
-    
+
+
     public String expiredString() {
         if (isForever()) {
             return "";

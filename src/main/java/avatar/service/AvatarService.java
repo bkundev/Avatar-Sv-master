@@ -191,7 +191,7 @@ public class AvatarService extends Service {
             ds.writeByte(us.getCrazy());
             ds.writeByte(us.getStylish());
             ds.writeByte(us.getHappy());
-            ds.writeByte(us.getXeng());
+            ds.writeByte(100 - us.getHunger());
             ds.writeInt(us.getLuong());
             ds.writeByte(us.getStar());
             for (Item itm : wearing) {

@@ -371,6 +371,11 @@ public class Session implements ISession {
 
     public void clientInfo(Message ms) throws IOException {
         byte provider = ms.reader().readByte();
+        if(provider!=9) {
+            Utils.writeLog(this.user,"login infoFail : provider = "+provider);
+            this.user.session.getAvatarService().serverDialog("Kết nối thất bại. Xin kiểm tra kết nối wifi/3g");
+            this.user.session.close();
+        }
         int memory = ms.reader().readInt();
         String platform = ms.reader().readUTF();
         this.platform = platform;
@@ -1448,7 +1453,7 @@ public class Session implements ISession {
 
     public void BuyHouse() throws IOException {
 
-        int userId = this.user.getId();
+        int userId =  this.user.session.user.getId();
         try (Connection connection = DbManager.getInstance().getConnection();) {
             String GET_HOUSE_DATA = "SELECT * FROM `house_buy` WHERE `user_id` = ? LIMIT 1";
             PreparedStatement ps = connection.prepareStatement(GET_HOUSE_DATA);
@@ -1459,9 +1464,10 @@ public class Session implements ISession {
                 this.user.session.avatarService.serverDialog("Bạn đã mua nhà rồi !");
                 return;
             }
-            if(user.xu < 1000000)
+            if(this.user.session.user.getXu() < 1000000)
             {
                 this.user.session.avatarService.serverDialog("Bạn không đủ tiền để mua nhà !");
+                return;
             }
 
             this.user.updateXu(-1000000);
@@ -1477,6 +1483,8 @@ public class Session implements ISession {
                 int rowsInserted = insertPs.executeUpdate();
                 if (rowsInserted > 0) {
                     this.user.session.avatarService.serverDialog("Bạn đã mua nhà thành công!");
+
+
                 }
             }
 

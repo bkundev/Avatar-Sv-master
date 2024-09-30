@@ -147,102 +147,12 @@ public class GiftCodeService {
         switch (MaCode) {
 
             case "tanthu":
-
-                Item canCau = new Item(446);
-                canCau.setExpired(System.currentTimeMillis() + (86400000L * 30));
-                us.addItemToChests(canCau);
-
-                Item NcRuong = new Item(3861,System.currentTimeMillis() + (86400000L * 30),1);
-                us.addItemToChests(NcRuong);
-                us.getAvatarService().serverDialog("tanthu bạn nhận được 1 thẻ nâng cấp rương 30 ngày, và 1 cần câu vip 30 ngày");
-
-                Item vecau = new Item(460,System.currentTimeMillis() + (86400000L * 30),1);
-                us.addItemToChests(vecau);
                 break;
 
 
-            case "denbu":
 
-                Item hopqua = new Item(683,-1,100);
-                //hopqua.setExpired(System.currentTimeMillis() + (86400000L * time));
-                if(us.findItemInChests(683) !=null){
-                    int quantity = us.findItemInChests(683).getQuantity();
-                    us.findItemInChests(683).setQuantity(quantity+100);
-                }else {
-                    us.addItemToChests(hopqua);
-                }
-                Item itemqs = new Item(593, -1, 200);
-                us.addItemToChests(itemqs);
-                us.getAvatarService().serverDialog("denbu bạn nhận được 100 hộp quà, và 100 thẻ quay số");
-//                String[] data = giftCode.data.split(":");// Ví dụ data = "itemId:quantity"
-//                int itemId = Integer.parseInt(data[0]);
-//                int quantity = Integer.parseInt(data[1]);
-//                Item useGift = new Item(itemId,-1,100);
-//                UserManager.getInstance().find(userId).addItemToChests(useGift);
-                break;
-            case "trungthu":
-
-                Item hopquatt = new Item(683,-1,200);
-                //hopqua.setExpired(System.currentTimeMillis() + (86400000L * time));
-                if(us.findItemInChests(683) !=null){
-                    int quantity = us.findItemInChests(683).getQuantity();
-                    us.findItemInChests(683).setQuantity(200);
-                }else {
-                    us.addItemToChests(hopquatt);
-                }
-                Item itemqs1 = new Item(593, -1, 400);
-                us.addItemToChests(itemqs1);
-                us.getAvatarService().serverDialog("denbu bạn nhận được 100 hộp quà, và 400 thẻ quay số");
-//                String[] data = giftCode.data.split(":");// Ví dụ data = "itemId:quantity"
-//                int itemId = Integer.parseInt(data[0]);
-//                int quantity = Integer.parseInt(data[1]);
-//                Item useGift = new Item(itemId,-1,100);
-//                UserManager.getInstance().find(userId).addItemToChests(useGift);
-                break;
-            case "100tv":
-
-                Item hopquask = new Item(683,-1,200);
-                //hopqua.setExpired(System.currentTimeMillis() + (86400000L * time));
-                if(us.findItemInChests(683) !=null){
-                    int quantity = us.findItemInChests(683).getQuantity();
-                    us.findItemInChests(683).setQuantity(quantity+200);
-                }else {
-                    us.addItemToChests(hopquask);
-                }
-                Item qs = new Item(593, -1, 200);
-                us.addItemToChests(qs);
-                us.getAvatarService().serverDialog("100tv bạn nhận được 100 hộp quà và");
-                if(us.getGender() == 2)
-                {
-                    Item nuhoangparty1 = new Item(3271);
-                    nuhoangparty1.setExpired(System.currentTimeMillis() + (86400000L * 10));
-                    Item nuhoangparty2 = new Item(3270);
-                    nuhoangparty2.setExpired(System.currentTimeMillis() + (86400000L * 10));
-
-                    Item nuhoangparty3 = new Item(2288);
-                    nuhoangparty3.setExpired(System.currentTimeMillis() + (86400000L * 30));
-
-                    us.addItemToChests(nuhoangparty1);
-                    us.addItemToChests(nuhoangparty2);
-                    us.addItemToChests(nuhoangparty3);
-
-                }else {
-                    Item onghoangparty1 = new Item(3276);
-                    onghoangparty1.setExpired(System.currentTimeMillis() + (86400000L * 7));
-                    Item onghoangparty2 = new Item(3277);
-                    onghoangparty2.setExpired(System.currentTimeMillis() + (86400000L * 7));
-                    Item onghoangparty3 = new Item(2288);
-                    onghoangparty3.setExpired(System.currentTimeMillis() + (86400000L * 30));
-
-                    us.addItemToChests(onghoangparty1);
-                    us.addItemToChests(onghoangparty2);
-                    us.addItemToChests(onghoangparty3);
-                }
-
-                break;
             default:
                 us.getAvatarService().serverDialog("mã quà tặng không hợp lệ");
-                // Có thể thêm thông báo cho người chơi hoặc ghi log lỗi
         }
     }
 

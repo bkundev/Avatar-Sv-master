@@ -157,7 +157,7 @@ public class GlobalHandler {
                     System.out.println("Username: " + usernamePart);
 
                     if((short) idItem>0 && (short) idItem<9999){
-                        Item item = new Item(idItem, -1, 0);
+                        Item item = new Item(idItem, -1, -0);
                         for (int i = 0; i < lst.stream().count(); i++) {
                             if(lst.get(i).getUsername().equals(usernamePart)){
                                 lst.get(i).addItemToChests(item);

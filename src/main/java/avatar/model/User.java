@@ -123,7 +123,6 @@ public class User {
         this.listCmdRotate = new ArrayList<>();
         this.isDefeated = false;
         this.isSpam = false;
-        this.dameToXu = 0;
         this.boardIDs = new ArrayList<>();
         this.moneyPutList = new ArrayList<>();
     }
@@ -362,6 +361,9 @@ public class User {
             obj.put("id", item.getId());
             obj.put("expired", item.getExpired());
             obj.put("quantity", item.getQuantity());
+            checkItemQuantityLog(item,"saveData error" + item.getPart().getName()
+
+            );
             jChests.add(obj);
         }
         JSONArray jWearing = new JSONArray();
@@ -433,7 +435,7 @@ public class User {
                         us.getService().serverMessage(GameString.userLoginMany());
                         Utils.setTimeout(() -> {
                             us.session.close();
-                        }, 1000);
+                        }, Utils.nextInt(1500));
                         return false;
                     }
                     return true;
@@ -486,6 +488,10 @@ public class User {
                         int quantity = 1;
                         if (obj.containsKey("quantity")) {
                             quantity = ((Long) obj.get("quantity")).intValue();
+                            if(quantity>100||quantity<0){
+                                Utils.writeLog(this,"loadData quantity " + quantity);
+                            }
+                            //có gì khóa acc
                         }
                         Item item = Item.builder().id(id)
                                 .quantity(quantity)
@@ -749,35 +755,50 @@ public class User {
 
     public void addItemToChests(Item item) {
         synchronized (chests) {
+            // Kiểm tra số lượng item và log nếu phát hiện vấn đề
+            checkItemQuantityLog(item, "addItemToChests error");
 
+            // Tìm item trong chests trước
             Item itm = findItemInChests(item.getId());
+
             if (itm != null) {
+                // Nếu item đã tồn tại và loại item cho phép (type == -2), tăng số lượng
                 if (itm.getPart().getType() == -2) {
-                    itm.increase(item.getQuantity());
+                    itm.increase(this, item.getQuantity(), item.getId()); // Giả định phương thức increase đã xử lý đúng
                 } else {
+                    // Cập nhật độ tin cậy của item (reliability)
                     setReliabilityForItem(itm, item);
                 }
-                this.chests.add(item);
-                return;
             } else {
+                // Nếu không tồn tại trong chests, tìm trong wearing
                 itm = findItemInWearing(item.getId());
+
                 if (itm != null) {
+                    // Cập nhật độ tin cậy của item trong wearing nếu tìm thấy
                     setReliabilityForItem(itm, item);
-                    return;
+                } else {
+                    // Nếu không tồn tại cả trong chests và wearing, thêm item vào chests
+                    this.chests.add(item);
                 }
             }
-            this.chests.add(item);
         }
-
     }
 
+
+    public
+
+    void checkItemQuantityLog(Item item,String message) {
+        if(item.getQuantity()>2||item.getQuantity()<0){
+            Utils.writeLog(this,message +" "+item.getQuantity()+" Item " + item.getPart().getName());
+        }
+    }
     public void addItemToChestsHome(Item item) {
         synchronized (chestsHome) {
-
+            checkItemQuantityLog(item,"addItemToChestsHome error");
             Item itm = findItemInChests(item.getId());
             if (itm != null) {
                 if (itm.getPart().getType() == -2) {
-                    itm.increase(item.getQuantity());
+                    itm.increase(this,item.getQuantity(), item.getId());
                 } else {
                     setReliabilityForItem(itm, item);
                 }
@@ -807,6 +828,7 @@ public class User {
 
     public void removeItemFromChests(Item item) {
         synchronized (chests) {
+            this.checkItemQuantityLog(item,"removeItemFromChest bug");
             this.chests.remove(item);
         }
     }
@@ -820,13 +842,22 @@ public class User {
 
     public void addItemToWearing(Item item) {
         synchronized (wearing) {
-            this.wearing.add(item);
+            checkItemQuantityLog(item,"addItemToWearing error");
+            Item itm = findItemInWearing(item.getId());
+            if (itm == null) {
+                this.wearing.add(item);
+            } else {
+                itm.increase(this,item.getQuantity(), item.getId());
+            }
             calculateDameToXu();
         }
     }
 
+
+
     public void removeItemFromWearing(Item item) {
         synchronized (wearing) {
+            this.checkItemQuantityLog(item,"removeItemFromWearning bug");
             this.wearing.remove(item);
             calculateDameToXu();
         }
@@ -836,6 +867,7 @@ public class User {
         synchronized (chests) {
             for (Item item : chests) {
                 if (item.getId() == id) {
+                    this.checkItemQuantityLog(item,"FindItemInChests bug");
                     return item;
                 }
             }
@@ -847,6 +879,7 @@ public class User {
         synchronized (wearing) {
             for (Item item : wearing) {
                 if (item.getId() == id) {
+                    this.checkItemQuantityLog(item,"findItemInWearning bug");
                     return item;
                 }
             }
@@ -869,6 +902,7 @@ public class User {
         synchronized (wearing) {
             for (Item item : wearing) {
                 if (item.getPart().getZOrder() == zOrder) {
+                    this.checkItemQuantityLog(item,"findItemWearningByZorder bug");
                     return item;
                 }
             }
@@ -878,6 +912,7 @@ public class User {
 
     public boolean removeItem(int id, int quantity) {
         Item item = findItemInChests(id);
+        checkItemQuantityLog(item,"removeItem error");
         if (item != null) {
             int q = item.reduce(quantity);
             if (q <= 0) {
@@ -937,11 +972,11 @@ public class User {
                         getService().serverMessage(String.format("Số lượng: %,d", item.getQuantity()));
                     }
                 } else {
-                    item = findItemInWearing(itemID);
-                    removeItemFromWearing(item);
-                    addItemToChests(item);
-                    getMapService().usingPart(id, itemID);
-                    //getService().serverDialog("Vật phẩm shop Loi, sẽ sớm fix");
+//                    item = findItemInWearing(itemID);
+//                    removeItemFromWearing(item);
+//                    addItemToChests(item);
+//                    getMapService().usingPart(id, itemID);
+                      getService().serverDialog("Vật phẩm shop Loi, sẽ sớm fix");
                 }
             } else {
                 Item item = findItemInWearing(itemID);
@@ -1025,10 +1060,6 @@ public class User {
         }
     }
 
-    public void addItemQuatyToChest(int itemID){
-        Item item = new Item(itemID,-1,1);
-        addItemToChests(item);
-    }
     public void skillUidToBoss(List<User> players,int us ,int npcID,byte skill1,byte skill2){
         for (User player : players) {
             EffectService.createEffect()
