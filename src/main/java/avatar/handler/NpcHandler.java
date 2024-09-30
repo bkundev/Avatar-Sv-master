@@ -369,10 +369,10 @@ public class NpcHandler {
                                                 System.out.println("Action for 15.000 xu triggered");
                                                 handleDiaLucky(us, DialLuckyManager.XU);
                                             }).build(),
-                                            Menu.builder().name("Q.S miễn phí").action(() -> {
-                                                System.out.println("Action for Q.S miễn phí triggered");
-                                                handleDiaLucky(us, DialLuckyManager.MIEN_PHI);
-                                            }).build(),
+//                                            Menu.builder().name("Q.S miễn phí").action(() -> {
+//                                                System.out.println("Action for Q.S miễn phí triggered");
+//                                                handleDiaLucky(us, DialLuckyManager.MIEN_PHI);
+//                                            }).build(),
                                             Menu.builder().name("Thoát").action(() -> {
                                                 System.out.println("Exit menu triggered");
                                             }).build()

@@ -785,11 +785,14 @@ public class User {
     }
 
 
-    public
+    public void checkItemQuantityLog(Item item, String message) {
+        if (item == null) {
+            Utils.writeLog(this, "Lỗi: item là null trong " + message);
+            return; // Dừng nếu item là null
+        }
 
-    void checkItemQuantityLog(Item item,String message) {
-        if(item.getQuantity()>2||item.getQuantity()<0){
-            Utils.writeLog(this,message +" "+item.getQuantity()+" Item " + item.getPart().getName());
+        if (item.getQuantity() >= 2 || item.getQuantity() < -1) {
+            Utils.writeLog(this, message + " " + item.getQuantity() + " Item " + (item.getPart() != null ? item.getPart().getName() : "Unknown"));
         }
     }
     public void addItemToChestsHome(Item item) {
@@ -828,8 +831,8 @@ public class User {
 
     public void removeItemFromChests(Item item) {
         synchronized (chests) {
-            this.checkItemQuantityLog(item,"removeItemFromChest bug");
             this.chests.remove(item);
+            this.checkItemQuantityLog(item,"removeItemFromChest bug");
         }
     }
 
