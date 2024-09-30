@@ -200,3 +200,4 @@
 2024-09-30 11:27:02 DEBUG User:940 - Item Gender=0
 2024-09-30 11:27:02 DEBUG User:945 - Get Type
 2024-09-30 11:27:02 DEBUG User:947 - Type =-2
+2024-09-30 11:30:14 DEBUG DbManager:93 - DB Connection Pool is shutting down.

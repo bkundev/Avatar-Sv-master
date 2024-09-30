@@ -46,7 +46,6 @@ public class NpcHandler {
 
     public static void handleDiaLucky(User us, byte type) {
         DialLucky dl = DialLuckyManager.getInstance().find(type);
-
         if (dl != null) {
             if (dl.getType() == DialLuckyManager.MIEN_PHI) {
                 if(us.chests.size() >= us.getChestSlot()-2){
@@ -54,6 +53,10 @@ public class NpcHandler {
                     return;
                 }
                 Item itm = us.findItemInChests(593);
+                if (itm.getQuantity() <=0 || itm.getQuantity() > 1998)
+                {
+                    return;
+                }
                 if (itm == null || itm.getQuantity() <= 0) {
                     us.getAvatarService().serverDialog("Bạn không có Vé quay số miễn phí!");
                     return;

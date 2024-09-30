@@ -44,9 +44,9 @@ public class DialLucky {
     public DialLucky(byte type) {
         this.type = type;
         //randomType.add(55, ITEM2);
-        randomType.add(20, ITEM);
+        randomType.add(18, ITEM);
         randomType.add(45, XU);
-        randomType.add(34, XP);
+        randomType.add(36, XP);
         randomType.add(1, LUONG);
 
 
