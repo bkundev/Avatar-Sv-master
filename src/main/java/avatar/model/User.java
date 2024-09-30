@@ -491,22 +491,22 @@ public class User {
                             if(quantity>100||quantity<0){
                                 Utils.writeLog(this,"loadData quantity " + quantity);
                             }
-                            if(quantity>9998||quantity<0) {
-                                Utils.writeLog(this, "loadData quantity và khoa acc" + quantity);
-                                Utils.writeLogKhoaAcc(this, "loadData quantity và khoa acc" + quantity);
-                                String sql1 = "UPDATE users SET active = ? WHERE id = ?";
-                                try (Connection connection1 = DbManager.getInstance().getConnection();
-                                     PreparedStatement ps1 = connection1.prepareStatement(sql1)) {
-
-                                    ps1.setInt(1, 0);  // Khóa tài khoản
-                                    ps1.setInt(2, this.id);
-                                    int rowsUpdated = ps1.executeUpdate();
-                                    if (rowsUpdated == 0) {
-                                        Utils.writeLog(this, "Không có bản ghi nào được cập nhật với ID " + this.id);
-                                    }
-                                    this.session.close();
-                                }
-                            }
+//                            if(quantity>9998||quantity<0) {
+//                                Utils.writeLog(this, "loadData quantity và khoa acc" + quantity);
+//                                Utils.writeLogKhoaAcc(this, "loadData quantity và khoa acc" + quantity);
+//                                String sql1 = "UPDATE users SET active = ? WHERE id = ?";
+//                                try (Connection connection1 = DbManager.getInstance().getConnection();
+//                                     PreparedStatement ps1 = connection1.prepareStatement(sql1)) {
+//
+//                                    ps1.setInt(1, 0);  // Khóa tài khoản
+//                                    ps1.setInt(2, this.id);
+//                                    int rowsUpdated = ps1.executeUpdate();
+//                                    if (rowsUpdated == 0) {
+//                                        Utils.writeLog(this, "Không có bản ghi nào được cập nhật với ID " + this.id);
+//                                    }
+//                                    this.session.close();
+//                                }
+//                            }
                             //có gì khóa acc
                         }
                         Item item = Item.builder().id(id)

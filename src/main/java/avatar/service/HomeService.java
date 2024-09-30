@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 
 import avatar.item.Item;
+import avatar.server.Utils;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
 
@@ -276,14 +277,34 @@ public class HomeService extends Service {
         short ii = ms.reader().readShort();// index
         short Itemid = ms.reader().readShort();
 
+        Item Home = this.session.user.findItemInChestsHome(Itemid);
+        Item chest = this.session.user.findItemInChests(Itemid);
 
-
+        if(chest.getId() == 2617 || chest.getId() == 683)
+        {
+            this.session.user.getAvatarService().serverDialog("error -004");
+            return;
+        }
         if(i == 0){
-            Item itm = this.session.user.findItemInChests(Itemid);
+            if(chest == null)
+            {
+                this.session.user.getAvatarService().serverDialog("error -001");
+                return;
+            }
+
+            if (chest != null && Home != null) {
+                this.session.user.getAvatarService().serverDialog("error -002");
+                return;
+            }
+            if(chest.getQuantity()> 0 || chest.getExpired()!= -1){
+                this.session.user.getAvatarService().serverDialog("error -003");
+                return;
+            }
+
             Boolean Slot = this.session.user.getChestHomeSlot() <= this.session.user.chestsHome.size() ? false : true;
             if(Slot){
-                this.session.user.removeItemFromChests(itm);
-                this.session.user.addItemToChestsHome(itm);
+                this.session.user.removeItemFromChests(chest);
+                this.session.user.addItemToChestsHome(chest);
             }
 
             ms = new Message(Cmd.TRANS_PART_CHEST);
@@ -294,6 +315,12 @@ public class HomeService extends Service {
             this.session.sendMessage(ms); // Gửi thông điệp tới client
         }else{
             Item itm = this.session.user.findItemInChestsHome(Itemid);
+
+            if (chest != null && Home != null) {
+                this.session.user.getAvatarService().serverDialog("error -2");
+                return;
+            }
+
             Boolean Slot = this.session.user.getChestSlot() <= this.session.user.chests.size() ? false : true;
             if(Slot){
                 this.session.user.removeItemFromChestsHome(itm);

@@ -371,11 +371,11 @@ public class Session implements ISession {
 
     public void clientInfo(Message ms) throws IOException {
         byte provider = ms.reader().readByte();
-        if(provider!=9) {
-            Utils.writeLog(this.user,"login infoFail : provider = "+provider);
-            this.user.session.getAvatarService().serverDialog("Kết nối thất bại. Xin kiểm tra kết nối wifi/3g");
-            this.user.session.close();
-        }
+//        if(provider!=9) {
+//            Utils.writeLog(this.user,"login infoFail : provider = "+provider);
+//            this.user.session.getAvatarService().serverDialog("Kết nối thất bại. Xin kiểm tra kết nối wifi/3g");
+//            this.user.session.close();
+//        }
         int memory = ms.reader().readInt();
         String platform = ms.reader().readUTF();
         this.platform = platform;
