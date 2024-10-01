@@ -21,24 +21,30 @@ public class UpgradeItem extends BossShopItem {
     private int xu;
     private int luong;
     private int scores;//điểm đổi sự kiện
+
     @Override
     public String initDialog(BossShop bossShop) {
         if (isOnlyLuong && bossShop.getIdShop() == BossShopHandler.SELECT_XU) {
             return "Bạn chỉ có thể nâng cấp vật phẩm này bằng lượng";
-        } else if (bossShop.getIdBoss() == NpcName.bunma+Npc.ID_ADD) {
+        } else if (bossShop.getIdBoss() == NpcName.bunma + Npc.ID_ADD) {
             return MessageFormat.format(
                     "Bạn có muốn đổi {0} bằng {1} điểm sự kiện không?",
                     super.getItem().getPart().getName(),
                     scores
 
             );
-        }
-        else if (bossShop.getIdBoss() == NpcName.Vegeta+Npc.ID_ADD) {
+        } else if (bossShop.getIdBoss() == NpcName.Vegeta + Npc.ID_ADD) {
             return MessageFormat.format(
                     "Bạn có muốn đổi {0} bằng {1} không?",
                     super.getItem().getPart().getName(),
                     PartManager.getInstance().findPartById(itemNeed).getName()
 
+            );
+        } else if (bossShop.getIdBoss() == NpcName.Shop_Dac_Biet + Npc.ID_ADD) {
+            return MessageFormat.format(
+                    "Bạn có muốn đổi {0} bằng 1 jack à nhầm bằng {1} Lượng không?",
+                    super.getItem().getPart().getName(),
+                    super.getItem().getPart().getGold()
             );
         }
         return MessageFormat.format(
@@ -48,6 +54,5 @@ public class UpgradeItem extends BossShopItem {
                 super.getItem().getPart().getName(),
                 ratio > 0 ? (ratio + "%") : "Không xác định"
         );
-
     }
 }

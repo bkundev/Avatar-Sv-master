@@ -356,14 +356,45 @@ public class AvatarService extends Service {
         byte idSelectedMini = ms.reader().readByte();
         short idJoin = ms.reader().readShort();
 
-        this.session.user.getZone().leave(this.session.user);
+        switch (idJoin) {
+            case 4:
+                this.session.user.getAvatarService().serverDialog("đang xây dựng");
+                break;
+            case 5://Shop 1 hawai
 
-        ms = new Message(Cmd.JOIN_ONGAME_MINI);
-        DataOutputStream ds = ms.writer();
-//        ds.writeByte(1);
-//        ds.writeByte(0);
-//        ds.writeShort(4);
-        this.session.sendMessage(ms);
+                // Retrieve the shop items
+                List<Item> items = Part.shopByPart(PartManager.getInstance().getShopVQBD());
+
+                // Check if items is null before proceeding
+                if (items == null) {
+                    System.out.println("Items list is null");
+                    return; // Handle the null case
+                }
+
+                // Open the shop UI
+                this.session.user.getAvatarService().openUIShop(5, "shop VQBD", items);
+                break;
+            case 9:
+                this.session.user.getAvatarService().serverDialog("shop 2 đang dây dựng");
+                break;
+            case 18:
+                this.session.user.getAvatarService().serverDialog("Biển Locity đang xây dựng vui lòng quay lại sau !");
+                break;
+            // Add more cases as needed
+            default:
+                // Code to execute if no cases match
+                break;
+        }
+
+
+//        this.session.user.getZone().leave(this.session.user);
+//
+//        ms = new Message(Cmd.JOIN_ONGAME_MINI);
+//        DataOutputStream ds = ms.writer();
+////        ds.writeByte(1);
+////        ds.writeByte(0);
+////        ds.writeShort(4);
+//        this.session.sendMessage(ms);
 
 
 

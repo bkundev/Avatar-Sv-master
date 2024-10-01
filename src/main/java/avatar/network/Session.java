@@ -84,6 +84,10 @@ public class Session implements ISession {
 
     private UpgradeItemHandler upgradeHandler;
 
+
+    private static final java.util.Map<Integer, Long> lastActionTimes = new HashMap<>();
+    private static final long ACTION_COOLDOWN_MS = 100; //
+
     public Session(Socket sc, int id) throws IOException {
         this.obj = new Object();
         this.resourceType = 0;
@@ -1207,7 +1211,50 @@ public class Session implements ISession {
                 return;
             }
         }
+        if (idBoss == Npc.ID_ADD + NpcName.Shop_Dac_Biet && user.getBossShopItems() != null) {
+            System.out.println(MessageFormat.format("do Event item boss shop ShopDacBiet {0}, {1}, {2},"
+                    , idBoss, type, indexItem));
+            UpgradeItem EventItem = (UpgradeItem) user.getBossShopItems().get(indexItem);
+            if (EventItem != null) {
+                doFinalEventShop(EventItem,NpcName.Shop_Dac_Biet);
+                return;
+            }
+        }
     }
+
+
+    private void doFinalEventShopThuong(Item item,int npcId) {
+        // pt thành dng item ko cần build qua updare
+        Zone z = user.getZone();
+        if (z != null) {
+            User u = z.find(npcId+Npc.ID_ADD);
+            if (u == null) {
+                return;
+            }
+        } else {
+            return;
+        }
+        switch (npcId) {
+            case NpcName.Shop_Dac_Biet:
+                if(user.getLuong()> item.getPart().getGold()){
+                    if(user.getChestSlot() <= user.chests.size())
+                    {
+                        getAvatarService().serverDialog("Rương đồ đã đầy");
+                        return;
+                    }
+                    item.setExpired(-1);
+                    user.addItemToChests(item);
+                    user.updateLuong(-item.getPart().getGold());
+                    getAvatarService().requestYourInfo(user);
+                    getAvatarService().updateMoney(0);
+                    getService().serverDialog("Chúc mừng bạn đã đổi thành công");
+                } else {
+                    getService().serverDialog("Bạn chưa đủ điều kiện để đổi");
+                }
+                break;
+        }
+    }
+
 
     private void doFinalEventShop(UpgradeItem Eventitem,int npcId) {
         Zone z = user.getZone();
@@ -1255,12 +1302,34 @@ public class Session implements ISession {
                     getService().serverDialog(String.format("Bạn không có %s để đổi",Eventitem.getItemNeed()));
                 }
                 break;
+            case NpcName.Shop_Dac_Biet:
+                if(user.getLuong()> Eventitem.getItem().getPart().getGold()){
+                    if(user.getChestSlot() <= user.chests.size())
+                    {
+                        getAvatarService().serverDialog("Rương đồ đã đầy");
+                        return;
+                    }
+                    Eventitem.getItem().setExpired(-1);
+                    user.addItemToChests(Eventitem.getItem());
+                    user.updateLuong(-Eventitem.getItem().getPart().getGold());
+                    getAvatarService().updateMoney(0);
+                    getService().serverDialog("Chúc mừng bạn đã đổi thành công");
+                } else {
+                    getService().serverDialog("Bạn chưa đủ điều kiện để đổi");
+                }
+                break;
         }
     }
 
-
-
     private void doFinalUpgrade(UpgradeItem item, Item itemOld) {
+
+        long currentTime = System.currentTimeMillis();
+        long lastActionTime = lastActionTimes.getOrDefault(this.user.getId(), 0L);
+        if (currentTime - lastActionTime < ACTION_COOLDOWN_MS) {
+            this.user.getAvatarService().serverDialog("Từ từ thôi bạn!");
+            return;
+        }
+        lastActionTimes.put(this.user.getId(), currentTime);
         if(itemOld.getExpired()!=-1){
             user.getAvatarService().serverDialog("Bạn cần có vật phẩm "+itemOld.getPart().getName()+ " vĩnh viễn");
             return;

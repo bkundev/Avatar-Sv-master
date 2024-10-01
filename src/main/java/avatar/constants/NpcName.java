@@ -34,11 +34,12 @@ public class NpcName {
     public static final int CUA_HANG = 761;
     public static final int CHU_DAU_TU = 857;
     public static final int LAI_BUON = 850;
-    public static final int em_Thinh = 851;
+    public static final int em_thinh = 851;
     public static final int binzoet = 852;
     //public static final int em_Thinh = 856;
     public static final int boss = 999;
     public static final int bunma = 858;
     public static final int Vegeta = 859;
     public static final int Tien_chi_mu_Lovanga = 860;
+    public static final int Shop_Dac_Biet = 861;
 }

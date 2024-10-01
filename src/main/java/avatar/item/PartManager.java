@@ -29,6 +29,10 @@ public class PartManager {
     @Getter
     private final List<UpgradeItem> upgradeItems = new ArrayList<>();
 
+
+    @Getter
+    private final List<Part> ShopVQBD = new ArrayList<>();///type 19
+
     public Part findPartById(int id) {
         return getParts().stream()
                 .filter(part -> part.getId() == id)
@@ -38,6 +42,7 @@ public class PartManager {
 
     public void load() {
         parts.clear();
+        ShopVQBD.clear();
         try (Connection connection = DbManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement("SELECT * FROM `items`;");
              ResultSet rs = ps.executeQuery()) {
@@ -80,12 +85,31 @@ public class PartManager {
                         .dy(dy)
                         .build());
                 System.out.println("id: " + id + " name: " + name);
+                if (sell == 19) {
+                    ShopVQBD.add(Part.builder().id(id)
+                            .coin(coin)
+                            .gold(gold)
+                            .type(type)
+                            .name(name)
+                            .icon(icon)
+                            .expiredDay(expiredDay)
+                            .level(level)
+                            .sell(sell)
+                            .zOrder(zOrder)
+                            .gender(gender)
+                            .imgID(imgID)
+                            .dx(dx)
+                            .dy(dy)
+                            .build());// Add the individual Part object
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         loadUpgradeItemData();
     }
+
+
     public void loadUpgradeItemData() {
         upgradeItems.clear();
         try (Connection connection = DbManager.getInstance().getConnection();

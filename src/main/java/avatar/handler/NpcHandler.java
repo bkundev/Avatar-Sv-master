@@ -1,9 +1,12 @@
 
 package avatar.handler;
 
+import avatar.common.BossShopItem;
 import avatar.constants.Cmd;
 import avatar.constants.NpcName;
 import avatar.item.Item;
+import avatar.item.Part;
+import avatar.item.PartManager;
 import avatar.model.*;
 
 import java.util.*;
@@ -331,7 +334,7 @@ public class NpcHandler {
                     us.setMenus(chudautu);
                     us.getAvatarService().openMenuOption(npcId, 0, chudautu);
                     break;
-//                case NpcName.em_Thinh:{
+//                case NpcName.em_thinh:{
 //                    List<Menu> listet = new ArrayList<>();
 //                    List<Item> Items = new ArrayList<>();
 //                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
@@ -341,7 +344,7 @@ public class NpcHandler {
 //                                                    Item item = new Item((short) i);
 //                                                    Items.add(item);
 //                                                }
-//                                                us.getAvatarService().openUIShop(-49,"em.Thinh",Items);
+//                                                us.getAvatarService().openUIShop(-49,"em.thinh",Items);
 //                                            }).build()
 //                                    ))
 //                            .id(npcId)
@@ -369,10 +372,10 @@ public class NpcHandler {
                                                 System.out.println("Action for 15.000 xu triggered");
                                                 handleDiaLucky(us, DialLuckyManager.XU);
                                             }).build(),
-//                                            Menu.builder().name("Q.S miễn phí").action(() -> {
-//                                                System.out.println("Action for Q.S miễn phí triggered");
-//                                                handleDiaLucky(us, DialLuckyManager.MIEN_PHI);
-//                                            }).build(),
+                                            Menu.builder().name("Q.S miễn phí").action(() -> {
+                                                System.out.println("Action for Q.S miễn phí triggered");
+                                                handleDiaLucky(us, DialLuckyManager.MIEN_PHI);
+                                            }).build(),
                                             Menu.builder().name("Thoát").action(() -> {
                                                 System.out.println("Exit menu triggered");
                                             }).build()
@@ -420,7 +423,7 @@ public class NpcHandler {
                 case NpcName.LAI_BUON: {
                     List<Menu> laibuon = new ArrayList<>();
                     Menu LAI_BUON = Menu.builder().name("Điểm Danh").action(() -> {
-                        Item item = new Item(593, -1, 1);
+                        //Item item = new Item(593, -1, 1);
                         //us.addItemToChests(item);
                         //us.addExp(5);
                         us.getService().serverMessage("đang xây dựng");//Bạn nhận được 5 điểm exp + 1 thẻ quay số miễn phí");
@@ -490,6 +493,24 @@ public class NpcHandler {
                     us.getAvatarService().openUIMenu(npcId, 0, listet, "text 1", "text2");
                     break;
                 }
+                case NpcName.Shop_Dac_Biet:
+                {
+                    List<Menu> ListDacBiet = new ArrayList<>();
+                    Menu ShopDacBiet = Menu.builder().name("Đổi Quà").action(() -> {
+                        ShopEventHandler.displayUI(us, Shop_Dac_Biet,5898);
+                    }).build();
+                    ListDacBiet.add(ShopDacBiet);
+                    ListDacBiet.add(Menu.builder().name("Xem hướng dẫn")
+                            .action(() -> {
+                                us.getAvatarService().customTab("Hướng dẫn", "co cai d.");
+                            })
+                            .build());
+                    ListDacBiet.add(Menu.builder().name("Thoát").id(npcId).build());
+                    us.setMenus(ListDacBiet);
+                    us.getAvatarService().openMenuOption(npcId, 0, ListDacBiet);
+                    break;
+                }
+
             }
         }
     }
