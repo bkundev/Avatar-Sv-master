@@ -248,6 +248,7 @@ public class User {
         this.luong += luongUp;
         try {
             this.getAvatarService().SendTabmsg("Luong : "+ this.luong);
+            Utils.writeLog(this,"luong : "+this.luong);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
