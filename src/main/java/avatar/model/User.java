@@ -978,10 +978,10 @@ public class User {
                 } else if (pType == -2) {
                     if(item.getId()==683)
                     {
-                        if (item.getQuantity() <=0 || item.getQuantity() > 1998)
-                        {
-                            return;
-                        }
+//                        if (item.getQuantity() <=0 || item.getQuantity() > 1998)
+//                        {
+//                            return;
+//                        }
                         if((this.chests.size() >= this.getChestSlot())){
                             getService().serverMessage("Bạn phải có ít nhất 1 ô trống");
                             return;
