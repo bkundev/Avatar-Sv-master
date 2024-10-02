@@ -484,6 +484,23 @@ public class Session implements ISession {
             checkThuongNapLanDau();
             checkThuongNapSet();
 
+            int diamondsPerThousand = 1; // Tặng 1 kim cương vũ trụ cho mỗi 1.000 VND đã nạp
+            int tongNap = getTotalDeposited(user); // Tổng số tiền người chơi đã nạp
+            int nhanthuongTongNap = getNhanThuongTongNap(); // Số tiền nạp đã nhận thưởng
+
+            // Tính phần thưởng dựa trên tổng tiền nạp chưa nhận
+            int rewardableAmount = (tongNap - nhanthuongTongNap) / 1000;
+
+            if (rewardableAmount > 0) {
+                // Tặng số kim cương tương ứng
+                Item Kimcuong =  new Item(690,-1, rewardableAmount * diamondsPerThousand);
+                this.user.addItemToChests(Kimcuong);
+                this.user.getAvatarService().SendTabmsg("Bạn vừa donate nhận được " + rewardableAmount * diamondsPerThousand + " kim cương vũ trụ");
+                // Cập nhật lại nhanthuongTongNap trong cơ sở dữ liệu
+                int newNhanThuong = nhanthuongTongNap + (rewardableAmount * 1000);
+                updateNhanThuongTongNap(newNhanThuong);
+            }
+
             //NhanThuongEventluong();
 
             //NhanThuongEventXuBoss();
@@ -499,6 +516,65 @@ public class Session implements ISession {
             enter();
         }
     }
+
+    public int getNhanThuongTongNap() {
+        String sql = "SELECT nhanthuongTongNap FROM users WHERE id = ?";
+        int nhanthuongTongNap = 0; // Mặc định là 0 nếu không có dữ liệu
+
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, this.user.getId());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    nhanthuongTongNap = rs.getInt("nhanthuongTongNap");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return nhanthuongTongNap;
+    }
+
+
+    private void updateNhanThuongTongNap(int newNhanThuong) {
+        String sql = "UPDATE users SET nhanthuongTongNap = ? WHERE id = ?";
+
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, newNhanThuong);
+            ps.setInt(2, this.user.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+//paytowin
+    public int getTotalDeposited(User us) {
+        String sql = "SELECT tongNap FROM users WHERE id = ?";
+        int totalDeposited = 0; // Mặc định tổng nạp là 0 nếu không tìm thấy
+
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, this.user.getId()); // Sử dụng ID người dùng để truy vấn
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    totalDeposited = rs.getInt("tongNap"); // Lấy tổng tiền nạp từ cột 'tongNap'
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return totalDeposited; // Trả về tổng tiền nạp
+    }
+
 
     private void NhanThuongEventXuBoss() throws IOException {
 
