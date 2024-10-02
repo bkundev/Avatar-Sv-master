@@ -512,9 +512,9 @@ public class NpcHandler {
                         ShopEventHandler.displayUI(us, Pay_To_Win,6824);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
-                    ListDacBiet.add(Menu.builder().name("Hộp quà có gì")
+                    ListDacBiet.add(Menu.builder().name("Hướng dẫn")
                             .action(() -> {
-                                us.getAvatarService().customTab("Hướng dẫn", "co cai d.");
+                                us.getAvatarService().customTab("Hướng dẫn", "khi bạn donate 1k sẽ nhận được 1 kim cương vũ trụ");
                             })
                             .build());
                     ListDacBiet.add(Menu.builder().name("Thoát").id(npcId).build());

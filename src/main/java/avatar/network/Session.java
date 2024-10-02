@@ -1400,6 +1400,22 @@ public class Session implements ISession {
                         getAvatarService().serverDialog("Rương đồ đã đầy");
                         return;
                     }
+                    if(Eventitem.getItem().getId() == 4345) {
+                        user.removeItem(huyhieu.getId(),Eventitem.getScores());
+                        Item quanpika = new Item(4346);
+                        quanpika.setExpired(-1);
+                        user.addItemToChests(quanpika);
+
+                        Item aopika = new Item(4347);
+                        aopika.setExpired(-1);
+                        user.addItemToChests(aopika);
+
+                        getAvatarService().requestYourInfo(user);
+
+                        getService().serverDialog(String.format("Chúc mừng bạn đã đổi thành công %s",Eventitem.getItem().getPart().getName()));
+                        //user.addItemToChests(Eventitem.getItem());
+                        //return;
+                    }
                     user.removeItem(huyhieu.getId(),Eventitem.getScores());
                     getAvatarService().requestYourInfo(user);
                     getService().serverDialog(String.format("Chúc mừng bạn đã đổi thành công %s",Eventitem.getItem().getPart().getName()));
