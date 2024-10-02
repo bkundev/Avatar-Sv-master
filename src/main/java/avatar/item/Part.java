@@ -32,14 +32,6 @@ public class Part {
     private byte[] dx;
     private byte[] dy;
 
-    public List<Item> CreateByPart(List<Part> PartItems) {
-        List<Item> items = new ArrayList<Item>();
-        for (Part part : PartItems) {
-            Item itm = new Item(part.getId(),part.getExpiredDay(),0);
-            items.add(itm);
-        }
-        return items;
-    }
     public static List<Item> shopByPart(List<Part> partItems) {
         // Create a list of part IDs
         List<Integer> partID = partItems.stream()
@@ -47,7 +39,7 @@ public class Part {
                 .collect(Collectors.toList());
 
         // Filter and sort the ShopVQBD parts
-        List<Item> shopPart = PartManager.getInstance().getShopVQBD()
+        List<Item> shopPart = partItems
                 .stream()
                 .filter(part -> partID.contains(part.getId())) // Filter by ID
                 .sorted(Comparator.comparingInt(part -> {

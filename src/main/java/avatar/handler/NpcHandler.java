@@ -334,32 +334,28 @@ public class NpcHandler {
                     us.setMenus(chudautu);
                     us.getAvatarService().openMenuOption(npcId, 0, chudautu);
                     break;
-//                case NpcName.em_thinh:{
-//                    List<Menu> listet = new ArrayList<>();
-//                    List<Item> Items = new ArrayList<>();
-//                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
-//                                    List.of(
-//                                            Menu.builder().name("demo item").action(() -> {
-//                                                for (int i = 2000; i < 6676; i++) {
-//                                                    Item item = new Item((short) i);
-//                                                    Items.add(item);
-//                                                }
-//                                                us.getAvatarService().openUIShop(-49,"em.thinh",Items);
-//                                            }).build()
-//                                    ))
-//                            .id(npcId)
-//                            .npcName("donate đi")
-//                            .npcChat("show Item")
-//                            .build();
-//                    listet.add(quaySo);
-//                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
-//                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
-//                    }).build());
-//                    listet.add(Menu.builder().name("Thoát").build());
-//                    us.setMenus(listet);
-//                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
-//                    break;
-//                }
+                case NpcName.em_thinh:{
+                    List<Menu> listet = new ArrayList<>();
+                    List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
+                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
+                                    List.of(
+                                            Menu.builder().name("demo item").action(() -> {
+                                                us.getAvatarService().openUIShop(-49,"em.thinh",Items);
+                                            }).build()
+                                    ))
+                            .id(npcId)
+                            .npcName("donate đi")
+                            .npcChat("show Item")
+                            .build();
+                    listet.add(quaySo);
+                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
+                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
+                    }).build());
+                    listet.add(Menu.builder().name("Thoát").build());
+                    us.setMenus(listet);
+                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
+                    break;
+                }
                 case NpcName.QUAY_SO: {
                     List<Menu> qs = new ArrayList<>();
                     Menu quaySo1 = Menu.builder().name("Quay số").menus(
@@ -394,14 +390,13 @@ public class NpcHandler {
                 }
                 case NpcName.THO_KIM_HOAN: {
                     List<Menu> nangcap = new ArrayList<>();
-                    String npcName = "Thợ KH";
                     String npcChat = "Muốn nâng cấp đồ thì vào đây";
-                    Menu upgrade = Menu.builder().name("Nâng cấp").id(npcId).npcName(npcName).npcChat(npcChat).menus(
+                    Menu upgrade = Menu.builder().name("Nâng cấp").id(npcId).menus(
                                     List.of(
-                                            Menu.builder().name("Nâng cấp xu").id(npcId).npcName(npcName).npcChat(npcChat)
+                                            Menu.builder().name("Nâng cấp xu").id(npcId)
                                                     .menus(listItemUpgrade(npcId, us, BossShopHandler.SELECT_XU))
                                                     .build(),
-                                            Menu.builder().name("Nâng cấp lượng").id(npcId).npcName(npcName).npcChat(npcChat)
+                                            Menu.builder().name("Nâng cấp lượng").id(npcId)
                                                     .menus(listItemUpgrade(npcId, us, BossShopHandler.SELECT_LUONG))
                                                     .id(npcId)
                                                     .build(),
@@ -417,7 +412,7 @@ public class NpcHandler {
                             .build());
                     nangcap.add(Menu.builder().name("Thoát").id(npcId).build());
                     us.setMenus(nangcap);
-                    us.getAvatarService().openUIMenu(npcId, 0, nangcap, npcName, npcChat);
+                    us.getAvatarService().openMenuOption(npcId, 0, nangcap);
                     break;
                 }
                 case NpcName.LAI_BUON: {
@@ -510,7 +505,23 @@ public class NpcHandler {
                     us.getAvatarService().openMenuOption(npcId, 0, ListDacBiet);
                     break;
                 }
-
+                case NpcName.Pay_To_Win:
+                {
+                    List<Menu> ListDacBiet = new ArrayList<>();
+                    Menu ShopDacBiet = Menu.builder().name("Đổi quà").action(() -> {
+                        ShopEventHandler.displayUI(us, Pay_To_Win,6824);
+                    }).build();
+                    ListDacBiet.add(ShopDacBiet);
+                    ListDacBiet.add(Menu.builder().name("Hộp quà có gì")
+                            .action(() -> {
+                                us.getAvatarService().customTab("Hướng dẫn", "co cai d.");
+                            })
+                            .build());
+                    ListDacBiet.add(Menu.builder().name("Thoát").id(npcId).build());
+                    us.setMenus(ListDacBiet);
+                    us.getAvatarService().openMenuOption(npcId, 0, ListDacBiet);
+                    break;
+                }
             }
         }
     }

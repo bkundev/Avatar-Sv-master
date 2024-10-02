@@ -28,11 +28,9 @@ public class PartManager {
     private final List<Part> parts = new ArrayList<>();
     @Getter
     private final List<UpgradeItem> upgradeItems = new ArrayList<>();
-
-
     @Getter
     private final List<Part> ShopVQBD = new ArrayList<>();///type 19
-
+    //private final List<UpgradeItem> upgradeItems = new ArrayList<>();
     public Part findPartById(int id) {
         return getParts().stream()
                 .filter(part -> part.getId() == id)

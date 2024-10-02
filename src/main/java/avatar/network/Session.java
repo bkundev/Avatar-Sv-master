@@ -482,7 +482,6 @@ public class Session implements ISession {
 
 
             checkThuongNapLanDau();
-
             checkThuongNapSet();
 
             //NhanThuongEventluong();
@@ -769,7 +768,7 @@ public class Session implements ISession {
             while (rs.next()) {
                 int tongnap = rs.getInt("tongnap");
                 boolean thuongNapSet = rs.getBoolean("ThuongNapSet");
-                if(!thuongNapSet && tongnap>=200000){
+                if(!thuongNapSet && tongnap>=100000){
                     nhanThuongNapSet();
                 }
             }
@@ -781,20 +780,60 @@ public class Session implements ISession {
 
     private void nhanThuongNapSet(){
         try {
-            user.getAvatarService().SendTabmsg("Bạn nhận được set IronMan dame = 100");
+
+            user.getAvatarService().SendTabmsg("Bạn nhận được set siêu sao âm nhạc");
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        if(user.chests.size() >= user.getChestSlot()-4){
+            user.getAvatarService().serverDialog("Bạn phải có ít nhất 5 ô trống trong rương đồ");
+            return;
+        }
+
         DbManager.getInstance().executeUpdate("UPDATE `users` SET `ThuongNapSet` = ? WHERE `id` = ? LIMIT 1;",
                 1, user.getId());
 
-        Item itemNon = new Item(3174,-1,1);
-        user.addItemToChests(itemNon);
-        Item itemAo = new Item(3176, -1, 1);
-        user.addItemToChests(itemAo);
-        Item itemQuan = new Item(3177, -1, 1);
-        user.addItemToChests(itemQuan);
+        if(user.getGender() == 1)
+        {
+            Item toc = new Item(5750);//tóc nam
+            toc.setExpired(-1);
+            user.addItemToChests(toc);
+
+            Item ao = new Item(5751);
+            ao.setExpired(-1);
+            user.addItemToChests(ao);
+
+            Item quan = new Item(5752);
+            quan.setExpired(-1);
+            user.addItemToChests(quan);
+
+            Item bongtai = new Item(5753);
+            bongtai.setExpired(-1);
+            user.addItemToChests(bongtai);
+
+        }else {
+            Item tocnu = new Item(5755);// nu
+            tocnu.setExpired(-1);
+            user.addItemToChests(tocnu);
+
+            Item aonu = new Item(5756);// nu
+            aonu.setExpired(-1);
+            user.addItemToChests(aonu);
+
+            Item quanNu = new Item(5757);// nu
+            quanNu.setExpired(-1);
+            user.addItemToChests(quanNu);
+
+            Item bongTaiNu = new Item(5759);// nu
+            bongTaiNu.setExpired(-1);
+            user.addItemToChests(bongTaiNu);
+
+        }
+
+        Item diaBayAmNhac = new Item(5760);
+        diaBayAmNhac.setExpired(-1);
+        user.addItemToChests(diaBayAmNhac);
     }
 
     public boolean isNewVersion() {
@@ -1192,7 +1231,16 @@ public class Session implements ISession {
         }
 
 
-        ///Shop Sự Kiện EventShop
+        if (idBoss == Npc.ID_ADD + NpcName.Pay_To_Win && user.getBossShopItems() != null) {
+            System.out.println(MessageFormat.format("do Event item boss shop Pay_To_Win {0}, {1}, {2},"
+                    , idBoss, type, indexItem));
+            UpgradeItem EventItem = (UpgradeItem) user.getBossShopItems().get(indexItem);
+            if (EventItem != null) {
+                doFinalEventShop(EventItem,NpcName.Pay_To_Win);
+                return;
+            }
+        }
+
         if (idBoss == Npc.ID_ADD + NpcName.bunma && user.getBossShopItems() != null) {
             System.out.println(MessageFormat.format("do Event item boss shop {0}, {1}, {2},"
                     , idBoss, type, indexItem));
@@ -1267,6 +1315,25 @@ public class Session implements ISession {
             return;
         }
         switch (npcId) {
+            case NpcName.Pay_To_Win:
+                Item huyhieu = user.findItemInChests(Eventitem.getItemNeed());
+                if(huyhieu!=null&& huyhieu.getQuantity() >= Eventitem.getScores()){
+                    Eventitem.getItem().setExpired(-1);
+                    if(user.getChestSlot() <= user.chests.size())
+                    {
+                        getAvatarService().serverDialog("Rương đồ đã đầy");
+                        return;
+                    }
+                    user.removeItem(huyhieu.getId(),Eventitem.getScores());
+                    getAvatarService().requestYourInfo(user);
+                    getService().serverDialog(String.format("Chúc mừng bạn đã đổi thành công %s",Eventitem.getItem().getPart().getName()));
+                    user.addItemToChests(Eventitem.getItem());
+                }
+                else
+                {
+                    getService().serverDialog(String.format("Bạn không đủ huy hiệu để đổi"));
+                }
+                break;
             case NpcName.bunma:
                 if(user.getScores()> Eventitem.getScores()){
                     Eventitem.getItem().setExpired(-1);

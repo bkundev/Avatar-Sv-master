@@ -24,9 +24,10 @@ Avatar {
     }
 
     public static void start() {
-        //getPart insert sql item
 
-//        for (int i = 2000; i < 6795; i++) {
+        //getPart insert sql item
+//
+//        for (int i = 2000; i < 6827; i++) {
 //           byte[] dat = Avatar.getFile("res/p/part_"+i+".dat");
 //            Utils.decodeItemDataFile(dat,true);
 //         }

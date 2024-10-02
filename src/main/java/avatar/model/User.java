@@ -229,6 +229,7 @@ public class User {
 
     public synchronized void updateXu(long xuUp) {
         this.xu += xuUp;
+        Utils.writeLog(this,"xu : "+this.xu);
     }
     public synchronized void updateXuKillBoss(int dame) {
         this.storedXuUpdate += dame; // Lưu xu vào biến tạm thời
@@ -772,10 +773,8 @@ public class User {
 
     public void addItemToChests(Item item) {
         synchronized (chests) {
-            // Kiểm tra số lượng item và log nếu phát hiện vấn đề
             checkItemQuantityLog(item, "addItemToChests error");
 
-            // Tìm item trong chests trước
             Item itm = findItemInChests(item.getId());
 
             if (itm != null) {
@@ -785,10 +784,11 @@ public class User {
                 } else {
                     // Cập nhật độ tin cậy của item (reliability)
                     setReliabilityForItem(itm, item);
+                    this.chests.add(item);
                 }
             } else {
                 // Nếu không tồn tại trong chests, tìm trong wearing
-                itm = findItemInWearing(item.getId());
+               // itm = findItemInWearing(item.getId());
 
                 if (itm != null) {
                     // Cập nhật độ tin cậy của item trong wearing nếu tìm thấy
