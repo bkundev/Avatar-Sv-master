@@ -531,7 +531,7 @@ public class NpcHandler {
                 {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Đổi quà").action(() -> {
-                        ShopEventHandler.displayUI(us, Chay_To_Win,2054,3443);
+                        ShopEventHandler.displayUI(us, Chay_To_Win,2054,2049,2050,2051,2354,2355,3440,3441,3442,3443,3445,3446);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
                     ListDacBiet.add(Menu.builder().name("Hướng dẫn")
