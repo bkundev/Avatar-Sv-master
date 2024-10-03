@@ -478,7 +478,7 @@ public class Session implements ISession {
             UserManager.getInstance().add(user);
             getAvatarService().onLoginSuccess();
             getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thanh Pho lo");
-            getAvatarService().serverInfo("notification");
+            getAvatarService().serverInfo("nạp x2 đến hết ngày 5/10 và update 2 shop PayToWin and ChayToWin ở ngoại ô mời các bạn khám phá, chúc các bạn online vui vẻ.");
 
 
             checkThuongNapLanDau();
