@@ -3025,3 +3025,405 @@
 2024-10-03 14:07:00 DEBUG User:948 - itemID: 5408 type: 1
 2024-10-03 14:07:00 DEBUG User:950 - Find Item
 2024-10-03 14:07:00 DEBUG User:952 - Find Done
+2024-10-03 14:09:27 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 14:09:35 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 14:15:49 DEBUG User:948 - itemID: 4036 type: 1
+2024-10-03 14:15:49 DEBUG User:950 - Find Item
+2024-10-03 14:15:49 DEBUG User:952 - Find Done
+2024-10-03 14:15:49 DEBUG User:957 - Find Detail Item
+2024-10-03 14:15:49 DEBUG User:960 - Item Gender=0
+2024-10-03 14:15:49 DEBUG User:965 - Get Type
+2024-10-03 14:15:49 DEBUG User:967 - Type =-1
+2024-10-03 14:16:42 DEBUG User:948 - itemID: 3440 type: 1
+2024-10-03 14:16:42 DEBUG User:950 - Find Item
+2024-10-03 14:16:42 DEBUG User:952 - Find Done
+2024-10-03 14:16:42 DEBUG User:957 - Find Detail Item
+2024-10-03 14:16:42 DEBUG User:960 - Item Gender=1
+2024-10-03 14:16:42 DEBUG User:965 - Get Type
+2024-10-03 14:16:42 DEBUG User:967 - Type =-1
+2024-10-03 14:16:45 DEBUG User:948 - itemID: 5419 type: 0
+2024-10-03 14:16:59 DEBUG User:948 - itemID: 3441 type: 1
+2024-10-03 14:16:59 DEBUG User:950 - Find Item
+2024-10-03 14:16:59 DEBUG User:952 - Find Done
+2024-10-03 14:16:59 DEBUG User:957 - Find Detail Item
+2024-10-03 14:16:59 DEBUG User:960 - Item Gender=1
+2024-10-03 14:16:59 DEBUG User:965 - Get Type
+2024-10-03 14:16:59 DEBUG User:967 - Type =-1
+2024-10-03 14:20:00 DEBUG User:948 - itemID: 3407 type: 1
+2024-10-03 14:20:00 DEBUG User:950 - Find Item
+2024-10-03 14:20:00 DEBUG User:952 - Find Done
+2024-10-03 14:20:00 DEBUG User:957 - Find Detail Item
+2024-10-03 14:20:00 DEBUG User:960 - Item Gender=0
+2024-10-03 14:20:00 DEBUG User:965 - Get Type
+2024-10-03 14:20:00 DEBUG User:967 - Type =-1
+2024-10-03 14:32:58 DEBUG User:948 - itemID: 491 type: 1
+2024-10-03 14:32:58 DEBUG User:950 - Find Item
+2024-10-03 14:32:58 DEBUG User:952 - Find Done
+2024-10-03 14:32:58 DEBUG User:957 - Find Detail Item
+2024-10-03 14:32:58 DEBUG User:960 - Item Gender=0
+2024-10-03 14:32:58 DEBUG User:965 - Get Type
+2024-10-03 14:32:58 DEBUG User:967 - Type =-1
+2024-10-03 14:33:11 DEBUG User:948 - itemID: 3441 type: 1
+2024-10-03 14:33:11 DEBUG User:950 - Find Item
+2024-10-03 14:33:11 DEBUG User:952 - Find Done
+2024-10-03 14:33:11 DEBUG User:957 - Find Detail Item
+2024-10-03 14:33:11 DEBUG User:960 - Item Gender=1
+2024-10-03 14:33:11 DEBUG User:965 - Get Type
+2024-10-03 14:33:11 DEBUG User:967 - Type =-1
+2024-10-03 14:34:05 DEBUG User:948 - itemID: 5343 type: 1
+2024-10-03 14:34:05 DEBUG User:950 - Find Item
+2024-10-03 14:34:05 DEBUG User:952 - Find Done
+2024-10-03 14:34:05 DEBUG User:957 - Find Detail Item
+2024-10-03 14:34:05 DEBUG User:960 - Item Gender=0
+2024-10-03 14:34:05 DEBUG User:965 - Get Type
+2024-10-03 14:34:05 DEBUG User:967 - Type =-1
+2024-10-03 14:34:22 DEBUG User:948 - itemID: 5344 type: 1
+2024-10-03 14:34:22 DEBUG User:950 - Find Item
+2024-10-03 14:34:22 DEBUG User:952 - Find Done
+2024-10-03 14:34:22 DEBUG User:957 - Find Detail Item
+2024-10-03 14:34:22 DEBUG User:960 - Item Gender=0
+2024-10-03 14:34:22 DEBUG User:965 - Get Type
+2024-10-03 14:34:22 DEBUG User:967 - Type =-1
+2024-10-03 14:35:30 DEBUG User:948 - itemID: 5347 type: 1
+2024-10-03 14:35:30 DEBUG User:950 - Find Item
+2024-10-03 14:35:30 DEBUG User:952 - Find Done
+2024-10-03 14:35:30 DEBUG User:957 - Find Detail Item
+2024-10-03 14:35:30 DEBUG User:960 - Item Gender=0
+2024-10-03 14:35:30 DEBUG User:965 - Get Type
+2024-10-03 14:35:30 DEBUG User:967 - Type =-1
+2024-10-03 14:49:57 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 14:50:03 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 14:50:33 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:50:33 DEBUG User:950 - Find Item
+2024-10-03 14:50:33 DEBUG User:952 - Find Done
+2024-10-03 14:50:33 DEBUG User:957 - Find Detail Item
+2024-10-03 14:50:33 DEBUG User:960 - Item Gender=0
+2024-10-03 14:50:33 DEBUG User:965 - Get Type
+2024-10-03 14:50:33 DEBUG User:967 - Type =-2
+2024-10-03 14:50:57 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 14:51:01 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 14:51:15 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:51:15 DEBUG User:950 - Find Item
+2024-10-03 14:51:15 DEBUG User:952 - Find Done
+2024-10-03 14:51:15 DEBUG User:957 - Find Detail Item
+2024-10-03 14:51:15 DEBUG User:960 - Item Gender=0
+2024-10-03 14:51:15 DEBUG User:965 - Get Type
+2024-10-03 14:51:15 DEBUG User:967 - Type =-2
+2024-10-03 14:51:16 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:51:16 DEBUG User:950 - Find Item
+2024-10-03 14:51:16 DEBUG User:952 - Find Done
+2024-10-03 14:51:16 DEBUG User:957 - Find Detail Item
+2024-10-03 14:51:16 DEBUG User:960 - Item Gender=0
+2024-10-03 14:51:16 DEBUG User:965 - Get Type
+2024-10-03 14:51:16 DEBUG User:967 - Type =-2
+2024-10-03 14:51:18 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:51:18 DEBUG User:950 - Find Item
+2024-10-03 14:51:18 DEBUG User:952 - Find Done
+2024-10-03 14:51:18 DEBUG User:957 - Find Detail Item
+2024-10-03 14:51:18 DEBUG User:960 - Item Gender=0
+2024-10-03 14:51:18 DEBUG User:965 - Get Type
+2024-10-03 14:51:18 DEBUG User:967 - Type =-2
+2024-10-03 14:51:19 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:51:19 DEBUG User:950 - Find Item
+2024-10-03 14:51:19 DEBUG User:952 - Find Done
+2024-10-03 14:51:19 DEBUG User:957 - Find Detail Item
+2024-10-03 14:51:19 DEBUG User:960 - Item Gender=0
+2024-10-03 14:51:19 DEBUG User:965 - Get Type
+2024-10-03 14:51:19 DEBUG User:967 - Type =-2
+2024-10-03 14:51:22 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:51:22 DEBUG User:950 - Find Item
+2024-10-03 14:51:22 DEBUG User:952 - Find Done
+2024-10-03 14:52:26 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:52:26 DEBUG User:950 - Find Item
+2024-10-03 14:52:26 DEBUG User:952 - Find Done
+2024-10-03 14:52:26 DEBUG User:957 - Find Detail Item
+2024-10-03 14:52:26 DEBUG User:960 - Item Gender=0
+2024-10-03 14:52:26 DEBUG User:965 - Get Type
+2024-10-03 14:52:26 DEBUG User:967 - Type =-2
+2024-10-03 14:52:33 DEBUG User:948 - itemID: 3944 type: 1
+2024-10-03 14:52:33 DEBUG User:950 - Find Item
+2024-10-03 14:52:33 DEBUG User:952 - Find Done
+2024-10-03 14:52:33 DEBUG User:957 - Find Detail Item
+2024-10-03 14:52:33 DEBUG User:960 - Item Gender=0
+2024-10-03 14:52:33 DEBUG User:965 - Get Type
+2024-10-03 14:52:33 DEBUG User:967 - Type =-1
+2024-10-03 14:52:39 DEBUG User:948 - itemID: 6824 type: 1
+2024-10-03 14:52:39 DEBUG User:950 - Find Item
+2024-10-03 14:52:39 DEBUG User:952 - Find Done
+2024-10-03 14:52:39 DEBUG User:957 - Find Detail Item
+2024-10-03 14:52:39 DEBUG User:960 - Item Gender=0
+2024-10-03 14:52:39 DEBUG User:965 - Get Type
+2024-10-03 14:52:39 DEBUG User:967 - Type =-1
+2024-10-03 14:52:59 DEBUG User:948 - itemID: 3938 type: 1
+2024-10-03 14:52:59 DEBUG User:950 - Find Item
+2024-10-03 14:52:59 DEBUG User:952 - Find Done
+2024-10-03 14:52:59 DEBUG User:957 - Find Detail Item
+2024-10-03 14:52:59 DEBUG User:960 - Item Gender=0
+2024-10-03 14:52:59 DEBUG User:965 - Get Type
+2024-10-03 14:52:59 DEBUG User:967 - Type =-1
+2024-10-03 14:53:34 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:53:34 DEBUG User:950 - Find Item
+2024-10-03 14:53:34 DEBUG User:952 - Find Done
+2024-10-03 14:53:34 DEBUG User:957 - Find Detail Item
+2024-10-03 14:53:34 DEBUG User:960 - Item Gender=0
+2024-10-03 14:53:34 DEBUG User:965 - Get Type
+2024-10-03 14:53:34 DEBUG User:967 - Type =-2
+2024-10-03 14:53:36 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:53:36 DEBUG User:950 - Find Item
+2024-10-03 14:53:36 DEBUG User:952 - Find Done
+2024-10-03 14:53:36 DEBUG User:957 - Find Detail Item
+2024-10-03 14:53:36 DEBUG User:960 - Item Gender=0
+2024-10-03 14:53:36 DEBUG User:965 - Get Type
+2024-10-03 14:53:36 DEBUG User:967 - Type =-2
+2024-10-03 14:55:57 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 14:55:59 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 14:56:10 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:56:10 DEBUG User:950 - Find Item
+2024-10-03 14:56:10 DEBUG User:952 - Find Done
+2024-10-03 14:56:10 DEBUG User:957 - Find Detail Item
+2024-10-03 14:56:10 DEBUG User:960 - Item Gender=0
+2024-10-03 14:56:10 DEBUG User:965 - Get Type
+2024-10-03 14:56:10 DEBUG User:967 - Type =-2
+2024-10-03 14:56:11 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:56:11 DEBUG User:950 - Find Item
+2024-10-03 14:56:11 DEBUG User:952 - Find Done
+2024-10-03 14:56:11 DEBUG User:957 - Find Detail Item
+2024-10-03 14:56:11 DEBUG User:960 - Item Gender=0
+2024-10-03 14:56:11 DEBUG User:965 - Get Type
+2024-10-03 14:56:11 DEBUG User:967 - Type =-2
+2024-10-03 14:56:13 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:56:13 DEBUG User:950 - Find Item
+2024-10-03 14:56:13 DEBUG User:952 - Find Done
+2024-10-03 14:56:13 DEBUG User:957 - Find Detail Item
+2024-10-03 14:56:13 DEBUG User:960 - Item Gender=0
+2024-10-03 14:56:13 DEBUG User:965 - Get Type
+2024-10-03 14:56:13 DEBUG User:967 - Type =-2
+2024-10-03 14:56:31 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:56:31 DEBUG User:950 - Find Item
+2024-10-03 14:56:31 DEBUG User:952 - Find Done
+2024-10-03 14:56:31 DEBUG User:957 - Find Detail Item
+2024-10-03 14:56:31 DEBUG User:960 - Item Gender=0
+2024-10-03 14:56:31 DEBUG User:965 - Get Type
+2024-10-03 14:56:31 DEBUG User:967 - Type =-2
+2024-10-03 14:57:43 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:57:43 DEBUG User:950 - Find Item
+2024-10-03 14:57:43 DEBUG User:952 - Find Done
+2024-10-03 14:57:43 DEBUG User:957 - Find Detail Item
+2024-10-03 14:57:43 DEBUG User:960 - Item Gender=0
+2024-10-03 14:57:43 DEBUG User:965 - Get Type
+2024-10-03 14:57:43 DEBUG User:967 - Type =-2
+2024-10-03 14:57:44 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:57:44 DEBUG User:950 - Find Item
+2024-10-03 14:57:44 DEBUG User:952 - Find Done
+2024-10-03 14:57:44 DEBUG User:957 - Find Detail Item
+2024-10-03 14:57:44 DEBUG User:960 - Item Gender=0
+2024-10-03 14:57:44 DEBUG User:965 - Get Type
+2024-10-03 14:57:44 DEBUG User:967 - Type =-2
+2024-10-03 14:57:46 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:57:46 DEBUG User:950 - Find Item
+2024-10-03 14:57:46 DEBUG User:952 - Find Done
+2024-10-03 14:57:46 DEBUG User:957 - Find Detail Item
+2024-10-03 14:57:46 DEBUG User:960 - Item Gender=0
+2024-10-03 14:57:46 DEBUG User:965 - Get Type
+2024-10-03 14:57:46 DEBUG User:967 - Type =-2
+2024-10-03 14:57:47 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:57:47 DEBUG User:950 - Find Item
+2024-10-03 14:57:47 DEBUG User:952 - Find Done
+2024-10-03 14:57:47 DEBUG User:957 - Find Detail Item
+2024-10-03 14:57:47 DEBUG User:960 - Item Gender=0
+2024-10-03 14:57:47 DEBUG User:965 - Get Type
+2024-10-03 14:57:47 DEBUG User:967 - Type =-2
+2024-10-03 14:57:48 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:57:48 DEBUG User:950 - Find Item
+2024-10-03 14:57:48 DEBUG User:952 - Find Done
+2024-10-03 14:57:48 DEBUG User:957 - Find Detail Item
+2024-10-03 14:57:48 DEBUG User:960 - Item Gender=0
+2024-10-03 14:57:48 DEBUG User:965 - Get Type
+2024-10-03 14:57:48 DEBUG User:967 - Type =-2
+2024-10-03 14:57:50 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:57:50 DEBUG User:950 - Find Item
+2024-10-03 14:57:50 DEBUG User:952 - Find Done
+2024-10-03 14:58:01 DEBUG User:948 - itemID: 5350 type: 1
+2024-10-03 14:58:01 DEBUG User:950 - Find Item
+2024-10-03 14:58:01 DEBUG User:952 - Find Done
+2024-10-03 14:58:01 DEBUG User:957 - Find Detail Item
+2024-10-03 14:58:01 DEBUG User:960 - Item Gender=0
+2024-10-03 14:58:01 DEBUG User:965 - Get Type
+2024-10-03 14:58:01 DEBUG User:967 - Type =-1
+2024-10-03 14:58:06 DEBUG User:948 - itemID: 5348 type: 1
+2024-10-03 14:58:06 DEBUG User:950 - Find Item
+2024-10-03 14:58:06 DEBUG User:952 - Find Done
+2024-10-03 14:58:06 DEBUG User:957 - Find Detail Item
+2024-10-03 14:58:06 DEBUG User:960 - Item Gender=0
+2024-10-03 14:58:06 DEBUG User:965 - Get Type
+2024-10-03 14:58:06 DEBUG User:967 - Type =-1
+2024-10-03 14:58:13 DEBUG User:948 - itemID: 5349 type: 1
+2024-10-03 14:58:13 DEBUG User:950 - Find Item
+2024-10-03 14:58:13 DEBUG User:952 - Find Done
+2024-10-03 14:58:13 DEBUG User:957 - Find Detail Item
+2024-10-03 14:58:13 DEBUG User:960 - Item Gender=0
+2024-10-03 14:58:13 DEBUG User:965 - Get Type
+2024-10-03 14:58:13 DEBUG User:967 - Type =-1
+2024-10-03 14:59:37 DEBUG User:948 - itemID: 5324 type: 1
+2024-10-03 14:59:37 DEBUG User:950 - Find Item
+2024-10-03 14:59:37 DEBUG User:952 - Find Done
+2024-10-03 14:59:37 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:37 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:37 DEBUG User:965 - Get Type
+2024-10-03 14:59:37 DEBUG User:967 - Type =-2
+2024-10-03 14:59:38 DEBUG User:948 - itemID: 5324 type: 1
+2024-10-03 14:59:38 DEBUG User:950 - Find Item
+2024-10-03 14:59:38 DEBUG User:952 - Find Done
+2024-10-03 14:59:38 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:38 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:38 DEBUG User:965 - Get Type
+2024-10-03 14:59:38 DEBUG User:967 - Type =-2
+2024-10-03 14:59:40 DEBUG User:948 - itemID: 5324 type: 1
+2024-10-03 14:59:40 DEBUG User:950 - Find Item
+2024-10-03 14:59:40 DEBUG User:952 - Find Done
+2024-10-03 14:59:40 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:40 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:40 DEBUG User:965 - Get Type
+2024-10-03 14:59:40 DEBUG User:967 - Type =-2
+2024-10-03 14:59:41 DEBUG User:948 - itemID: 5324 type: 1
+2024-10-03 14:59:41 DEBUG User:950 - Find Item
+2024-10-03 14:59:41 DEBUG User:952 - Find Done
+2024-10-03 14:59:41 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:41 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:41 DEBUG User:965 - Get Type
+2024-10-03 14:59:41 DEBUG User:967 - Type =-2
+2024-10-03 14:59:42 DEBUG User:948 - itemID: 5324 type: 1
+2024-10-03 14:59:42 DEBUG User:950 - Find Item
+2024-10-03 14:59:42 DEBUG User:952 - Find Done
+2024-10-03 14:59:42 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:42 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:42 DEBUG User:965 - Get Type
+2024-10-03 14:59:42 DEBUG User:967 - Type =-2
+2024-10-03 14:59:44 DEBUG User:948 - itemID: 5408 type: 1
+2024-10-03 14:59:44 DEBUG User:950 - Find Item
+2024-10-03 14:59:44 DEBUG User:952 - Find Done
+2024-10-03 14:59:44 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:44 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:44 DEBUG User:965 - Get Type
+2024-10-03 14:59:44 DEBUG User:967 - Type =-2
+2024-10-03 14:59:45 DEBUG User:948 - itemID: 5408 type: 1
+2024-10-03 14:59:45 DEBUG User:950 - Find Item
+2024-10-03 14:59:45 DEBUG User:952 - Find Done
+2024-10-03 14:59:45 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:45 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:45 DEBUG User:965 - Get Type
+2024-10-03 14:59:45 DEBUG User:967 - Type =-2
+2024-10-03 14:59:46 DEBUG User:948 - itemID: 5408 type: 1
+2024-10-03 14:59:46 DEBUG User:950 - Find Item
+2024-10-03 14:59:46 DEBUG User:952 - Find Done
+2024-10-03 14:59:46 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:46 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:46 DEBUG User:965 - Get Type
+2024-10-03 14:59:46 DEBUG User:967 - Type =-2
+2024-10-03 14:59:47 DEBUG User:948 - itemID: 5408 type: 1
+2024-10-03 14:59:47 DEBUG User:950 - Find Item
+2024-10-03 14:59:47 DEBUG User:952 - Find Done
+2024-10-03 14:59:47 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:47 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:47 DEBUG User:965 - Get Type
+2024-10-03 14:59:47 DEBUG User:967 - Type =-2
+2024-10-03 14:59:48 DEBUG User:948 - itemID: 5408 type: 1
+2024-10-03 14:59:48 DEBUG User:950 - Find Item
+2024-10-03 14:59:48 DEBUG User:952 - Find Done
+2024-10-03 14:59:48 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:48 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:48 DEBUG User:965 - Get Type
+2024-10-03 14:59:48 DEBUG User:967 - Type =-2
+2024-10-03 14:59:51 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:59:51 DEBUG User:950 - Find Item
+2024-10-03 14:59:51 DEBUG User:952 - Find Done
+2024-10-03 14:59:51 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:51 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:51 DEBUG User:965 - Get Type
+2024-10-03 14:59:51 DEBUG User:967 - Type =-2
+2024-10-03 14:59:52 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:59:52 DEBUG User:950 - Find Item
+2024-10-03 14:59:52 DEBUG User:952 - Find Done
+2024-10-03 14:59:52 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:52 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:52 DEBUG User:965 - Get Type
+2024-10-03 14:59:52 DEBUG User:967 - Type =-2
+2024-10-03 14:59:53 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:59:53 DEBUG User:950 - Find Item
+2024-10-03 14:59:53 DEBUG User:952 - Find Done
+2024-10-03 14:59:53 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:53 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:53 DEBUG User:965 - Get Type
+2024-10-03 14:59:53 DEBUG User:967 - Type =-2
+2024-10-03 14:59:54 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:59:54 DEBUG User:950 - Find Item
+2024-10-03 14:59:54 DEBUG User:952 - Find Done
+2024-10-03 14:59:54 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:54 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:54 DEBUG User:965 - Get Type
+2024-10-03 14:59:54 DEBUG User:967 - Type =-2
+2024-10-03 14:59:56 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:59:56 DEBUG User:950 - Find Item
+2024-10-03 14:59:56 DEBUG User:952 - Find Done
+2024-10-03 14:59:56 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:56 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:56 DEBUG User:965 - Get Type
+2024-10-03 14:59:56 DEBUG User:967 - Type =-2
+2024-10-03 14:59:57 DEBUG User:948 - itemID: 5880 type: 1
+2024-10-03 14:59:57 DEBUG User:950 - Find Item
+2024-10-03 14:59:57 DEBUG User:952 - Find Done
+2024-10-03 14:59:57 DEBUG User:957 - Find Detail Item
+2024-10-03 14:59:57 DEBUG User:960 - Item Gender=0
+2024-10-03 14:59:57 DEBUG User:965 - Get Type
+2024-10-03 14:59:57 DEBUG User:967 - Type =-2
+2024-10-03 15:00:12 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:00:13 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:09:12 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:09:17 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:09:19 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:12:45 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:13:47 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:13:50 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:14:42 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:14:44 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:16:44 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:16:50 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:25:11 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:25:16 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:26:07 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:26:09 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:28:06 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:28:10 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:35:09 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:35:13 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:36:02 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:36:07 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:37:30 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:37:35 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:38:52 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:38:57 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:39:55 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:39:56 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:40:49 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:40:54 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:41:23 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:41:28 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:42:38 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:43:59 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:44:32 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:44:37 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:45:17 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:45:22 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:47:17 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:47:23 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:48:22 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:48:26 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:49:05 DEBUG User:948 - itemID: 3443 type: 1
+2024-10-03 15:49:05 DEBUG User:950 - Find Item
+2024-10-03 15:49:05 DEBUG User:952 - Find Done
+2024-10-03 15:49:05 DEBUG User:957 - Find Detail Item
+2024-10-03 15:49:05 DEBUG User:960 - Item Gender=2
+2024-10-03 15:52:01 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:52:06 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-03 15:52:22 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-03 15:52:26 DEBUG DbManager:81 - DB Connection Pool has created.

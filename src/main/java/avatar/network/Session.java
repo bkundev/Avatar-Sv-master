@@ -1305,7 +1305,15 @@ public class Session implements ISession {
                 }
             }
         }
-
+        if (idBoss == Npc.ID_ADD + NpcName.Chay_To_Win && user.getBossShopItems() != null) {
+            System.out.println(MessageFormat.format("do Event item boss shop Chay_To_Win {0}, {1}, {2},"
+                    , idBoss, type, indexItem));
+            UpgradeItem EventItem = (UpgradeItem) user.getBossShopItems().get(indexItem);
+            if (EventItem != null) {
+                doFinalEventShop(EventItem,NpcName.Chay_To_Win);
+                return;
+            }
+        }
 
         if (idBoss == Npc.ID_ADD + NpcName.Pay_To_Win && user.getBossShopItems() != null) {
             System.out.println(MessageFormat.format("do Event item boss shop Pay_To_Win {0}, {1}, {2},"
@@ -1391,6 +1399,27 @@ public class Session implements ISession {
             return;
         }
         switch (npcId) {
+            case NpcName.Chay_To_Win:
+                if(user.getXu()> Eventitem.getItem().getPart().getCoin()){
+                    if (!isGenderCompatible(Eventitem.getItem(),this.user)){
+                        getAvatarService().serverDialog("Giới tính không phù hợp !");
+                        return;
+                    }
+
+                    if(user.getChestSlot() <= user.chests.size())
+                    {
+                        getAvatarService().serverDialog("Rương đồ đã đầy");
+                        return;
+                    }
+                    Eventitem.getItem().setExpired(-1);
+                    user.updateXu(-Eventitem.getXu());
+                    getAvatarService().updateMoney(0);
+                    user.addItemToChests(Eventitem.getItem());
+                    getService().serverDialog("Chúc mừng bạn đã đổi thành công");
+                } else {
+                    getService().serverDialog("Bạn chưa đủ Xu để đổi");
+                }
+                break;
             case NpcName.Pay_To_Win:
                 Item huyhieu = this.user.findItemInChests(Eventitem.getItemNeed());
                 if(huyhieu!=null&& huyhieu.getQuantity() >= Eventitem.getScores()){
@@ -1419,7 +1448,7 @@ public class Session implements ISession {
                     user.removeItem(huyhieu.getId(),Eventitem.getScores());
                     getAvatarService().requestYourInfo(user);
                     getService().serverDialog(String.format("Chúc mừng bạn đã đổi thành công %s",Eventitem.getItem().getPart().getName()));
-                    if(Eventitem.getItem().getId() == 5408 || Eventitem.getItem().getId() == 5324)
+                    if(Eventitem.getItem().getId() == 5408 || Eventitem.getItem().getId() == 5324 || Eventitem.getItem().getId() == 5880)
                     {
                         Item hopqua = new Item(Eventitem.getItem().getId(),-1,1);
                         //hopqua.setExpired(System.currentTimeMillis() + (86400000L * time));
@@ -1436,7 +1465,7 @@ public class Session implements ISession {
                 }
                 else
                 {
-                    getService().serverDialog(String.format("Bạn không đủ huy hiệu để đổi"));
+                    getService().serverDialog(String.format("Bạn không đủ Kim cương vũ trụ để đổi"));
                 }
                 break;
             case NpcName.bunma:
@@ -1492,7 +1521,18 @@ public class Session implements ISession {
                 break;
         }
     }
+    private boolean isGenderCompatible(Item item, User user) {
+        int itemGender = item.getPart().getGender(); // Giới tính của item (0 = cả hai giới, 1 = nam, 2 = nữ)
+        int userGender = user.getGender(); // Giới tính của user (1 = nam, 2 = nữ)
 
+        // Nếu itemGender là 0, thì cả hai giới đều dùng được
+        if (itemGender == 0) {
+            return true;
+        }
+
+        // Nếu không, kiểm tra xem giới tính của item có khớp với giới tính của user không
+        return itemGender == userGender;
+    }
     private void doFinalUpgrade(UpgradeItem item, Item itemOld) {
 
         long currentTime = System.currentTimeMillis();

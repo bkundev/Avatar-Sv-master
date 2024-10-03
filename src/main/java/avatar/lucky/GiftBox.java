@@ -27,6 +27,7 @@ public class GiftBox {
 
     private static List<List<Item>> setHaiTac = new ArrayList<>();
 
+    private static List<List<Item>> setVuTru = new ArrayList<>();
 
     static {
         List<Item> luffySet = new ArrayList<>();
@@ -79,10 +80,58 @@ public class GiftBox {
             gaoXanh.add(new Item(i));
         }
         SieuNhan.add(gaoXanh);//nam
+//hop qua vu tru
 
+
+        List<Item> iron = new ArrayList<>();
+        for (int i = 3174; i <= 3177; i++) {
+            iron.add(new Item(i));
+        }
+        setVuTru.add(iron);
+
+        List<Item> Venom = new ArrayList<>();
+        for (int i = 4306; i <= 4308; i++) {
+            Venom.add(new Item(i));
+        }
+        setVuTru.add(Venom);
+
+        List<Item> Deadpool = new ArrayList<>();
+        for (int i = 4104; i <= 4107; i++) {
+            Deadpool.add(new Item(i));
+        }
+        setVuTru.add(Deadpool);
+
+
+        List<Item> DrStrange = new ArrayList<>();
+        for (int i = 4564; i <= 4567; i++) {
+            DrStrange.add(new Item(i));
+        }
+        setVuTru.add(DrStrange);
+
+        List<Item> tiDus = new ArrayList<>();
+        for (int i = 5343; i <= 5346; i++) {
+            tiDus.add(new Item(i));
+        }
+        setVuTru.add(tiDus);
+
+        List<Item> Yuna = new ArrayList<>();
+        for (int i = 5347; i <= 5350; i++) {
+            Yuna.add(new Item(i));
+        }
+        setVuTru.add(Yuna);
+
+        List<Item> Batman = new ArrayList<>();
+        for (int i = 5373; i <= 5375; i++) {
+            Batman.add(new Item(i));
+        }
+        setVuTru.add(Batman);
+
+        List<Item> NguoiMeo = new ArrayList<>();
+        for (int i = 5376; i <= 5378; i++) {
+            NguoiMeo.add(new Item(i));
+        }
+        setVuTru.add(NguoiMeo);
     }
-
-
 
 
     public GiftBox() {
@@ -206,9 +255,37 @@ public class GiftBox {
         us.getAvatarService().serverDialog("Bạn nhận được set "+ set.get(0).getPart().getName() + String.format(" Số lượng còn lại : %,d", item.getQuantity()));
     }
 
-    private boolean isGenderCompatible(Item item, User us) {
-        return item.getPart().getGender() == us.getGender();
+    public void openSetVuTru(User us, Item item) {
+        Random random = new Random();
+        List<Item> set;
+
+        do {
+            int setIndex = random.nextInt(setVuTru.size());
+            set = setVuTru.get(setIndex);
+        } while (!isGenderCompatible(set.get(0), us)); // Kiểm tra giới tính
+
+        for (int i = 0; i < set.size(); i++) {
+            set.get(i).setExpired(-1);
+            us.addItemToChests(set.get(i));
+        }
+
+        us.getAvatarService().serverDialog("Bạn nhận được set " + set.get(0).getPart().getName() +
+                String.format(" Số lượng còn lại : %,d", item.getQuantity()));
     }
+
+    private boolean isGenderCompatible(Item item, User user) {
+        int itemGender = item.getPart().getGender(); // Giới tính của item (0 = cả hai giới, 1 = nam, 2 = nữ)
+        int userGender = user.getGender(); // Giới tính của user (1 = nam, 2 = nữ)
+
+        // Nếu itemGender là 0, thì cả hai giới đều dùng được
+        if (itemGender == 0) {
+            return true;
+        }
+
+        // Nếu không, kiểm tra xem giới tính của item có khớp với giới tính của user không
+        return itemGender == userGender;
+    }
+
     private RandomCollection<Integer> chooseItemCollection() {
         RandomCollection<RandomCollection<Integer>> itemCollections = new RandomCollection<>();
         itemCollections.add(40, randomItemList1);

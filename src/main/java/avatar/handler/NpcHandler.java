@@ -509,16 +509,16 @@ public class NpcHandler {
                 {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Đổi quà").action(() -> {
-                        ShopEventHandler.displayUI(us, Pay_To_Win,6824);
+                        ShopEventHandler.displayUI(us, Pay_To_Win,6803,6824);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
                     Menu ShopQuaSet = Menu.builder().name("Đổi quà cả Set").action(() -> {
-                        ShopEventHandler.displayUI(us, Pay_To_Win,5324,5408,4345);
+                        ShopEventHandler.displayUI(us, Pay_To_Win,5880,5324,5408,4345);
                     }).build();
                     ListDacBiet.add(ShopQuaSet);
                     ListDacBiet.add(Menu.builder().name("Hướng dẫn")
                             .action(() -> {
-                                us.getAvatarService().customTab("Hướng dẫn", "khi bạn donate 1k sẽ nhận được 1 kim cương vũ trụ");
+                                us.getAvatarService().customTab("Hướng dẫn", "Đổi cả set là được cả set(ít nhất 3 món) , Hộp quà vũ trụ mở ra set 80 dame như : iron , Venmon , DeadPool,(nam,nữ) Dr Strange(nam),  TiDus(nam)/Yuna(nữ), Batman(nam), Người mèo(nữ) | hộp quà siêu nhân 50 dame : gao xanh, đỏ ,đen,| hộp quà hải tặc (80 dame) : Luffy: Nam,Nami: Nữ,Mihawk: Nam,Nico Robin: Nữ,Zoro: Nam");
                             })
                             .build());
                     ListDacBiet.add(Menu.builder().name("Thoát").id(npcId).build());
@@ -526,6 +526,25 @@ public class NpcHandler {
                     us.getAvatarService().openMenuOption(npcId, 0, ListDacBiet);
                     break;
                 }
+
+                case NpcName.Chay_To_Win:
+                {
+                    List<Menu> ListDacBiet = new ArrayList<>();
+                    Menu ShopDacBiet = Menu.builder().name("Đổi quà").action(() -> {
+                        ShopEventHandler.displayUI(us, Chay_To_Win,2054,3443);
+                    }).build();
+                    ListDacBiet.add(ShopDacBiet);
+                    ListDacBiet.add(Menu.builder().name("Hướng dẫn")
+                            .action(() -> {
+                                us.getAvatarService().customTab("Hướng dẫn", "pem boss , câu cá để lấy xu");
+                            })
+                            .build());
+                    ListDacBiet.add(Menu.builder().name("Thoát").id(npcId).build());
+                    us.setMenus(ListDacBiet);
+                    us.getAvatarService().openMenuOption(npcId, 0, ListDacBiet);
+                    break;
+                }
+
             }
         }
     }

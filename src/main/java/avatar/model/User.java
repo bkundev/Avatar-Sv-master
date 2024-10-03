@@ -1007,6 +1007,16 @@ public class User {
                         GiftBox giftBox = new GiftBox();
                         giftBox.openSieuNhan(this,item);
                     }
+                    if(item.getId()==5880)
+                    {
+                        if((this.chests.size() >= this.getChestSlot()-3)){
+                            getService().serverMessage("Bạn phải có ít nhất 4 ô trống để mở hộp quà siêu anh hùng");
+                            return;
+                        }
+                        removeItem(item.getId(), 1);
+                        GiftBox giftBox = new GiftBox();
+                        giftBox.openSetVuTru(this,item);
+                    }
 
                     else {
                         getService().serverMessage(String.format("Số lượng: %,d", item.getQuantity()));

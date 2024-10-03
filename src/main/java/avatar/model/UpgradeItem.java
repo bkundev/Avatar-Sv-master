@@ -30,7 +30,7 @@ public class UpgradeItem extends BossShopItem {
             return MessageFormat.format(
                     "Bạn có muốn đổi {0} bằng {1} điểm sự kiện không?",
                     super.getItem().getPart().getName(),
-                    scores
+                    this.scores
 
             );
         } else if (bossShop.getIdBoss() == NpcName.Vegeta + Npc.ID_ADD) {
@@ -45,6 +45,12 @@ public class UpgradeItem extends BossShopItem {
                     "Bạn có muốn đổi {0} bằng 1 jack à nhầm bằng {1} Lượng không?",
                     super.getItem().getPart().getName(),
                     super.getItem().getPart().getGold()
+            );
+        }else if (bossShop.getIdBoss() == NpcName.Chay_To_Win + Npc.ID_ADD) {
+            return MessageFormat.format(
+                    "Bạn có muốn đổi {0} bằng {1} xu không?",
+                    super.getItem().getPart().getName(),
+                    xu
             );
         }else if (bossShop.getIdBoss() == NpcName.Pay_To_Win + Npc.ID_ADD) {
             return MessageFormat.format(
