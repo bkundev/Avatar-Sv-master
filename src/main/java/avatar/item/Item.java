@@ -50,21 +50,7 @@ public class Item {
     public int getDay() {
         return (int) ((this.expired - System.currentTimeMillis()) / 1000 / 60 / 60 / 24) + 1;
     }
-
-    private Map<Integer, Long> itemIncreaseTimestamps = new HashMap<>(); // Lưu ID item và thời gian thay đổi gần nhất
-    private final long INCREASE_LIMIT_INTERVAL = 20_000; // 20 giây
-    private final int LARGE_INCREASE_THRESHOLD = 50; // Ngưỡng số lượng lớn để log lại
-
     public synchronized int increase(User us, int quantity, int itemId) {
-        long currentTime = System.currentTimeMillis();
-        long lastIncreaseTime = itemIncreaseTimestamps.getOrDefault(itemId, 0L);
-
-        // Kiểm tra khoảng thời gian giữa các lần tăng số lượng
-        if (currentTime - lastIncreaseTime < INCREASE_LIMIT_INTERVAL && quantity >= LARGE_INCREASE_THRESHOLD) {
-            // Log lại hành vi tăng số lượng lớn trong thời gian ngắn
-           Utils.writeLog(us, "quantity, increase " + quantity + " by " + itemId);
-        }
-
         // Kiểm tra nếu số lượng yêu cầu là hợp lệ
         if (quantity <= 0) {
             return this.quantity;
@@ -77,10 +63,6 @@ public class Item {
         } else {
             this.quantity += quantity;
         }
-
-        // Cập nhật thời gian thay đổi số lượng gần nhất
-        itemIncreaseTimestamps.put(itemId, currentTime);
-
         return this.quantity;
     }
 

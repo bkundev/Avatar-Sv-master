@@ -1135,14 +1135,14 @@ public class Session implements ISession {
                         Menu.builder().name("Auto Câu Cá").menus(
                                         List.of(
                                                 Menu.builder().name("Kích hoạt Auto Câu Cá").action(() -> {
-                                                    String checkNap = "SELECT tongnap FROM users WHERE id = ? LIMIT 1;";
+                                                    String checkNap = "SELECT ThuongNapLanDau FROM users WHERE id = ? LIMIT 1;";
                                                     try (Connection connection = DbManager.getInstance().getConnection();
                                                          PreparedStatement ps = connection.prepareStatement(checkNap);) {
                                                         ps.setInt(1, user.getId());
                                                         ResultSet rs = ps.executeQuery();
                                                         while (rs.next()) {
-                                                            int tongnap = rs.getInt("tongnap");
-                                                            if(tongnap>=20000){
+                                                            boolean napLanDau = rs.getBoolean("ThuongNapLanDau");
+                                                            if(napLanDau){
                                                                 this.user.getAvatarService().serverDialog("Bạn Đã Kích Hoạt Auto Câu Cá Thành Công");
                                                                 this.user.setAutoFish(true);
                                                             }
@@ -1392,7 +1392,7 @@ public class Session implements ISession {
         }
         switch (npcId) {
             case NpcName.Pay_To_Win:
-                Item huyhieu = user.findItemInChests(Eventitem.getItemNeed());
+                Item huyhieu = this.user.findItemInChests(Eventitem.getItemNeed());
                 if(huyhieu!=null&& huyhieu.getQuantity() >= Eventitem.getScores()){
                     Eventitem.getItem().setExpired(-1);
                     if(user.getChestSlot() <= user.chests.size())
@@ -1419,6 +1419,19 @@ public class Session implements ISession {
                     user.removeItem(huyhieu.getId(),Eventitem.getScores());
                     getAvatarService().requestYourInfo(user);
                     getService().serverDialog(String.format("Chúc mừng bạn đã đổi thành công %s",Eventitem.getItem().getPart().getName()));
+                    if(Eventitem.getItem().getId() == 5408 || Eventitem.getItem().getId() == 5324)
+                    {
+                        Item hopqua = new Item(Eventitem.getItem().getId(),-1,1);
+                        //hopqua.setExpired(System.currentTimeMillis() + (86400000L * time));
+                        if(user.findItemInChests(Eventitem.getItem().getId()) !=null){
+                            int quantity = user.findItemInChests(Eventitem.getItem().getId()).getQuantity();
+                            user.findItemInChests(Eventitem.getItem().getId()).setQuantity(quantity+1);
+                        }else {
+                            user.addItemToChests(hopqua);
+                        }
+                        return;
+                    }
+
                     user.addItemToChests(Eventitem.getItem());
                 }
                 else

@@ -512,6 +512,10 @@ public class NpcHandler {
                         ShopEventHandler.displayUI(us, Pay_To_Win,6824);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
+                    Menu ShopQuaSet = Menu.builder().name("Đổi quà cả Set").action(() -> {
+                        ShopEventHandler.displayUI(us, Pay_To_Win,5324,5408,4345);
+                    }).build();
+                    ListDacBiet.add(ShopQuaSet);
                     ListDacBiet.add(Menu.builder().name("Hướng dẫn")
                             .action(() -> {
                                 us.getAvatarService().customTab("Hướng dẫn", "khi bạn donate 1k sẽ nhận được 1 kim cương vũ trụ");

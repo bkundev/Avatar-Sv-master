@@ -796,11 +796,11 @@ public class User {
                 } else {
                     // Nếu không tồn tại cả trong chests và wearing, thêm item vào chests
                     this.chests.add(item);
+                    Utils.writeLog(this,"bú item to chests "+ item.getPart().getName());
                 }
             }
         }
     }
-
 
     public void checkItemQuantityLog(Item item, String message) {
         if (item == null) {
@@ -979,10 +979,6 @@ public class User {
                 } else if (pType == -2) {
                     if(item.getId()==683)
                     {
-//                        if (item.getQuantity() <=0 || item.getQuantity() > 1998)
-//                        {
-//                            return;
-//                        }
                         if((this.chests.size() >= this.getChestSlot())){
                             getService().serverMessage("Bạn phải có ít nhất 1 ô trống");
                             return;
@@ -990,6 +986,26 @@ public class User {
                         removeItem(item.getId(), 1);
                         GiftBox giftBox = new GiftBox();
                         giftBox.open(this,item);
+                    }
+                    if(item.getId()==5408)
+                    {
+                        if((this.chests.size() >= this.getChestSlot()-4)){
+                            getService().serverMessage("Bạn phải có ít nhất 5 ô trống để mở hộp quà hải tặc");
+                            return;
+                        }
+                        removeItem(item.getId(), 1);
+                        GiftBox giftBox = new GiftBox();
+                        giftBox.openHaiTac(this,item);
+                    }
+                    if(item.getId()==5324)
+                    {
+                        if((this.chests.size() >= this.getChestSlot()-2)){
+                            getService().serverMessage("Bạn phải có ít nhất 3 ô trống để mở hộp quà siêu nhân");
+                            return;
+                        }
+                        removeItem(item.getId(), 1);
+                        GiftBox giftBox = new GiftBox();
+                        giftBox.openSieuNhan(this,item);
                     }
 
                     else {
@@ -1000,7 +1016,7 @@ public class User {
 //                    removeItemFromWearing(item);
 //                    addItemToChests(item);
 //                    getMapService().usingPart(id, itemID);
-                      getService().serverDialog("Vật phẩm shop Loi, sẽ sớm fix");
+                      getService().serverDialog("error 0020");//Vật phẩm shop Loi, sẽ sớm fix
                 }
             } else {
                 Item item = findItemInWearing(itemID);

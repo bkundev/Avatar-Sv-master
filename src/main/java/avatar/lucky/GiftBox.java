@@ -22,6 +22,69 @@ public class GiftBox {
     private final RandomCollection<Integer> randomItemList2 = new RandomCollection<>();
     private final RandomCollection<Integer> randomItemList3 = new RandomCollection<>();
 
+
+    private static List<List<Item>> SieuNhan = new ArrayList<>();
+
+    private static List<List<Item>> setHaiTac = new ArrayList<>();
+
+
+    static {
+        List<Item> luffySet = new ArrayList<>();
+        for (int i = 5409; i <= 5413; i++) {
+            luffySet.add(new Item(i));
+        }
+        setHaiTac.add(luffySet);//nam
+
+        List<Item> namiSet = new ArrayList<>();
+        for (int i = 5414; i <= 5418; i++) {
+            namiSet.add(new Item(i));
+        }
+        setHaiTac.add(namiSet);
+
+        List<Item> mihawkSet = new ArrayList<>();
+        for (int i = 5419; i <= 5423; i++) {
+            mihawkSet.add(new Item(i));
+        }
+        setHaiTac.add(mihawkSet);//nam
+
+        List<Item> NicoRobin = new ArrayList<>();
+        for (int i = 5424; i <= 5427; i++) {
+            NicoRobin.add(new Item(i));
+        }
+        setHaiTac.add(NicoRobin);//nam
+
+        List<Item> Zoro = new ArrayList<>();
+        for (int i = 5428; i <= 5432; i++) {
+            Zoro.add(new Item(i));
+        }
+        setHaiTac.add(Zoro);//nam
+///hop sieu nhan
+
+        List<Item> gaoDen = new ArrayList<>();
+        for (int i = 3937; i <= 3939; i++) {
+            gaoDen.add(new Item(i));
+        }
+        SieuNhan.add(gaoDen);
+
+
+        List<Item> gaoDO = new ArrayList<>();
+        for (int i = 3940; i <= 3942; i++) {
+            gaoDO.add(new Item(i));
+        }
+        SieuNhan.add(gaoDO);//nam
+
+
+        List<Item> gaoXanh = new ArrayList<>();
+        for (int i = 3943; i <= 3945; i++) {
+            gaoXanh.add(new Item(i));
+        }
+        SieuNhan.add(gaoXanh);//nam
+
+    }
+
+
+
+
     public GiftBox() {
         randomType.add(45, Items);
         randomType.add(25, XU);   // Tỷ lệ
@@ -61,10 +124,8 @@ public class GiftBox {
 
     }
 
-
     public void open(User us, Item item) {
         byte type = randomType.next();
-
         switch (type) {
             case Items:
                 RandomCollection<Integer> chosenItemCollection = chooseItemCollection();
@@ -114,7 +175,40 @@ public class GiftBox {
         }
     }
 
+    public void openHaiTac(User us, Item item) {
+        Random random = new Random();
+        List<Item> set;
 
+        do {
+            int setIndex = random.nextInt(setHaiTac.size());
+            set = setHaiTac.get(setIndex);
+        } while (!isGenderCompatible(set.get(0), us)); // Kiểm tra giới tính
+
+        for (int i = 0; i < set.size(); i++) {
+            set.get(i).setExpired(-1);
+            us.addItemToChests(set.get(i));
+        }
+
+        us.getAvatarService().serverDialog("Bạn nhận được set " + set.get(0).getPart().getName() +
+                String.format(" Số lượng còn lại : %,d", item.getQuantity()));
+    }
+
+    public void openSieuNhan(User us, Item item) {
+        Random random = new Random();
+        int setIndex = random.nextInt(SieuNhan.size());
+
+        List<Item> set = SieuNhan.get(setIndex);
+
+        for (int i = 0; i < set.size(); i++) {
+            set.get(i).setExpired(-1);
+            us.addItemToChests(set.get(i));
+        }
+        us.getAvatarService().serverDialog("Bạn nhận được set "+ set.get(0).getPart().getName() + String.format(" Số lượng còn lại : %,d", item.getQuantity()));
+    }
+
+    private boolean isGenderCompatible(Item item, User us) {
+        return item.getPart().getGender() == us.getGender();
+    }
     private RandomCollection<Integer> chooseItemCollection() {
         RandomCollection<RandomCollection<Integer>> itemCollections = new RandomCollection<>();
         itemCollections.add(40, randomItemList1);
