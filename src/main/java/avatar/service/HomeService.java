@@ -296,7 +296,7 @@ public class HomeService extends Service {
                 this.session.user.getAvatarService().serverDialog("error -002");
                 return;
             }
-            if(chest.getQuantity()> 0 || chest.getExpired()!= -1){
+            if(chest.getQuantity()> 1 || chest.getExpired()!= -1){
                 this.session.user.getAvatarService().serverDialog("error -003");
                 return;
             }
