@@ -50,13 +50,13 @@ public class UpgradeItem extends BossShopItem {
             return MessageFormat.format(
                     "Bạn có muốn đổi {0} bằng {1} xu không?",
                     super.getItem().getPart().getName(),
-                    xu
+                    this.getXu()
             );
         }else if (bossShop.getIdBoss() == NpcName.Pay_To_Win + Npc.ID_ADD) {
             return MessageFormat.format(
                     "Bạn có muốn đổi {0} bằng {1} {2} không?",
                     super.getItem().getPart().getName(),
-                    scores,
+                    this.getScores(),
                     PartManager.getInstance().findPartById(itemNeed).getName()
             );
         }

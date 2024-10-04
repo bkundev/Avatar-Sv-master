@@ -1389,7 +1389,7 @@ public class Session implements ISession {
 
 
     private void doFinalEventShop(UpgradeItem Eventitem,int npcId) {
-        Zone z = user.getZone();
+        Zone z = this.user.getZone();
         if (z != null) {
             User u = z.find(npcId+Npc.ID_ADD);
             if (u == null) {
@@ -1400,21 +1400,21 @@ public class Session implements ISession {
         }
         switch (npcId) {
             case NpcName.Chay_To_Win:
-                if(user.getXu()> Eventitem.getItem().getPart().getCoin()){
+                if(this.user.getXu()> Eventitem.getXu()){
                     if (!isGenderCompatible(Eventitem.getItem(),this.user)){
                         getAvatarService().serverDialog("Giới tính không phù hợp !");
                         return;
                     }
 
-                    if(user.getChestSlot() <= user.chests.size())
+                    if(this.user.getChestSlot() <= this.user.chests.size())
                     {
                         getAvatarService().serverDialog("Rương đồ đã đầy");
                         return;
                     }
                     Eventitem.getItem().setExpired(-1);
-                    user.updateXu(-Eventitem.getXu());
+                    this.user.updateXu(-Eventitem.getXu());
                     getAvatarService().updateMoney(0);
-                    user.addItemToChests(Eventitem.getItem());
+                    this.user.addItemToChests(Eventitem.getItem());
                     getService().serverDialog("Chúc mừng bạn đã đổi thành công");
                 } else {
                     getService().serverDialog("Bạn chưa đủ Xu để đổi");
