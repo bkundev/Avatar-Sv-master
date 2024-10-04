@@ -281,7 +281,7 @@ public class HomeService extends Service {
             Item Home = this.session.user.findItemInChestsHome(Itemid);
             Item chest = this.session.user.findItemInChests(Itemid);
 
-            if(chest==null || chest.getId() == 2617 || chest.getId() == 683)
+            if(chest==null || chest.getId() == 593 || chest.getId() == 683)
             {
                 this.session.user.getAvatarService().serverDialog("error -004");
                 return;
