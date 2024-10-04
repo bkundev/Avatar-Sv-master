@@ -119,48 +119,14 @@ public class GlobalHandler {
         List<User> lst = UserManager.users;
 
 
+        DauGiaManager dauGiaManager = DauGiaManager.getInstance();
+
         switch (menuId) {
             case 110: // Đấu giá
-                try {
-                    int tienCuoc = Integer.parseInt(text); // Chuyển giá trị nhập vào thành số nguyên
-
-                    if (tienCuoc <= 0) {
-                        // Nếu số tiền cược <= 0, không hợp lệ
-                        this.us.getAvatarService().serverDialog("Số tiền cược không hợp lệ!");
-                    } else if (tienCuoc > this.us.getXu()) {
-                        // Nếu tiền cược lớn hơn số xu hiện có của người chơi
-                        this.us.getAvatarService().serverDialog("Bạn không đủ xu để đặt cược.");
-                    } else {
-                        // Thêm số tiền cược vào hệ thống đấu giá
-                        DauGiaManager dauGiaManager = DauGiaManager.getInstance();
-                        dauGiaManager.addBid(this.us, tienCuoc);
-
-                        // Lấy giá trị đấu giá cao nhất hiện tại và người chơi tương ứng
-                        int highestBid = dauGiaManager.getHighestBid();
-                        User highestBidder = dauGiaManager.getHighestBidder();
-
-                        // Cập nhật hiển thị NPC với giá cao nhất hiện tại
-                        Map m = MapManager.getInstance().find(9);
-                        if (m != null) {
-                            List<Zone> zones = m.getZones();
-                            for (Zone z : zones) {
-                                if (z != null) {
-                                    Npc npc = NpcManager.getInstance().find(z.getMap().getId(), z.getId(), NpcName.DAU_GIA + Npc.ID_ADD);
-                                    if (npc == null) {
-                                        continue; // Bỏ qua nếu không tìm thấy NPC
-                                    }
-                                    npc.setTextChats(List.of(
-                                            MessageFormat.format("Giá cao nhất hiện tại là {0} bởi người chơi {1}", highestBid, highestBidder.getUsername())
-                                    ));
-                                }
-                            }
-                        }
-                    }
-                } catch (NumberFormatException e) {
-                    this.us.getAvatarService().serverDialog("Vui lòng nhập một số hợp lệ.");
-                }
+                int tienCuoc = Integer.parseInt(text); // Chuyển giá trị nhập vào thành số nguyên
+                // Xử lý đặt cược
+                dauGiaManager.addBid(this.us, tienCuoc); // Thêm cược vào quản lý đấu giá
                 break;
-
             case 20:
                 GiftCodeService giftCodeService = new GiftCodeService();
                 giftCodeService.useGiftCode(this.us.getId(), text);

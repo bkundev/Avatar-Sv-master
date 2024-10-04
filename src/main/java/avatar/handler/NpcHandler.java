@@ -22,6 +22,7 @@ import avatar.network.Message;
 import avatar.play.MapManager;
 import avatar.play.NpcManager;
 import avatar.play.Zone;
+import avatar.server.DauGiaManager;
 import avatar.server.ServerManager;
 import avatar.server.UserManager;
 import avatar.server.Utils;
@@ -335,18 +336,39 @@ public class NpcHandler {
                     us.getAvatarService().openMenuOption(npcId, 0, chudautu);
                     break;
                 case NpcName.DAU_GIA:
-                    if (distance > 100.0 || us.getZone().getId()>2 || us.getZone().getMap().getId()!=9) {
+                    if (distance > 100.0 || us.getZone().getId() > 2 || us.getZone().getMap().getId() != 9) {
                         us.getAvatarService().serverDialog("Bạn đứng xa rồi : v");
                         return;
                     }
+
                     List<Menu> DauGia = new ArrayList<>();
-                    Menu Daugia = Menu.builder().name("Đặt Giá").action(() -> {
-                        us.getAvatarService().sendTextBoxPopup(us.getId(),110,"Đặt giá cho phiên đấu giá",1);
-                    }).build();
-                    DauGia.add(Daugia);
+
+                    long currentTimes = System.currentTimeMillis();
+                    DauGiaManager dauGiaManager = DauGiaManager.getInstance();
+
+                    if (currentTimes >= dauGiaManager.getEndTime()) {
+                        Menu infoMenu = Menu.builder()
+                                .name("Thông tin")
+                                .action(() -> {
+                                    us.getAvatarService().serverDialog("Thời gian đấu giá tiếp: " );
+                                })
+                                .build();
+                        DauGia.add(infoMenu);
+                    } else {
+                        // Nếu phiên đấu giá đang diễn ra, cho phép đặt giá
+                        Menu Daugia = Menu.builder()
+                                .name("Đặt Giá")
+                                .action(() -> {
+                                    us.getAvatarService().sendTextBoxPopup(us.getId(), 110, "Đặt giá cho phiên đấu giá", 1);
+                                })
+                                .build();
+                        DauGia.add(Daugia);
+                    }
+
                     us.setMenus(DauGia);
                     us.getAvatarService().openMenuOption(npcId, 0, DauGia);
                     break;
+
 //                case NpcName.em_thinh:{
 //                    List<Menu> listet = new ArrayList<>();
 //                    List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
