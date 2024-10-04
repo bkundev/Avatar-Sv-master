@@ -335,9 +335,13 @@ public class NpcHandler {
                     us.getAvatarService().openMenuOption(npcId, 0, chudautu);
                     break;
                 case NpcName.DAU_GIA:
+                    if (distance > 100.0 || us.getZone().getId()>2 || us.getZone().getMap().getId()!=9) {
+                        us.getAvatarService().serverDialog("Bạn đứng xa rồi : v");
+                        return;
+                    }
                     List<Menu> DauGia = new ArrayList<>();
-                    Menu Daugia = Menu.builder().name("đặt cược").action(() -> {
-
+                    Menu Daugia = Menu.builder().name("Đặt Giá").action(() -> {
+                        us.getAvatarService().sendTextBoxPopup(us.getId(),110,"Đặt giá cho phiên đấu giá",1);
                     }).build();
                     DauGia.add(Daugia);
                     us.setMenus(DauGia);
