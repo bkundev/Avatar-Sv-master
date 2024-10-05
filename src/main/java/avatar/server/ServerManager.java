@@ -11,6 +11,7 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
+import avatar.service.AuctionScheduler;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
 
@@ -173,7 +174,9 @@ public class ServerManager {
                 ++numNPC;
             }
             System.out.println("Load success " + numNPC + " NPC !");
-            DauGiaManager.getInstance().startAuction();// khoi dong dau gia
+
+            AuctionScheduler scheduler = new AuctionScheduler();
+            scheduler.startScheduling();
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(0);

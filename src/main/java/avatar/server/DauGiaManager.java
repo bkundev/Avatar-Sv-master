@@ -28,7 +28,6 @@ public class DauGiaManager {
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1); // Quản lý thời gian đấu giá// Biến lưu thời gian kết thúc đấu giá
     private long duration = 30 * 60 * 1000;//30p cho1 phiên
 
-
     public long getEndTime() {
         return endTime;
     }
@@ -43,19 +42,40 @@ public class DauGiaManager {
 
 
 
+    public  class AuctionScheduler {
+        private Timer timer;
+
+        public void startScheduling() {
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Calendar now = Calendar.getInstance();
+                    System.out.println(now.get(Calendar.DAY_OF_WEEK));
+                    if (now.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY && now.get(Calendar.HOUR_OF_DAY) == 20) {
+                        startAuction();
+                    }
+                }
+            }, 0, 24 * 60 * 60 * 1000); // Chạy kiểm tra mỗi ngày một lần
+        }
+    }
+
+
     public void startAuction() {
         // ...
-        long duration = 2 * 60 * 1000; // 30 phút tính bằng millisecond
+        long duration = 2 * 60 * 1000;
         endTime = System.currentTimeMillis() + duration;
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-
                 updateNpcAuctionInfo();
             }
-        }, 0, 1000); // Cập nhật mỗi giây
+        }, 0, 1000);
     }
+
+
+
     public static DauGiaManager getInstance() {
         if (instance == null) {
             instance = new DauGiaManager();
@@ -90,8 +110,15 @@ public class DauGiaManager {
                     if (npc == null) {
                         continue; // Bỏ qua nếu không tìm thấy NPC
                     }
+                    long timeRemaining = getTimeRemaining(); // Lấy thời gian còn lại
                     int highestBid = getHighestBid(); // Lấy giá cao nhất
                     User highestBidder = getHighestBidder(); // Lấy người đấu giá cao nhất
+                    // Kiểm tra nếu thời gian còn lại đã hết
+                    if (timeRemaining <= 0) {
+                        // Kết thúc đấu giá và trao giải cho người có giá cao nhất
+                        endAuction();
+                        return;
+                    }
 
                     npc.setTextChats(List.of(
                             MessageFormat.format("Giá cao nhất hiện tại là {0} bởi người chơi {1}. Thời gian còn lại: {2} giây",
@@ -107,7 +134,24 @@ public class DauGiaManager {
             }
         }
     }
+    public void endAuction() {
+        // Lấy người đấu giá cao nhất
+        User highestBidder = getHighestBidder();
+        int highestBid = getHighestBid();
 
+        if (highestBidder != null) {
+            // Trao giải cho người có giá thầu cao nhất
+            System.out.println("Đấu giá đã kết thúc. Người chơi " + highestBidder.getUsername() + " đã thắng với giá " + highestBid);
+            // Thêm logic trao phần thưởng ở đây
+        } else {
+            System.out.println("Đấu giá đã kết thúc nhưng không có người tham gia.");
+        }
+
+        // Hủy bộ đếm để ngừng cập nhật
+        if (timer != null) {
+            timer.cancel();
+        }
+    }
 
     public String getFormattedTimeRemaining() {
         long timeRemaining = endTime - System.currentTimeMillis();
@@ -118,5 +162,32 @@ public class DauGiaManager {
         } else {
             return "00:00"; // Hoặc xử lý trường hợp phiên đấu giá đã kết thúc
         }
+    }
+
+    public String getTimeToNextAuction() {
+        LocalDateTime now = LocalDateTime.now();
+        // Tìm ngày Chủ nhật tới
+        LocalDateTime nextSunday = now.with(TemporalAdjusters.next(DayOfWeek.SUNDAY)).withHour(20).withMinute(0);
+
+        // Tính toán thời gian còn lại
+        long timeRemaining = Duration.between(now, nextSunday).toMillis();
+
+        if (timeRemaining > 0) {
+            return formatDuration(timeRemaining);
+        } else {
+            // Nếu đã qua Chủ nhật 8h tối, tính cho Chủ nhật tuần sau
+            nextSunday = nextSunday.plusWeeks(1);
+            return formatDuration(Duration.between(now, nextSunday).toMillis());
+        }
+    }
+
+    private String formatDuration(long milliseconds) {
+        Duration duration = Duration.ofMillis(milliseconds);
+        long days = duration.toDays();
+        duration = duration.minusDays(days);
+        long hours = duration.toHours();
+        duration = duration.minusHours(hours);
+        long minutes = duration.toMinutes();
+        return String.format("%d Ngày %d giờ %d phút", days, hours, minutes);
     }
 }
