@@ -45,7 +45,7 @@ public class DauGiaManager {
 
     public void startAuction() {
         // ...
-        long duration = 30 * 60 * 1000; // 30 phút tính bằng millisecond
+        long duration = 2 * 60 * 1000; // 30 phút tính bằng millisecond
         endTime = System.currentTimeMillis() + duration;
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -80,6 +80,7 @@ public class DauGiaManager {
     }
 
     public void updateNpcAuctionInfo() {
+
         avatar.play.Map m = MapManager.getInstance().find(9);
         if (m != null) {
             List<Zone> zones = m.getZones();

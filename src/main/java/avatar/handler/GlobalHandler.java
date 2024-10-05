@@ -145,7 +145,7 @@ public class GlobalHandler {
                         dauGiaManager.updateNpcAuctionInfo();
                     }
                 }
-                this.us.updateXu(-tienCuoc);
+                //this.us.updateXu(-tienCuoc);
                 break;
             case 20:
                 GiftCodeService giftCodeService = new GiftCodeService();
