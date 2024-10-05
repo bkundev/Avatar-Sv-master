@@ -173,7 +173,7 @@ public class ServerManager {
                 ++numNPC;
             }
             System.out.println("Load success " + numNPC + " NPC !");
-            //DauGiaManager.getInstance().startAuction();// khoi dong dau gia
+            DauGiaManager.getInstance().startAuction();// khoi dong dau gia
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(0);

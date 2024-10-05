@@ -157,9 +157,9 @@ public class Boss extends User {
 
     public synchronized void handleBossDefeat(Boss boss, User us) throws IOException {
 
-        us.applyStoredXuUpdate();
-        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu_from_boss` = ? WHERE `user_id` = ? LIMIT 1;",
-                us.xu_from_boss, us.getId());
+        //us.applyStoredXuUpdate();
+//        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu_from_boss` = ? WHERE `user_id` = ? LIMIT 1;",
+//                us.xu_from_boss, us.getId());
         String username = us.getUsername();
 
         Item hopqua = new Item(683,-1,1);

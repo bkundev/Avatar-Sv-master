@@ -47,6 +47,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+import static avatar.server.DauGiaManager.userBids;
+
 public class GlobalHandler {
     private User us;
     public GlobalHandler(User user) {
@@ -118,14 +120,32 @@ public class GlobalHandler {
         String text = ms.reader().readUTF();
         List<User> lst = UserManager.users;
 
-
-        DauGiaManager dauGiaManager = DauGiaManager.getInstance();
-
         switch (menuId) {
             case 110: // Đấu giá
-                int tienCuoc = Integer.parseInt(text); // Chuyển giá trị nhập vào thành số nguyên
-                // Xử lý đặt cược
-                dauGiaManager.addBid(this.us, tienCuoc); // Thêm cược vào quản lý đấu giá
+                int tienCuoc = Integer.parseInt(text);
+
+                // Kiểm tra xem người chơi có đủ tiền không
+                if (tienCuoc > this.us.getXu()) {
+                    this.us.getAvatarService().serverDialog("Bạn không đủ xu để đặt cược.");
+                    return;
+                }
+
+                DauGiaManager dauGiaManager = DauGiaManager.getInstance();
+                // Cập nhật thông tin đặt cược
+                synchronized (userBids) { // Đảm bảo đồng bộ khi nhiều người cùng đặt cược
+                    int currentBid = userBids.getOrDefault(userId, 0);
+                    int totalBid = currentBid + tienCuoc;
+                    userBids.put(userId, totalBid);
+
+                    // Cập nhật giá cao nhất và người chơi dẫn đầu
+
+                    if (totalBid > dauGiaManager.getHighestBid()) {
+                        dauGiaManager.setHighestBid(totalBid);
+                        dauGiaManager.setHighestBidder(us);
+                        dauGiaManager.updateNpcAuctionInfo();
+                    }
+                }
+                this.us.updateXu(-tienCuoc);
                 break;
             case 20:
                 GiftCodeService giftCodeService = new GiftCodeService();
