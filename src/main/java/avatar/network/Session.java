@@ -1253,7 +1253,7 @@ public class Session implements ISession {
                                     }).build(),
                                     Menu.builder().name("Khoá nick").build(),
                                     Menu.builder().name("dau gia").action(() -> {
-                                        user.getAvatarService().sendTextBoxPopup(user.getId(), 200, "Mo Dau gia type ? item id ?", 1);
+                                        user.getAvatarService().sendTextBoxPopup(user.getId(), 81, "Mo Dau gia type ? item id ?", 1);
                                     }).build(),
                                     Menu.builder().name("Tặng item").build()
                             ))

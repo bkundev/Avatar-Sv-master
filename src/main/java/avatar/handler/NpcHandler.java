@@ -392,7 +392,7 @@ public class NpcHandler {
                     Menu infoMenu1 = Menu.builder()
                             .name("Giới Thiệu")
                             .action(() -> {
-                                us.getAvatarService().serverDialog("Đấu giá để kiếm những vật phẩm hiếm có, mặc định đấu giá xu: 5.000.000 xu, đấu giá lượng: 1000 lượng, ai đặt tổng cao nhất sẽ chiến thắng !");
+                                us.getAvatarService().serverDialog("Đấu giá để kiếm những vật phẩm hiếm có, mặc định đấu giá xu: 5.000.000 xu, đấu giá lượng: 1000 lượng, ai đặt tổng cao nhất sẽ chiến thắng ! ai thua sẽ được hoàn 90 phần trăm tổng đặt.");
                             })
                             .build();
                     DauGia.add(infoMenu1);

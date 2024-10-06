@@ -121,32 +121,54 @@ public class GlobalHandler {
         List<User> lst = UserManager.users;
 
         switch (menuId) {
-//            case 200: // Đấu giá
-//                int type = Integer.parseInt(text);
 
-             //   break;
+            case 81:
+                try {
+                    // Tách id và username
+                    String[] idAndName = text.split(" ");
+                    String typeDauGia = idAndName[0];
+                    String ItemDauGia = idAndName[1];
+                    int type = Integer.parseInt(typeDauGia);
+                    short idItem = Short.parseShort(ItemDauGia);
+
+                    DauGiaManager.getInstance().startAuction(type, new Item(idItem, -1, 0));
+                } catch (NumberFormatException e) {
+                    us.getAvatarService().serverDialog("dau gia");
+                }
+                break;
+
             case 110: // Đấu giá
                 try {
+                    DauGiaManager dauGiaManager = DauGiaManager.getInstance();
+
                     int tienCuoc = Integer.parseInt(text);
 
-                    // Kiểm tra xem người chơi có đủ tiền không
-                    if (tienCuoc > this.us.getXu()) {
-                        this.us.getAvatarService().serverDialog("Bạn không đủ xu để đặt cược.");
-                        return;
+                    int tiencuocToiThieu = dauGiaManager.getAuctionCurrency() == 1 ? 1000 : 5000000;
+
+                    int typeXuLuong = dauGiaManager.getAuctionCurrency();
+                    if (typeXuLuong == 0) {
+                        if (tienCuoc > this.us.getXu()) {
+                            this.us.getAvatarService().serverDialog("Bạn không đủ Xu để đặt cược.");
+                            return;
+                        }
+                    }
+                    else {
+                        if (tienCuoc > this.us.getLuong()) {
+                            this.us.getAvatarService().serverDialog("Bạn không đủ Lượng để đặt cược.");
+                            return;
+                        }
                     }
 
-                    DauGiaManager dauGiaManager = DauGiaManager.getInstance();
                     // Cập nhật thông tin đặt cược
                     synchronized (userBids) { // Đảm bảo đồng bộ khi nhiều người cùng đặt cược
                         int currentBid = userBids.getOrDefault(userId, 0);
-                        int tiencuocToiThieu = dauGiaManager.getAuctionCurrency() == 1 ? 1000 : 5000000;
 
                         if (currentBid <= 0 && tienCuoc < tiencuocToiThieu) {
                             this.us.getAvatarService().serverDialog("Bạn phải đặt ít nhất " + tiencuocToiThieu + " " + dauGiaManager.getauctionCurrency() + " cho lần đầu ");
                             return;
                         }
                         if(dauGiaManager.getAuctionCurrency() == 1){
-                            this.us.updateXu(-tienCuoc);
+                            this.us.updateLuong(-tienCuoc);
                         }else{
                             this.us.updateXu(-tienCuoc);
                         }

@@ -163,9 +163,41 @@ public class DauGiaManager {
                 user.getAvatarService().serverInfo("Chúc mừng bạn "+ highestBidder.getUsername() +" đã chiến thắng đấu giá " + currency + " vật phẩm : " + auctionItem.getPart().getName()  +
                         " với giá " + highestBid + " " + currency +" . mọi người đều ngưỡng mộ !");
             });
+            highestBidder.addItemToChests(this.auctionItem);
+
         } else {
             System.out.println("Đấu giá đã kết thúc nhưng không có người tham gia.");
         }
+
+        // Hoàn lại 90% tiền cược cho tất cả người chơi đã cược (trừ người chiến thắng)
+        synchronized (userBids) { // Đảm bảo đồng bộ khi nhiều người cùng hoàn tiền
+            for (Map.Entry<Integer, Integer> entry : userBids.entrySet()) {
+                int userId = entry.getKey();
+                int bidAmount = entry.getValue();
+
+                // Kiểm tra xem người chơi có phải là người chiến thắng không
+                if (highestBidder != null && userId == highestBidder.getId()) {
+                    continue; // Bỏ qua người chiến thắng
+                }
+
+                // Tìm người chơi từ ID
+                User user = UserManager.getInstance().find(userId);
+                if (user != null) {
+                    // Hoàn lại 90% số tiền cược
+                    int refundAmount = (int) (bidAmount * 0.9);
+
+                    if (auctionCurrency == 0) {
+                        // Hoàn lại xu
+                        user.updateXu(+refundAmount);
+                    } else {
+                        // Hoàn lại lượng
+                        user.updateLuong(+refundAmount);
+                    }
+                    user.getAvatarService().serverInfo("Bạn đã được hoàn lại " + refundAmount + " " + currency + " (90 phần trăm) từ phiên đấu giá.");
+                }
+            }
+        }
+        this.userBids.clear();
         if (timer != null) {
             timer.cancel();
         }
@@ -186,7 +218,7 @@ public class DauGiaManager {
         LocalDateTime now = LocalDateTime.now();
 
         // Lấy thời gian của Chủ nhật hiện tại lúc 20:00
-        LocalDateTime nextSunday = now.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).withHour(20).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime nextSunday = now.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).withHour(21).withMinute(0).withSecond(0).withNano(0);
 
         // Nếu thời gian hiện tại đã qua 8h tối Chủ nhật, tính cho tuần sau
         if (now.isAfter(nextSunday)) {
