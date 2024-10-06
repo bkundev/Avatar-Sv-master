@@ -3801,3 +3801,15 @@
 2024-10-06 15:21:17 DEBUG DbManager:93 - DB Connection Pool is shutting down.
 2024-10-06 15:21:25 DEBUG DbManager:81 - DB Connection Pool has created.
 2024-10-06 15:21:45 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-06 15:27:09 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-06 15:29:14 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-06 15:29:16 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-06 15:30:28 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-06 15:30:29 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-06 15:32:11 DEBUG User:948 - itemID: 6112 type: 1
+2024-10-06 15:32:11 DEBUG User:950 - Find Item
+2024-10-06 15:32:11 DEBUG User:952 - Find Done
+2024-10-06 15:32:11 DEBUG User:957 - Find Detail Item
+2024-10-06 15:32:11 DEBUG User:960 - Item Gender=0
+2024-10-06 15:32:11 DEBUG User:965 - Get Type
+2024-10-06 15:32:11 DEBUG User:967 - Type =-1

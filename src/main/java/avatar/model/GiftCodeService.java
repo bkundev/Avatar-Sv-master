@@ -1,14 +1,11 @@
 package avatar.model;
 
 import java.sql.PreparedStatement;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import avatar.item.Item;
 import avatar.server.UserManager;
@@ -146,6 +143,24 @@ public class GiftCodeService {
 
         switch (MaCode) {
 
+            case "lenhinh":
+                List<Integer> itemIds = new ArrayList<>();
+                itemIds.add(4732);
+                itemIds.add(4733);
+                itemIds.add(5724);
+                itemIds.add(6112);
+                itemIds.add(6112);
+                itemIds.add(6670);
+                // Bước 2: Tạo một đối tượng Random
+                Random random = new Random();// Bước 3: Lấy một ID ngẫu nhiên từ danh sách
+                int randomIndex = random.nextInt(itemIds.size()); // Lấy chỉ số ngẫu nhiên
+                int randomItemId = itemIds.get(randomIndex); // Lấy ID ngẫu nhiên
+                Item daisen = new Item(randomItemId);
+
+                daisen.setExpired(System.currentTimeMillis() + (86400000L * 3));
+                us.getAvatarService().serverDialog("bạn vừa nhận được " + daisen.getPart().getName() + " 3 ngay");
+                us.addItemToChests(daisen);
+                break;
             case "tanthu":
 
                 Item canCau = new Item(446);
