@@ -188,16 +188,13 @@ public class NpcHandler {
                 return;
             }
             us.updateSpam(-1,(Boss)boss,us);
-
-
-
         }else {
             switch (npcIdCase) {
-                case NpcName.Tien_chi_mu_Lovanga:
+                case NpcName.Tien_chi_mu_Lovanga: {
                     List<Menu> list = new ArrayList<>();
                     Menu tienchi = Menu.builder().name("Dự đoán vị trí người yêu").action(() -> {
                         us.getService().serverDialog(us.getService().DuDoanNY(us));
-                                            }).build();
+                    }).build();
                     list.add(tienchi);
                     list.add(Menu.builder().name("Dự đoán kết quả sổ số").action(() -> {
                         us.getService().serverDialog("Dự đoán kết quả : Comingsion");
@@ -209,7 +206,8 @@ public class NpcHandler {
                     us.setMenus(list);
                     us.getAvatarService().openMenuOption(npcId, 0, list);
                     break;
-                case NpcName.SAITAMA:
+                }
+                case NpcName.SAITAMA: {
                     List<Menu> QuanLyItem = new ArrayList<>();
                     Menu QuanLyeye = Menu.builder().name("Quản Lý Mặt").action(() -> {
                         List<Item> _chests = us.chests.stream().filter(item -> {
@@ -228,10 +226,11 @@ public class NpcHandler {
                     us.setMenus(QuanLyItem);
                     us.getAvatarService().openMenuOption(npcId, 0, QuanLyItem);
                     break;
-                case NpcName.bunma:
+                }
+                case NpcName.bunma: {
                     List<Menu> list1 = new ArrayList<>();
                     Menu Event = Menu.builder().name("Đổi Quà").action(() -> {
-                        ShopEventHandler.displayUI(us, bunma,2034,2035,2036,2040,3506,2620,2577,5539,2618, 2619, 3987,3455,3456,3457,4995,6772,6773,6774);
+                        ShopEventHandler.displayUI(us, bunma, 2034, 2035, 2036, 2040, 3506, 2620, 2577, 5539, 2618, 2619, 3987, 3455, 3456, 3457, 4995, 6772, 6773, 6774);
                     }).build();
                     list1.add(Event);
                     list1.add(Menu.builder().name("Góp Ngọc Rồng Lỏ")
@@ -244,7 +243,7 @@ public class NpcHandler {
                                 StringBuilder detailedMessage = new StringBuilder("Thành tích bản thân");
                                 detailedMessage.append(String.format("\n Bạn đang có %d điểm sự kiện", us.getScores()));
                                 int rankPhaoLuong = us.getService().getUserRankPhaoLuong(us);
-                                detailedMessage.append(String.format("\n Bạn đang ở top %d thả pháo lượng : %d", rankPhaoLuong,us.getTopPhaoLuong()));
+                                detailedMessage.append(String.format("\n Bạn đang ở top %d thả pháo lượng : %d", rankPhaoLuong, us.getTopPhaoLuong()));
 
                                 int rankXuboss = us.getService().getUserRankXuBoss(us);
                                 detailedMessage.append(String.format("\n Bạn đang ở top %d xu boss : %d", rankXuboss, us.getXu_from_boss()));
@@ -296,20 +295,21 @@ public class NpcHandler {
                     us.setMenus(list1);
                     us.getAvatarService().openMenuOption(npcId, 0, list1);
                     break;
-                case NpcName.Vegeta:
+                }
+                case NpcName.Vegeta: {
                     List<Menu> lstVegeta = new ArrayList<>();
 
 
                     Menu vegenta = Menu.builder().name("Quà Thẻ VIP PREMIUM").action(() -> {
-                        ShopEventHandler.displayUI(us, Vegeta,4560,5822,6450,6314);
+                        ShopEventHandler.displayUI(us, Vegeta, 4560, 5822, 6450, 6314);
                     }).build();
                     lstVegeta.add(Menu.builder().name("Quà Thẻ VIP Cao Cấp").action(() -> {
-                        ShopEventHandler.displayUI(us, Vegeta, 4562,4563,4561,6113,6553);
+                        ShopEventHandler.displayUI(us, Vegeta, 4562, 4563, 4561, 6113, 6553);
                     }).build());
                     lstVegeta.add(vegenta);
 
                     lstVegeta.add(Menu.builder().name("Quà Thẻ VIP").action(() -> {
-                        ShopEventHandler.displayUI(us, Vegeta, 3638 , 3636, 620,2090,6541,2052,2053,3636,3638);
+                        ShopEventHandler.displayUI(us, Vegeta, 3638, 3636, 620, 2090, 6541, 2052, 2053, 3636, 3638);
                     }).build());
 
                     lstVegeta.add(Menu.builder().name("Xem hướng dẫn")
@@ -322,7 +322,8 @@ public class NpcHandler {
 
                     us.getAvatarService().openMenuOption(npcId, 0, lstVegeta);
                     break;
-                case NpcName.CHU_DAU_TU:
+                }
+                case NpcName.CHU_DAU_TU: {
                     List<Menu> chudautu = new ArrayList<>();
                     Menu chuDautu = Menu.builder().name("Mua biệt thự").action(() -> {
                         try {
@@ -335,7 +336,8 @@ public class NpcHandler {
                     us.setMenus(chudautu);
                     us.getAvatarService().openMenuOption(npcId, 0, chudautu);
                     break;
-                case NpcName.DAU_GIA:
+                }
+                case NpcName.DAU_GIA: {
                     if (distance > 100.0 || us.getZone().getId() > 2 || us.getZone().getMap().getId() != 9) {
                         us.getAvatarService().serverDialog("Bạn đứng xa rồi : v");
                         return;
@@ -348,9 +350,9 @@ public class NpcHandler {
 
                     if (currentTimes >= dauGiaManager.getEndTime()) {
                         Menu infoMenu = Menu.builder()
-                                .name("Thông tin")
+                                .name("Thông Tin Phiên Đấu Giá")
                                 .action(() -> {
-                                    us.getAvatarService().serverDialog("Thời gian đấu giá tiếp: " + DauGiaManager.getInstance().getTimeToNextAuction());
+                                    us.getAvatarService().serverDialog("Thời gian đấu giá tiếp: " + dauGiaManager.getTimeToNextAuction());
                                 })
                                 .build();
                         DauGia.add(infoMenu);
@@ -359,16 +361,49 @@ public class NpcHandler {
                         Menu Daugia = Menu.builder()
                                 .name("Đặt Giá")
                                 .action(() -> {
-                                    us.getAvatarService().sendTextBoxPopup(us.getId(), 110, "Đặt giá cho phiên đấu giá", 1);
+                                    String currency = dauGiaManager.getAuctionCurrency() == 0 ? "xu" : "lượng";
+                                    us.getAvatarService().sendTextBoxPopup(us.getId(), 110, "Đặt giá cho phiên đấu giá " + currency, 1);
                                 })
                                 .build();
                         DauGia.add(Daugia);
                     }
 
+                    DauGia.add(Menu.builder().name("Thông tin đấu giá").action(() -> {
+                        int highestBid = dauGiaManager.getHighestBid(); // Lấy giá cao nhất
+                        User highestBidder = dauGiaManager.getHighestBidder(); // Lấy người chơi đấu giá cao nhất
+                        int userBid = DauGiaManager.userBids.getOrDefault(us.getId(), 0); // Lấy tổng giá mà người chơi đã đặt
+
+                        String currencyType = dauGiaManager.getAuctionCurrency() == 0 ? "xu" : "lượng"; // Kiểm tra loại tiền
+                        String auctionItemName = dauGiaManager.getAuctionItem() != null ? dauGiaManager.getAuctionItem().getPart().getName() : "Không có vật phẩm";
+
+                        String message = String.format(
+                                "Vật phẩm đấu giá: %s\nLoại tiền: %s\nGiá cao nhất hiện tại: %d bởi %s\nTổng giá bạn đã đặt: %d %s",
+                                auctionItemName,
+                                currencyType,
+                                highestBid,
+                                highestBidder != null ? highestBidder.getUsername() : "Chưa có",
+                                userBid,
+                                currencyType
+                        );
+
+                        us.getAvatarService().serverDialog(message);
+                    }).build());
+
+                    Menu infoMenu1 = Menu.builder()
+                            .name("Giới Thiệu")
+                            .action(() -> {
+                                us.getAvatarService().serverDialog("Đấu giá để kiếm những vật phẩm hiếm có, mặc định đấu giá xu: 5.000.000 xu, đấu giá lượng: 1000 lượng, ai đặt tổng cao nhất sẽ chiến thắng !");
+                            })
+                            .build();
+                    DauGia.add(infoMenu1);
+
+                    DauGia.add(Menu.builder().name("Thoát").action(() -> {
+                    }).build());
+
                     us.setMenus(DauGia);
                     us.getAvatarService().openMenuOption(npcId, 0, DauGia);
                     break;
-
+                }
 //                case NpcName.em_thinh:{
 //                    List<Menu> listet = new ArrayList<>();
 //                    List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
@@ -467,17 +502,17 @@ public class NpcHandler {
                     us.getAvatarService().openMenuOption(npcId, 0, laibuon);
                     break;
                 }
-                case NpcName.THO_CAU:
+                case NpcName.THO_CAU: {
                     List<Menu> thocau = new ArrayList<>();
                     Menu thoCau = Menu.builder().name("Câu cá").action(() -> {
                         List<Item> Items1 = new ArrayList<>();
-                        Item item = new Item(446,30,0);//câu vip
+                        Item item = new Item(446, 30, 0);//câu vip
                         Items1.add(item);
-                        Item item1 = new Item(460,2,0);//vé cau
+                        Item item1 = new Item(460, 2, 0);//vé cau
                         Items1.add(item1);
-                        Item item2 = new Item(448,30,1);//mồi
+                        Item item2 = new Item(448, 30, 1);//mồi
                         Items1.add(item2);
-                        us.getAvatarService().openUIShop(npcId,"Trùm Câu Cá,",Items1);
+                        us.getAvatarService().openUIShop(npcId, "Trùm Câu Cá,", Items1);
                         us.getAvatarService().updateMoney(0);
                     }).build();
                     thocau.add(thoCau);
@@ -493,10 +528,10 @@ public class NpcHandler {
                     }).build());
                     thocau.add(Menu.builder().name("Thoát").build());
                     us.setMenus(thocau);
-                    us.getAvatarService().openMenuOption(npcId,0,  thocau);
+                    us.getAvatarService().openMenuOption(npcId, 0, thocau);
                     break;
-                case NpcName.CUA_HANG:
-                {
+                }
+                case NpcName.CUA_HANG: {
                     List<Menu> listet = new ArrayList<>();
                     List<Item> Items = new ArrayList<>();
 
@@ -523,8 +558,7 @@ public class NpcHandler {
                     us.getAvatarService().openUIMenu(npcId, 0, listet, "text 1", "text2");
                     break;
                 }
-                case NpcName.Shop_Dac_Biet:
-                {
+                case NpcName.Shop_Dac_Biet: {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Đổi Quà").action(() -> {
                         ShopEventHandler.displayUI(us, Shop_Dac_Biet,5898);
@@ -540,8 +574,7 @@ public class NpcHandler {
                     us.getAvatarService().openMenuOption(npcId, 0, ListDacBiet);
                     break;
                 }
-                case NpcName.Pay_To_Win:
-                {
+                case NpcName.Pay_To_Win: {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Đổi quà").action(() -> {
                         ShopEventHandler.displayUI(us, Pay_To_Win,6803,6824);
@@ -561,9 +594,7 @@ public class NpcHandler {
                     us.getAvatarService().openMenuOption(npcId, 0, ListDacBiet);
                     break;
                 }
-
-                case NpcName.Chay_To_Win:
-                {
+                case NpcName.Chay_To_Win: {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Đổi quà").action(() -> {
                         ShopEventHandler.displayUI(us, Chay_To_Win,2049,2050,2051,2054,2041,2056,2354,2355,3440,3441,3442,3443,3445,3446);

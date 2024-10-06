@@ -167,6 +167,9 @@ public class ServerManager {
                                 .build();
                         npc.setTextChats(chat);
                         NpcManager.getInstance().add(npc);
+                        if(botID == 186){
+                            DauGiaManager.getInstance().setDauGia(npc);
+                        }
                         z.enter(npc, X, Y);
                     }
                 }

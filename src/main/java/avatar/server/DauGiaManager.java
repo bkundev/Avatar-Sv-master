@@ -1,6 +1,7 @@
 package avatar.server;
 
 import avatar.constants.NpcName;
+import avatar.item.Item;
 import avatar.model.Npc;
 import avatar.model.User;
 import avatar.play.MapManager;
@@ -26,11 +27,11 @@ public class DauGiaManager {
     private User highestBidder; // Người chơi đặt giá cao nhất
     private long endTime; // Thời gian kết thúc phiên đấu giá
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1); // Quản lý thời gian đấu giá// Biến lưu thời gian kết thúc đấu giá
-    private long duration = 30 * 60 * 1000;//30p cho1 phiên
+    private int auctionCurrency; // 0 là xu, 1 là lượng
+    private Item auctionItem;
 
-    public long getEndTime() {
-        return endTime;
-    }
+    private List<Npc> dauGia = new ArrayList<>();
+
     private DauGiaManager() {
     }
     public void setHighestBidder(User user) {
@@ -41,28 +42,46 @@ public class DauGiaManager {
     }
 
 
+    public String getauctionCurrency (){
+        return  this.auctionCurrency == 0 ? "xu" : "lượng";
+    }
+    public int getAuctionCurrency() {
+        return auctionCurrency;
+    }
+    public Item getAuctionItem() {
+        return auctionItem;
+    }
+    public List<Npc> getDauGia() {
+        // Trả về một bản sao để tránh bị sửa đổi trực tiếp
+        return new ArrayList<>(dauGia);
+    }
+    public long getEndTime() {
+        return endTime;
+    }
+    public int getHighestBid() {
+        return highestBid;
+    }
+    public User getHighestBidder() {
+        return highestBidder;
+    }
+    public Item getauctionItem() {
+        return auctionItem;
+    }
 
-    public  class AuctionScheduler {
-        private Timer timer;
 
-        public void startScheduling() {
-            timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    Calendar now = Calendar.getInstance();
-                    System.out.println(now.get(Calendar.DAY_OF_WEEK));
-                    if (now.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY && now.get(Calendar.HOUR_OF_DAY) == 20) {
-                        startAuction();
-                    }
-                }
-            }, 0, 24 * 60 * 60 * 1000); // Chạy kiểm tra mỗi ngày một lần
+
+
+    public void setDauGia(Npc dauGia) {
+        if (dauGia != null) {
+            if(this.dauGia.size() > 2) {return;}
+            this.dauGia.add(dauGia);
         }
     }
 
 
-    public void startAuction() {
-        // ...
+    public void startAuction(int currencyType, Item item) {
+        this.auctionCurrency = currencyType; // Gán loại tiền cho phiên đấu giá
+        this.auctionItem = item; // Gán vật phẩm cho phiên đấu giá
         long duration = 2 * 60 * 1000;
         endTime = System.currentTimeMillis() + duration;
         timer = new Timer();
@@ -91,63 +110,62 @@ public class DauGiaManager {
         }
     }
 
-    public int getHighestBid() {
-        return highestBid;
-    }
-
-    public User getHighestBidder() {
-        return highestBidder;
-    }
 
     public void updateNpcAuctionInfo() {
-
-        avatar.play.Map m = MapManager.getInstance().find(9);
-        if (m != null) {
-            List<Zone> zones = m.getZones();
-            for (Zone z : zones) {
-                if (z != null) {
-                    Npc npc = NpcManager.getInstance().find(z.getMap().getId(), z.getId(), NpcName.DAU_GIA + Npc.ID_ADD);
-                    if (npc == null) {
-                        continue; // Bỏ qua nếu không tìm thấy NPC
-                    }
-                    long timeRemaining = getTimeRemaining(); // Lấy thời gian còn lại
-                    int highestBid = getHighestBid(); // Lấy giá cao nhất
-                    User highestBidder = getHighestBidder(); // Lấy người đấu giá cao nhất
-                    // Kiểm tra nếu thời gian còn lại đã hết
-                    if (timeRemaining <= 0) {
-                        // Kết thúc đấu giá và trao giải cho người có giá cao nhất
-                        endAuction();
-                        return;
-                    }
-
-                    npc.setTextChats(List.of(
-                            MessageFormat.format("Giá cao nhất hiện tại là {0} bởi người chơi {1}. Thời gian còn lại: {2} giây",
-                                    highestBid,
-                                    highestBidder != null ? highestBidder.getUsername() : "Chưa có",
-                                    getFormattedTimeRemaining())
-                    ));
-                    System.out.println(MessageFormat.format("Giá cao nhất hiện tại là {0} bởi người chơi {1}. Thời gian còn lại: {2} giây",
+        long timeRemaining = getTimeRemaining(); // Lấy thời gian còn lại
+        int highestBid = getHighestBid(); // Lấy giá cao nhất
+        User highestBidder = getHighestBidder(); // Lấy người đấu giá cao nhất
+        String currency = auctionCurrency == 0 ? "xu" : "lượng";
+        for (Npc npc : dauGia) {
+            // Kiểm tra nếu thời gian còn lại đã hết
+            if (timeRemaining <= 0) {
+                // Kết thúc đấu giá và trao giải cho người có giá cao nhất
+                endAuction();
+                return;
+            }
+            npc.setTextChats(List.of(
+                    MessageFormat.format("Loại đấu giá: {0}. Vật phẩm: {1}. Giá cao nhất hiện tại là {2} bởi người chơi {3}. Thời gian còn lại: {4} giây",
+                            currency,
+                            this.auctionItem.getPart().getName(), // Tên vật phẩm
                             highestBid,
                             highestBidder != null ? highestBidder.getUsername() : "Chưa có",
-                            getFormattedTimeRemaining()));
-                }
-            }
+                            getFormattedTimeRemaining()
+                    )
+            ));
+            System.out.println(MessageFormat.format(
+                    "Loại đấu giá: {0}. Vật phẩm: {1}. Giá cao nhất hiện tại là {2} bởi người chơi {3}. Thời gian còn lại: {4} giây",
+                    currency,
+                    auctionItem.getPart().getName(),
+                    highestBid,
+                    highestBidder != null ? highestBidder.getUsername() : "Chưa có",
+                    getFormattedTimeRemaining()
+            ));
         }
+
     }
     public void endAuction() {
-        // Lấy người đấu giá cao nhất
+
         User highestBidder = getHighestBidder();
         int highestBid = getHighestBid();
-
+        String currency = auctionCurrency == 0 ? "xu" : "lượng";
         if (highestBidder != null) {
-            // Trao giải cho người có giá thầu cao nhất
-            System.out.println("Đấu giá đã kết thúc. Người chơi " + highestBidder.getUsername() + " đã thắng với giá " + highestBid);
-            // Thêm logic trao phần thưởng ở đây
+            for (Npc npc : dauGia) {
+                npc.setTextChats(List.of(
+                        MessageFormat.format("Chúc Mừng {0} đã chiến thắng phiên đấu giá với {1} {2}. Vật phẩm : {3}",
+                                highestBidder.getUsername(),
+                                highestBid,
+                                currency,
+                                auctionItem.getPart().getName()
+                        )
+                ));
+            }
+            UserManager.users.forEach(user -> {
+                user.getAvatarService().serverInfo("Chúc mừng bạn "+ highestBidder.getUsername() +" đã chiến thắng đấu giá " + currency + " vật phẩm : " + auctionItem.getPart().getName()  +
+                        " với giá " + highestBid + " " + currency +" . mọi người đều ngưỡng mộ !");
+            });
         } else {
             System.out.println("Đấu giá đã kết thúc nhưng không có người tham gia.");
         }
-
-        // Hủy bộ đếm để ngừng cập nhật
         if (timer != null) {
             timer.cancel();
         }
@@ -166,19 +184,19 @@ public class DauGiaManager {
 
     public String getTimeToNextAuction() {
         LocalDateTime now = LocalDateTime.now();
-        // Tìm ngày Chủ nhật tới
-        LocalDateTime nextSunday = now.with(TemporalAdjusters.next(DayOfWeek.SUNDAY)).withHour(20).withMinute(0);
+
+        // Lấy thời gian của Chủ nhật hiện tại lúc 20:00
+        LocalDateTime nextSunday = now.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).withHour(20).withMinute(0).withSecond(0).withNano(0);
+
+        // Nếu thời gian hiện tại đã qua 8h tối Chủ nhật, tính cho tuần sau
+        if (now.isAfter(nextSunday)) {
+            nextSunday = nextSunday.plusWeeks(1);
+        }
 
         // Tính toán thời gian còn lại
         long timeRemaining = Duration.between(now, nextSunday).toMillis();
 
-        if (timeRemaining > 0) {
-            return formatDuration(timeRemaining);
-        } else {
-            // Nếu đã qua Chủ nhật 8h tối, tính cho Chủ nhật tuần sau
-            nextSunday = nextSunday.plusWeeks(1);
-            return formatDuration(Duration.between(now, nextSunday).toMillis());
-        }
+        return formatDuration(timeRemaining);
     }
 
     private String formatDuration(long milliseconds) {
@@ -189,5 +207,6 @@ public class DauGiaManager {
         duration = duration.minusHours(hours);
         long minutes = duration.toMinutes();
         return String.format("%d Ngày %d giờ %d phút", days, hours, minutes);
+
     }
 }
