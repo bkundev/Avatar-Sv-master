@@ -177,6 +177,7 @@ public class GlobalHandler {
                         userBids.put(userId, totalBid);
 
                         if (totalBid > dauGiaManager.getHighestBid()) {
+                            dauGiaManager.setPreviousHighestBid(dauGiaManager.getHighestBid());
                             dauGiaManager.setHighestBid(totalBid);
                             dauGiaManager.setHighestBidder(us);
                             dauGiaManager.updateNpcAuctionInfo();

@@ -33,6 +33,21 @@ public class Npc extends User {
         }
     });
 
+    private Thread autoChatBotSpeed = new Thread(() -> {
+        while (true) {
+            try {
+                for (String text : textChats) {
+                    getMapService().chat(this, text);
+                    Thread.sleep(500);
+                }
+                if (textChats == null || textChats.size() == 0) {
+                    Thread.sleep(1000);
+                }
+            } catch (InterruptedException ignored) {
+            }
+        }
+    });
+
     @Builder
     public Npc(int id, String name, short x, short y, ArrayList<Item> wearing) {
         setId(id > ID_ADD ? id : id + ID_ADD);
@@ -42,7 +57,11 @@ public class Npc extends User {
         setY(y);
         setWearing(wearing);
         textChats = new ArrayList<>();
-        autoChatBot.start();
+        if(id == 864){
+            autoChatBotSpeed.start();
+        }else{
+            autoChatBot.start();
+        }
     }
 
     public void addChat(String chat) {

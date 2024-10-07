@@ -158,26 +158,54 @@ public class ServerManager {
                         if (zoneCount >= 3) {
                             break; // Dừng vòng lặp khi đã xử lý đủ 3 khu vực
                         }
-                        Npc npc = Npc.builder()
-                                .id(botID)
-                                .name(botName)
-                                .x(X)
-                                .y(Y)
-                                .wearing(items)
-                                .build();
-                        npc.setTextChats(chat);
-                        NpcManager.getInstance().add(npc);
-                        if(botID == 186){
+
+                        // Kiểm tra nếu botID là 186
+                        if (botID == 186) {
+                            // Chỉ load 1 NPC và lưu lại
+                            Npc npc = Npc.builder()
+                                    .id(botID)
+                                    .name(botName)
+                                    .x(X)
+                                    .y(Y)
+                                    .wearing(items)
+                                    .build();
+                            npc.setTextChats(chat);
+                            NpcManager.getInstance().add(npc);
                             DauGiaManager.getInstance().setDauGia(npc);
+                            z.enter(npc, X, Y);
+                            break; // Dừng lại sau khi đã thêm NPC
                         }
-                        z.enter(npc, X, Y);
+                        // Kiểm tra nếu botID là boss ID
+                        else if (botID == 864) { // Thay đổi ID theo ý muốn
+                            Npc npc = Npc.builder()
+                                    .id(botID)
+                                    .name(botName) // Tên boss, thay đổi theo ý muốn
+                                    .x(X)
+                                    .y(Y)
+                                    .wearing(items)
+                                    .build();
+                            npc.setTextChats(chat);
+                            NpcManager.getInstance().add(npc);
+                            DauGiaManager.getInstance().setNhanVienDauGia(npc); // Giả sử có phương thức setBoss()
+                            z.enter(npc, X, Y);
+                            break; // Dừng lại sau khi đã thêm boss
+                        } else {
+                            // Tạo NPC cho các ID khác
+                            Npc npc = Npc.builder()
+                                    .id(botID)
+                                    .name(botName)
+                                    .x(X)
+                                    .y(Y)
+                                    .wearing(items)
+                                    .build();
+                            npc.setTextChats(chat);
+                            NpcManager.getInstance().add(npc);
+                            z.enter(npc, X, Y);
+                        }
                     }
                 }
-                System.out.println("  + NPC " + Utils.removeAccent(botName) + " - " + botID);
-                ++numNPC;
+                System.out.println("Load success " + numNPC + " NPC !");
             }
-            System.out.println("Load success " + numNPC + " NPC !");
-
             AuctionScheduler scheduler = new AuctionScheduler();
             scheduler.startScheduling();
         } catch (Exception e) {

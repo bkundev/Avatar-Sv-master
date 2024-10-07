@@ -43,7 +43,7 @@ public class Utils {
     private static final String LOG_DIRECTORY = "logs/";
 
 
-    public static void writeLog(User user, String message) {
+    public synchronized static void writeLog(User user, String message) {
         String username = user.getUsername();
         String logFilePath = LOG_DIRECTORY + username + "_log.txt"; // Tên file log theo username
 
@@ -57,7 +57,7 @@ public class Utils {
         }
     }
 
-    public static void writeLogKhoaAcc(User user, String message) {
+    public synchronized static void writeLogKhoaAcc(User user, String message) {
         String username = user.getUsername();
         String logFilePath = LOG_DIRECTORY  + "KhoaAcc.txt"; // Tên file log theo username
 

@@ -24,6 +24,7 @@ public class DauGiaManager {
     private Timer timer;
     public static Map<Integer, Integer> userBids = new HashMap<>(); // Lưu ID người chơi và số tiền đặt
     private int highestBid = 0; // Giá cao nhất hiện tại
+    private int previousHighestBid = 0; // Biến lưu trữ giá đặt trước đó
     private User highestBidder; // Người chơi đặt giá cao nhất
     private long endTime; // Thời gian kết thúc phiên đấu giá
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1); // Quản lý thời gian đấu giá// Biến lưu thời gian kết thúc đấu giá
@@ -31,6 +32,7 @@ public class DauGiaManager {
     private Item auctionItem;
 
     private List<Npc> dauGia = new ArrayList<>();
+    private List<Npc> NhanViendauGia = new ArrayList<>();
 
     private DauGiaManager() {
     }
@@ -40,7 +42,20 @@ public class DauGiaManager {
     public void setHighestBid(int highestBid) {
         this.highestBid = highestBid;
     }
-
+    public void setTimeRemaining(long timeInSeconds) {
+        synchronized (this) { // Bảo vệ truy cập đồng thời
+            if (timeInSeconds > 0) {
+                // Thiết lập lại endTime dựa trên thời gian hiện tại và thời gian còn lại
+                this.endTime = System.currentTimeMillis() + (timeInSeconds * 1000);
+            } else {
+                // Nếu timeInSeconds <= 0, có thể kết thúc phiên đấu giá ngay lập tức
+                endAuction(); // Gọi hàm kết thúc phiên đấu giá nếu cần
+            }
+        }
+    }
+    public void setPreviousHighestBid(int previousBid) {
+        this.previousHighestBid = previousBid;
+    }
 
     public String getauctionCurrency (){
         return  this.auctionCurrency == 0 ? "xu" : "lượng";
@@ -51,10 +66,12 @@ public class DauGiaManager {
     public Item getAuctionItem() {
         return auctionItem;
     }
+
     public List<Npc> getDauGia() {
         // Trả về một bản sao để tránh bị sửa đổi trực tiếp
         return new ArrayList<>(dauGia);
     }
+
     public long getEndTime() {
         return endTime;
     }
@@ -68,6 +85,16 @@ public class DauGiaManager {
         return auctionItem;
     }
 
+    public int getPreviousHighestBid() {
+        return previousHighestBid;
+    }
+    public long getTimeRemaining() {
+        synchronized (this) { // Bảo vệ việc truy cập endTime
+            long timeRemaining = endTime - System.currentTimeMillis();
+            return timeRemaining > 0 ? timeRemaining / 1000 : 0;
+
+        }
+    }
 
 
 
@@ -77,12 +104,17 @@ public class DauGiaManager {
             this.dauGia.add(dauGia);
         }
     }
-
+    public void setNhanVienDauGia(Npc nhanViendauGia) {
+        if (dauGia != null) {
+            if(this.NhanViendauGia.size() > 2) {return;}
+            this.NhanViendauGia.add(nhanViendauGia);
+        }
+    }
 
     public void startAuction(int currencyType, Item item) {
         this.auctionCurrency = currencyType; // Gán loại tiền cho phiên đấu giá
         this.auctionItem = item; // Gán vật phẩm cho phiên đấu giá
-        long duration = 20 * 60 * 1000;
+        long duration = 1 * 60 * 1000;
         endTime = System.currentTimeMillis() + duration;
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -103,46 +135,70 @@ public class DauGiaManager {
     }
 
 
-    public long getTimeRemaining() {
-        synchronized (this) { // Bảo vệ việc truy cập endTime
-            long timeRemaining = endTime - System.currentTimeMillis();
-            return timeRemaining > 0 ? timeRemaining / 1000 : 0;
-        }
-    }
-
 
     public void updateNpcAuctionInfo() {
         long timeRemaining = getTimeRemaining(); // Lấy thời gian còn lại
         int highestBid = getHighestBid(); // Lấy giá cao nhất
         User highestBidder = getHighestBidder(); // Lấy người đấu giá cao nhất
         String currency = auctionCurrency == 0 ? "xu" : "lượng";
+
+        System.out.println("Time remaining: " + timeRemaining);
+
+        if (timeRemaining <= 30 && highestBidder != null && highestBid > getPreviousHighestBid()) {
+            System.out.println("Resetting time to 30 seconds");
+            setTimeRemaining(30); // Đặt lại thời gian còn lại thành 30 giây
+            for (Npc npc : getInstance().NhanViendauGia) {
+                npc.setTextChats(List.of(
+                        MessageFormat.format("Có người vừa trả giá {0} {1} cho vật phẩm {2} có ai muốn trả cao hơn không ạ? . Thời gian còn lại: {3} giây",
+                                highestBid,
+                                currency,
+                                this.auctionItem.getPart().getName(),
+                                getFormattedTimeRemaining()
+                        )
+                ));
+            }
+        }
+
+        // Cập nhật giá trị trước khi hiển thị
+        setPreviousHighestBid(highestBid); // Cập nhật giá đặt trước đó
+
         for (Npc npc : dauGia) {
-            // Kiểm tra nếu thời gian còn lại đã hết
             if (timeRemaining <= 0) {
-                // Kết thúc đấu giá và trao giải cho người có giá cao nhất
                 endAuction();
                 return;
             }
             npc.setTextChats(List.of(
-                    MessageFormat.format("Loại đấu giá: {0}. Vật phẩm: {1}. Giá cao nhất hiện tại là {2} bởi người chơi {3}. Thời gian còn lại: {4} giây",
+                    MessageFormat.format("Loại đấu giá: {0}. Vật phẩm: {1}. Giá cao nhất hiện tại là {2} . Thời gian còn lại: {3} giây",
                             currency,
                             this.auctionItem.getPart().getName(), // Tên vật phẩm
                             highestBid,
-                            highestBidder != null ? highestBidder.getUsername() : "Chưa có",
                             getFormattedTimeRemaining()
                     )
             ));
             System.out.println(MessageFormat.format(
-                    "Loại đấu giá: {0}. Vật phẩm: {1}. Giá cao nhất hiện tại là {2} bởi người chơi {3}. Thời gian còn lại: {4} giây",
+                    "Loại đấu giá: {0}. Vật phẩm: {1}. Giá cao nhất hiện tại là {2} . Thời gian còn lại: {3} giây",
                     currency,
                     auctionItem.getPart().getName(),
                     highestBid,
-                    highestBidder != null ? highestBidder.getUsername() : "Chưa có",
                     getFormattedTimeRemaining()
             ));
         }
 
+        if (timeRemaining <= 30){
+            for (Npc npc : getInstance().NhanViendauGia) {
+                npc.setTextChats(List.of(
+                        MessageFormat.format("Có người vừa trả giá {0} {1} cho vật phẩm {2} có ai muốn trả cao hơn không ạ? . Thời gian còn lại: {3} giây",
+                                highestBid,
+                                currency,
+                                this.auctionItem.getPart().getName(),
+                                getFormattedTimeRemaining()
+                        )
+                ));
+            }
+        }
+
     }
+
     public void endAuction() {
 
         User highestBidder = getHighestBidder();
@@ -169,7 +225,6 @@ public class DauGiaManager {
             System.out.println("Đấu giá đã kết thúc nhưng không có người tham gia.");
         }
 
-        // Hoàn lại 90% tiền cược cho tất cả người chơi đã cược (trừ người chiến thắng)
         synchronized (userBids) { // Đảm bảo đồng bộ khi nhiều người cùng hoàn tiền
             for (Map.Entry<Integer, Integer> entry : userBids.entrySet()) {
                 int userId = entry.getKey();
@@ -177,10 +232,9 @@ public class DauGiaManager {
 
                 // Kiểm tra xem người chơi có phải là người chiến thắng không
                 if (highestBidder != null && userId == highestBidder.getId()) {
-                    continue; // Bỏ qua người chiến thắng
+                    continue; //
                 }
 
-                // Tìm người chơi từ ID
                 User user = UserManager.getInstance().find(userId);
                 if (user != null) {
                     // Hoàn lại 90% số tiền cược
@@ -198,6 +252,8 @@ public class DauGiaManager {
             }
         }
         this.userBids.clear();
+        this.setHighestBid(0);
+        this.setHighestBidder(null);
         if (timer != null) {
             timer.cancel();
         }
