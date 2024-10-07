@@ -34,7 +34,7 @@ public class BoardManager {
     }
 
 
-    public void increaseMaxPlayer(int id, User user) {
+    public void increaseMaxPlayer(int id,byte roomID, User user) {
         synchronized (this) {
             for (BoardInfo board : boardList) {
                 if (board.boardID == id) {
@@ -48,15 +48,20 @@ public class BoardManager {
                     if (!userExists) {
                         board.nPlayer += 1;
                         board.lstUsers.add(user);
+                        user.setRoomID(roomID);
                     }
                 }
             }
         }
     }
 
-
+    public void remove(User us) {
+        synchronized(users) {
+            users.remove(us);
+        }
+    }
     public void initBoards() {
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 6; i++) {
             BoardInfo board = new BoardInfo();
             board.boardID = (byte) i;
             board.nPlayer = 80;//số ng chia 16
@@ -70,6 +75,16 @@ public class BoardManager {
         }
     }
 
+    public BoardInfo findUserBoard(User user) {
+        synchronized (this) {
+            for (BoardInfo board : boardList) {
+                if (board.lstUsers.contains(user)) {
+                    return board; // Trả về bàn nếu người dùng đang tham gia
+                }
+            }
+        }
+        return null; // Trả về null nếu người dùng không tham gia bàn nào
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true; // Kiểm tra nếu đối tượng so sánh chính là đối tượng hiện tại

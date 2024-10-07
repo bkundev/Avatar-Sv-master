@@ -244,7 +244,6 @@ public class Boss extends User {
         }
 
         boss.getWearing().clear();
-
         boss.setId(currentBossId++);
         boss.setDefeated(false);
 //        List<String> chatMessages = Arrays.asList("YAAAA", "YOOOO");

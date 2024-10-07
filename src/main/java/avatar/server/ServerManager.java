@@ -1,5 +1,9 @@
 package avatar.server;
 
+import avatar.constants.Cmd;
+import avatar.message.CasinoMsgHandler;
+import avatar.message.ParkMsgHandler;
+import avatar.message.minigame.BauCuaMsgHandler;
 import avatar.model.*;
 import avatar.db.DbManager;
 import avatar.item.Item;
@@ -277,11 +281,26 @@ public class ServerManager {
         }
     }
 
-    public static void disconnect(Session cl) {
+    public static void disconnect(Session cl) throws IOException {
         synchronized (ServerManager.clients) {
             ServerManager.clients.remove(cl);
             --ServerManager.numClients;
             System.out.println("Disconnect client: " + cl);
+
+            BoardInfo board = BoardManager.getInstance().findUserBoard(cl.user);
+            if(board != null) {
+                ByteArrayOutputStream leaveBoard = new ByteArrayOutputStream();
+                try (DataOutputStream dos2 = new DataOutputStream(leaveBoard)) {
+
+                    dos2.writeByte(cl.user.getRoomID());
+                    dos2.writeByte(board.boardID);
+                    dos2.flush();
+                    byte[] dataJoinPak = leaveBoard.toByteArray();
+                    CasinoMsgHandler csnMsgHandler1 = new CasinoMsgHandler(cl);
+                    csnMsgHandler1.onMessage(new Message(Cmd.LEAVE_BOARD, dataJoinPak));
+                }
+            }
+
         }
     }
 

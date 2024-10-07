@@ -53,6 +53,8 @@ public class User {
     public int spam;
     public int HP;
     public int xu_from_boss;
+    private boolean spamclickBoss;
+    private int intSpanboss;
     private boolean isDefeated;
     private boolean isSpam;
     private int storedXuUpdate; // Biến lưu trữ xu đã cập nhật
@@ -111,6 +113,7 @@ public class User {
 
 
     private List<Byte> boardIDs;
+    private byte roomID;
     List<Byte> moneyPutList;
     public boolean isToXong;
     public boolean isHaPhom;
@@ -127,9 +130,34 @@ public class User {
         this.moneyPutList = new ArrayList<>();
     }
 
+    public int getIntSpanboss() {
+        return intSpanboss;
+    }
+
+    public void incrementIntSpanboss() {
+        this.intSpanboss++;
+    }
+
+    public void resetIntSpanboss() {
+        this.intSpanboss = 0;
+    }
+
+    // Phương thức để reset tất cả thông tin của người chơi
+    public void resetUser() {
+        resetIntSpanboss();
+        setspamclickBoss(false);
+    }
+    public synchronized boolean getspamclickBoss() {
+        return spamclickBoss;
+    }
+
+    public void setspamclickBoss(boolean spamclickBoss) {
+        this.spamclickBoss = spamclickBoss;
+    }
+
 
     public synchronized boolean isHaPhom() {
-        return isHaPhom;
+        return this.isHaPhom;
     }
 
     public synchronized void setHaPhom(boolean isHaPhom) {
@@ -137,7 +165,7 @@ public class User {
     }
 
     public synchronized boolean isToXong() {
-        return isToXong;
+        return this.isToXong;
     }
 
     public synchronized void setToXong(boolean isToXong) {
@@ -308,6 +336,12 @@ public class User {
         return isDefeated;
     }
 
+    public synchronized byte getRoomID() {
+        return this.roomID;
+    }
+
+    public synchronized void setRoomID(byte RoomID) {
+        this.roomID = RoomID;}
 
 
     public int getChestLevel() {

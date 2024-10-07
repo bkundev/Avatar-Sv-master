@@ -139,7 +139,7 @@ public class CasinoMsgHandler extends MessageHandler {
         }
         BoardInfo board = BoardManager.getInstance().find(boardID);
 
-        BoardManager.getInstance().increaseMaxPlayer(boardID,us);
+        BoardManager.getInstance().increaseMaxPlayer(boardID,roomID,us);
         List<User> BoardUs = board.getLstUsers();
 
 

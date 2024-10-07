@@ -357,9 +357,9 @@ public class AvatarService extends Service {
         short idJoin = ms.reader().readShort();
 
         switch (idJoin) {
-            case 4:
-                this.session.user.getAvatarService().serverDialog("đang xây dựng");
-                break;
+//            case 4:
+//                this.session.user.getAvatarService().serverDialog("đang xây dựng");
+//                break;
             case 5://Shop 1 hawai
 
                 // Retrieve the shop items
@@ -387,14 +387,14 @@ public class AvatarService extends Service {
         }
 
 
-//        this.session.user.getZone().leave(this.session.user);
-//
-//        ms = new Message(Cmd.JOIN_ONGAME_MINI);
-//        DataOutputStream ds = ms.writer();
-////        ds.writeByte(1);
-////        ds.writeByte(0);
-////        ds.writeShort(4);
-//        this.session.sendMessage(ms);
+        this.session.user.getZone().leave(this.session.user);
+
+        ms = new Message(Cmd.JOIN_ONGAME_MINI);
+        DataOutputStream ds = ms.writer();
+//        ds.writeByte(1);
+//        ds.writeByte(0);
+//        ds.writeShort(4);
+        this.session.sendMessage(ms);
 
 
 

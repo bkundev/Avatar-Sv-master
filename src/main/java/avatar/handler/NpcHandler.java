@@ -111,10 +111,8 @@ public class NpcHandler {
         }
         // Cập nhật thời gian thực hiện hành động
         lastActionTimes.put(us.getId(), currentTime);
-
         int npcIdCase = npcId - Npc.ID_ADD;
         User boss = z.find(npcId);
-
         double maxDistance = 55.0;
         int playerX = us.getX();
         int playerY = us.getY();
@@ -125,8 +123,13 @@ public class NpcHandler {
 
         if (npcIdCase > 1000 && npcIdCase<=9999)
         {
-
-
+            Random random = new Random(); // Khởi tạo Random
+            boolean isBossRandom = random.nextInt(100) < 2; // 1% tỷ lệ để tạo boss
+            if(isBossRandom || us.getspamclickBoss()){
+                us.setspamclickBoss(true);
+                us.getAvatarService().openMenuOption(1000, 0, "rô bốt hả bạn? : Đúng rồi", "rô bốt hả bạn? : Chắc chắn rồi", "rô bốt hả bạn? : Không", "rô bốt hả bạn? : Yes sir");
+                return;
+            }
             if(us.getSession().isResourceHD()){
                 List<Menu> listmenuboss = new ArrayList<>();
                 Menu bossmenu = Menu.builder().name(" Đánh ").action(() -> {
@@ -158,9 +161,6 @@ public class NpcHandler {
                 // Xử lý nếu thời gian không nằm trong khoảng
                 System.out.println("Hàm không được kích hoạt ngoài khoảng thời gian từ 6h sáng đến 11h đêm.");
             }
-
-
-
             us.updateXu(+us.getDameToXu());
 
             us.getAvatarService().updateMoney(0);
@@ -610,7 +610,6 @@ public class NpcHandler {
                     us.getAvatarService().openMenuOption(npcId, 0, ListDacBiet);
                     break;
                 }
-
             }
         }
     }
