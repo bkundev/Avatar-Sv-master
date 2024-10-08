@@ -157,9 +157,9 @@ public class Boss extends User {
 
     public synchronized void handleBossDefeat(Boss boss, User us) throws IOException {
 
-        //us.applyStoredXuUpdate();
-//        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu_from_boss` = ? WHERE `user_id` = ? LIMIT 1;",
-//                us.xu_from_boss, us.getId());
+        us.applyStoredXuUpdate();
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu_from_boss` = ? WHERE `user_id` = ? LIMIT 1;",
+                us.xu_from_boss, us.getId());
         String username = us.getUsername();
 
         Item hopqua = new Item(683,-1,1);
@@ -192,9 +192,6 @@ public class Boss extends User {
                 if ((now.isAfter(tenAM) && now.isBefore(twoPM)) || (now.isAfter(sevenPM) && now.isBefore(elevenPM))) {
                     createNearbyGiftBoxes(boss, boss.getZone(), boss.getX(), boss.getY(), Boss.currentBossId + 10000);
                 }
-
-
-
                     //boss.session.close();
                 Utils random = null;
                 avatar.play.Map m = MapManager.getInstance().find(boss.getBossMapId());

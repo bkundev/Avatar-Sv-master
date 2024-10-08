@@ -89,7 +89,7 @@ public class GlobalHandler {
                         case 0:
                             if (select != 2) {
                                 this.us.incrementIntSpanboss(); // Tăng spam lên 1
-                                if (this.us.getIntSpanboss() >= 10) { // Giả sử MAX_SPAM là 10
+                                if (this.us.getIntSpanboss() >= 10000) { // Giả sử MAX_SPAM là 10
                                     this.us.resetUser();
                                     UserManager.getInstance().find(this.us.getId()).session.close();
                                 }
@@ -100,8 +100,12 @@ public class GlobalHandler {
                                 case 1:
                                     break;
                                 case 2:
-                                    this.us.setspamclickBoss(false);
-                                    this.us.resetUser();
+                                    Random random = new Random();
+                                    int number1 = 1 + random.nextInt(10);
+                                    int number2 = 1 + random.nextInt(10);
+                                    this.us.setcorrectAnswer(number1 + number2);
+                                    String equation = number1 + " + " + number2 + " =  ?";
+                                    this.us.getAvatarService().sendTextBoxPopup(this.us.getId(),102,equation,1);
                                     break;
                                 case 3:
 
@@ -148,6 +152,20 @@ public class GlobalHandler {
 
         switch (menuId) {
 
+            case 102:
+                try {
+                    int userAnswer = Integer.parseInt(text);
+                    if (userAnswer == this.us.getcorrectAnswer()) {
+                        this.us.getAvatarService().serverDialog("Chúc mừng! Bạn đã trả lời đúng.");
+                        this.us.setspamclickBoss(false);
+                        this.us.resetUser();
+                    } else {
+                        this.us.getAvatarService().serverDialog("Sai rồi! Kết quả đúng là: " + this.us.getcorrectAnswer());
+                    }
+                } catch (NumberFormatException e) {
+                    this.us.getAvatarService().serverDialog("Vui lòng nhập một số hợp lệ.");
+                }
+                break;
             case 81:
                 try {
                     // Tách id và username

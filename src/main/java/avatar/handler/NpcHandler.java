@@ -124,10 +124,28 @@ public class NpcHandler {
         if (npcIdCase > 1000 && npcIdCase<=9999)
         {
             Random random = new Random(); // Khởi tạo Random
-            boolean isBossRandom = random.nextInt(100) < 2; // 1% tỷ lệ để tạo boss
-            if(isBossRandom || us.getspamclickBoss()){
+            if (us.getRandomTimeInMillis() == 0) {
+                int randomMinutes = 1 + random.nextInt(1); // Tạo số phút ngẫu nhiên từ 10-20
+                long randomTimeInMillis = randomMinutes * 60 * 1000; // Chuyển đổi phút sang mili giây
+                // Gán thời gian ngẫu nhiên cho user
+                us.setRandomTimeInMillis(randomTimeInMillis);
+                us.setLastTimeSet(System.currentTimeMillis()); // Lưu thời gian hiện tại khi gán
+            }
+
+            // Kiểm tra thời gian hiện tại và thời gian đã gán
+            long currentTime1 = System.currentTimeMillis();
+            System.out.println(currentTime1);
+            if (currentTime1 - us.getLastTimeSet() >= us.getRandomTimeInMillis() ||us.getspamclickBoss()) {
+                // Nếu thời gian đã hết, hiện thông báo rô bốt
+                us.getAvatarService().openMenuOption(1000, 0,
+                        "bạn có phải nghẹo không? : Đúng rồi",
+                        "nghẹo là bạn hả ? : Chắc chắn rồi",
+                        "nghẹo hả : Không phải",
+                        "bạn là nghẹo : Yes sir");
+
+                // Reset lại thời gian sau khi hiện thông báo
                 us.setspamclickBoss(true);
-                us.getAvatarService().openMenuOption(1000, 0, "rô bốt hả bạn? : Đúng rồi", "rô bốt hả bạn? : Chắc chắn rồi", "rô bốt hả bạn? : Không", "rô bốt hả bạn? : Yes sir");
+                us.setRandomTimeInMillis(0); // Đặt lại để lần sau có thể gán thời gian mới
                 return;
             }
             if(us.getSession().isResourceHD()){
@@ -156,7 +174,7 @@ public class NpcHandler {
 
             // Kiểm tra nếu thời gian hiện tại nằm trong khoảng
             if (now.isAfter(startTime) && now.isBefore(endTime)) {
-                us.updateXuKillBoss(+us.getDameToXu());
+                us.updateXuKillBoss(+1);
             } else {
                 // Xử lý nếu thời gian không nằm trong khoảng
                 System.out.println("Hàm không được kích hoạt ngoài khoảng thời gian từ 6h sáng đến 11h đêm.");
@@ -404,28 +422,28 @@ public class NpcHandler {
                     us.getAvatarService().openMenuOption(npcId, 0, DauGia);
                     break;
                 }
-                case VE_SO:{
-                    List<Menu> listet = new ArrayList<>();
-                    List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
-                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
-                                    List.of(
-                                            Menu.builder().name("demo item").action(() -> {
-                                                us.getAvatarService().openUIShop(-49,"em.thinh",Items);
-                                            }).build()
-                                    ))
-                            .id(npcId)
-                            .npcName("donate đi")
-                            .npcChat("show Item")
-                            .build();
-                    listet.add(quaySo);
-                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
-                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
-                    }).build());
-                    listet.add(Menu.builder().name("Thoát").build());
-                    us.setMenus(listet);
-                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
-                    break;
-                }
+//                case em_thinh:{
+//                    List<Menu> listet = new ArrayList<>();
+//                    List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
+//                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
+//                                    List.of(
+//                                            Menu.builder().name("demo item").action(() -> {
+//                                                us.getAvatarService().openUIShop(-49,"em.thinh",Items);
+//                                            }).build()
+//                                    ))
+//                            .id(npcId)
+//                            .npcName("donate đi")
+//                            .npcChat("show Item")
+//                            .build();
+//                    listet.add(quaySo);
+//                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
+//                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
+//                    }).build());
+//                    listet.add(Menu.builder().name("Thoát").build());
+//                    us.setMenus(listet);
+//                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
+//                    break;
+//                }
                 case NpcName.QUAY_SO: {
                     List<Menu> qs = new ArrayList<>();
                     Menu quaySo1 = Menu.builder().name("Quay số").menus(

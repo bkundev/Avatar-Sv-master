@@ -70,8 +70,10 @@ public class User {
     public int luongKhoa;
 
     private int dame;
-
     private int dameToXu;
+    public long randomTimeInMillis; // Random time in milliseconds
+    public long lastTimeSet;
+    public int correctAnswer; // Biến lưu trữ kết quả đúng của phép toán
 
     public int xeng;
     private short clanID;
@@ -94,6 +96,9 @@ public class User {
     public List<Item> chests;
     public List<Item> chestsHome;
 
+
+
+
     private Zone zone;
     private short x, y;
     private byte direct;
@@ -102,9 +107,14 @@ public class User {
     private short idImg = -1;
     private List<Command> listCmd;
     private List<Command> listCmdRotate;
+
+
+
     @Getter
     @Setter
     private boolean loadDataFinish;
+
+
 
     @Getter
     @Setter
@@ -342,6 +352,33 @@ public class User {
 
     public synchronized void setRoomID(byte RoomID) {
         this.roomID = RoomID;}
+    public long getRandomTimeInMillis() {
+        return randomTimeInMillis;
+    }
+
+    // Setter cho randomTimeInMillis
+    public void setRandomTimeInMillis(long randomTimeInMillis) {
+        this.randomTimeInMillis = randomTimeInMillis;
+    }
+
+    // Getter cho lastTimeSet
+    public long getcorrectAnswer() {
+        return this.correctAnswer;
+    }
+
+    // Setter cho lastTimeSet
+    public void setcorrectAnswer(int sum) {
+        this.correctAnswer = sum;
+    }
+
+    public void set(long randomTimeInMillis) {
+        this.randomTimeInMillis = randomTimeInMillis;
+    }
+
+    // Getter cho lastTimeSet
+    public long getLastTimeSet() {
+        return lastTimeSet;
+    }
 
 
     public int getChestLevel() {
