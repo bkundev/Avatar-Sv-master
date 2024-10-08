@@ -264,11 +264,11 @@ public class NpcHandler {
                                 detailedMessage.append(String.format("\n Bạn đang ở top %d thả pháo lượng : %d", rankPhaoLuong, us.getTopPhaoLuong()));
 
                                 int rankXuboss = us.getService().getUserRankXuBoss(us);
-                                detailedMessage.append(String.format("\n Bạn đang ở top %d xu boss : %d", rankXuboss, us.getXu_from_boss()));
+                                detailedMessage.append(String.format("\n Bạn đang ở top %d lượt đánh boss : %d", rankXuboss, us.getXu_from_boss()));
                                 us.getAvatarService().serverDialog(detailedMessage.toString());
                             })
                             .build());
-                    list1.add(Menu.builder().name("Bảng xếp hạng kiếm xu từ boss")
+                    list1.add(Menu.builder().name("Bảng xếp hạng lượt đánh boss")
                             .action(() -> {
                                 List<User> topPlayers = us.getService().getTop10PlayersByXuFromBoss();
                                 StringBuilder result = new StringBuilder();
@@ -279,7 +279,7 @@ public class NpcHandler {
                                         result.append(player.getUsername())
                                                 .append(" Top ").append(rank).append(" : ")
                                                 .append(player.getXu_from_boss())
-                                                .append(" xu\n");
+                                                .append(" lượt\n");
                                         rank++; // Tăng thứ hạng sau mỗi lần thêm người chơi vào kết quả
                                     }
                                 }
