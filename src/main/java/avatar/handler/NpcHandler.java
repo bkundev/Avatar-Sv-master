@@ -125,7 +125,7 @@ public class NpcHandler {
         {
             Random random = new Random(); // Khởi tạo Random
             if (us.getRandomTimeInMillis() == 0) {
-                int randomMinutes = 1 + random.nextInt(1); // Tạo số phút ngẫu nhiên từ 10-20
+                int randomMinutes = 10 + random.nextInt(11); // Tạo số phút ngẫu nhiên từ 10-20
                 long randomTimeInMillis = randomMinutes * 60 * 1000; // Chuyển đổi phút sang mili giây
                 // Gán thời gian ngẫu nhiên cho user
                 us.setRandomTimeInMillis(randomTimeInMillis);
@@ -138,12 +138,10 @@ public class NpcHandler {
             if (currentTime1 - us.getLastTimeSet() >= us.getRandomTimeInMillis() ||us.getspamclickBoss()) {
                 // Nếu thời gian đã hết, hiện thông báo rô bốt
                 us.getAvatarService().openMenuOption(1000, 0,
-                        "bạn có phải nghẹo không? : Đúng rồi",
-                        "nghẹo là bạn hả ? : Chắc chắn rồi",
-                        "nghẹo hả : Không phải",
-                        "bạn là nghẹo : Yes sir");
-
-                // Reset lại thời gian sau khi hiện thông báo
+                        "bạn có phải robot không? : Đúng rồi",
+                        "robot là bạn hả ? : Chắc chắn rồi",
+                        "robot hả : Không phải",
+                        "bạn là robot : Yes sir");
                 us.setspamclickBoss(true);
                 us.setRandomTimeInMillis(0); // Đặt lại để lần sau có thể gán thời gian mới
                 return;
@@ -263,27 +261,12 @@ public class NpcHandler {
                                 int rankPhaoLuong = us.getService().getUserRankPhaoLuong(us);
                                 detailedMessage.append(String.format("\n Bạn đang ở top %d thả pháo lượng : %d", rankPhaoLuong, us.getTopPhaoLuong()));
 
+                                int rankPhaoXu = us.getService().getUserRankPhaoXu(us);
+                                detailedMessage.append(String.format("\n Bạn đang ở top %d thả pháo xu : %d", rankPhaoXu, us.getTopPhaoXu()));
+
                                 int rankXuboss = us.getService().getUserRankXuBoss(us);
                                 detailedMessage.append(String.format("\n Bạn đang ở top %d lượt đánh boss : %d", rankXuboss, us.getXu_from_boss()));
                                 us.getAvatarService().serverDialog(detailedMessage.toString());
-                            })
-                            .build());
-                    list1.add(Menu.builder().name("Bảng xếp hạng lượt đánh boss")
-                            .action(() -> {
-                                List<User> topPlayers = us.getService().getTop10PlayersByXuFromBoss();
-                                StringBuilder result = new StringBuilder();
-                                int rank = 1; // Biến đếm để theo dõi thứ hạng
-
-                                for (User player : topPlayers) {
-                                    if (player.getXu_from_boss() > 0) {
-                                        result.append(player.getUsername())
-                                                .append(" Top ").append(rank).append(" : ")
-                                                .append(player.getXu_from_boss())
-                                                .append(" lượt\n");
-                                        rank++; // Tăng thứ hạng sau mỗi lần thêm người chơi vào kết quả
-                                    }
-                                }
-                                us.getAvatarService().customTab("Top 10", result.toString());
                             })
                             .build());
                     list1.add(Menu.builder().name("Bảng xếp hạng thả pháo lượng")
@@ -298,6 +281,42 @@ public class NpcHandler {
                                                 .append(" Top ").append(rank).append(" : ")
                                                 .append(player.getTopPhaoLuong())
                                                 .append("\n");
+                                        rank++; // Tăng thứ hạng sau mỗi lần thêm người chơi vào kết quả
+                                    }
+                                }
+                                us.getAvatarService().customTab("Top 10 thả pháo lượng", result.toString());
+                            })
+                            .build());
+                    list1.add(Menu.builder().name("Bảng xếp hạng thả pháo Xu")
+                            .action(() -> {
+                                List<User> topPlayers = us.getService().getTopPhaoXu();
+                                StringBuilder result = new StringBuilder();
+                                int rank = 1; // Biến đếm để theo dõi thứ hạng
+
+                                for (User player : topPlayers) {
+                                    if (player.getTopPhaoXu() > 0) {
+                                        result.append(player.getUsername())
+                                                .append(" Top ").append(rank).append(" : ")
+                                                .append(player.getTopPhaoXu())
+                                                .append("\n");
+                                        rank++; // Tăng thứ hạng sau mỗi lần thêm người chơi vào kết quả
+                                    }
+                                }
+                                us.getAvatarService().customTab("Top 10 thả pháo xu", result.toString());
+                            })
+                            .build());
+                    list1.add(Menu.builder().name("Bảng xếp hạng lượt đánh boss")
+                            .action(() -> {
+                                List<User> topPlayers = us.getService().getTop10PlayersByXuFromBoss();
+                                StringBuilder result = new StringBuilder();
+                                int rank = 1; // Biến đếm để theo dõi thứ hạng
+
+                                for (User player : topPlayers) {
+                                    if (player.getXu_from_boss() > 0) {
+                                        result.append(player.getUsername())
+                                                .append(" Top ").append(rank).append(" : ")
+                                                .append(player.getXu_from_boss())
+                                                .append(" lượt\n");
                                         rank++; // Tăng thứ hạng sau mỗi lần thêm người chơi vào kết quả
                                     }
                                 }

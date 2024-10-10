@@ -47,8 +47,6 @@ public class Service {
 
     }
 
-
-
     public void serverDialog(String message) {
         try {
             Message ms = new Message(Cmd.SET_MONEY_ERROR);
@@ -139,6 +137,48 @@ public class Service {
         }
         return topPlayers;
     }
+    public List<User> getAllPlayersByxu_fromboss() {
+        List<User> allPlayers = new ArrayList<>();
+        String sql = "SELECT u.username, p.xu_from_boss " +
+                "FROM players p " +
+                "JOIN users u ON p.user_id = u.id " +
+                "WHERE p.xu_from_boss > 0 " + // Chỉ lấy những người có TopPhaoLuong > 0
+                "ORDER BY p.xu_from_boss DESC";
+
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                String username = rs.getString("username");
+                int xu_from_boss = rs.getInt("xu_from_boss");
+
+                User player = new User(username, xu_from_boss);
+                allPlayers.add(player);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Xử lý ngoại lệ khi truy vấn thất bại
+        }
+        return allPlayers;
+    }
+    public int getUserRankXuBoss(User currentUser) {
+        List<User> allPlayers = getAllPlayersByxu_fromboss();
+
+        // Đảm bảo currentUser có giá trị TopPhaoLuong hợp lệ
+        if (currentUser.getXu_from_boss() <= 0) {
+            return -1; // Chỉ ra rằng người dùng không có mặt trong danh sách
+        }
+
+        int rank = 1;
+        for (User player : allPlayers) {
+            if (currentUser.getXu_from_boss() >= player.getXu_from_boss()) {
+                return rank; // Trả về vị trí nếu giá trị của người dùng lớn hơn hoặc bằng
+            }
+            rank++;
+        }
+
+        return -1; // Nếu người dùng không có mặt trong danh sách
+    }
+
     public List<User> getTopPhaoLuong() {
         List<User> topPlayers = new ArrayList<>();
         String sql = "SELECT u.username, p.TopPhaoLuong " +
@@ -165,8 +205,6 @@ public class Service {
         }
         return topPlayers;
     }
-
-
     public List<User> getAllPlayersByPhaoLuong() {
         List<User> allPlayers = new ArrayList<>();
         String sql = "SELECT u.username, p.TopPhaoLuong " +
@@ -191,31 +229,6 @@ public class Service {
         }
         return allPlayers;
     }
-
-    public List<User> getAllPlayersByxu_fromboss() {
-        List<User> allPlayers = new ArrayList<>();
-        String sql = "SELECT u.username, p.xu_from_boss " +
-                "FROM players p " +
-                "JOIN users u ON p.user_id = u.id " +
-                "WHERE p.xu_from_boss > 0 " + // Chỉ lấy những người có TopPhaoLuong > 0
-                "ORDER BY p.xu_from_boss DESC";
-
-        try (Connection connection = DbManager.getInstance().getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                String username = rs.getString("username");
-                int xu_from_boss = rs.getInt("xu_from_boss");
-
-                User player = new User(username, xu_from_boss);
-                allPlayers.add(player);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Xử lý ngoại lệ khi truy vấn thất bại
-        }
-        return allPlayers;
-    }
-
     public int getUserRankPhaoLuong(User currentUser) {
         List<User> allPlayers = getAllPlayersByPhaoLuong();
 
@@ -235,17 +248,69 @@ public class Service {
         return -1; // Nếu người dùng không có mặt trong danh sách
     }
 
-    public int getUserRankXuBoss(User currentUser) {
-        List<User> allPlayers = getAllPlayersByxu_fromboss();
+    public List<User> getTopPhaoXu() {
+        List<User> topPlayers = new ArrayList<>();
+        String sql = "SELECT u.username,u.id, p.TopPhaoXu " +
+                "FROM players p " +
+                "JOIN users u ON p.user_id = u.id " +
+                "ORDER BY p.TopPhaoXu DESC " +
+                "LIMIT 10";
+
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                String username = rs.getString("username");
+                int TopPhaoXu  = rs.getInt("TopPhaoXu");
+                int userid  = rs.getInt("id");
+                // In ra giá trị đọc từ ResultSet để kiểm tra
+                System.out.println("Username: " + username + ", phao xu " + TopPhaoXu);
+
+                User player = new User(username,userid,0,TopPhaoXu );
+                topPlayers.add(player);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Xử lý ngoại lệ khi truy vấn thất bại
+        }
+        return topPlayers;
+    }
+    public List<User> getAllPlayersByPhaoXu() {
+        List<User> allPlayers = new ArrayList<>();
+        String sql = "SELECT u.username,u.id, p.TopPhaoXu " +
+                "FROM players p " +
+                "JOIN users u ON p.user_id = u.id " +
+                "WHERE p.TopPhaoXu > 0 " + // Chỉ lấy những người có TopPhaoLuong > 0
+                "ORDER BY p.TopPhaoXu DESC";
+
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                String username = rs.getString("username");
+                int userid  = rs.getInt("id");
+                int topPhaoLuong = rs.getInt("TopPhaoXu");
+
+                // Tạo đối tượng User từ dữ liệu truy vấn và thêm vào danh sách
+                User player = new User(username,userid, 0, topPhaoLuong);
+                allPlayers.add(player);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Xử lý ngoại lệ khi truy vấn thất bại
+        }
+        return allPlayers;
+    }
+
+    public int getUserRankPhaoXu(User currentUser) {
+        List<User> allPlayers = getAllPlayersByPhaoXu();
 
         // Đảm bảo currentUser có giá trị TopPhaoLuong hợp lệ
-        if (currentUser.getXu_from_boss() <= 0) {
+        if (currentUser.getTopPhaoXu() <= 0) {
             return -1; // Chỉ ra rằng người dùng không có mặt trong danh sách
         }
 
         int rank = 1;
         for (User player : allPlayers) {
-            if (currentUser.getXu_from_boss() >= player.getXu_from_boss()) {
+            if (currentUser.getTopPhaoXu() >= player.getTopPhaoXu()) {
                 return rank; // Trả về vị trí nếu giá trị của người dùng lớn hơn hoặc bằng
             }
             rank++;
@@ -253,6 +318,8 @@ public class Service {
 
         return -1; // Nếu người dùng không có mặt trong danh sách
     }
+
+
 
     public String DuDoanNY(User us){
 

@@ -479,8 +479,6 @@ public class Session implements ISession {
             getAvatarService().onLoginSuccess();
             getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thanh Pho lo");
             getAvatarService().serverInfo("nạp x2 đến hết ngày 5/10 và update 2 shop PayToWin and ChayToWin ở ngoại ô mời các bạn khám phá, chúc các bạn online vui vẻ.");
-
-
             checkThuongNapLanDau();
             checkThuongNapSet();
 
@@ -575,7 +573,7 @@ public class Session implements ISession {
         return totalDeposited; // Trả về tổng tiền nạp
     }
 
-
+//chay
     private void NhanThuongEventXuBoss() throws IOException {
 
         int TopXuboss = this.user.getService().getUserRankXuBoss(user);
@@ -598,9 +596,6 @@ public class Session implements ISession {
         TOP3SET.add(new Item(4443,-1,1));
         TOP3SET.add(new Item(4444,-1,1));
 
-
-
-
         if (TopXuboss == 1) {
             // Trao thưởng top 1
             if(user.chests.size() >= user.getChestSlot()-5){
@@ -612,7 +607,7 @@ public class Session implements ISession {
             phanThuongTop1boss.add(new  Item(2740,System.currentTimeMillis() + (86400000L * 7),1));//the vip
             phanThuongTop1boss.add(new  Item(6142,-1,1));//tóc superblue6
 
-            Utils.writeLog(user,"Nhận Thưởng TOP 1 XU BOSS : ");
+            Utils.writeLogSystem(user,"Nhận Thưởng TOP 1 XU BOSS : ");
             for (Item item : TOP3SET) {
                 this.user.addItemToChests(item);
                 Utils.writeLog(user,item.getPart().getName());
@@ -625,7 +620,7 @@ public class Session implements ISession {
                 this.user.addItemToChests(item);
                 Utils.writeLog(user,item.getPart().getName());
             }
-            System.out.println("Username: " + user.getUsername() + ", rank" + TopXuboss);
+            Utils.writeLogSystem(user,"Username: " + user.getUsername() + ", rank" + TopXuboss);
 
         } else if (TopXuboss == 2 || TopXuboss == 3) {
 
@@ -634,12 +629,12 @@ public class Session implements ISession {
                 return;
             }
 
-            Utils.writeLog(user,"Nhận Thưởng TOP 2or3 xu boss :");
+            Utils.writeLogSystem(user,"Nhận Thưởng TOP 2or3 xu boss :");
             Item theCaoCao =  new  Item(2740,System.currentTimeMillis() + (86400000L * 7),1);
             user.addItemToChests(theCaoCao);
-            Utils.writeLog(user,theCaoCao.getPart().getName());
+            Utils.writeLogSystem(user,theCaoCao.getPart().getName());
 
-            System.out.println("Username: " + user.getUsername() + ", rank3" + TopXuboss);
+            Utils.writeLogSystem(user,  user.getUsername() + ", rank3" + TopXuboss);
             for (Item item : TOP5XUBOSS){
                 this.user.addItemToChests(item);
                 Utils.writeLog(user,item.getPart().getName());
@@ -654,10 +649,10 @@ public class Session implements ISession {
                 user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 2 ô trống trong rương đồ để nhận thưởng top lượng "+TopXuboss);
                 return;
             }
-            Utils.writeLog(user,"Nhận Thưởng TOP 4or5 Pháo Lượng :");
+            Utils.writeLogSystem(user,"Nhận Thưởng TOP 4or5 Pháo Lượng :");
             for (Item item : TOP5XUBOSS){
                 this.user.addItemToChests(item);
-                Utils.writeLog(user,item.getPart().getName());
+                Utils.writeLogSystem(user,item.getPart().getName());
             }
         }
         UpdateDaNhanThuongEventXuboss(user);
@@ -665,7 +660,7 @@ public class Session implements ISession {
     }
 
     private void UpdateDaNhanThuongEventXuboss(User us) {
-        String sql = "UPDATE players SET XubossTop = TRUE WHERE user_id = ?";
+        String sql = "UPDATE players SET thuongXuBoss = TRUE WHERE user_id = ?";
         try (Connection connection = DbManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, us.getId()); // Sử dụng user_id để cập nhật
@@ -676,7 +671,7 @@ public class Session implements ISession {
     }
 
     private boolean checkXemNhanThuongXuboss(User us) {
-        String sql = "SELECT XubossTop FROM players WHERE user_id = ?";
+        String sql = "SELECT thuongXuBoss FROM players WHERE user_id = ?";
         try (Connection connection = DbManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, us.getId()); // Sử dụng user_id để truy vấn
@@ -690,7 +685,7 @@ public class Session implements ISession {
         }
         return false; // Mặc định trả về false nếu có lỗi
     }
-
+    //nạp luong
     private void NhanThuongEventluong() throws IOException {
 
         int rankPhaoLuong = this.user.getService().getUserRankPhaoLuong(user);
@@ -723,14 +718,14 @@ public class Session implements ISession {
             phanThuongTop1.add(new  Item(2742,System.currentTimeMillis() + (86400000L * 7),1));//preium
             phanThuongTop1.add(new  Item(2741,System.currentTimeMillis() + (86400000L * 7),1));//cao cấp
 
-            Utils.writeLog(user,"Nhận Thưởng TOP 1 Pháo Lượng : ");
+            Utils.writeLogSystem(user,"Nhận Thưởng TOP 1 Pháo Lượng : ");
             for (Item item : phanThuongTop1){
                 this.user.addItemToChests(item);
-                Utils.writeLog(user,item.getPart().getName());
+                Utils.writeLogSystem(user,item.getPart().getName());
             }
             for (Item item : TOP5Luong){
                 this.user.addItemToChests(item);
-                Utils.writeLog(user,item.getPart().getName());
+                Utils.writeLogSystem(user,item.getPart().getName());
             }
             System.out.println("Username: " + user.getUsername() + ", rank" + rankPhaoLuong);
 
@@ -741,7 +736,7 @@ public class Session implements ISession {
                 return;
             }
 
-            Utils.writeLog(user,"Nhận Thưởng TOP 2or3 Pháo Lượng :");
+            Utils.writeLogSystem(user,"Nhận Thưởng TOP 2or3 Pháo Lượng :");
             Item theCaoCao =  new  Item(2741,System.currentTimeMillis() + (86400000L * 7),1);
             user.addItemToChests(theCaoCao);
             Utils.writeLog(user,theCaoCao.getPart().getName());
@@ -749,7 +744,7 @@ public class Session implements ISession {
             System.out.println("Username: " + user.getUsername() + ", rank3" + rankPhaoLuong);
             for (Item item : TOP5Luong){
                 this.user.addItemToChests(item);
-                Utils.writeLog(user,item.getPart().getName());
+                Utils.writeLogSystem(user,item.getPart().getName());
             }
 
 
@@ -758,10 +753,10 @@ public class Session implements ISession {
                 user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 3 ô trống trong rương đồ để nhận thưởng top lượng "+rankPhaoLuong);
                 return;
             }
-            Utils.writeLog(user,"Nhận Thưởng TOP 4or5 Pháo Lượng :");
+            Utils.writeLogSystem(user,"Nhận Thưởng TOP 4or5 Pháo Lượng :");
             for (Item item : TOP5Luong){
                 this.user.addItemToChests(item);
-                Utils.writeLog(user,item.getPart().getName());
+                Utils.writeLogSystem(user,item.getPart().getName());
             }
         }
         UpdateDaNhanThuongEventluong(user);
@@ -769,7 +764,7 @@ public class Session implements ISession {
     }
 
     private void UpdateDaNhanThuongEventluong(User us) {
-        String sql = "UPDATE players SET has_received_reward = TRUE WHERE user_id = ?";
+        String sql = "UPDATE players SET thuongPhaoLuong = TRUE WHERE user_id = ?";
         try (Connection connection = DbManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, us.getId()); // Sử dụng user_id để cập nhật
@@ -780,7 +775,7 @@ public class Session implements ISession {
     }
 
     private boolean checkXemNhanThuongTopLuong(User us) {
-        String sql = "SELECT has_received_reward FROM players WHERE user_id = ?";
+        String sql = "SELECT thuongPhaoLuong FROM players WHERE user_id = ?";
         try (Connection connection = DbManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, us.getId()); // Sử dụng user_id để truy vấn
@@ -794,6 +789,8 @@ public class Session implements ISession {
         }
         return false; // Mặc định trả về false nếu có lỗi
     }
+// cày xu
+
 
     ////////
     private void checkThuongNapLanDau(){
@@ -911,6 +908,8 @@ public class Session implements ISession {
         diaBayAmNhac.setExpired(-1);
         user.addItemToChests(diaBayAmNhac);
     }
+
+
 
     public boolean isNewVersion() {
         return true;
@@ -1778,10 +1777,6 @@ public class Session implements ISession {
 
 
     }
-
-
-
-
 
     public void closeMessage() {
         if (this.isConnected()) {

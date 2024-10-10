@@ -54,7 +54,6 @@ public class GlobalHandler {
     public GlobalHandler(User user) {
         this.us = user;
     }
-    private static final int MAX_SPAM = 10; // Giới hạn số lần spam
 
     public void handleOptionMenu(Message ms) throws IOException {
         int userId = ms.reader().readInt();
@@ -135,12 +134,6 @@ public class GlobalHandler {
             return;
         }
     }
-
-    public void comingSoon() {
-        us.getAvatarService().serverDialog("Chức năng đang được xây dựng, vui lòng thử lại sau");
-    }
-
-
 
 
 

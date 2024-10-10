@@ -382,21 +382,16 @@ public class AvatarService extends Service {
                 break;
             // Add more cases as needed
             default:
-                // Code to execute if no cases match
-                break;
-        }
+                this.session.user.getZone().leave(this.session.user);
 
-
-        this.session.user.getZone().leave(this.session.user);
-
-        ms = new Message(Cmd.JOIN_ONGAME_MINI);
-        DataOutputStream ds = ms.writer();
+                ms = new Message(Cmd.JOIN_ONGAME_MINI);
+                DataOutputStream ds = ms.writer();
 //        ds.writeByte(1);
 //        ds.writeByte(0);
 //        ds.writeShort(4);
-        this.session.sendMessage(ms);
-
-
+                this.session.sendMessage(ms);
+                break;
+        }
 
     }
 
@@ -885,7 +880,7 @@ public class AvatarService extends Service {
             DataOutputStream ds = ms.writer();
             ds.writeShort(id);
             switch (id) {
-                case 48:
+                case 48: {
                     us.getZone().getPlayers().forEach(u -> {
                         EffectService.createEffect()
                                 .session(u.session)
@@ -899,7 +894,8 @@ public class AvatarService extends Service {
                                 .send();
                     });
                     break;
-                case 47:
+                }
+                case 47: {
                     us.getZone().getPlayers().forEach(u -> {
                         EffectService.createEffect()
                                 .session(u.session)
@@ -913,9 +909,10 @@ public class AvatarService extends Service {
                                 .send();
                     });
                     break;
-                case 8:
-                    if(us.getLuong()<5){
-                        us.getAvatarService().serverDialog("B phải có trên 5 Lượng");
+                }
+                case 8: {
+                    if (us.getLuong() < 5) {
+                        us.getAvatarService().serverDialog("Bạn phải có trên 5 Lượng");
                         return;
                     }
                     us.getZone().getPlayers().forEach(u -> {
@@ -930,10 +927,13 @@ public class AvatarService extends Service {
                                 .idPlayer(us.getId())
                                 .send();
                     });
+
+
                     us.updateTopPhaoLuong(-5);
                     us.getAvatarService().updateMoney(0);
                     break;
-                case 35:
+                }
+                case 35: {
                     us.getZone().getPlayers().forEach(u -> {
                         EffectService.createEffect()
                                 .session(u.session)
@@ -947,7 +947,8 @@ public class AvatarService extends Service {
                                 .send();
                     });
                     break;
-                case 33:
+                }
+                case 33: {
                     us.getZone().getPlayers().forEach(u -> {
                         EffectService.createEffect()
                                 .session(u.session)
@@ -961,7 +962,8 @@ public class AvatarService extends Service {
                                 .send();
                     });
                     break;
-                case 34:
+                }
+                case 34: {
                     us.getZone().getPlayers().forEach(u -> {
                         EffectService.createEffect()
                                 .session(u.session)
@@ -975,7 +977,8 @@ public class AvatarService extends Service {
                                 .send();
                     });
                     break;
-                case 9:
+                }
+                case 9: {
                     us.getZone().getPlayers().forEach(u -> {
                         EffectService.createEffect()
                                 .session(u.session)
@@ -989,7 +992,8 @@ public class AvatarService extends Service {
                                 .send();
                     });
                     break;
-                case 10:
+                }
+                case 10: {
                     ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
                     try (DataOutputStream dos1 = new DataOutputStream(baos1)) {
                         dos1.writeInt(0);//x
@@ -999,8 +1003,29 @@ public class AvatarService extends Service {
                         msgHandler.onMessage(new Message(Cmd.CONTAINER, data1));
                     }
                     break;
+                }
+                case 11: {
+                    if (us.getXu() < 20000) {
+                        us.getAvatarService().serverDialog("Bạn phải có trên 20.000 Xu");
+                        return;
+                    }
+                    us.getZone().getPlayers().forEach(u -> {
+                        EffectService.createEffect()
+                                .session(u.session)
+                                .id((byte) 20)
+                                .style((byte) 0)
+                                .loopLimit((byte) 6)
+                                .loop((short) 1)//so luong lap lai
+                                .loopType((byte) 1)
+                                .radius((short) 6)
+                                .idPlayer(us.getId())
+                                .send();
+                    });
+                    us.updateTopPhaoXu(-20000);
+                    us.getAvatarService().updateMoney(0);
+                    break;
+                }
             }
-
             ds.flush();
             sendMessage(ms);
         } catch (IOException e) {

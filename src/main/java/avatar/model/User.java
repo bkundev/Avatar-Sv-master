@@ -48,15 +48,23 @@ public class User {
     private static final int[] UPGRADE_COST_COINS = {0, 0,0,20000, 50000, 100000, 200000 ,200000,500000,600000,70000,0,1000000,1200000,1500000,1700000,2000000,2500000,2700000,3000000,4000000,5000000};
     private static final int[] UPGRADE_COST_GOLD = {0, 0, 0, 0, 0, 0, 0, 200,500,600,700,1000,1000 ,1200 ,1500 ,1700 ,2000 ,2500 ,2700 ,3000 ,4000 ,5000 };
     public boolean AutoFish;
+
     public int bossMapId;
+
     public int TopPhaoLuong;
-    public int spam;
-    public int HP;
+    public int TopPhaoXu;
+
     public int xu_from_boss;
     private boolean spamclickBoss;
+
     private int intSpanboss;
+    public int spam;
+
+    public int HP;
+
     private boolean isDefeated;
     private boolean isSpam;
+
     private int storedXuUpdate; // Biến lưu trữ xu đã cập nhật
     private static final Logger logger = Logger.getLogger(User.class);
     public Session session;
@@ -91,12 +99,10 @@ public class User {
     private byte hunger;
     private byte chestSlot;
     private byte chestHomeSlot;
-    private int scores;
+    private int scores;// điểm sk
     private List<Item> wearing;
     public List<Item> chests;
     public List<Item> chestsHome;
-
-
 
 
     private Zone zone;
@@ -229,6 +235,14 @@ public class User {
         this.xeng = xeng;
         this.TopPhaoLuong = TopPhaoLuong;
     }
+
+    public User(String username, int id,int xeng, int TopPhaoXu) {
+        this.username = username;
+        this.id = id;
+        this.xeng = xeng;
+        this.TopPhaoXu = TopPhaoXu;
+    }
+
     public AvatarService getAvatarService() {
         return session.getAvatarService();
     }
@@ -277,12 +291,15 @@ public class User {
         this.Updatexu_from_boss(storedXuUpdate);
         this.storedXuUpdate = 0; // Reset xu đã lưu trữ
     }
+
     public synchronized void updateXP(int XP) {
         this.expMain += XP;
     }
+
     public synchronized void Updatexu_from_boss(int xu_from_boss) {
         this.xu_from_boss += xu_from_boss;
     }
+
     public synchronized void updateLuong(int luongUp) {
         this.luong += luongUp;
         try {
@@ -292,6 +309,7 @@ public class User {
             throw new RuntimeException(e);
         }
     }
+
     public synchronized void updateScores(int ScoresUp) {
         this.scores += ScoresUp;
     }
@@ -299,22 +317,18 @@ public class User {
     public synchronized void updateLuongKhoa(int luongUp) {
         this.luong += luongUp;
     }
-
     public synchronized void updateXeng(int xengUp) {
         this.xeng += xengUp;
     }
-
     public synchronized void updateHunger(int hunger) {
         this.hunger += (byte) hunger;
     }
     public synchronized void updateChestSlot(int chestslot) {
         this.chestSlot += (byte) chestslot;
     }
-
     public synchronized void updateChest_homeSlot(int chestslot) {
         this.chestHomeSlot += (byte) chestslot;
     }
-
     public synchronized void updateHP(long dame,Boss boss,User us) throws IOException {
         this.HP += dame;
         if (HP <= 0) {
@@ -326,7 +340,6 @@ public class User {
             }
         }
     }
-
     public synchronized void updateSpam(long spams,Boss boss, User us) throws IOException {
         boss.spam += spams;
         System.out.println("Spam " + boss.getSpam());
@@ -419,6 +432,14 @@ public class User {
                 this.TopPhaoLuong, this.id);
     }
 
+    public synchronized void updateTopPhaoXu(int xuThaPhao) {
+        this.xu += xuThaPhao;
+        this.TopPhaoXu += 1;
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `TopPhaoXu` = ? WHERE `user_id` = ? LIMIT 1;",
+                this.TopPhaoXu, this.id);
+    }
+
+
     public void sendMessage(Message ms) {
         this.session.sendMessage(ms);
     }
@@ -427,7 +448,7 @@ public class User {
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `gender` = ?, `friendly` = ?, `crazy` = ?, `stylish` = ?, `happy` = ?, `hunger` = ?, `chest_slot` = ? , `chest_home_slot` = ? WHERE `user_id` = ? LIMIT 1;",
                 this.gender, this.friendly, this.crazy, this.stylish, this.happy, this.hunger,this.chestSlot,this.chestHomeSlot, this.id);
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ?,`scores` = ? , `xu_from_boss` = ? , `TopPhaoLuong` = ? WHERE `user_id` = ? LIMIT 1;",
-                this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain,this.scores,this.xu_from_boss,this.TopPhaoLuong, this.id);
+                this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain,this.scores,this.xu_from_boss,this.TopPhaoLuong,this.TopPhaoXu, this.id);
         JSONArray jChests = new JSONArray();
         for (Item item : this.chests) {
             JSONObject obj = new JSONObject();
@@ -551,6 +572,7 @@ public class User {
                     this.scores = res.getInt("scores");
                     this.xu_from_boss = res.getInt("xu_from_boss");
                     this.TopPhaoLuong = res.getInt("TopPhaoLuong");
+                    this.TopPhaoXu = res.getInt("TopPhaoXu");
 
                     this.chests = new ArrayList<>();
                     JSONArray chests = (JSONArray) JSONValue.parse(res.getString("chests"));
@@ -653,6 +675,7 @@ public class User {
         listCmdRotate.add(new Command((short) 8, "Pháo thịnh vượng (5 lượng)", 241, (byte) 0));
         //listCmdRotate.add(new Command((short) 9, "triệu hồi con chim k nhớ tên", 1082, (byte) 0));
         //listCmdRotate.add(new Command((short) 10, "Rương chỉ sử dụng không được bỏ(sẽ bị xóa item ở rương gốc)", 1204, (byte) 0));
+        listCmdRotate.add(new Command((short) 11, "thả bóng bay (20k xu)", 577, (byte) 0));
         listCmdRotate.add(new Command((short) 23, "Cuốc", 869, (byte) 0));
         //listCmdRotate.add(new Command((short) 36, "Hẹn hò", 1096, (byte) 1));
     }
