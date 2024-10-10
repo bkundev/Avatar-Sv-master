@@ -472,7 +472,7 @@ public class Session implements ISession {
 
     private void enter() throws IOException {
         if (user.loadData()) {
-            DbManager.getInstance().executeUpdate("UPDATE `players` SET `is_online` = ?, `client_id` = ? WHERE `user_id` = ? LIMIT 1;", 1, this.id, user.getId());
+            DbManager.getInstance().executeUpdate("UPDATE `players` SET `is_online` = ?, `client_id` = ? , `ip_address` = ? WHERE `user_id` = ? LIMIT 1;", 1, this.id,this.ip, user.getId());
             user.initAvatar();
             this.handler = new GlobalHandler(user);
             UserManager.getInstance().add(user);

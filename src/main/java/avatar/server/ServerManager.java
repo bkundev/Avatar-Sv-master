@@ -264,7 +264,6 @@ public class ServerManager {
             while (ServerManager.clients.size() > 0) {
                 Session c = ServerManager.clients.get(0);
                 c.close();
-                --ServerManager.numClients;
             }
             ServerManager.clients = null;
             DbManager.getInstance().shutdown();

@@ -320,7 +320,7 @@ public class NpcHandler {
                                         rank++; // Tăng thứ hạng sau mỗi lần thêm người chơi vào kết quả
                                     }
                                 }
-                                us.getAvatarService().customTab("Top 10", result.toString());
+                                us.getAvatarService().customTab("Top 10 lượt đánh boss", result.toString());
                             })
                             .build());
                     list1.add(Menu.builder().name("Xem hướng dẫn")
