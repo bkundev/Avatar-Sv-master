@@ -634,7 +634,7 @@ public class NpcHandler {
                 case NpcName.Chay_To_Win: {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Đổi quà").action(() -> {
-                        ShopEventHandler.displayUI(us, Chay_To_Win,2049,2050,2051,2054,2041,2056,2354,2355,3440,3441,3442,3443,3445,3446);
+                        ShopEventHandler.displayUI(us, Chay_To_Win,2049,2050,2051,2054,2041,2056,2354,2355,3440,3441,3442,3443,3445,3446,3627,3628,3629,3630,3631,3632,3633,3634,3360);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
                     ListDacBiet.add(Menu.builder().name("Hướng dẫn")
@@ -762,9 +762,6 @@ public class NpcHandler {
                                 Menu.builder().name("Mũ ảo thuật tinh anh").action(() -> {
                                     BossShopHandler.displayUI(us, type, 2899, 2900, 2901, 2902, 2903, 3037, 3038, 3039);
                                 }).build(),
-                                Menu.builder().name("Cửu vỹ hồ ly").action(() -> {
-                                    BossShopHandler.displayUI(us, type, 4724, 4728, 4729);
-                                }).build(),
                                 Menu.builder().name("Vương miện huyền vũ").action(() -> {
                                     BossShopHandler.displayUI(us, type, 2997, 2998, 2999);
                                 }).build()
@@ -868,14 +865,8 @@ public class NpcHandler {
 //                                Menu.builder().name("Tiểu tiên bướm").action(() -> {
 //                                    BossShopHandler.displayUI(us, type, 4305, 5058);
 //                                }).build(),
-//                                Menu.builder().name("Cáo tuyết cửu vỹ").action(() -> {
-//                                    BossShopHandler.displayUI(us, type, 4904, 4905);
-//                                }).build(),
 //                                Menu.builder().name("Ma vương").action(() -> {
 //                                    BossShopHandler.displayUI(us, type, 4096, 4731);
-//                                }).build(),
-//                                Menu.builder().name("Cửu vỹ hồ ly").action(() -> {
-//                                    BossShopHandler.displayUI(us, type, 4724, 4728, 4729);
 //                                }).build(),
 //                                Menu.builder().name("Lợn lém lỉnh").action(() -> {
 //                                    BossShopHandler.displayUI(us, type, 4376);
