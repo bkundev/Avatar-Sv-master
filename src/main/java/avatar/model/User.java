@@ -447,7 +447,7 @@ public class User {
     protected void saveData() {
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `gender` = ?, `friendly` = ?, `crazy` = ?, `stylish` = ?, `happy` = ?, `hunger` = ?, `chest_slot` = ? , `chest_home_slot` = ? WHERE `user_id` = ? LIMIT 1;",
                 this.gender, this.friendly, this.crazy, this.stylish, this.happy, this.hunger,this.chestSlot,this.chestHomeSlot, this.id);
-        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ?,`scores` = ? , `xu_from_boss` = ? , `TopPhaoLuong` = ? WHERE `user_id` = ? LIMIT 1;",
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ?,`scores` = ? , `xu_from_boss` = ? , `TopPhaoLuong` = ?, `TopPhaoXu` = ? WHERE `user_id` = ? LIMIT 1;",
                 this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain,this.scores,this.xu_from_boss,this.TopPhaoLuong,this.TopPhaoXu, this.id);
         JSONArray jChests = new JSONArray();
         for (Item item : this.chests) {
@@ -586,7 +586,7 @@ public class User {
                             if(quantity>100||quantity<0){
                                 Utils.writeLog(this,"loadData quantity " + quantity);
                             }
-                            if(quantity>9998||quantity<0) {
+                            if(quantity>15000||quantity<0) {
                                 Utils.writeLog(this, "loadData quantity và khoa acc" + quantity);
                                 Utils.writeLogKhoaAcc(this, "loadData quantity và khoa acc" + quantity);
                                 String sql1 = "UPDATE users SET active = ? WHERE id = ?";
