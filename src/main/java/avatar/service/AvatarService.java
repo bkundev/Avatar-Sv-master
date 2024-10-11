@@ -13,6 +13,7 @@ import avatar.model.*;
 import avatar.server.Avatar;
 import avatar.server.ServerManager;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,8 @@ import org.apache.log4j.Logger;
 public class AvatarService extends Service {
 
     private static final Logger logger = Logger.getLogger(AvatarService.class);
-
+    private static final java.util.Map<Integer, Long> lastActionTimes = new HashMap<>();
+    private static final long ACTION_COOLDOWN_MS = 50; // 2 giây cooldown
     public AvatarService(Session cl) {
         super(cl);
     }
@@ -911,6 +913,15 @@ public class AvatarService extends Service {
                     break;
                 }
                 case 8: {
+                    long currentTime = System.currentTimeMillis();
+                    long lastActionTime = lastActionTimes.getOrDefault(us.getId(), 0L);
+
+                    if (currentTime - lastActionTime < ACTION_COOLDOWN_MS) {
+                        us.getAvatarService().serverDialog("Từ từ thôi bạn!");
+                        return;
+                    }
+                    // Cập nhật thời gian thực hiện hành động
+                    lastActionTimes.put(us.getId(), currentTime);
                     if (us.getLuong() < 5) {
                         us.getAvatarService().serverDialog("Bạn phải có trên 5 Lượng");
                         return;
@@ -1005,6 +1016,15 @@ public class AvatarService extends Service {
                     break;
                 }
                 case 11: {
+                    long currentTime = System.currentTimeMillis();
+                    long lastActionTime = lastActionTimes.getOrDefault(us.getId(), 0L);
+
+                    if (currentTime - lastActionTime < ACTION_COOLDOWN_MS) {
+                        us.getAvatarService().serverDialog("Từ từ thôi bạn!");
+                        return;
+                    }
+                    // Cập nhật thời gian thực hiện hành động
+                    lastActionTimes.put(us.getId(), currentTime);
                     if (us.getXu() < 20000) {
                         us.getAvatarService().serverDialog("Bạn phải có trên 20.000 Xu");
                         return;

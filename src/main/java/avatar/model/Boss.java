@@ -198,7 +198,7 @@ public class Boss extends User {
                 List<Zone> zones = m.getZones();
                 Zone randomZone = zones.get(random.nextInt(zones.size()));
                 boss.getZone().leave(boss);
-                addBossToZone(boss,boss.bossMapId,randomZone,(short) 0,(short) 0,Utils.nextInt(50000,100000));
+                addBossToZone(boss,boss.bossMapId,randomZone,(short) 0,(short) 0,Utils.nextInt(70000,120000));
 
             } catch (IOException e) {
                 throw new RuntimeException(e);

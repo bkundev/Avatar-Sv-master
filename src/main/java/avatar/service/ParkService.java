@@ -237,14 +237,14 @@ public class ParkService extends Service {
 
             RandomCollection<Integer> chosenItemCollection = chooseItemCollection();
             int idItems = chosenItemCollection.next();
-            Item Nro = new Item(idItems,-1,1);
+            //Item Nro = new Item(idItems,-1,1);
             if(us.findItemInChests(idItems) !=null){
                 int quantity = us.findItemInChests(idItems).getQuantity();
                 us.findItemInChests(idItems).setQuantity(quantity+1);
             }else {
-                us.addItemToChests(Nro);
+                //us.addItemToChests(Nro);
             }
-            us.getAvatarService().SendTabmsg("Bạn vừa nhận được 1 "+ " " + Nro.getPart().getName());
+            //us.getAvatarService().SendTabmsg("Bạn vừa nhận được 1 "+ " " + Nro.getPart().getName());
         }
     }
 
