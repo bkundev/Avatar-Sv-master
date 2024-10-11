@@ -441,7 +441,7 @@ public class NpcHandler {
                     us.getAvatarService().openMenuOption(npcId, 0, DauGia);
                     break;
                 }
-//                case em_thinh:{
+//                case NpcName.VE_SO:{
 //                    List<Menu> listet = new ArrayList<>();
 //                    List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
 //                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
