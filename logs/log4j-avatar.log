@@ -4144,3 +4144,334 @@
 2024-10-10 19:59:48 DEBUG DbManager:81 - DB Connection Pool has created.
 2024-10-10 20:02:07 DEBUG DbManager:93 - DB Connection Pool is shutting down.
 2024-10-10 20:02:10 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 14:30:32 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 14:30:56 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 14:30:58 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 14:34:12 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 14:39:42 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 14:44:20 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 14:44:22 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 14:44:23 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 14:44:56 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 14:47:06 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 14:47:07 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 14:47:13 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 14:47:16 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 14:48:09 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 14:48:10 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 14:48:19 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 14:48:21 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 14:51:25 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 14:51:28 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 14:52:01 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 14:52:05 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 14:52:32 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 14:55:06 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 14:55:56 DEBUG User:1039 - itemID: 2386 type: 1
+2024-10-11 14:55:56 DEBUG User:1041 - Find Item
+2024-10-11 14:55:56 DEBUG User:1043 - Find Done
+2024-10-11 14:55:56 DEBUG User:1048 - Find Detail Item
+2024-10-11 14:55:56 DEBUG User:1051 - Item Gender=0
+2024-10-11 14:55:56 DEBUG User:1056 - Get Type
+2024-10-11 14:55:56 DEBUG User:1058 - Type =-2
+2024-10-11 14:55:58 DEBUG User:1039 - itemID: 2387 type: 1
+2024-10-11 14:55:58 DEBUG User:1041 - Find Item
+2024-10-11 14:55:58 DEBUG User:1043 - Find Done
+2024-10-11 14:55:58 DEBUG User:1048 - Find Detail Item
+2024-10-11 14:55:58 DEBUG User:1051 - Item Gender=0
+2024-10-11 14:55:58 DEBUG User:1056 - Get Type
+2024-10-11 14:55:58 DEBUG User:1058 - Type =-2
+2024-10-11 14:58:32 DEBUG User:1039 - itemID: 2384 type: 1
+2024-10-11 14:58:32 DEBUG User:1041 - Find Item
+2024-10-11 14:58:32 DEBUG User:1043 - Find Done
+2024-10-11 14:58:32 DEBUG User:1048 - Find Detail Item
+2024-10-11 14:58:32 DEBUG User:1051 - Item Gender=0
+2024-10-11 14:58:32 DEBUG User:1056 - Get Type
+2024-10-11 14:58:32 DEBUG User:1058 - Type =-2
+2024-10-11 14:58:34 DEBUG User:1039 - itemID: 2384 type: 1
+2024-10-11 14:58:34 DEBUG User:1041 - Find Item
+2024-10-11 14:58:34 DEBUG User:1043 - Find Done
+2024-10-11 14:58:34 DEBUG User:1048 - Find Detail Item
+2024-10-11 14:58:34 DEBUG User:1051 - Item Gender=0
+2024-10-11 14:58:34 DEBUG User:1056 - Get Type
+2024-10-11 14:58:34 DEBUG User:1058 - Type =-2
+2024-10-11 14:58:35 DEBUG User:1039 - itemID: 2386 type: 1
+2024-10-11 14:58:35 DEBUG User:1041 - Find Item
+2024-10-11 14:58:35 DEBUG User:1043 - Find Done
+2024-10-11 14:58:35 DEBUG User:1048 - Find Detail Item
+2024-10-11 14:58:35 DEBUG User:1051 - Item Gender=0
+2024-10-11 14:58:35 DEBUG User:1056 - Get Type
+2024-10-11 14:58:35 DEBUG User:1058 - Type =-2
+2024-10-11 14:58:37 DEBUG User:1039 - itemID: 2387 type: 1
+2024-10-11 14:58:37 DEBUG User:1041 - Find Item
+2024-10-11 14:58:37 DEBUG User:1043 - Find Done
+2024-10-11 14:58:37 DEBUG User:1048 - Find Detail Item
+2024-10-11 14:58:37 DEBUG User:1051 - Item Gender=0
+2024-10-11 14:58:37 DEBUG User:1056 - Get Type
+2024-10-11 14:58:37 DEBUG User:1058 - Type =-2
+2024-10-11 15:02:32 DEBUG User:1039 - itemID: 3491 type: 1
+2024-10-11 15:02:32 DEBUG User:1041 - Find Item
+2024-10-11 15:02:32 DEBUG User:1043 - Find Done
+2024-10-11 15:02:32 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:02:32 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:02:32 DEBUG User:1056 - Get Type
+2024-10-11 15:02:32 DEBUG User:1058 - Type =-1
+2024-10-11 15:02:45 DEBUG User:1039 - itemID: 3492 type: 1
+2024-10-11 15:02:45 DEBUG User:1041 - Find Item
+2024-10-11 15:02:45 DEBUG User:1043 - Find Done
+2024-10-11 15:02:45 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:02:45 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:02:45 DEBUG User:1056 - Get Type
+2024-10-11 15:02:45 DEBUG User:1058 - Type =-1
+2024-10-11 15:03:47 DEBUG User:1039 - itemID: 3493 type: 1
+2024-10-11 15:03:47 DEBUG User:1041 - Find Item
+2024-10-11 15:03:47 DEBUG User:1043 - Find Done
+2024-10-11 15:03:47 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:03:47 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:03:47 DEBUG User:1056 - Get Type
+2024-10-11 15:03:47 DEBUG User:1058 - Type =-1
+2024-10-11 15:04:03 DEBUG User:1039 - itemID: 3494 type: 1
+2024-10-11 15:04:03 DEBUG User:1041 - Find Item
+2024-10-11 15:04:03 DEBUG User:1043 - Find Done
+2024-10-11 15:04:03 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:04:03 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:04:03 DEBUG User:1056 - Get Type
+2024-10-11 15:04:03 DEBUG User:1058 - Type =-1
+2024-10-11 15:04:22 DEBUG User:1039 - itemID: 3495 type: 1
+2024-10-11 15:04:22 DEBUG User:1041 - Find Item
+2024-10-11 15:04:22 DEBUG User:1043 - Find Done
+2024-10-11 15:04:22 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:04:22 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:04:22 DEBUG User:1056 - Get Type
+2024-10-11 15:04:22 DEBUG User:1058 - Type =-1
+2024-10-11 15:04:35 DEBUG User:1039 - itemID: 3496 type: 1
+2024-10-11 15:04:35 DEBUG User:1041 - Find Item
+2024-10-11 15:04:35 DEBUG User:1043 - Find Done
+2024-10-11 15:04:35 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:04:35 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:04:35 DEBUG User:1056 - Get Type
+2024-10-11 15:04:35 DEBUG User:1058 - Type =-1
+2024-10-11 15:04:48 DEBUG User:1039 - itemID: 3497 type: 1
+2024-10-11 15:04:48 DEBUG User:1041 - Find Item
+2024-10-11 15:04:48 DEBUG User:1043 - Find Done
+2024-10-11 15:04:48 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:04:48 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:04:48 DEBUG User:1056 - Get Type
+2024-10-11 15:04:48 DEBUG User:1058 - Type =-1
+2024-10-11 15:06:23 DEBUG User:1039 - itemID: 4261 type: 1
+2024-10-11 15:06:23 DEBUG User:1041 - Find Item
+2024-10-11 15:06:23 DEBUG User:1043 - Find Done
+2024-10-11 15:06:23 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:06:23 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:06:23 DEBUG User:1056 - Get Type
+2024-10-11 15:06:23 DEBUG User:1058 - Type =-1
+2024-10-11 15:07:33 DEBUG User:1039 - itemID: 4262 type: 1
+2024-10-11 15:07:33 DEBUG User:1041 - Find Item
+2024-10-11 15:07:33 DEBUG User:1043 - Find Done
+2024-10-11 15:07:33 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:07:33 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:07:33 DEBUG User:1056 - Get Type
+2024-10-11 15:07:33 DEBUG User:1058 - Type =-1
+2024-10-11 15:08:19 DEBUG User:1039 - itemID: 4263 type: 1
+2024-10-11 15:08:19 DEBUG User:1041 - Find Item
+2024-10-11 15:08:19 DEBUG User:1043 - Find Done
+2024-10-11 15:08:19 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:08:19 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:08:19 DEBUG User:1056 - Get Type
+2024-10-11 15:08:19 DEBUG User:1058 - Type =-1
+2024-10-11 15:11:21 DEBUG User:1039 - itemID: 3471 type: 1
+2024-10-11 15:11:21 DEBUG User:1041 - Find Item
+2024-10-11 15:11:21 DEBUG User:1043 - Find Done
+2024-10-11 15:11:21 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:11:21 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:11:21 DEBUG User:1056 - Get Type
+2024-10-11 15:11:21 DEBUG User:1058 - Type =-2
+2024-10-11 15:14:15 DEBUG User:1039 - itemID: 5112 type: 1
+2024-10-11 15:14:15 DEBUG User:1041 - Find Item
+2024-10-11 15:14:15 DEBUG User:1043 - Find Done
+2024-10-11 15:14:15 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:14:15 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:14:15 DEBUG User:1056 - Get Type
+2024-10-11 15:14:15 DEBUG User:1058 - Type =-1
+2024-10-11 15:14:45 DEBUG User:1039 - itemID: 2466 type: 1
+2024-10-11 15:14:45 DEBUG User:1041 - Find Item
+2024-10-11 15:14:45 DEBUG User:1043 - Find Done
+2024-10-11 15:14:45 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:14:45 DEBUG User:1051 - Item Gender=1
+2024-10-11 15:14:45 DEBUG User:1056 - Get Type
+2024-10-11 15:14:45 DEBUG User:1058 - Type =-1
+2024-10-11 15:15:01 DEBUG User:1039 - itemID: 2467 type: 1
+2024-10-11 15:15:01 DEBUG User:1041 - Find Item
+2024-10-11 15:15:01 DEBUG User:1043 - Find Done
+2024-10-11 15:15:01 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:15:01 DEBUG User:1051 - Item Gender=1
+2024-10-11 15:15:01 DEBUG User:1056 - Get Type
+2024-10-11 15:15:01 DEBUG User:1058 - Type =-1
+2024-10-11 15:15:15 DEBUG User:1039 - itemID: 2468 type: 1
+2024-10-11 15:15:15 DEBUG User:1041 - Find Item
+2024-10-11 15:15:15 DEBUG User:1043 - Find Done
+2024-10-11 15:15:15 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:15:15 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:15:15 DEBUG User:1056 - Get Type
+2024-10-11 15:15:15 DEBUG User:1058 - Type =-1
+2024-10-11 15:15:38 DEBUG User:1039 - itemID: 3471 type: 1
+2024-10-11 15:15:38 DEBUG User:1041 - Find Item
+2024-10-11 15:15:38 DEBUG User:1043 - Find Done
+2024-10-11 15:15:38 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:15:38 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:15:38 DEBUG User:1056 - Get Type
+2024-10-11 15:15:38 DEBUG User:1058 - Type =-2
+2024-10-11 15:20:26 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 15:20:29 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 15:20:31 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 15:21:05 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 15:22:15 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 15:22:18 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 15:23:31 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 15:23:33 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 15:26:02 DEBUG User:1039 - itemID: 2281 type: 1
+2024-10-11 15:26:02 DEBUG User:1041 - Find Item
+2024-10-11 15:26:02 DEBUG User:1043 - Find Done
+2024-10-11 15:26:02 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:26:02 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:26:02 DEBUG User:1056 - Get Type
+2024-10-11 15:26:02 DEBUG User:1058 - Type =-1
+2024-10-11 15:26:16 DEBUG User:1039 - itemID: 2282 type: 1
+2024-10-11 15:26:16 DEBUG User:1041 - Find Item
+2024-10-11 15:26:16 DEBUG User:1043 - Find Done
+2024-10-11 15:26:16 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:26:16 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:26:16 DEBUG User:1056 - Get Type
+2024-10-11 15:26:16 DEBUG User:1058 - Type =-1
+2024-10-11 15:27:15 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 15:27:17 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 15:28:02 DEBUG User:1039 - itemID: 5102 type: 1
+2024-10-11 15:28:02 DEBUG User:1041 - Find Item
+2024-10-11 15:28:02 DEBUG User:1043 - Find Done
+2024-10-11 15:28:02 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:28:02 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:28:02 DEBUG User:1056 - Get Type
+2024-10-11 15:28:02 DEBUG User:1058 - Type =-1
+2024-10-11 15:28:20 DEBUG User:1039 - itemID: 5103 type: 1
+2024-10-11 15:28:20 DEBUG User:1041 - Find Item
+2024-10-11 15:28:20 DEBUG User:1043 - Find Done
+2024-10-11 15:28:20 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:28:20 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:28:20 DEBUG User:1056 - Get Type
+2024-10-11 15:28:20 DEBUG User:1058 - Type =-1
+2024-10-11 15:28:44 DEBUG User:1039 - itemID: 5104 type: 1
+2024-10-11 15:28:44 DEBUG User:1041 - Find Item
+2024-10-11 15:28:44 DEBUG User:1043 - Find Done
+2024-10-11 15:28:44 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:28:44 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:28:44 DEBUG User:1056 - Get Type
+2024-10-11 15:28:44 DEBUG User:1058 - Type =-1
+2024-10-11 15:29:57 DEBUG User:1039 - itemID: 5501 type: 1
+2024-10-11 15:29:57 DEBUG User:1041 - Find Item
+2024-10-11 15:29:57 DEBUG User:1043 - Find Done
+2024-10-11 15:29:57 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:29:57 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:29:57 DEBUG User:1056 - Get Type
+2024-10-11 15:29:57 DEBUG User:1058 - Type =-1
+2024-10-11 15:30:08 DEBUG User:1039 - itemID: 5502 type: 1
+2024-10-11 15:30:08 DEBUG User:1041 - Find Item
+2024-10-11 15:30:08 DEBUG User:1043 - Find Done
+2024-10-11 15:30:08 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:30:08 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:30:08 DEBUG User:1056 - Get Type
+2024-10-11 15:30:08 DEBUG User:1058 - Type =-1
+2024-10-11 15:30:43 DEBUG User:1039 - itemID: 5495 type: 1
+2024-10-11 15:30:43 DEBUG User:1041 - Find Item
+2024-10-11 15:30:43 DEBUG User:1043 - Find Done
+2024-10-11 15:30:43 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:30:43 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:30:43 DEBUG User:1056 - Get Type
+2024-10-11 15:30:43 DEBUG User:1058 - Type =-1
+2024-10-11 15:30:59 DEBUG User:1039 - itemID: 5497 type: 1
+2024-10-11 15:30:59 DEBUG User:1041 - Find Item
+2024-10-11 15:30:59 DEBUG User:1043 - Find Done
+2024-10-11 15:30:59 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:30:59 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:30:59 DEBUG User:1056 - Get Type
+2024-10-11 15:30:59 DEBUG User:1058 - Type =-1
+2024-10-11 15:31:50 DEBUG User:1039 - itemID: 5498 type: 1
+2024-10-11 15:31:50 DEBUG User:1041 - Find Item
+2024-10-11 15:31:50 DEBUG User:1043 - Find Done
+2024-10-11 15:31:50 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:31:50 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:31:50 DEBUG User:1056 - Get Type
+2024-10-11 15:31:50 DEBUG User:1058 - Type =-1
+2024-10-11 15:32:04 DEBUG User:1039 - itemID: 5499 type: 1
+2024-10-11 15:32:04 DEBUG User:1041 - Find Item
+2024-10-11 15:32:04 DEBUG User:1043 - Find Done
+2024-10-11 15:32:04 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:32:04 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:32:04 DEBUG User:1056 - Get Type
+2024-10-11 15:32:04 DEBUG User:1058 - Type =-1
+2024-10-11 15:32:31 DEBUG User:1039 - itemID: 5500 type: 1
+2024-10-11 15:32:31 DEBUG User:1041 - Find Item
+2024-10-11 15:32:31 DEBUG User:1043 - Find Done
+2024-10-11 15:32:31 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:32:31 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:32:31 DEBUG User:1056 - Get Type
+2024-10-11 15:32:31 DEBUG User:1058 - Type =-1
+2024-10-11 15:33:11 DEBUG User:1039 - itemID: 5505 type: 1
+2024-10-11 15:33:11 DEBUG User:1041 - Find Item
+2024-10-11 15:33:11 DEBUG User:1043 - Find Done
+2024-10-11 15:33:11 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:33:11 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:33:11 DEBUG User:1056 - Get Type
+2024-10-11 15:33:11 DEBUG User:1058 - Type =-1
+2024-10-11 15:33:43 DEBUG User:1039 - itemID: 6429 type: 1
+2024-10-11 15:33:43 DEBUG User:1041 - Find Item
+2024-10-11 15:33:43 DEBUG User:1043 - Find Done
+2024-10-11 15:33:43 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:33:43 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:33:43 DEBUG User:1056 - Get Type
+2024-10-11 15:33:43 DEBUG User:1058 - Type =-1
+2024-10-11 15:34:30 DEBUG User:1039 - itemID: 6430 type: 1
+2024-10-11 15:34:30 DEBUG User:1041 - Find Item
+2024-10-11 15:34:30 DEBUG User:1043 - Find Done
+2024-10-11 15:34:30 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:34:30 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:34:30 DEBUG User:1056 - Get Type
+2024-10-11 15:34:30 DEBUG User:1058 - Type =-1
+2024-10-11 15:35:09 DEBUG User:1039 - itemID: 6431 type: 1
+2024-10-11 15:35:09 DEBUG User:1041 - Find Item
+2024-10-11 15:35:09 DEBUG User:1043 - Find Done
+2024-10-11 15:35:09 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:35:09 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:35:09 DEBUG User:1056 - Get Type
+2024-10-11 15:35:09 DEBUG User:1058 - Type =-1
+2024-10-11 15:35:38 DEBUG User:1039 - itemID: 6436 type: 1
+2024-10-11 15:35:38 DEBUG User:1041 - Find Item
+2024-10-11 15:35:38 DEBUG User:1043 - Find Done
+2024-10-11 15:35:38 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:35:38 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:35:38 DEBUG User:1056 - Get Type
+2024-10-11 15:35:38 DEBUG User:1058 - Type =-1
+2024-10-11 15:36:30 DEBUG User:1039 - itemID: 6428 type: 1
+2024-10-11 15:36:30 DEBUG User:1041 - Find Item
+2024-10-11 15:36:30 DEBUG User:1043 - Find Done
+2024-10-11 15:36:30 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:36:30 DEBUG User:1051 - Item Gender=0
+2024-10-11 15:36:30 DEBUG User:1056 - Get Type
+2024-10-11 15:36:30 DEBUG User:1058 - Type =-1
+2024-10-11 15:38:09 DEBUG User:1039 - itemID: 3981 type: 1
+2024-10-11 15:38:09 DEBUG User:1041 - Find Item
+2024-10-11 15:38:09 DEBUG User:1043 - Find Done
+2024-10-11 15:38:09 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:38:09 DEBUG User:1051 - Item Gender=2
+2024-10-11 15:38:22 DEBUG User:1039 - itemID: 3984 type: 1
+2024-10-11 15:38:22 DEBUG User:1041 - Find Item
+2024-10-11 15:38:22 DEBUG User:1043 - Find Done
+2024-10-11 15:38:22 DEBUG User:1048 - Find Detail Item
+2024-10-11 15:38:22 DEBUG User:1051 - Item Gender=1
+2024-10-11 15:38:22 DEBUG User:1056 - Get Type
+2024-10-11 15:38:22 DEBUG User:1058 - Type =-1
+2024-10-11 15:42:32 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 15:42:34 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 15:46:07 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 15:46:09 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-11 15:48:58 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-11 15:48:59 DEBUG DbManager:81 - DB Connection Pool has created.

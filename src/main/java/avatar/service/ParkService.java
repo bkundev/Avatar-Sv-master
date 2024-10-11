@@ -206,8 +206,8 @@ public class ParkService extends Service {
                 if(IDFISH == 457) {
                     UserManager.users.forEach(user -> {
                         user.getAvatarService().serverInfo("Chúc mừng bạn : " + this.session.user.getUsername()+" đã câu được 1 Cá Mập");
-                        Utils.writeLog(this.session.user,"bú 1 cá mập");
                     });
+                    Utils.writeLogCaMap(this.session.user,"bú 1 cá mập");
                 }
                 addVatPhamSuKienFish(this.session.user);
             }

@@ -42,7 +42,19 @@ public class Utils {
 
     private static final String LOG_DIRECTORY = "logs/";
 
+    public synchronized static void writeLogAddChest(User user, String message) {
+        String username = user.getUsername();
+        String logFilePath = LOG_DIRECTORY + username + "addchest.txt"; // Tên file log theo username
 
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFilePath, true))) {
+            LocalDateTime currentTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            writer.write(currentTime.format(formatter) + " - " + message + " " + username);
+            writer.newLine(); // Xuống dòng sau mỗi log
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public synchronized static void writeLog(User user, String message) {
         String username = user.getUsername();
         String logFilePath = LOG_DIRECTORY + username + "_log.txt"; // Tên file log theo username
@@ -59,7 +71,7 @@ public class Utils {
 
     public synchronized static void writeLogSystem(User user, String message) {
         String username = user.getUsername();
-        String logFilePath = LOG_DIRECTORY  + "System.txt"; // Tên file log theo username
+        String logFilePath = LOG_DIRECTORY  + "System.txt"; //log file hệ thống
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFilePath, true))) {
             LocalDateTime currentTime = LocalDateTime.now();
@@ -85,7 +97,19 @@ public class Utils {
         }
     }
 
+    public synchronized static void writeLogCaMap(User user, String message) {
+        String username = user.getUsername();
+        String logFilePath = LOG_DIRECTORY  + "caMap.txt"; // Tên file log theo username
 
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFilePath, true))) {
+            LocalDateTime currentTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            writer.write(currentTime.format(formatter) + " - " + message + " " + username);
+            writer.newLine(); // Xuống dòng sau mỗi log
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static double distanceBetween(int x1, int y1, int x2, int y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));

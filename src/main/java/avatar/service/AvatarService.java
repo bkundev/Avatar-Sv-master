@@ -188,7 +188,7 @@ public class AvatarService extends Service {
             ds.writeByte(us.getLeverMainPercen());
             ds.writeInt(Math.toIntExact(us.getXu()));
             ds.writeByte(us.getFriendly());
-            ds.writeByte(us.getCrazy());
+            ds.writeByte(0);//us.getCrazy()
             ds.writeByte(us.getStylish());
             ds.writeByte(us.getHappy());
             ds.writeByte(100 - us.getHunger());
@@ -772,7 +772,7 @@ public class AvatarService extends Service {
             ds.writeByte(us.getLeverMain());
             ds.writeByte(us.getLeverMainPercen());
             ds.writeByte(us.getFriendly());
-            ds.writeByte(us.getCrazy());
+            ds.writeByte(0);//us.getCrazy()
             ds.writeByte(us.getStylish());
             ds.writeByte(us.getHappy());
             ds.writeByte(100 - us.getHunger());

@@ -162,14 +162,14 @@ public class Boss extends User {
                 us.xu_from_boss, us.getId());
         String username = us.getUsername();
 
-        Item hopqua = new Item(683,-1,1);
-        //hopqua.setExpired(System.currentTimeMillis() + (86400000L * time));
-        if(us.findItemInChests(683) !=null){
-            int quantity = us.findItemInChests(683).getQuantity();
-            us.findItemInChests(683).setQuantity(quantity+1);
-        }else {
-            us.addItemToChests(hopqua);
-        }
+//        Item hopqua = new Item(683,-1,1);
+//        //hopqua.setExpired(System.currentTimeMillis() + (86400000L * time));
+//        if(us.findItemInChests(683) !=null){
+//            int quantity = us.findItemInChests(683).getQuantity();
+//            us.findItemInChests(683).setQuantity(quantity+1);
+//        }else {
+//            us.addItemToChests(hopqua);
+//        }
 
         String message = String.format("Khá lắm bạn %s đã kill được %s", username, boss.getUsername().substring(3, boss.getUsername().length() - 6));
         List<String> newMessages = Arrays.asList(message,"Ta sẽ quay lại sau!!!");
@@ -316,19 +316,19 @@ public class Boss extends User {
         boss.addItemToWearing(new Item(randomItemId));
     }
 
-
+//đồ của boss
     private void assignRandomItemToBoss(User boss) {
-        List<Integer> itemIds = Arrays.asList(0,8,2033, 4121, 4122, 4123);//sen bo hung
-        List<Integer> itemIds1 = Arrays.asList(8,2034, 2035, 2036);//ma bu
-        List<Integer> itemIds2 = Arrays.asList(6161, 6162, 6163);//ma bu map
+        List<Integer> itemIds = Arrays.asList(0,5112, 2469, 2470,6428,6431,4304);//sen bo hung
+        List<Integer> itemIds1 = Arrays.asList(0,2468, 2469, 2470,2282,4304);//ma bu
+        List<Integer> itemIds2 = Arrays.asList(0,8,2471, 2472, 2473,3495,4304);//ma bu map
         //List<Integer> itemIds3 = Arrays.asList(10, 20, 30, 40, 50);
 
         Map<List<Integer>, String> itemListToName = new HashMap<>();
-        itemListToName.put(itemIds, "SenBoHung");
-        itemListToName.put(itemIds1, "MaBu");
-        itemListToName.put(itemIds2, "MaBuMap");
+        itemListToName.put(itemIds, "TrumMaBi");
+        itemListToName.put(itemIds1, "MaBi");
+        itemListToName.put(itemIds2, "Frankeinstein");
 
-        List<List<Integer>> allItemLists = Arrays.asList(itemIds,itemIds1, itemIds2);
+        List<List<Integer>> allItemLists = Arrays.asList(itemIds,itemIds1,itemIds2);
         Random random = new Random();
         int randomIndex = random.nextInt(allItemLists.size());
         List<Integer> randomList = allItemLists.get(randomIndex);
@@ -339,7 +339,7 @@ public class Boss extends User {
             boss.addItemToWearing(item);
         }
         String bossUsername = generateRandomUsername(4).toLowerCase();
-        String bossUsername1 = generateRandomUsername(4).toLowerCase();;
+        String bossUsername1 = generateRandomUsername(3).toLowerCase();;
         boss.setUsername(bossUsername+bossName+bossUsername1);
     }
 

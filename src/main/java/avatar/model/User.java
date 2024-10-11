@@ -93,7 +93,7 @@ public class User {
     private byte leverPercen;
     private int expFarm;
     private byte friendly;
-    private byte crazy;
+    private short crazy;
     private byte stylish;
     private byte happy;
     private byte hunger;
@@ -104,7 +104,6 @@ public class User {
     public List<Item> chests;
     public List<Item> chestsHome;
 
-
     private Zone zone;
     private short x, y;
     private byte direct;
@@ -114,13 +113,9 @@ public class User {
     private List<Command> listCmd;
     private List<Command> listCmdRotate;
 
-
-
     @Getter
     @Setter
     private boolean loadDataFinish;
-
-
 
     @Getter
     @Setter
@@ -340,6 +335,7 @@ public class User {
             }
         }
     }
+
     public synchronized void updateSpam(long spams,Boss boss, User us) throws IOException {
         boss.spam += spams;
         System.out.println("Spam " + boss.getSpam());
@@ -421,9 +417,6 @@ public class User {
 
         return -1; // Trường hợp không hợp lệ
     }
-
-
-
 
     public synchronized void updateTopPhaoLuong(int luongThaPhao) {
         this.luong += luongThaPhao;
@@ -564,7 +557,8 @@ public class User {
                     this.xeng = res.getInt("xeng");
                     this.clanID = res.getShort("clan_id");                    //res.writeShort(2206);
                     this.friendly = res.getByte("friendly");
-                    this.crazy = res.getByte("crazy");
+                    this.crazy = res.getShort("crazy");//vp sk/
+                    System.out.println(this.crazy);
                     this.stylish = res.getByte("stylish");
                     this.happy = res.getByte("happy");
                     this.hunger = res.getByte("hunger");
@@ -890,7 +884,7 @@ public class User {
                 } else {
                     // Nếu không tồn tại cả trong chests và wearing, thêm item vào chests
                     this.chests.add(item);
-                    Utils.writeLog(this,"bú item to chests "+ item.getPart().getName());
+                    Utils.writeLogAddChest(this,"add item to chests "+ item.getPart().getName());
                 }
             }
         }
@@ -917,6 +911,8 @@ public class User {
                     setReliabilityForItem(itm, item);
                 }
                 this.chestsHome.add(item);
+                Utils.writeLogAddChest(this,"add item to chests 1 "+ item.getPart().getName());
+
                 return;
             } else {
                 itm = findItemInChests(item.getId());
@@ -926,6 +922,7 @@ public class User {
                 }
             }
             this.chestsHome.add(item);
+            Utils.writeLogAddChest(this,"add item to chests 2 "+ item.getPart().getName());
         }
 
     }
