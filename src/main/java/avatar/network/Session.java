@@ -478,7 +478,7 @@ public class Session implements ISession {
             UserManager.getInstance().add(user);
             getAvatarService().onLoginSuccess();
             getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thanh Pho lo");
-            getAvatarService().serverInfo("top thả pháo, up boss đã kết thúc , đến sự kiện sẽ reset lại . chúc m.n online vui vẻ.");
+            getAvatarService().serverInfo("từ ngày 12/10/2024 mở x2 donate, donate trên 100k nhận thêm set Người sói và Mèo đen vĩnh viễn");
             checkThuongNapLanDau();
             checkThuongNapSet();
 
@@ -854,7 +854,7 @@ public class Session implements ISession {
     private void nhanThuongNapSet(){
         try {
 
-            user.getAvatarService().SendTabmsg("Bạn nhận được set siêu sao âm nhạc");
+            user.getAvatarService().SendTabmsg("mèo đen và set Người sói");
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -867,46 +867,25 @@ public class Session implements ISession {
         DbManager.getInstance().executeUpdate("UPDATE `users` SET `ThuongNapSet` = ? WHERE `id` = ? LIMIT 1;",
                 1, user.getId());
 
-        if(user.getGender() == 1)
-        {
-            Item toc = new Item(5750);//tóc nam
-            toc.setExpired(-1);
-            user.addItemToChests(toc);
+        Item toc = new Item(3972);//tóc nam
+        toc.setExpired(-1);
+        user.addItemToChests(toc);
 
-            Item ao = new Item(5751);
-            ao.setExpired(-1);
-            user.addItemToChests(ao);
+        Item ao = new Item(3973);
+        ao.setExpired(-1);
+        user.addItemToChests(ao);
 
-            Item quan = new Item(5752);
-            quan.setExpired(-1);
-            user.addItemToChests(quan);
+        Item quan = new Item(3974);
+        quan.setExpired(-1);
+        user.addItemToChests(quan);
 
-            Item bongtai = new Item(5753);
-            bongtai.setExpired(-1);
-            user.addItemToChests(bongtai);
+        Item bongtai = new Item(3975);
+        bongtai.setExpired(-1);
+        user.addItemToChests(bongtai);
 
-        }else {
-            Item tocnu = new Item(5755);// nu
-            tocnu.setExpired(-1);
-            user.addItemToChests(tocnu);
-
-            Item aonu = new Item(5756);// nu
-            aonu.setExpired(-1);
-            user.addItemToChests(aonu);
-
-            Item quanNu = new Item(5757);// nu
-            quanNu.setExpired(-1);
-            user.addItemToChests(quanNu);
-
-            Item bongTaiNu = new Item(5759);// nu
-            bongTaiNu.setExpired(-1);
-            user.addItemToChests(bongTaiNu);
-
-        }
-
-        Item diaBayAmNhac = new Item(5760);
-        diaBayAmNhac.setExpired(-1);
-        user.addItemToChests(diaBayAmNhac);
+        Item meoden = new Item(3496);
+        meoden.setExpired(-1);
+        user.addItemToChests(meoden);
     }
 
 
