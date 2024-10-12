@@ -246,7 +246,7 @@ public class NpcHandler {
                 case NpcName.bunma: {
                     List<Menu> list1 = new ArrayList<>();
                     Menu Event = Menu.builder().name("Đổi Quà").action(() -> {
-                        ShopEventHandler.displayUI(us, bunma, 2295,2543,4277,3494,5103,5104,3964,4195,4903,3364,3509,4726,3358,3495,5501,5502);
+                        ShopEventHandler.displayUI(us, bunma, 2295,2543,4277,3494,5103,5104,3964,5130,4726,4903,3364,3509,4195,3358,3495,5501,5502);
                     }).build();
                     list1.add(Event);
                     list1.add(Menu.builder().name("Góp Kẹo")

@@ -4778,3 +4778,23 @@
 2024-10-12 16:00:49 DEBUG DbManager:81 - DB Connection Pool has created.
 2024-10-12 16:03:45 DEBUG DbManager:93 - DB Connection Pool is shutting down.
 2024-10-12 16:03:46 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-12 16:10:17 DEBUG User:1039 - itemID: 3374 type: 1
+2024-10-12 16:10:17 DEBUG User:1041 - Find Item
+2024-10-12 16:10:17 DEBUG User:1043 - Find Done
+2024-10-12 16:10:17 DEBUG User:1048 - Find Detail Item
+2024-10-12 16:10:17 DEBUG User:1051 - Item Gender=0
+2024-10-12 16:10:17 DEBUG User:1056 - Get Type
+2024-10-12 16:10:17 DEBUG User:1058 - Type =-2
+2024-10-12 16:13:43 DEBUG User:1039 - itemID: 5130 type: 1
+2024-10-12 16:13:43 DEBUG User:1041 - Find Item
+2024-10-12 16:13:43 DEBUG User:1043 - Find Done
+2024-10-12 16:13:43 DEBUG User:1048 - Find Detail Item
+2024-10-12 16:13:43 DEBUG User:1051 - Item Gender=0
+2024-10-12 16:13:43 DEBUG User:1056 - Get Type
+2024-10-12 16:13:43 DEBUG User:1058 - Type =-1
+2024-10-12 16:14:51 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-12 16:14:54 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-12 16:15:50 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-12 16:15:53 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-12 16:16:42 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-12 16:16:45 DEBUG DbManager:81 - DB Connection Pool has created.
