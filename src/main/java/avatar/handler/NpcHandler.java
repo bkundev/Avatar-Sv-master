@@ -675,35 +675,31 @@ public class NpcHandler {
     }
 
     public static void GopDiemSK(User us){
- //       java.util.Map<Integer, Integer> itemsToProcess = new HashMap<>();
-//        itemsToProcess.put(4081, 1);
-//        itemsToProcess.put(4082, 2);
-//        itemsToProcess.put(4083, 3);
-//        itemsToProcess.put(4084, 4);
-//        itemsToProcess.put(4085, 5);
-//        itemsToProcess.put(4086, 6);
-//        itemsToProcess.put(4087, 7);
-//        int addscores = 0;
-//// Lặp qua từng cặp ID và số lượng
-//
-//        StringBuilder detailedMessage = new StringBuilder("Bạn đã đổi thành công:");
-//        for (java.util.Map.Entry<Integer, Integer> entry : itemsToProcess.entrySet()) {
-//            int itemId = entry.getKey();
-//            int scores = entry.getValue();
-//            Item item = us.findItemInChests(itemId);
-//            if (item != null && item.getQuantity() > 0) {
-//                addscores += item.getQuantity()*scores;
-//                detailedMessage.append(String.format("\n%s :(Điểm %d) Số lượng %d  x  tong %d điểm", item.getPart().getName(), scores, item.getQuantity(), item.getQuantity()*scores));
-//                us.updateScores(+addscores);
-//                us.removeItem(itemId, item.getQuantity());
-//            }
-//        }
-//        if(addscores > 0){
-//            detailedMessage.append(String.format("\n Tổng tất cả %d",addscores) +" điểm");
-//            us.getAvatarService().serverDialog(detailedMessage.toString());
-//        }else {
-//            us.getAvatarService().serverDialog("Bạn không còn ngọc rồng");
-//        }
+        java.util.Map<Integer, Integer> itemsToProcess = new HashMap<>();
+        itemsToProcess.put(2383, 1);
+        itemsToProcess.put(2384, 2);
+        itemsToProcess.put(2385, 3);
+        int addscores = 0;
+// Lặp qua từng cặp ID và số lượng
+
+        StringBuilder detailedMessage = new StringBuilder("Bạn đã đổi thành công:");
+        for (java.util.Map.Entry<Integer, Integer> entry : itemsToProcess.entrySet()) {
+            int itemId = entry.getKey();
+            int scores = entry.getValue();
+            Item item = us.findItemInChests(itemId);
+            if (item != null && item.getQuantity() > 0) {
+                addscores += item.getQuantity()*scores;
+                detailedMessage.append(String.format("\n%s :(Điểm %d) Số lượng %d  x  tong %d điểm", item.getPart().getName(), scores, item.getQuantity(), item.getQuantity()*scores));
+                us.updateScores(+addscores);
+                us.removeItem(itemId, item.getQuantity());
+            }
+        }
+        if(addscores > 0){
+            detailedMessage.append(String.format("\n Tổng tất cả %d",addscores) +" điểm");
+            us.getAvatarService().serverDialog(detailedMessage.toString());
+        }else {
+            us.getAvatarService().serverDialog("Bạn không còn kẹo");
+        }
     }
 
     public static List<Menu> listItemUpgrade(int npcId, User us, byte type) {
