@@ -232,6 +232,10 @@ public class ParkService extends Service {
     }
 
     private void addVatPhamSuKienFish(User us) throws IOException {
+
+        if(us.getCrazy() >=1500){
+            return;
+        }
         int ok =  (Utils.nextInt(100) < 70) ? 1 : 0;
         if(ok==1){
 
@@ -243,8 +247,10 @@ public class ParkService extends Service {
                 us.findItemInChests(idItems).setQuantity(quantity+1);
             }else {
                 //us.addItemToChests(Nro);
+                us.updateCrazy(+1);
             }
             //us.getAvatarService().SendTabmsg("Bạn vừa nhận được 1 "+ " " + Nro.getPart().getName());
+
         }
     }
 

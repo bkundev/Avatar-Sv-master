@@ -93,7 +93,7 @@ public class User {
     private byte leverPercen;
     private int expFarm;
     private byte friendly;
-    private short crazy;
+    private short crazy;// item sk quatyti
     private byte stylish;
     private byte happy;
     private byte hunger;
@@ -286,7 +286,9 @@ public class User {
         this.Updatexu_from_boss(storedXuUpdate);
         this.storedXuUpdate = 0; // Reset xu đã lưu trữ
     }
-
+    public synchronized void updateCrazy(int crazy) {
+        this.crazy += crazy;
+    }
     public synchronized void updateXP(int XP) {
         this.expMain += XP;
     }
