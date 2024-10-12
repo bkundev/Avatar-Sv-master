@@ -246,10 +246,10 @@ public class NpcHandler {
                 case NpcName.bunma: {
                     List<Menu> list1 = new ArrayList<>();
                     Menu Event = Menu.builder().name("Đổi Quà").action(() -> {
-                        ShopEventHandler.displayUI(us, bunma, 2034, 2035, 2036, 2040, 3506, 2620, 2577, 5539, 2618, 2619, 3987, 3455, 3456, 3457, 4995, 6772, 6773, 6774);
+                        ShopEventHandler.displayUI(us, bunma, 2295,2543,4277,3494,5103,5104,3964,4195,4903,3364,3509,4726,3358,3495,5501,5502);
                     }).build();
                     list1.add(Event);
-                    list1.add(Menu.builder().name("Góp Ngọc Rồng Lỏ")
+                    list1.add(Menu.builder().name("Góp Kẹo")
                             .action(() -> {
                                 GopDiemSK(us);
                             })
@@ -598,7 +598,7 @@ public class NpcHandler {
                 case NpcName.Shop_Dac_Biet: {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Đổi Quà").action(() -> {
-                        ShopEventHandler.displayUI(us, Shop_Dac_Biet,5898);
+                        ShopEventHandler.displayUI(us, Shop_Dac_Biet,5898,4331);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
                     ListDacBiet.add(Menu.builder().name("Xem hướng dẫn")
@@ -614,7 +614,7 @@ public class NpcHandler {
                 case NpcName.Pay_To_Win: {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Đổi quà").action(() -> {
-                        ShopEventHandler.displayUI(us, Pay_To_Win,6803,6824);
+                        ShopEventHandler.displayUI(us, Pay_To_Win,6803,6824,3076);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
                     Menu ShopQuaSet = Menu.builder().name("Đổi quà cả Set").action(() -> {
@@ -675,35 +675,35 @@ public class NpcHandler {
     }
 
     public static void GopDiemSK(User us){
-        java.util.Map<Integer, Integer> itemsToProcess = new HashMap<>();
-        itemsToProcess.put(4081, 1);
-        itemsToProcess.put(4082, 2);
-        itemsToProcess.put(4083, 3);
-        itemsToProcess.put(4084, 4);
-        itemsToProcess.put(4085, 5);
-        itemsToProcess.put(4086, 6);
-        itemsToProcess.put(4087, 7);
-        int addscores = 0;
-// Lặp qua từng cặp ID và số lượng
-
-        StringBuilder detailedMessage = new StringBuilder("Bạn đã đổi thành công:");
-        for (java.util.Map.Entry<Integer, Integer> entry : itemsToProcess.entrySet()) {
-            int itemId = entry.getKey();
-            int scores = entry.getValue();
-            Item item = us.findItemInChests(itemId);
-            if (item != null && item.getQuantity() > 0) {
-                addscores += item.getQuantity()*scores;
-                detailedMessage.append(String.format("\n%s :(Điểm %d) Số lượng %d  x  tong %d điểm", item.getPart().getName(), scores, item.getQuantity(), item.getQuantity()*scores));
-                us.updateScores(+addscores);
-                us.removeItem(itemId, item.getQuantity());
-            }
-        }
-        if(addscores > 0){
-            detailedMessage.append(String.format("\n Tổng tất cả %d",addscores) +" điểm");
-            us.getAvatarService().serverDialog(detailedMessage.toString());
-        }else {
-            us.getAvatarService().serverDialog("Bạn không còn ngọc rồng");
-        }
+ //       java.util.Map<Integer, Integer> itemsToProcess = new HashMap<>();
+//        itemsToProcess.put(4081, 1);
+//        itemsToProcess.put(4082, 2);
+//        itemsToProcess.put(4083, 3);
+//        itemsToProcess.put(4084, 4);
+//        itemsToProcess.put(4085, 5);
+//        itemsToProcess.put(4086, 6);
+//        itemsToProcess.put(4087, 7);
+//        int addscores = 0;
+//// Lặp qua từng cặp ID và số lượng
+//
+//        StringBuilder detailedMessage = new StringBuilder("Bạn đã đổi thành công:");
+//        for (java.util.Map.Entry<Integer, Integer> entry : itemsToProcess.entrySet()) {
+//            int itemId = entry.getKey();
+//            int scores = entry.getValue();
+//            Item item = us.findItemInChests(itemId);
+//            if (item != null && item.getQuantity() > 0) {
+//                addscores += item.getQuantity()*scores;
+//                detailedMessage.append(String.format("\n%s :(Điểm %d) Số lượng %d  x  tong %d điểm", item.getPart().getName(), scores, item.getQuantity(), item.getQuantity()*scores));
+//                us.updateScores(+addscores);
+//                us.removeItem(itemId, item.getQuantity());
+//            }
+//        }
+//        if(addscores > 0){
+//            detailedMessage.append(String.format("\n Tổng tất cả %d",addscores) +" điểm");
+//            us.getAvatarService().serverDialog(detailedMessage.toString());
+//        }else {
+//            us.getAvatarService().serverDialog("Bạn không còn ngọc rồng");
+//        }
     }
 
     public static List<Menu> listItemUpgrade(int npcId, User us, byte type) {

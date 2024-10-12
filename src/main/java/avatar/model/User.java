@@ -666,10 +666,10 @@ public class User {
         //listCmdRotate.add(new Command((short) 35, "Cánh thần hiển linh", 1055, (byte) 0));
         //listCmdRotate.add(new Command((short) 48, "pháo sinh nhật(5 lượng)", 1115, (byte) 0));
         //listCmdRotate.add(new Command((short) 47, "Pháo hạnh phúc (5 lượng)", 242, (byte) 0));
-        listCmdRotate.add(new Command((short) 8, "Pháo thịnh vượng (5 lượng)", 241, (byte) 0));
+        //listCmdRotate.add(new Command((short) 8, "Pháo thịnh vượng (5 lượng)", 241, (byte) 0));//sk
         //listCmdRotate.add(new Command((short) 9, "triệu hồi con chim k nhớ tên", 1082, (byte) 0));
         //listCmdRotate.add(new Command((short) 10, "Rương chỉ sử dụng không được bỏ(sẽ bị xóa item ở rương gốc)", 1204, (byte) 0));
-        listCmdRotate.add(new Command((short) 11, "thả bóng bay (20k xu)", 577, (byte) 0));
+        //listCmdRotate.add(new Command((short) 11, "thả bóng bay (20k xu)", 577, (byte) 0)); // sk
         listCmdRotate.add(new Command((short) 23, "Cuốc", 869, (byte) 0));
         //listCmdRotate.add(new Command((short) 36, "Hẹn hò", 1096, (byte) 1));
     }
