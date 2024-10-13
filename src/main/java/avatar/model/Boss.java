@@ -255,6 +255,11 @@ public class Boss extends User {
 //        ((Boss) boss).setTextChats(chatMessages);
         assignRandomItemToBoss(boss);
         boss.setHP(hp);
+        if(boss.getWearing().get(1).getId() == 5112){
+            boss.setHP(hp+90000);
+            List<String> chatMessages = Arrays.asList("gãi ngứa hả tên kia", "Mau nộp kẹo cho taaaa");
+            ((Boss) boss).setTextChats(chatMessages);
+        }
         boss.bossMapId = Map;
         bossCount++; // Tăng số lượng Boss đã tạo
         sendAndHandleMessages(boss);
@@ -328,14 +333,27 @@ public class Boss extends User {
         List<Integer> itemIds = Arrays.asList(0,5112, 2469, 2470,6428,6431,4304);//sen bo hung
         List<Integer> itemIds1 = Arrays.asList(0,2468, 2469, 2470,2282,4304);//ma bu
         List<Integer> itemIds2 = Arrays.asList(0,8,2471, 2472, 2473,3495,4304);//ma bu map
-        //List<Integer> itemIds3 = Arrays.asList(10, 20, 30, 40, 50);
+        List<Integer> itemIds3 = Arrays.asList(10, 2049, 2050, 2051);
+        List<Integer> itemIds4 = Arrays.asList(10, 2099, 2100, 2101);
+        List<Integer> itemIds5 = Arrays.asList(10, 6036, 6037, 6038);
+
+
+        List<Integer> itemIds6 = Arrays.asList(10, 2049, 2050, 2051);
+        List<Integer> itemIds7 = Arrays.asList(10, 2099, 2100, 2101);
+
 
         Map<List<Integer>, String> itemListToName = new HashMap<>();
         itemListToName.put(itemIds, "TrumMaBi");
         itemListToName.put(itemIds1, "MaBi");
         itemListToName.put(itemIds2, "Frankeinstein");
+        itemListToName.put(itemIds3, "XuongKho");
+        itemListToName.put(itemIds4, "XacUop");
+        itemListToName.put(itemIds5, "TrumXacUop");
 
-        List<List<Integer>> allItemLists = Arrays.asList(itemIds,itemIds1,itemIds2);
+        itemListToName.put(itemIds6, "XuongKho");
+        itemListToName.put(itemIds7, "XacUop");
+
+        List<List<Integer>> allItemLists = Arrays.asList(itemIds,itemIds1,itemIds2,itemIds3,itemIds4,itemIds5,itemIds6,itemIds7);
         Random random = new Random();
         int randomIndex = random.nextInt(allItemLists.size());
         List<Integer> randomList = allItemLists.get(randomIndex);
