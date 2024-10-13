@@ -22,12 +22,18 @@ public class GiftBox {
     private final RandomCollection<Integer> randomItemList2 = new RandomCollection<>();
     private final RandomCollection<Integer> randomItemList3 = new RandomCollection<>();
 
+    private final RandomCollection<Byte> randomType1 = new RandomCollection<>();
+    private final RandomCollection<Integer> randomEvent1 = new RandomCollection<>();
+    private final RandomCollection<Integer> randomEvent2 = new RandomCollection<>();//xp hiế, hơn// item loại 2
+
+
 
     private static List<List<Item>> SieuNhan = new ArrayList<>();
 
     private static List<List<Item>> setHaiTac = new ArrayList<>();
 
     private static List<List<Item>> setVuTru = new ArrayList<>();
+
 
     static {
         List<Item> luffySet = new ArrayList<>();
@@ -171,6 +177,13 @@ public class GiftBox {
         randomItemList3.add(10, 6413);
         randomItemList3.add(10, 6414);
 
+        randomType1.add(45, Items);
+        randomType1.add(15, XP);   // Tỷ lệ
+        randomType1.add(25, XU);   // Tỷ lệ
+        randomType1.add(15, LUONG); // Tỷ lệ 10%
+
+        randomEvent1.add(50,5000);
+
     }
 
     public void open(User us, Item item) {
@@ -273,6 +286,42 @@ public class GiftBox {
                 String.format(" Số lượng còn lại : %,d", item.getQuantity()));
     }
 
+    public void openHopQuaMaQuai(User us, Item item) {
+        byte type = randomType.next();
+        switch (type) {
+            case Items:
+                RandomCollection<Integer> chosenItemCollection = choseItemGiftEvent();
+                int idItems = chosenItemCollection.next();
+                Item rewardItem  = new Item(idItems);
+                boolean ok =  (Utils.nextInt(100) < 80) ? true : false;
+                if(ok){
+                    rewardItem.setExpired(-1);
+                    us.addItemToChests(rewardItem);
+                    us.getAvatarService().serverDialog("Bạn nhận được "+ rewardItem.getPart().getName()  + String.format(" Vĩnh viễn Số lượng còn lại: %,d", item.getQuantity()));
+                }else {
+                    rewardItem.setExpired(System.currentTimeMillis() + (86400000L * 30));
+                    us.addItemToChests(rewardItem);
+                    us.getAvatarService().serverDialog("Bạn nhận được "+ rewardItem.getPart().getName()  + String.format(" 30 ngày, Số lượng còn lại: %,d", item.getQuantity()));
+                }
+                break;
+            case XP:
+                us.getAvatarService().serverDialog("Bạn nhận được "+ item +" loại 2 ");
+                break;
+            case XU:
+                int xu = Utils.nextInt(200, 500) * 1000;
+                us.updateXu(xu);
+                us.getAvatarService().serverDialog("Bạn nhận được "+ xu +" Xu ");
+                us.getAvatarService().updateMoney(0);
+                break;
+            case LUONG:
+                int luong = Utils.nextInt(10, 50);
+                us.updateLuong(luong);
+                us.getAvatarService().serverDialog("Bạn nhận được "+ luong +" Lượng ");
+                us.getAvatarService().updateMoney(0);
+                break;
+        }
+    }
+
     private boolean isGenderCompatible(Item item, User user) {
         int itemGender = item.getPart().getGender(); // Giới tính của item (0 = cả hai giới, 1 = nam, 2 = nữ)
         int userGender = user.getGender(); // Giới tính của user (1 = nam, 2 = nữ)
@@ -294,5 +343,10 @@ public class GiftBox {
         return itemCollections.next();
     }
 
-
+    private RandomCollection<Integer> choseItemGiftEvent() {
+        RandomCollection<RandomCollection<Integer>> itemCollections = new RandomCollection<>();
+        itemCollections.add(80, randomEvent1);
+        itemCollections.add(20, randomEvent2);
+        return itemCollections.next();
+    }
 }

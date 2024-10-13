@@ -1059,6 +1059,24 @@ public class User {
                 short pType = part.getType();
                 logger.debug("Type =" + pType);
                 if (pType == -1) {
+
+                    // hp quà ma quái
+                    if(item.getId()==5532)
+                    {
+                        if((this.chests.size() >= this.getChestSlot())){
+                            getService().serverMessage("Bạn phải có ít nhất 1 ô trống");
+                            return;
+                        }
+                        removeItem(item.getId(), 1);
+                        GiftBox giftBox = new GiftBox();
+                        giftBox.openHopQuaMaQuai(this,item);
+                        return;
+                    }
+
+
+
+
+
                     int zOrder = part.getZOrder();
                     Item w = findItemWearingByZOrder(zOrder);
                     if (w != null) {

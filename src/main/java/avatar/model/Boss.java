@@ -32,6 +32,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import static avatar.server.ServerManager.clients;
+
 public class Boss extends User {
     @Getter
     @Setter
@@ -164,14 +166,16 @@ public class Boss extends User {
 //                us.xu_from_boss, us.getId());
         String username = us.getUsername();
 
-//        Item hopqua = new Item(683,-1,1);
-//        //hopqua.setExpired(System.currentTimeMillis() + (86400000L * time));
-//        if(us.findItemInChests(683) !=null){
-//            int quantity = us.findItemInChests(683).getQuantity();
-//            us.findItemInChests(683).setQuantity(quantity+1);
-//        }else {
-//            us.addItemToChests(hopqua);
-//        }
+        if(boss.getWearing().get(1).getId() == 5112){
+            Item hopqua = new Item(5532,System.currentTimeMillis() + (86400000L * 7),1);
+            for (int i = 0; i < 10; i++) {
+                us.addItemToChests(hopqua);
+            }
+            UserManager.users.forEach(user -> {
+                user.getAvatarService().serverInfo("Chúc mừng bạn : " + us.getUsername()+" đã Kill được trùm ma bí và nhận 1 hộp quà ma quái mọi người đều ngưỡng mộ.");
+            });
+            //}
+        }
 
         String message = String.format("Khá lắm bạn %s đã kill được %s", username, boss.getUsername().substring(3, boss.getUsername().length() - 6));
         List<String> newMessages = Arrays.asList(message,"Ta sẽ quay lại sau!!!");
@@ -235,7 +239,9 @@ public class Boss extends User {
             us.addItemToChests(hopqua);
         }
         boss.session.close();
+        ServerManager.numClients--;
     }
+
 
     public void addBossToZone(User boss,int Map ,Zone zone, short x, short y,int hp) throws IOException {
         if (bossCount >= TOTAL_BOSSES) {
@@ -248,7 +254,6 @@ public class Boss extends User {
 //        List<String> chatMessages = Arrays.asList("YAAAA", "YOOOO");
 //        ((Boss) boss).setTextChats(chatMessages);
         assignRandomItemToBoss(boss);
-
         boss.setHP(hp);
         boss.bossMapId = Map;
         bossCount++; // Tăng số lượng Boss đã tạo
@@ -289,7 +294,6 @@ public class Boss extends User {
         boss.setId(id);
         boss.setX(x);
         boss.setY(y);
-        boss.setStar((byte)0);
         return boss;
     }
 
@@ -531,7 +535,7 @@ public class Boss extends User {
 
             Zone randomZone = zones.get(random.nextInt(zones.size()));
             try {
-                boss.addBossToZone(boss,mapId,randomZone, (short) 50, (short) 50, (int) 5000);
+                boss.addBossToZone(boss,mapId,randomZone, (short) 50, (short) 50, (int) 50000);
                 System.out.println("Boss " + i + " khu " + randomZone.getId() + " map " + mapId);
             } catch (IOException e) {
                 throw new RuntimeException(e);

@@ -210,8 +210,9 @@ public class ServerManager {
                 }
                 System.out.println("Load success " + numNPC + " NPC !");
             }
-            AuctionScheduler scheduler = new AuctionScheduler();
-            scheduler.startScheduling();
+            //auto đấu giá
+            //AuctionScheduler scheduler = new AuctionScheduler();
+            //scheduler.startScheduling();
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(0);
@@ -264,6 +265,7 @@ public class ServerManager {
             while (ServerManager.clients.size() > 0) {
                 Session c = ServerManager.clients.get(0);
                 c.close();
+                --ServerManager.numClients;
             }
             ServerManager.clients = null;
             DbManager.getInstance().shutdown();

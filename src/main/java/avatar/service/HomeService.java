@@ -276,12 +276,12 @@ public class HomeService extends Service {
         byte i = ms.reader().readByte();// 0 chest to chesthome , 1 = chestHomeToChest
         short ii = ms.reader().readShort();// index
         short Itemid = ms.reader().readShort();
-
         if(i == 0){
             Item Home = this.session.user.findItemInChestsHome(Itemid);
             Item chest = this.session.user.findItemInChests(Itemid);
 
-            if(chest==null || chest.getId() == 593 || chest.getId() == 683)
+
+            if(chest==null || chest.getId() == 593 || chest.getId() == 683 || chest.getPart().getType() == -2)
             {
                 this.session.user.getAvatarService().serverDialog("error -004");
                 return;

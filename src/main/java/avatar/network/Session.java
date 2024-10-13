@@ -430,7 +430,7 @@ public class Session implements ISession {
             case 6: {
                 ms = new Message(-10);
                 DataOutputStream ds = ms.writer();
-                ds.writeUTF(String.format("Bạn đang đăng nhập vào thành phố %s. Dân số %d  người.", ServerManager.cityName, ServerManager.numClients));
+                ds.writeUTF(String.format("Bạn đang đăng nhập vào thành phố %s. Dân số %d  người.", ServerManager.cityName, ServerManager.clients.size()));
                 ds.flush();
                 this.sendMessage(ms);
                 break;
