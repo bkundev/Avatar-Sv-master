@@ -5942,3 +5942,5 @@
 2024-10-13 19:53:44 DEBUG User:1053 - Item Gender=0
 2024-10-13 19:53:44 DEBUG User:1058 - Get Type
 2024-10-13 19:53:44 DEBUG User:1060 - Type =-1
+2024-10-13 20:01:12 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-13 20:01:15 DEBUG DbManager:81 - DB Connection Pool has created.

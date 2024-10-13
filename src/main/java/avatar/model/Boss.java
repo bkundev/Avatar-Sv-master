@@ -166,11 +166,11 @@ public class Boss extends User {
 //                us.xu_from_boss, us.getId());
         String username = us.getUsername();
 
+
         if(boss.getWearing().get(1).getId() == 5112){
-//            Item hopqua = new Item(5532,System.currentTimeMillis() + (86400000L * 7),1);
-//            for (int i = 0; i < 10; i++) {
-//                us.addItemToChests(hopqua);
-//            }
+            Item hopqua = new Item(5532,System.currentTimeMillis() + (86400000L * 7),1);
+            us.addItemToChests(hopqua);
+
             UserManager.users.forEach(user -> {
                 user.getAvatarService().serverInfo("Chúc mừng bạn : " + us.getUsername()+" đã Kill được trùm ma bí và nhận 1 hộp quà ma quái mọi người đều ngưỡng mộ.");
             });

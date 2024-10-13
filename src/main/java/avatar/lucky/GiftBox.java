@@ -297,11 +297,11 @@ public class GiftBox {
                 if(ok){
                     rewardItem.setExpired(-1);
                     us.addItemToChests(rewardItem);
-                    us.getAvatarService().serverDialog("Bạn nhận được "+ rewardItem.getPart().getName()  + String.format(" Vĩnh viễn Số lượng còn lại: %,d", item.getQuantity()));
+                    us.getAvatarService().serverDialog("Bạn nhận được "+ rewardItem.getPart().getName()  + String.format(" Vĩnh viễn"));
                 }else {
-                    rewardItem.setExpired(System.currentTimeMillis() + (86400000L * 30));
+                    rewardItem.setExpired(System.currentTimeMillis() + (86400000L * 7));
                     us.addItemToChests(rewardItem);
-                    us.getAvatarService().serverDialog("Bạn nhận được "+ rewardItem.getPart().getName()  + String.format(" 30 ngày, Số lượng còn lại: %,d", item.getQuantity()));
+                    us.getAvatarService().serverDialog("Bạn nhận được "+ rewardItem.getPart().getName()  + String.format(" 7 ngày"));
                 }
                 break;
             case XP:
@@ -314,7 +314,7 @@ public class GiftBox {
                 us.getAvatarService().updateMoney(0);
                 break;
             case LUONG:
-                int luong = Utils.nextInt(10, 50);
+                int luong = Utils.nextInt(10, 60);
                 us.updateLuong(luong);
                 us.getAvatarService().serverDialog("Bạn nhận được "+ luong +" Lượng ");
                 us.getAvatarService().updateMoney(0);
