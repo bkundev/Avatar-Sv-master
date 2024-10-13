@@ -182,7 +182,17 @@ public class GiftBox {
         randomType1.add(25, XU);   // Tỷ lệ
         randomType1.add(15, LUONG); // Tỷ lệ 10%
 
-        randomEvent1.add(50,5000);
+        randomEvent1.add(10,5499);
+        randomEvent1.add(10,4882);
+
+        randomEvent2.add(10,6428);
+        randomEvent2.add(10,3495);
+        randomEvent2.add(10,5497);
+        randomEvent2.add(10,6030);
+        randomEvent2.add(10,6040);
+        randomEvent2.add(10,4686);
+
+
 
     }
 
@@ -305,7 +315,19 @@ public class GiftBox {
                 }
                 break;
             case XP:
-                us.getAvatarService().serverDialog("Bạn nhận được "+ item +" loại 2 ");
+                RandomCollection<Integer> chosenItemCollection1 = choseItemGiftEvent();
+                int idItems1 = chosenItemCollection1.next();
+                Item rewardItem1  = new Item(idItems1);
+                boolean ok1 =  (Utils.nextInt(100) < 80) ? true : false;
+                if(ok1){
+                    rewardItem1.setExpired(-1);
+                    us.addItemToChests(rewardItem1);
+                    us.getAvatarService().serverDialog("Bạn nhận được "+ rewardItem1.getPart().getName()  + String.format(" Vĩnh viễn"));
+                }else {
+                    rewardItem1.setExpired(System.currentTimeMillis() + (86400000L * 7));
+                    us.addItemToChests(rewardItem1);
+                    us.getAvatarService().serverDialog("Bạn nhận được "+ rewardItem1.getPart().getName()  + String.format(" 7 ngày"));
+                }
                 break;
             case XU:
                 int xu = Utils.nextInt(200, 500) * 1000;

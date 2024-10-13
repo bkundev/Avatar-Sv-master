@@ -95,7 +95,7 @@ public class User {
     private byte friendly;
     private short crazy;// item sk quatyti
     private byte stylish;
-    private byte happy;
+    private byte happy;// 100 hop qua
     private byte hunger;
     private byte chestSlot;
     private byte chestHomeSlot;
@@ -288,6 +288,9 @@ public class User {
     }
     public synchronized void updateCrazy(int crazy) {
         this.crazy += crazy;
+    }
+    public synchronized void updateHappy(int Happy) {
+        this.happy += Happy;
     }
     public synchronized void updateXP(int XP) {
         this.expMain += XP;

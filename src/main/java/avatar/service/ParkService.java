@@ -25,13 +25,8 @@ public class ParkService extends Service {
     private static final Fish a = new Fish();
     public ParkService(Session cl) {
         super(cl);
-        randomItemList1.add(30, 4081);//nro
-        randomItemList1.add(20, 4082);
-        randomItemList1.add(10, 4083);
-        randomItemList1.add(10, 4084);
-        randomItemList1.add(10, 4085);
-        randomItemList1.add(10, 4086);
-        randomItemList1.add(10, 4087);
+        randomItemList1.add(80, 2383);//nro
+        randomItemList1.add(20, 2384);
     }
 
     public void handleAddFriendRequest(Message ms) {
@@ -241,15 +236,15 @@ public class ParkService extends Service {
 
             RandomCollection<Integer> chosenItemCollection = chooseItemCollection();
             int idItems = chosenItemCollection.next();
-            //Item Nro = new Item(idItems,-1,1);
+            Item Nro = new Item(idItems,-1,1);
             if(us.findItemInChests(idItems) !=null){
                 int quantity = us.findItemInChests(idItems).getQuantity();
                 us.findItemInChests(idItems).setQuantity(quantity+1);
             }else {
-                //us.addItemToChests(Nro);
+                us.addItemToChests(Nro);
                 us.updateCrazy(+1);
             }
-            //us.getAvatarService().SendTabmsg("Bạn vừa nhận được 1 "+ " " + Nro.getPart().getName());
+            us.getAvatarService().SendTabmsg("Bạn vừa nhận được 1 "+ " " + Nro.getPart().getName());
 
         }
     }

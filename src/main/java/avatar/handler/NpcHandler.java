@@ -246,7 +246,7 @@ public class NpcHandler {
                 case NpcName.bunma: {
                     List<Menu> list1 = new ArrayList<>();
                     Menu Event = Menu.builder().name("Đổi Quà").action(() -> {
-                        ShopEventHandler.displayUI(us, bunma, 2295,2543,4277,3494,4261,5103,3962,5104,3964,5130,4726,4903,3364,3509,4195,3358,5303,5304,5305,5306,5307,5308,6415,5501,5502);
+                        ShopEventHandler.displayUI(us, bunma, 2295,2543,4277,3494,4261,5103,3962,5104,3964,5130,4726,4903,3364,3509,4195,3358,5303,5304,5305,5306,5307,5308,6415,5501,5502,6429);
                     }).build();
                     list1.add(Event);
                     list1.add(Menu.builder().name("Góp Kẹo")
@@ -343,7 +343,7 @@ public class NpcHandler {
                     lstVegeta.add(vegenta);
 
                     lstVegeta.add(Menu.builder().name("Quà Thẻ VIP Cao Cấp").action(() -> {
-                        ShopEventHandler.displayUI(us, Vegeta, 4304,6449,6431,6453);
+                        ShopEventHandler.displayUI(us, Vegeta, 4304,6449,6431);
                     }).build());
 
                     lstVegeta.add(Menu.builder().name("Quà Thẻ VIP").action(() -> {

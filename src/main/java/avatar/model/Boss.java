@@ -3,6 +3,7 @@ package avatar.model;
 import avatar.constants.Cmd;
 import avatar.db.DbManager;
 import avatar.item.Item;
+import avatar.lib.RandomCollection;
 import avatar.message.MessageHandler;
 import avatar.message.ParkMsgHandler;
 import avatar.network.Message;
@@ -167,14 +168,23 @@ public class Boss extends User {
         String username = us.getUsername();
 
 
-        if(boss.getWearing().get(1).getId() == 5112){
+        if(boss.getWearing().get(1).getId() == 5112 && us.getHappy() < 100){
+            int idItems = 2385;
+            Item keoAcMa = new Item(idItems,-1,1);
+            if(us.findItemInChests(idItems) !=null){
+                int quantity = us.findItemInChests(idItems).getQuantity();
+                us.findItemInChests(idItems).setQuantity(quantity+1);
+            }else {
+                us.addItemToChests(keoAcMa);
+            }
+            us.updateHappy(+1);//+1 cho slot 100 hop
+            us.getAvatarService().SendTabmsg("Bạn vừa nhận được 1 "+ " " + keoAcMa.getPart().getName());
             Item hopqua = new Item(5532,System.currentTimeMillis() + (86400000L * 7),1);
             us.addItemToChests(hopqua);
 
             UserManager.users.forEach(user -> {
-                user.getAvatarService().serverInfo("Chúc mừng bạn : " + us.getUsername()+" đã Kill được trùm ma bí và nhận 1 hộp quà ma quái mọi người đều ngưỡng mộ.");
+                user.getAvatarService().serverInfo("Chúc mừng bạn : " + us.getUsername()+" đã Kill được trùm ma bí và nhận 1 hộp quà Ma Quái mọi người đều ngưỡng mộ.");
             });
-            //}
         }
 
         String message = String.format("Khá lắm bạn %s đã kill được %s", username, boss.getUsername().substring(3, boss.getUsername().length() - 6));
