@@ -96,7 +96,7 @@ public class User {
     private short crazy;// item sk quatyti
     private byte stylish;
     private byte happy;// 100 hop qua
-    private byte hunger;
+    private byte hunger;//100 kẹo tối đa
     private byte chestSlot;
     private byte chestHomeSlot;
     private int scores;// điểm sk

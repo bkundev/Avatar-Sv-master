@@ -265,7 +265,7 @@ public class NpcHandler {
                                 detailedMessage.append(String.format("\n Bạn đang ở top %d thả pháo xu : %d", rankPhaoXu, us.getTopPhaoXu()));
 
                                 int rankXuboss = us.getService().getUserRankXuBoss(us);
-                                detailedMessage.append(String.format("\n Bạn đang ở top %d lượt đánh boss : %d", rankXuboss, us.getXu_from_boss()));
+                                detailedMessage.append(String.format("\n Bạn đang ở top %d điểm đánh boss : %d", rankXuboss, us.getXu_from_boss()));
                                 us.getAvatarService().serverDialog(detailedMessage.toString());
                             })
                             .build());
@@ -305,7 +305,7 @@ public class NpcHandler {
                                 us.getAvatarService().customTab("Top 10 thả pháo xu", result.toString());
                             })
                             .build());
-                    list1.add(Menu.builder().name("Bảng xếp hạng lượt đánh boss")
+                    list1.add(Menu.builder().name("Bảng xếp hạng điểm đánh boss")
                             .action(() -> {
                                 List<User> topPlayers = us.getService().getTop10PlayersByXuFromBoss();
                                 StringBuilder result = new StringBuilder();
@@ -316,16 +316,16 @@ public class NpcHandler {
                                         result.append(player.getUsername())
                                                 .append(" Top ").append(rank).append(" : ")
                                                 .append(player.getXu_from_boss())
-                                                .append(" lượt\n");
+                                                .append(" Điểm\n");
                                         rank++; // Tăng thứ hạng sau mỗi lần thêm người chơi vào kết quả
                                     }
                                 }
-                                us.getAvatarService().customTab("Top 10 lượt đánh boss", result.toString());
+                                us.getAvatarService().customTab("Top 10 Điểm đánh boss", result.toString());
                             })
                             .build());
                     list1.add(Menu.builder().name("Xem hướng dẫn")
                             .action(() -> {
-                                us.getAvatarService().customTab("Hướng dẫn", "-Từ Ngày");
+                                us.getAvatarService().customTab("Hướng dẫn", "cứ đánh boss là 1 điểm");
                             })
                             .build());
                     list1.add(Menu.builder().name("Thoát").id(npcId).build());
@@ -352,7 +352,7 @@ public class NpcHandler {
 
                     lstVegeta.add(Menu.builder().name("Xem hướng dẫn")
                             .action(() -> {
-                                us.getAvatarService().customTab("Hướng dẫn", "từ hôm nay đến hết 04 tháng 10 năm 2024 TOP 5 thả lượng sẽ được set Xên Bọ Hung Vĩnh Viễn(120 dame)  ở TOP 3 thì thêm 1 Thẻ Vip Cao Cấp, riêng TOP 1 nhận thêm thẻ VIP PREMIUM, TOP 5 XU từ BOSS Sẽ nhận được tóc Tóc Siêu Xaya cấp 2 TOP 3 XU Từ boss sẽ được 1 thẻ VIP, và 1 set Super Saiyan Rose(120 dame) riêng top 1 thêm tóc Super Saiyan Blue 6");
+                                us.getAvatarService().customTab("Hướng dẫn", "Top 5 thả pháo xu và điểm đánh boss được set thẻ vip, trong top 3 được set Zombie , riêng top 1 được thêm mũ cấp 3, top thả tháo lượng trong top 5 đc set zombie trong top 3  nhận 1 thẻ vip cao cấp và được tùy chọn zombie hoặc doremon, riêng top 1 nhận thêm sao xanh cạnh tên và 1 thẻ  vip preium");
                             })
                             .build());
                     lstVegeta.add(Menu.builder().name("Thoát").id(npcId).build());

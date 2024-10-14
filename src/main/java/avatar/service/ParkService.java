@@ -228,7 +228,7 @@ public class ParkService extends Service {
 
     private void addVatPhamSuKienFish(User us) throws IOException {
 
-        if(us.getCrazy() >=1500){
+        if(this.session.user.getCrazy() >=1000){
             return;
         }
         int ok =  (Utils.nextInt(100) < 70) ? 1 : 0;
@@ -248,7 +248,6 @@ public class ParkService extends Service {
 
         }
     }
-
 
     private RandomCollection<Integer> chooseItemCollection() {
         RandomCollection<RandomCollection<Integer>> itemCollections = new RandomCollection<>();

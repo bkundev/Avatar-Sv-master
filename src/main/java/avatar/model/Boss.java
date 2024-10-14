@@ -162,9 +162,9 @@ public class Boss extends User {
 
 
         //update lượt boss.
-//        us.applyStoredXuUpdate();
-//        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu_from_boss` = ? WHERE `user_id` = ? LIMIT 1;",
-//                us.xu_from_boss, us.getId());
+        us.applyStoredXuUpdate();
+        DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu_from_boss` = ? WHERE `user_id` = ? LIMIT 1;",
+                us.xu_from_boss, us.getId());
         String username = us.getUsername();
 
 
@@ -179,11 +179,12 @@ public class Boss extends User {
             }
             us.updateHappy(+1);//+1 cho slot 100 hop
             us.getAvatarService().SendTabmsg("Bạn vừa nhận được 1 "+ " " + keoAcMa.getPart().getName());
+
             Item hopqua = new Item(5532,System.currentTimeMillis() + (86400000L * 7),1);
             us.addItemToChests(hopqua);
 
             UserManager.users.forEach(user -> {
-                user.getAvatarService().serverInfo("Chúc mừng bạn : " + us.getUsername()+" đã Kill được trùm ma bí và nhận 1 hộp quà Ma Quái mọi người đều ngưỡng mộ.");
+                user.getAvatarService().serverInfo("Chúc mừng bạn : " + us.getUsername()+" đã Kill được trùm ma bí và nhận 1 hộp quà Ma Quái ("+us.getHappy() +"/100) mọi người đều ngưỡng mộ.");
             });
         }
 
