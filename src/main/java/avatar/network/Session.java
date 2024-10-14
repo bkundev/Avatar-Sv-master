@@ -478,7 +478,8 @@ public class Session implements ISession {
             UserManager.getInstance().add(user);
             getAvatarService().onLoginSuccess();
             getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thanh Pho lo");
-            getAvatarService().serverInfo("từ ngày 12/10/2024 mở x2 donate, donate trên 100k nhận thêm set Người sói và Mèo đen vĩnh viễn");
+            getAvatarService().serverInfo("từ hôm nay mở x2 donate đến hết ngày 21/10/2024, donate trên 100k nhận thêm set Người sói và Mèo đen vĩnh viễn");
+            getAvatarService().serverInfo("sự kiện halloween đã về thanhpholo");
             checkThuongNapLanDau();
             checkThuongNapSet();
 
