@@ -336,7 +336,7 @@ public class GiftBox {
                 us.getAvatarService().updateMoney(0);
                 break;
             case LUONG:
-                int luong = Utils.nextInt(10, 60);
+                int luong = Utils.nextInt(20, 60);
                 us.updateLuong(luong);
                 us.getAvatarService().serverDialog("Bạn nhận được "+ luong +" Lượng ");
                 us.getAvatarService().updateMoney(0);

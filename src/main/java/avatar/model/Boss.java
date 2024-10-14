@@ -65,7 +65,7 @@ public class Boss extends User {
 //        );
 //        zoneCoordinates.put(1, map1);
 
-        //autoChatBot.start();
+        autoChatBot.start();
     }
 
     private void initializeCoordinates() {

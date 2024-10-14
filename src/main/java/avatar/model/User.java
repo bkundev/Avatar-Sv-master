@@ -558,6 +558,7 @@ public class User {
                     this.chestHomeSlot = res.getByte("chest_home_slot");
                     this.xu = res.getLong("xu");
                     this.luong = res.getInt("luong");
+                    Utils.writeLog(this,"luong load :" + this.luong);
                     this.luongKhoa = res.getInt("luong_khoa");
                     this.xeng = res.getInt("xeng");
                     this.clanID = res.getShort("clan_id");                    //res.writeShort(2206);
@@ -566,7 +567,7 @@ public class User {
                     System.out.println(this.crazy);
                     this.stylish = res.getByte("stylish");
                     this.happy = res.getByte("happy");
-                    this.hunger = res.getByte("hunger");
+                    this.hunger = res.getByte("hunger");//quà
                     this.star = res.getByte("star");
                     this.scores = res.getInt("scores");
                     this.xu_from_boss = res.getInt("xu_from_boss");
