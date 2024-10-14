@@ -867,6 +867,9 @@ public class User {
 
     public void addItemToChests(Item item) {
         synchronized (chests) {
+            if(this.chestSlot <= chests.size()){
+                this.getAvatarService().serverDialog("Rương đồ đã đầy");
+            }
             checkItemQuantityLog(item, "addItemToChests error");
 
             Item itm = findItemInChests(item.getId());
