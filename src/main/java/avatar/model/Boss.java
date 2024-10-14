@@ -159,30 +159,30 @@ public class Boss extends User {
 
 
     public synchronized void handleBossDefeat(Boss boss, User us) throws IOException {
-
-
         //update lượt boss.
         us.applyStoredXuUpdate();
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu_from_boss` = ? WHERE `user_id` = ? LIMIT 1;",
                 us.xu_from_boss, us.getId());
         String username = us.getUsername();
 
-
-        if(boss.getWearing().get(1).getId() == 5112 && us.getHappy() < 100){
+        if(us.getHunger() < 100){
             int idItems = 2385;
-            Item keoAcMa = new Item(idItems,-1,1);
+            Item keoAcMa = new Item(2385,-1,1);
             if(us.findItemInChests(idItems) !=null){
                 int quantity = us.findItemInChests(idItems).getQuantity();
                 us.findItemInChests(idItems).setQuantity(quantity+1);
             }else {
                 us.addItemToChests(keoAcMa);
             }
-            us.updateHappy(+1);//+1 cho slot 100 hop
+            us.updateHunger(+1);//+1 cho slot 100 hop
             us.getAvatarService().SendTabmsg("Bạn vừa nhận được 1 "+ " " + keoAcMa.getPart().getName());
+        }
 
+        if(boss.getWearing().get(1).getId() == 5112 && us.getHappy() < 100){
+
+            us.updateHappy(+1);//+1 cho slot 100 hop
             Item hopqua = new Item(5532,System.currentTimeMillis() + (86400000L * 7),1);
             us.addItemToChests(hopqua);
-
             UserManager.users.forEach(user -> {
                 user.getAvatarService().serverInfo("Chúc mừng bạn : " + us.getUsername()+" đã Kill được trùm ma bí và nhận 1 hộp quà Ma Quái ("+us.getHappy() +"/100) mọi người đều ngưỡng mộ.");
             });

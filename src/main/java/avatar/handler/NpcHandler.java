@@ -137,7 +137,7 @@ public class NpcHandler {
             System.out.println(currentTime1);
             if (currentTime1 - us.getLastTimeSet() >= us.getRandomTimeInMillis() ||us.getspamclickBoss()) {
                 // Nếu thời gian đã hết, hiện thông báo rô bốt
-                us.getAvatarService().openMenuOption(1000, 0,
+                us.getAvatarService().openMenuOption(1000, 1,
                         "bạn có phải robot không? : Đúng rồi",
                         "robot là bạn hả ? : Chắc chắn rồi",
                         "robot hả : Không phải",

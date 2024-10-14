@@ -85,13 +85,14 @@ public class GlobalHandler {
                     break;
                 case 1000:
                     switch (menuId) {
-                        case 0:
+                        case 1:
                             if (select != 2) {
                                 this.us.incrementIntSpanboss(); // Tăng spam lên 1
                                 if (this.us.getIntSpanboss() >= 500) { // Giả sử MAX_SPAM là 10
                                     this.us.resetUser();
                                     UserManager.getInstance().find(this.us.getId()).session.close();
                                 }
+                                return;
                             }
                             switch (select) {
                                 case 0:

@@ -146,36 +146,11 @@ public class GiftBox {
         randomType.add(15, XP);   // Tỷ lệ
         randomType.add(15, LUONG); // Tỷ lệ 10%
 
-        randomItemList1.add(30, 4081);//nro
-        randomItemList1.add(20, 4082);
-        randomItemList1.add(10, 4083);
-        randomItemList1.add(10, 4084);
-        randomItemList1.add(10, 4085);
-        randomItemList1.add(10, 4086);
-        randomItemList1.add(10, 4087);
+        randomItemList1.add(30, 4081);//nro rac
 
-        randomItemList2.add(10, 6523);//item
-        randomItemList2.add(10, 6524);
-        randomItemList2.add(10, 6525);
-        randomItemList2.add(10, 6526);
-        randomItemList2.add(10, 6527);//kẹo cao xu
-        randomItemList2.add(10, 2866);
-        randomItemList2.add(10, 2867);
-        randomItemList2.add(10, 2868);
-        randomItemList2.add(10, 2869);
-        randomItemList2.add(10, 3452);
+        randomItemList2.add(10, 593);//item
 
-
-        randomItemList3.add(10, 3449);//item
-        randomItemList3.add(10, 3450);
-        randomItemList3.add(10, 3451);
-        randomItemList3.add(10, 4083);
-        randomItemList3.add(10, 4084);
-        randomItemList3.add(10, 2343);
-        randomItemList3.add(10, 5142);
-        randomItemList3.add(10, 5274);
-        randomItemList3.add(10, 6413);
-        randomItemList3.add(10, 6414);
+        randomItemList3.add(10, 4081);//item
 
         randomType1.add(45, Items);
         randomType1.add(15, XP);   // Tỷ lệ
@@ -184,6 +159,9 @@ public class GiftBox {
 
         randomEvent1.add(10,5499);
         randomEvent1.add(10,4882);
+        randomEvent1.add(10,4689);
+        randomEvent1.add(10,4692);
+        randomEvent1.add(10,6496);
 
         randomEvent2.add(10,6428);
         randomEvent2.add(10,3495);
@@ -191,7 +169,7 @@ public class GiftBox {
         randomEvent2.add(10,6030);
         randomEvent2.add(10,6040);
         randomEvent2.add(10,4686);
-
+        randomEvent2.add(10,6499);
 
 
     }
@@ -202,8 +180,7 @@ public class GiftBox {
             case Items:
                 RandomCollection<Integer> chosenItemCollection = chooseItemCollection();
                 int idItems = chosenItemCollection.next();
-                if( idItems >= 4081 && idItems <= 4087){
-
+                if( idItems == 4081 || idItems == 593){
                     Item Nro = new Item(idItems,-1,1);
                     if(us.findItemInChests(idItems) !=null){
                         int quantity = us.findItemInChests(idItems).getQuantity();
@@ -212,22 +189,10 @@ public class GiftBox {
                         us.addItemToChests(Nro);
                     }
                     us.getAvatarService().serverDialog("Bạn nhận được "+ Nro.getPart().getName()  + String.format(" Số lượng còn lại: %,d", item.getQuantity()));
-                    break;
                 }
-                Item rewardItem  = new Item(idItems);
-                boolean ok =  (Utils.nextInt(100) < 80) ? true : false;
-                if(ok){
-                    rewardItem.setExpired(-1);
-                    us.addItemToChests(rewardItem);
-                    us.getAvatarService().serverDialog("Bạn nhận được "+ rewardItem.getPart().getName()  + String.format(" Vĩnh viễn Số lượng còn lại: %,d", item.getQuantity()));
-                    break;
-                }
-                rewardItem.setExpired(System.currentTimeMillis() + (86400000L * 30));
-                us.addItemToChests(rewardItem);
-                us.getAvatarService().serverDialog("Bạn nhận được "+ rewardItem.getPart().getName()  + String.format(" 30 ngày, Số lượng còn lại: %,d", item.getQuantity()));
                 break;
             case XU:
-                int xu = Utils.nextInt(1, 10) * 1000;
+                int xu = Utils.nextInt(1, 5) * 1000;
                 us.updateXu(xu);
                 us.getAvatarService().serverDialog("Bạn nhận được "+ xu +" Xu " + String.format("Số lượng còn lại: %,d", item.getQuantity()));
                 us.getAvatarService().updateMoney(0);
@@ -239,7 +204,7 @@ public class GiftBox {
                 us.getAvatarService().updateMoney(0);
                 break;
             case LUONG:
-                int luong = Utils.nextInt(1, 5);
+                int luong = Utils.nextInt(1,2);
                 us.updateLuong(luong);
                 us.getAvatarService().serverDialog("Bạn nhận được "+ luong +" Lượng "+ String.format("Số lượng còn lại : %,d", item.getQuantity()));
                 us.getAvatarService().updateMoney(0);
