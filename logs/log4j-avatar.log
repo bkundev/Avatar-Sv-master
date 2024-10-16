@@ -6636,3 +6636,32 @@
 2024-10-14 14:30:14 DEBUG User:1062 - Get Type
 2024-10-14 14:30:14 DEBUG User:1064 - Type =-1
 2024-10-14 14:31:12 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-16 14:03:06 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-16 14:08:44 DEBUG User:1048 - itemID: 470 type: 1
+2024-10-16 14:08:44 DEBUG User:1050 - Find Item
+2024-10-16 14:08:44 DEBUG User:1052 - Find Done
+2024-10-16 14:08:44 DEBUG User:1057 - Find Detail Item
+2024-10-16 14:08:44 DEBUG User:1060 - Item Gender=1
+2024-10-16 14:08:44 DEBUG User:1065 - Get Type
+2024-10-16 14:08:44 DEBUG User:1067 - Type =-1
+2024-10-16 14:11:43 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-16 14:11:47 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-16 14:14:28 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-16 14:18:52 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-16 14:20:25 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-16 14:20:28 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-16 14:22:03 DEBUG User:1048 - itemID: 2851 type: 1
+2024-10-16 14:22:03 DEBUG User:1050 - Find Item
+2024-10-16 14:22:03 DEBUG User:1052 - Find Done
+2024-10-16 14:22:03 DEBUG User:1057 - Find Detail Item
+2024-10-16 14:22:03 DEBUG User:1060 - Item Gender=0
+2024-10-16 14:22:03 DEBUG User:1065 - Get Type
+2024-10-16 14:22:03 DEBUG User:1067 - Type =-1
+2024-10-16 14:23:02 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-16 14:23:05 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-16 14:23:13 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-16 14:23:16 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-16 14:25:18 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-16 14:25:20 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-16 14:31:32 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-16 14:31:36 DEBUG DbManager:81 - DB Connection Pool has created.

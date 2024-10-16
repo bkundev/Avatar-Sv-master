@@ -29,8 +29,14 @@ public class PartManager {
     @Getter
     private final List<UpgradeItem> upgradeItems = new ArrayList<>();
     @Getter
-    private final List<Part> ShopVQBD = new ArrayList<>();///type 19
+    private final List<Part> Shop0 = new ArrayList<>();///type 19 shop 1
+    @Getter
+    private final List<Part> Shop1 = new ArrayList<>();///type 19 shop 1
+    @Getter
+    private final List<Part> Shop2 = new ArrayList<>();///type 14 shop 2
     //private final List<UpgradeItem> upgradeItems = new ArrayList<>();
+
+
     public Part findPartById(int id) {
         return getParts().stream()
                 .filter(part -> part.getId() == id)
@@ -40,7 +46,9 @@ public class PartManager {
 
     public void load() {
         parts.clear();
-        ShopVQBD.clear();
+        Shop0.clear();
+        Shop1.clear();
+        Shop2.clear();
         try (Connection connection = DbManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement("SELECT * FROM `items`;");
              ResultSet rs = ps.executeQuery()) {
@@ -83,8 +91,42 @@ public class PartManager {
                         .dy(dy)
                         .build());
                 System.out.println("id: " + id + " name: " + name);
+                if (sell == 14) {
+                    Shop0.add(Part.builder().id(id)
+                            .coin(coin)
+                            .gold(gold)
+                            .type(type)
+                            .name(name)
+                            .icon(icon)
+                            .expiredDay(expiredDay)
+                            .level(level)
+                            .sell(sell)
+                            .zOrder(zOrder)
+                            .gender(gender)
+                            .imgID(imgID)
+                            .dx(dx)
+                            .dy(dy)
+                            .build());// Add the individual Part object
+                }
                 if (sell == 19) {
-                    ShopVQBD.add(Part.builder().id(id)
+                    Shop1.add(Part.builder().id(id)
+                            .coin(coin)
+                            .gold(gold)
+                            .type(type)
+                            .name(name)
+                            .icon(icon)
+                            .expiredDay(expiredDay)
+                            .level(level)
+                            .sell(sell)
+                            .zOrder(zOrder)
+                            .gender(gender)
+                            .imgID(imgID)
+                            .dx(dx)
+                            .dy(dy)
+                            .build());// Add the individual Part object
+                }
+                if (sell == 17) {
+                    Shop2.add(Part.builder().id(id)
                             .coin(coin)
                             .gold(gold)
                             .type(type)

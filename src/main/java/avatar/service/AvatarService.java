@@ -365,19 +365,24 @@ public class AvatarService extends Service {
             case 5://Shop 1 hawai
 
                 // Retrieve the shop items
-                List<Item> items = Part.shopByPart(PartManager.getInstance().getShopVQBD());
+                List<Item> items = Part.shopByPart(PartManager.getInstance().getShop1());
 
-                // Check if items is null before proceeding
                 if (items == null) {
                     System.out.println("Items list is null");
                     return; // Handle the null case
                 }
 
-                // Open the shop UI
-                this.session.user.getAvatarService().openUIShop(5, "shop VQBD", items);
+                this.session.user.getAvatarService().openUIShop(5, "shop 1", items);
                 break;
             case 9:
-                this.session.user.getAvatarService().serverDialog("shop 2 đang dây dựng");
+                List<Item> itemshop2 = Part.shopByPart(PartManager.getInstance().getShop2());
+
+                if (itemshop2 == null) {
+                    System.out.println("Items list is null");
+                    return; // Handle the null case
+                }
+
+                this.session.user.getAvatarService().openUIShop(5, "shop 2", itemshop2);
                 break;
             case 18:
                 this.session.user.getAvatarService().serverDialog("Biển Locity đang xây dựng vui lòng quay lại sau !");

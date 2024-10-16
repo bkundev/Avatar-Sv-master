@@ -167,8 +167,8 @@ public class NpcHandler {
             LocalTime now = LocalTime.now();
 
             // Đặt khoảng thời gian hợp lệ
-            LocalTime startTime = LocalTime.of(6, 0); // 6h sáng
-            LocalTime endTime = LocalTime.of(23, 59);  // 11h đêm
+            LocalTime startTime = LocalTime.of(7, 0); // 6h sáng
+            LocalTime endTime = LocalTime.of(22, 59);  // 11h đêm
 
             // Kiểm tra nếu thời gian hiện tại nằm trong khoảng
             if (now.isAfter(startTime) && now.isBefore(endTime)) {
@@ -325,7 +325,7 @@ public class NpcHandler {
                             .build());
                     list1.add(Menu.builder().name("Xem hướng dẫn")
                             .action(() -> {
-                                us.getAvatarService().customTab("Hướng dẫn", "cứ đánh boss là 1 điểm");
+                                us.getAvatarService().customTab("Hướng dẫn", "cứ đánh boss là 1 điểm chỉ tính trong thời gian từ 7h đến 23h hàng ngày");
                             })
                             .build());
                     list1.add(Menu.builder().name("Thoát").id(npcId).build());
@@ -574,18 +574,13 @@ public class NpcHandler {
                     List<Item> Items = new ArrayList<>();
 
                     Menu quaySo = Menu.builder().name("shop noname").action(() ->{
-                        for (int i = 2000; i < 6304; i++) {//470
-                            Item item = new Item((short) i);
-                            if(i == 2539 || i == 2540|| i == 2541)
-                            {
-                                Items.add(item);
-                            }
-                            if (item.getPart().getSell() == 14||item.getPart().getSell() == 16)
-                            {
-                                Items.add(item);
-                            }
+                        List<Item> itemshop0 = Part.shopByPart(PartManager.getInstance().getShop0());
+
+                        if (itemshop0 == null) {
+                            System.out.println("Items list is null");
+                            return; // Handle the null case
                         }
-                        us.getAvatarService().openUIShop(npcId,"shop hawai",Items);
+                        us.getAvatarService().openUIShop(5, "shop 0", itemshop0);
                     }).build();
                     listet.add(quaySo);
                     listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
