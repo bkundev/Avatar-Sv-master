@@ -1285,6 +1285,28 @@ public class Session implements ISession {
                     doFinalUpgrade(upgradeItem, item);
                     return;
                 }
+                else if (type == BossShopHandler.SELECT_DNS) {
+                    Item item1 = user.findItemInChests(3672);
+                    if (item1 == null || item1.getQuantity() < upgradeItem.getScores()) {
+                        getService().serverDialog(MessageFormat.format("Bạn cần có {0} Đá ngũ sắc để nâng cấp món đồ này", upgradeItem.getScores()));
+                        return;
+                    }
+
+                    if (user.getLuong() < upgradeItem.getLuong()) {
+                        getService().serverDialog(MessageFormat.format("Bạn cần có {0} lượng để nâng cấp món đồ này", upgradeItem.getLuong()));
+                        return;
+                    }
+
+                    if (user.getXu() < upgradeItem.getXu()) {
+                        getService().serverDialog(MessageFormat.format("Bạn cần có {0} xu để nâng cấp món đồ này", upgradeItem.getXu()));
+                        return;
+                    }
+                    user.removeItem(3672,upgradeItem.getScores());
+                    user.updateLuong(-upgradeItem.getLuong());
+                    user.updateXu(-upgradeItem.getXu());
+                    doFinalUpgrade(upgradeItem, item);
+                    return;
+                }
             }
         }
         if (idBoss == Npc.ID_ADD + NpcName.Chay_To_Win && user.getBossShopItems() != null) {
@@ -1306,7 +1328,6 @@ public class Session implements ISession {
                 return;
             }
         }
-
         if (idBoss == Npc.ID_ADD + NpcName.bunma && user.getBossShopItems() != null) {
             System.out.println(MessageFormat.format("do Event item boss shop {0}, {1}, {2},"
                     , idBoss, type, indexItem));
@@ -1563,9 +1584,22 @@ public class Session implements ISession {
 
             Zone z = user.getZone();
             if (z != null) {
+
                 Npc npc = NpcManager.getInstance().find(z.getMap().getId(), z.getId(), NpcName.THO_KIM_HOAN + Npc.ID_ADD);
                 if (npc == null) {
-                    return;
+                    npc = NpcManager.getInstance().find(z.getMap().getId(), z.getId(), NpcName.Chay_To_Win + Npc.ID_ADD);
+                    for (User player : players) {
+                        EffectService.createEffect()
+                                .session(player.session)
+                                .id((byte)16)
+                                .style((byte) 0)
+                                .loopLimit((byte) 5)
+                                .loop((short) 1)
+                                .loopType((byte) 1)
+                                .radius((short) 1)
+                                .idPlayer(NpcName.THO_KIM_HOAN+Npc.ID_ADD)
+                                .send();
+                    };
                 }
                 npc.setTextChats(List.of(MessageFormat.format("Chúc mừng bạn {0} đã nâng cấp vật phẩm {1} thành công", user.getUsername(), item.getItem().getPart().getName())));
             } else {

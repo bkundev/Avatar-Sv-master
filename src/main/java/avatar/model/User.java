@@ -869,6 +869,7 @@ public class User {
         synchronized (chests) {
             if(this.chestSlot <= chests.size()){
                 this.getAvatarService().serverDialog("Rương đồ đã đầy");
+                return;
             }
             checkItemQuantityLog(item, "addItemToChests error");
 
@@ -911,6 +912,10 @@ public class User {
     }
     public void addItemToChestsHome(Item item) {
         synchronized (chestsHome) {
+            if(this.chestHomeSlot <= chestsHome.size()){
+                this.getAvatarService().serverDialog("Rương nhà đã đầy");
+                return;
+            }
             checkItemQuantityLog(item,"addItemToChestsHome error");
             Item itm = findItemInChests(item.getId());
             if (itm != null) {

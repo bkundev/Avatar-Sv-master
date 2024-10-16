@@ -18,6 +18,9 @@ import java.util.stream.IntStream;
 public class BossShopHandler {
     public static final byte SELECT_XU = 0;
     public static final byte SELECT_LUONG = 1;
+    public static final byte SELECT_DNS = 2;
+
+    public static final byte SELECT_HoaNS = 3;
 
     public static void displayUI(User us, byte type, int... itemIds) {
         AvatarService service = us.getAvatarService();

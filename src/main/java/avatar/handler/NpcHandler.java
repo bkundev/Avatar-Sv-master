@@ -22,10 +22,7 @@ import avatar.network.Message;
 import avatar.play.MapManager;
 import avatar.play.NpcManager;
 import avatar.play.Zone;
-import avatar.server.DauGiaManager;
-import avatar.server.ServerManager;
-import avatar.server.UserManager;
-import avatar.server.Utils;
+import avatar.server.*;
 import avatar.service.AvatarService;
 
 import java.text.MessageFormat;
@@ -629,10 +626,13 @@ public class NpcHandler {
                 }
                 case NpcName.Chay_To_Win: {
                     List<Menu> ListDacBiet = new ArrayList<>();
-                    Menu ShopDacBiet = Menu.builder().name("Đổi quà").action(() -> {
-                        ShopEventHandler.displayUI(us, Chay_To_Win,2049,2050,2051,2054,2041,2056,2354,2355,3440,3441,3442,3443,3445,3446,3627,3628,3629,3630,3631,3632,3633,3634,3360);
+                    Menu ShopDacBiet = Menu.builder().name("Chay To Win").action(() -> {
+                        ShopEventHandler.displayUI(us, Chay_To_Win,2049,2050,2051,2054,2041,2056,2354,2355,3440,3441,3442,3443,3445,3446,3627,3628,3629,3630,3631,3632,3633,3634,3360,2727);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
+                    ListDacBiet.add(Menu.builder().name("Shop Nâng Cấp Chay To Win").id(npcId)
+                            .menus(listItemUpgradeChay(npcId, us, BossShopHandler.SELECT_DNS))
+                            .build());
                     ListDacBiet.add(Menu.builder().name("Hướng dẫn")
                             .action(() -> {
                                 us.getAvatarService().customTab("Hướng dẫn", "pem boss , câu cá để lấy xu");
@@ -697,6 +697,38 @@ public class NpcHandler {
             us.getAvatarService().serverDialog("Bạn không còn kẹo");
         }
     }
+
+    public static List<Menu> listItemUpgradeChay(int npcId, User us, byte type) {
+        return List.of(
+                Menu.builder()
+                        .name("nâng cấp item Chay To Win")
+                        .id(npcId)
+                        .action(() -> {
+
+                            us.getAvatarService().serverDialog("chưa update");
+                            //BossShopHandler.displayUI(us, type, 2217);
+                        })
+                        .build(),
+                Menu.builder()
+                        .name("nâng cấp Item sự kiện")
+                        .id(npcId)
+                        .action(() -> {
+                            us.getAvatarService().serverDialog("chưa update");
+                            //BossShopHandler.displayUI(us, type, 2217);
+                        })
+                        .build(),
+                Menu.builder()
+                        .name("nâng cấp Item quay số")
+                        .id(npcId)
+                        .action(() -> {
+                            BossShopHandler.displayUI(us, type, 4907,4119);
+                        })
+                        .build()
+        );
+    }
+
+
+
 
     public static List<Menu> listItemUpgrade(int npcId, User us, byte type) {
         //String npcName = "Thợ KH";
