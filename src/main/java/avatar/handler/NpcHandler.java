@@ -627,7 +627,7 @@ public class NpcHandler {
                 case NpcName.Chay_To_Win: {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Chay To Win").action(() -> {
-                        ShopEventHandler.displayUI(us, Chay_To_Win,2049,2050,2051,2054,2041,2056,2354,2355,3440,3441,3442,3443,3445,3446,3627,3628,3629,3630,3631,3632,3633,3634,3360,2727);
+                        ShopEventHandler.displayUI(us, Chay_To_Win,2049,2050,2051,2054,2041,2056,2354,2355,3440,3441,3442,3443,3445,3446,3627,3628,3629,3630,3631,3632,3633,3634,3360);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
                     ListDacBiet.add(Menu.builder().name("Shop Nâng Cấp Chay To Win").id(npcId)
@@ -710,7 +710,7 @@ public class NpcHandler {
                         })
                         .build(),
                 Menu.builder()
-                        .name("nâng cấp Item sự kiện")
+                        .name("nâng cấp Item sự kiện/mảnh")
                         .id(npcId)
                         .action(() -> {
                             us.getAvatarService().serverDialog("chưa update");

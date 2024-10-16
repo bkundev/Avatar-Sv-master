@@ -1091,6 +1091,10 @@ public class User {
 
                     int zOrder = part.getZOrder();
                     Item w = findItemWearingByZOrder(zOrder);
+                    if(this.chestSlot <= chests.size()){
+                        this.getAvatarService().serverDialog("Rương đồ đã đầy 001 ");
+                        return;
+                    }
                     if (w != null) {
                         removeItemFromWearing(w);
                         addItemToChests(w);
@@ -1160,6 +1164,10 @@ public class User {
                 int zOrder = item.getPart().getZOrder();
                 if (zOrder == 10 || zOrder == 20 || zOrder == 50) {
                     getService().serverDialog("Không thể cất vật phẩm này.");
+                    return;
+                }
+                if(this.chestSlot <= chests.size()){
+                    this.getAvatarService().serverDialog("Rương đồ đã đầy 002 ");
                     return;
                 }
                 removeItemFromWearing(item);
