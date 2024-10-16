@@ -146,11 +146,11 @@ public class GiftBox {
         randomType.add(15, XP);   // Tỷ lệ
         randomType.add(15, LUONG); // Tỷ lệ 10%
 
-        randomItemList1.add(30, 4081);//nro rac
+        randomItemList1.add(30, 3672);//nro rac
 
-        randomItemList2.add(10, 593);//item
+        randomItemList2.add(30, 593);//item
 
-        randomItemList3.add(10, 4081);//item
+        randomItemList2.add(40, 0);//item
 
         randomType1.add(45, Items);
         randomType1.add(15, XP);   // Tỷ lệ
@@ -180,7 +180,11 @@ public class GiftBox {
             case Items:
                 RandomCollection<Integer> chosenItemCollection = chooseItemCollection();
                 int idItems = chosenItemCollection.next();
-                if( idItems == 4081 || idItems == 593){
+                if( idItems == 0){
+                    us.getAvatarService().serverDialog("Bạn nhận được cái nịt : V"+ String.format(" Số lượng còn lại: %,d", item.getQuantity()));
+                    return;
+                }
+                if( idItems == 3672 || idItems == 593){
                     Item Nro = new Item(idItems,-1,1);
                     if(us.findItemInChests(idItems) !=null){
                         int quantity = us.findItemInChests(idItems).getQuantity();

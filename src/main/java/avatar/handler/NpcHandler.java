@@ -714,7 +714,7 @@ public class NpcHandler {
                         .id(npcId)
                         .action(() -> {
                             us.getAvatarService().serverDialog("chưa update");
-                            //BossShopHandler.displayUI(us, type, 2217);
+                           // BossShopHandler.displayUI(us, type, 6837);
                         })
                         .build(),
                 Menu.builder()

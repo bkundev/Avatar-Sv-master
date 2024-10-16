@@ -91,7 +91,7 @@ public class PartManager {
                         .dy(dy)
                         .build());
                 System.out.println("id: " + id + " name: " + name);
-                if (sell == 14) {
+                if (sell == 14 || sell == 8) {
                     Shop0.add(Part.builder().id(id)
                             .coin(coin)
                             .gold(gold)
