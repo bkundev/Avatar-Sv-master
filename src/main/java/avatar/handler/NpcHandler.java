@@ -635,7 +635,7 @@ public class NpcHandler {
                             .build());
                     ListDacBiet.add(Menu.builder().name("Hướng dẫn")
                             .action(() -> {
-                                us.getAvatarService().customTab("Hướng dẫn", "pem boss , câu cá để lấy xu");
+                                us.getAvatarService().customTab("Hướng dẫn", "Đá ngũ sắc mở từ hộp quà may mắn (nhặt khi đánh boss)");
                             })
                             .build());
                     ListDacBiet.add(Menu.builder().name("Thoát").id(npcId).build());
