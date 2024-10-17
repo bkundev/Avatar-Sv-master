@@ -588,10 +588,10 @@ public class NpcHandler {
                     us.getAvatarService().openUIMenu(npcId, 0, listet, "text 1", "text2");
                     break;
                 }
-                case NpcName.Shop_Dac_Biet: {
+                case NpcName.Shop_Buy_Luong: {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Đổi Quà").action(() -> {
-                        ShopEventHandler.displayUI(us, Shop_Dac_Biet,5898,4331);
+                        ShopEventHandler.displayUI(us, Shop_Buy_Luong,5898,4331);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
                     ListDacBiet.add(Menu.builder().name("Xem hướng dẫn")
@@ -626,13 +626,19 @@ public class NpcHandler {
                 }
                 case NpcName.Chay_To_Win: {
                     List<Menu> ListDacBiet = new ArrayList<>();
-                    Menu ShopDacBiet = Menu.builder().name("Chay To Win").action(() -> {
+                    Menu ShopDacBiet = Menu.builder().name("Chay To Win (Xu)").action(() -> {
                         ShopEventHandler.displayUI(us, Chay_To_Win,2049,2050,2051,2054,2041,2056,2354,2355,3440,3441,3442,3443,3445,3446,3627,3628,3629,3630,3631,3632,3633,3634,3360,6822);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
+
+                    ListDacBiet.add(Menu.builder().name("Shop Đá Ngũ Sắc").action(() -> {
+                        ShopEventHandler.displayUI(us, Pay_To_Win,3743);
+                    }).build());
+
                     ListDacBiet.add(Menu.builder().name("Shop Nâng Cấp Chay To Win").id(npcId)
                             .menus(listItemUpgradeChay(npcId, us, BossShopHandler.SELECT_DNS))
                             .build());
+
                     ListDacBiet.add(Menu.builder().name("Hướng dẫn")
                             .action(() -> {
                                 us.getAvatarService().customTab("Hướng dẫn", "Đá ngũ sắc mở từ hộp quà may mắn (nhặt khi đánh boss)");
@@ -710,17 +716,17 @@ public class NpcHandler {
                         })
                         .build(),
                 Menu.builder()
-                        .name("nâng cấp Item sự kiện/mảnh")
+                        .name("Nâng cấp Item sự kiện/mảnh")
                         .id(npcId)
                         .action(() -> {
                             BossShopHandler.displayUI(us, BossShopHandler.SELECT_ManhGhep, 6837);
                         })
                         .build(),
                 Menu.builder()
-                        .name("nâng cấp Item quay số")
+                        .name("Nâng cấp Item Quay Số/Nâng Cấp")
                         .id(npcId)
                         .action(() -> {
-                            BossShopHandler.displayUI(us, type, 4907,4119);
+                            BossShopHandler.displayUI(us, BossShopHandler.SELECT_DNS, 4907,4119);
                         })
                         .build()
         );

@@ -66,7 +66,7 @@ public class UpgradeItem extends BossShopItem {
                     PartManager.getInstance().findPartById(itemNeed).getName()
 
             );
-        } else if (bossShop.getIdBoss() == NpcName.Shop_Dac_Biet + Npc.ID_ADD) {
+        } else if (bossShop.getIdBoss() == NpcName.Shop_Buy_Luong + Npc.ID_ADD) {
             return MessageFormat.format(
                     "Bạn có muốn đổi {0} bằng 1 jack à nhầm bằng {1} Lượng không?",
                     super.getItem().getPart().getName(),

@@ -1361,12 +1361,12 @@ public class Session implements ISession {
                 return;
             }
         }
-        if (idBoss == Npc.ID_ADD + NpcName.Shop_Dac_Biet && user.getBossShopItems() != null) {
+        if (idBoss == Npc.ID_ADD + NpcName.Shop_Buy_Luong && user.getBossShopItems() != null) {
             System.out.println(MessageFormat.format("do Event item boss shop ShopDacBiet {0}, {1}, {2},"
                     , idBoss, type, indexItem));
             UpgradeItem EventItem = (UpgradeItem) user.getBossShopItems().get(indexItem);
             if (EventItem != null) {
-                doFinalEventShop(EventItem,NpcName.Shop_Dac_Biet);
+                doFinalEventShop(EventItem,NpcName.Shop_Buy_Luong);
                 return;
             }
         }
@@ -1385,7 +1385,7 @@ public class Session implements ISession {
             return;
         }
         switch (npcId) {
-            case NpcName.Shop_Dac_Biet:
+            case NpcName.Shop_Buy_Luong:
                 if(user.getLuong()> item.getPart().getGold()){
                     if(user.getChestSlot() <= user.chests.size())
                     {
@@ -1447,9 +1447,9 @@ public class Session implements ISession {
                     getService().serverDialog("Bạn chưa đủ Xu để đổi");
                 }
                 break;
-            case NpcName.Pay_To_Win:
+            case NpcName.Pay_To_Win://shop đổi đá
                 Item huyhieu = this.user.findItemInChests(Eventitem.getItemNeed());
-                if(huyhieu!=null&& huyhieu.getQuantity() >= Eventitem.getScores()){
+                if(huyhieu!=null && huyhieu.getQuantity() >= Eventitem.getScores()){
                     Eventitem.getItem().setExpired(-1);
                     if(user.getChestSlot() <= user.chests.size())
                     {
@@ -1489,10 +1489,11 @@ public class Session implements ISession {
                     }
 
                     user.addItemToChests(Eventitem.getItem());
-                }
-                else
+                } else
                 {
-                    getService().serverDialog(String.format("Bạn không đủ Kim cương vũ trụ để đổi"));
+                    Item itemneed = new Item(Eventitem.getItemNeed(), -1, 1);
+                    String partName = itemneed.getPart() != null ? itemneed.getPart().getName() : "unknown";
+                    getService().serverDialog(String.format("Bạn không đủ %s để đổi", partName));
                 }
                 break;
             case NpcName.bunma:
@@ -1530,7 +1531,7 @@ public class Session implements ISession {
                     getService().serverDialog(String.format("Bạn không có %s để đổi",Eventitem.getItemNeed()));
                 }
                 break;
-            case NpcName.Shop_Dac_Biet:
+            case NpcName.Shop_Buy_Luong:
                 if(user.getLuong()> Eventitem.getItem().getPart().getGold()){
                     if(user.getChestSlot() <= user.chests.size())
                     {
