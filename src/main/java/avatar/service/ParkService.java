@@ -199,6 +199,13 @@ public class ParkService extends Service {
                 this.session.user.addItemToChests(item);
                 this.session.user.getAvatarService().sellFish(this.session.user,item.getId());
                 if(IDFISH == 457) {
+                    Item keoAcMa = new Item(6822,-1,1);
+                    if(this.session.user.findItemInChests(6822) !=null){
+                        int quantity = this.session.user.findItemInChests(6822).getQuantity();
+                        this.session.user.findItemInChests(6822).setQuantity(quantity+1);
+                    }else {
+                        this.session.user.addItemToChests(keoAcMa);
+                    }
                     UserManager.users.forEach(user -> {
                         user.getAvatarService().serverInfo("Chúc mừng bạn : " + this.session.user.getUsername()+" đã câu được 1 Cá Mập");
                     });

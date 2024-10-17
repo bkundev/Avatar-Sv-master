@@ -52,7 +52,13 @@ public class UpgradeItem extends BossShopItem {
                     resources.toString(), // Sử dụng chuỗi tài nguyên đã xây dựng
                     ratio > 0 ? (ratio + "%") : "Không xác định"
             );
-
+        }else if (bossShop.getIdShop() == BossShopHandler.SELECT_ManhGhep) {
+            return MessageFormat.format(
+                    "Bạn có muốn đổi {0} bằng {1} {2} không ?",
+                    super.getItem().getPart().getName(),
+                    scores,
+                    PartManager.getInstance().findPartById(itemNeed).getName()
+            );
         } else if (bossShop.getIdBoss() == NpcName.Vegeta + Npc.ID_ADD) {
             return MessageFormat.format(
                     "Bạn có muốn đổi {0} bằng {1} không?",

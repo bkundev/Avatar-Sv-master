@@ -1274,6 +1274,7 @@ public class Session implements ISession {
                         return;
                     }
                     user.updateXu(-upgradeItem.getXu());
+                    Utils.writeLog(this.user,"xu Nâng Cấp Item " +upgradeItem.getItem().getPart().getName() + this.user.getXu());
                     doFinalUpgrade(upgradeItem, item);
                     return;
                 } else if (type == BossShopHandler.SELECT_LUONG) {
@@ -1282,10 +1283,10 @@ public class Session implements ISession {
                         return;
                     }
                     user.updateLuong(-upgradeItem.getLuong());
+                    Utils.writeLog(this.user,"Luong Nâng Cấp Item " +upgradeItem.getItem().getPart().getName() + this.user.getLuong());
                     doFinalUpgrade(upgradeItem, item);
                     return;
-                }
-                else if (type == BossShopHandler.SELECT_DNS) {
+                } else if (type == BossShopHandler.SELECT_DNS) {
                     Item item1 = user.findItemInChests(3672);
                     if (item1 == null || item1.getQuantity() < upgradeItem.getScores()) {
                         getService().serverDialog(MessageFormat.format("Bạn cần có {0} Đá ngũ sắc để nâng cấp món đồ này", upgradeItem.getScores()));
@@ -1304,7 +1305,19 @@ public class Session implements ISession {
                     user.removeItem(3672,upgradeItem.getScores());
                     user.updateLuong(-upgradeItem.getLuong());
                     user.updateXu(-upgradeItem.getXu());
+                    Utils.writeLog(this.user,"Xu Luong Nâng Cấp Item " +upgradeItem.getItem().getPart().getName() + this.user.getXu()+" luong " + this.user.getLuong());
                     doFinalUpgrade(upgradeItem, item);
+                    return;
+                }else if (type == BossShopHandler.SELECT_ManhGhep) {
+                    Item ManhGhep = user.findItemInChests(upgradeItem.getItemNeed());
+                    if (ManhGhep == null || ManhGhep.getQuantity() < upgradeItem.getScores()) {
+                        getService().serverDialog(MessageFormat.format("Bạn cần có {0} Mảnh ghép để đổi {1} ", upgradeItem.getScores(),upgradeItem.getItem().getPart().getName()));
+                        return;
+                    }
+                    user.removeItem(upgradeItem.getItemNeed(),upgradeItem.getScores());
+                    upgradeItem.getItem().setExpired(-1);
+                    user.addItemToChests(upgradeItem.getItem());
+                    getService().serverDialog(MessageFormat.format("Chúc mừng bạn đã đổi thành công {0}", upgradeItem.getItem().getPart().getName()));
                     return;
                 }
             }
@@ -1408,16 +1421,25 @@ public class Session implements ISession {
                         getAvatarService().serverDialog("Giới tính không phù hợp !");
                         return;
                     }
-
                     if(this.user.getChestSlot() <= this.user.chests.size())
                     {
                         getAvatarService().serverDialog("Rương đồ đã đầy");
                         return;
                     }
+
                     Eventitem.getItem().setExpired(-1);
                     this.user.updateXu(-Eventitem.getXu());
                     getAvatarService().updateMoney(0);
-                    this.user.addItemToChests(Eventitem.getItem());
+                    if (Eventitem.getItem().getPart().getType() == -2){
+                        if(this.user.findItemInChests(Eventitem.getItem().getId()) !=null){
+                            int quantity = this.user.findItemInChests(Eventitem.getItem().getId()).getQuantity();
+                            this.user.findItemInChests(Eventitem.getItem().getId()).setQuantity(quantity+1);
+                        }else {
+                            this.user.addItemToChests(Eventitem.getItem());
+                        }
+                    }else {
+                        this.user.addItemToChests(Eventitem.getItem());
+                    }
                     getService().serverDialog("Chúc mừng bạn đã đổi thành công");
                 } else {
                     getService().serverDialog("Bạn chưa đủ Xu để đổi");

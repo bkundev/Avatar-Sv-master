@@ -276,7 +276,6 @@ public class User {
 
     public synchronized void updateXu(long xuUp) {
         this.xu += xuUp;
-        Utils.writeLog(this,"xu : "+this.xu);
     }
     public synchronized void updateXuKillBoss(int dame) {
         this.storedXuUpdate += dame; // Lưu xu vào biến tạm thời
@@ -284,6 +283,7 @@ public class User {
     public void applyStoredXuUpdate() {
         //this.updateXu(storedXuUpdate * 5); // Cộng dồn số xu ba lần
         this.Updatexu_from_boss(storedXuUpdate);
+        Utils.writeLog(this,"xu : " + storedXuUpdate +" X "+this.getDame()+ " dame to xu = >" + this.xu);
         this.storedXuUpdate = 0; // Reset xu đã lưu trữ
     }
     public synchronized void updateCrazy(int crazy) {
@@ -307,7 +307,6 @@ public class User {
         this.luong += luongUp;
         try {
             this.getAvatarService().SendTabmsg("Luong : "+ this.luong);
-            Utils.writeLog(this,"luong : "+this.luong);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -564,7 +563,6 @@ public class User {
                     this.clanID = res.getShort("clan_id");                    //res.writeShort(2206);
                     this.friendly = res.getByte("friendly");
                     this.crazy = res.getShort("crazy");//vp sk/
-                    System.out.println(this.crazy);
                     this.stylish = res.getByte("stylish");
                     this.happy = res.getByte("happy");
                     this.hunger = res.getByte("hunger");//quà
@@ -586,7 +584,7 @@ public class User {
                             if(quantity>100||quantity<0){
                                 Utils.writeLog(this,"loadData quantity " + quantity);
                             }
-                            if(quantity>15000||quantity<0) {
+                            if(quantity>150000||quantity<0) {
                                 Utils.writeLog(this, "loadData quantity và khoa acc" + quantity);
                                 Utils.writeLogKhoaAcc(this, "loadData quantity và khoa acc" + quantity);
                                 String sql1 = "UPDATE users SET active = ? WHERE id = ?";

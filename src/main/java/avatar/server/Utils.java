@@ -44,7 +44,7 @@ public class Utils {
 
     public synchronized static void writeLogAddChest(User user, String message) {
         String username = user.getUsername();
-        String logFilePath = LOG_DIRECTORY + username + "addchest.txt"; // Tên file log theo username
+        String logFilePath = LOG_DIRECTORY + username + "_addchest.txt"; // Tên file log theo username
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFilePath, true))) {
             LocalDateTime currentTime = LocalDateTime.now();
