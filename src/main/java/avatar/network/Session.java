@@ -1274,7 +1274,7 @@ public class Session implements ISession {
                         return;
                     }
                     user.updateXu(-upgradeItem.getXu());
-                    Utils.writeLog(this.user,"xu Nâng Cấp Item " +upgradeItem.getItem().getPart().getName() + this.user.getXu());
+                    Utils.writeLog(this.user,"xu Nâng Cấp Item " +upgradeItem.getItem().getPart().getName() + " " + this.user.getXu());
                     doFinalUpgrade(upgradeItem, item);
                     return;
                 } else if (type == BossShopHandler.SELECT_LUONG) {
@@ -1283,7 +1283,7 @@ public class Session implements ISession {
                         return;
                     }
                     user.updateLuong(-upgradeItem.getLuong());
-                    Utils.writeLog(this.user,"Luong Nâng Cấp Item " +upgradeItem.getItem().getPart().getName() + this.user.getLuong());
+                    Utils.writeLog(this.user,"Luong Nâng Cấp Item " +upgradeItem.getItem().getPart().getName()+ " " +this.user.getLuong());
                     doFinalUpgrade(upgradeItem, item);
                     return;
                 } else if (type == BossShopHandler.SELECT_DNS) {

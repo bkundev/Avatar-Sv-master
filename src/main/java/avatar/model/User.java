@@ -556,6 +556,7 @@ public class User {
                     this.chestSlot = res.getByte("chest_slot");
                     this.chestHomeSlot = res.getByte("chest_home_slot");
                     this.xu = res.getLong("xu");
+                    Utils.writeLog(this,"xu load :" + this.xu);
                     this.luong = res.getInt("luong");
                     Utils.writeLog(this,"luong load :" + this.luong);
                     this.luongKhoa = res.getInt("luong_khoa");

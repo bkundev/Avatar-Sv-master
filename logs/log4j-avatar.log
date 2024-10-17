@@ -7510,3 +7510,31 @@
 2024-10-17 14:58:48 DEBUG User:1070 - Type =-1
 2024-10-17 15:00:49 DEBUG DbManager:93 - DB Connection Pool is shutting down.
 2024-10-17 15:00:51 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-17 15:04:42 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-17 15:09:13 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-17 15:09:47 DEBUG User:1051 - itemID: 4715 type: 1
+2024-10-17 15:09:47 DEBUG User:1053 - Find Item
+2024-10-17 15:09:47 DEBUG User:1055 - Find Done
+2024-10-17 15:09:47 DEBUG User:1060 - Find Detail Item
+2024-10-17 15:09:47 DEBUG User:1063 - Item Gender=0
+2024-10-17 15:09:47 DEBUG User:1068 - Get Type
+2024-10-17 15:09:47 DEBUG User:1070 - Type =-1
+2024-10-17 15:09:58 DEBUG User:1051 - itemID: 4442 type: 1
+2024-10-17 15:09:58 DEBUG User:1053 - Find Item
+2024-10-17 15:09:58 DEBUG User:1055 - Find Done
+2024-10-17 15:09:58 DEBUG User:1060 - Find Detail Item
+2024-10-17 15:09:58 DEBUG User:1063 - Item Gender=0
+2024-10-17 15:09:58 DEBUG User:1068 - Get Type
+2024-10-17 15:09:58 DEBUG User:1070 - Type =-1
+2024-10-17 15:10:02 DEBUG User:1051 - itemID: 3972 type: 1
+2024-10-17 15:10:02 DEBUG User:1053 - Find Item
+2024-10-17 15:10:02 DEBUG User:1055 - Find Done
+2024-10-17 15:10:02 DEBUG User:1060 - Find Detail Item
+2024-10-17 15:10:02 DEBUG User:1063 - Item Gender=0
+2024-10-17 15:10:02 DEBUG User:1068 - Get Type
+2024-10-17 15:10:02 DEBUG User:1070 - Type =-1
+2024-10-17 15:11:40 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-17 15:13:27 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-17 15:15:44 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-17 15:15:47 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-17 15:16:27 DEBUG DbManager:93 - DB Connection Pool is shutting down.
