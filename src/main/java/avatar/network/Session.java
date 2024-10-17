@@ -1330,6 +1330,8 @@ public class Session implements ISession {
                 doFinalEventShop(EventItem,NpcName.Chay_To_Win);
                 return;
             }
+
+            // item ned(huy hieu thi cho vo pay to win
         }
 
         if (idBoss == Npc.ID_ADD + NpcName.Pay_To_Win && user.getBossShopItems() != null) {
