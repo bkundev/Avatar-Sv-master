@@ -65,7 +65,7 @@ public class Boss extends User {
 //        );
 //        zoneCoordinates.put(1, map1);
 
-        autoChatBot.start();
+        //autoChatBot.start();
     }
 
     private void initializeCoordinates() {
@@ -249,8 +249,8 @@ public class Boss extends User {
         }else {
             us.addItemToChests(hopqua);
         }
+        ServerManager.disconnect(boss.session);
         boss.session.close();
-        ServerManager.numClients--;
     }
 
 

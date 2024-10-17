@@ -150,7 +150,7 @@ public class GiftBox {
 
         randomItemList2.add(30, 593);//item
 
-        randomItemList2.add(40, 0);//item
+        randomItemList3.add(40, 0);//item
 
         randomType1.add(45, Items);
         randomType1.add(15, XP);   // Tỷ lệ
@@ -182,7 +182,6 @@ public class GiftBox {
                 int idItems = chosenItemCollection.next();
                 if( idItems == 0){
                     us.getAvatarService().serverDialog("Bạn nhận được cái nịt : V"+ String.format(" Số lượng còn lại: %,d", item.getQuantity()));
-                    return;
                 }
                 if( idItems == 3672 || idItems == 593){
                     Item Nro = new Item(idItems,-1,1);
@@ -328,9 +327,9 @@ public class GiftBox {
 
     private RandomCollection<Integer> chooseItemCollection() {
         RandomCollection<RandomCollection<Integer>> itemCollections = new RandomCollection<>();
-        itemCollections.add(40, randomItemList1);
-        itemCollections.add(30, randomItemList2);
-        itemCollections.add(30, randomItemList3);
+        itemCollections.add(20, randomItemList1);
+        itemCollections.add(35, randomItemList2);
+        itemCollections.add(45, randomItemList3);
         return itemCollections.next();
     }
 
