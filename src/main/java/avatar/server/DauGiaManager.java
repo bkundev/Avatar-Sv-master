@@ -114,7 +114,7 @@ public class DauGiaManager {
     public void startAuction(int currencyType, Item item) {
         this.auctionCurrency = currencyType; // Gán loại tiền cho phiên đấu giá
         this.auctionItem = item; // Gán vật phẩm cho phiên đấu giá
-        long duration = 10 * 60 * 1000;
+        long duration = 1 * 60 * 1000;
         endTime = System.currentTimeMillis() + duration;
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -147,23 +147,39 @@ public class DauGiaManager {
 //        if (timeRemaining <= 30 && highestBidder != null && highestBid > getPreviousHighestBid()) {
 //            System.out.println("Resetting time to 30 seconds");
 //            setTimeRemaining(30); // Đặt lại thời gian còn lại thành 30 giây
-//            for (Npc npc : getInstance().NhanViendauGia) {
-//                npc.setTextChats(List.of(
-//                        MessageFormat.format("Có người vừa trả giá {0} {1} cho vật phẩm {2} có ai muốn trả cao hơn không ạ? . Thời gian còn lại: {3} giây",
-//                                highestBid,
-//                                currency,
-//                                this.auctionItem.getPart().getName(),
-//                                getFormattedTimeRemaining()
-//                        )
-//                ));
-//            }
+        if (timeRemaining < 30) {
+            for (Npc npc : getInstance().NhanViendauGia) {
+                npc.setTextChats(List.of(
+                        MessageFormat.format("Có người vừa trả giá {0} {1} cho vật phẩm {2} . Thời gian còn lại: {3} giây",
+                                highestBid,
+                                currency,
+                                this.auctionItem.getPart().getName(),
+                                getFormattedTimeRemaining()
+                        )
+                ));
+            }
+        }
 //        }
 
         // Cập nhật giá trị trước khi hiển thị
  //       setPreviousHighestBid(highestBid); // Cập nhật giá đặt trước đó
-
+        if (timeRemaining < 0){
+            for (Npc npc : getInstance().NhanViendauGia) {
+                npc.setTextChats(List.of(
+                        MessageFormat.format("Có người vừa trả giá {0} {1} cho vật phẩm {2}  . Thời gian còn lại: {3} end",
+                                highestBid,
+                                currency,
+                                this.auctionItem.getPart().getName(),
+                                getFormattedTimeRemaining()
+                        )
+                ));
+            }
+        }
         for (Npc npc : dauGia) {
             if (timeRemaining <= 0) {
+                if (timer != null) {
+                    timer.cancel();
+                }
                 endAuction();
                 return;
             }
@@ -184,18 +200,6 @@ public class DauGiaManager {
             ));
         }
 
-        if (timeRemaining <= 30){
-            for (Npc npc : getInstance().NhanViendauGia) {
-                npc.setTextChats(List.of(
-                        MessageFormat.format("Có người vừa trả giá {0} {1} cho vật phẩm {2} có ai muốn trả cao hơn không ạ? . Thời gian còn lại: {3} giây",
-                                highestBid,
-                                currency,
-                                this.auctionItem.getPart().getName(),
-                                getFormattedTimeRemaining()
-                        )
-                ));
-            }
-        }
 
     }
 
