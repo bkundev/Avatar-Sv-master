@@ -13,7 +13,7 @@ import java.io.DataOutputStream;
 import java.sql.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.*;
 
 import avatar.service.*;
 import org.json.simple.JSONValue;
@@ -24,16 +24,13 @@ import java.io.IOException;
 import avatar.network.Message;
 import avatar.play.MapService;
 
-import java.util.ArrayList;
-
 import avatar.play.Zone;
 import avatar.server.GameString;
 import avatar.server.ServerManager;
 import avatar.server.UserManager;
 import avatar.server.Utils;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
@@ -46,11 +43,9 @@ import org.json.simple.JSONArray;
 public class User {
     private static int chestLevel;
     private static final int[] UPGRADE_COST_COINS = {0, 0,0,20000, 50000, 100000, 200000 ,200000,500000,600000,70000,0,1000000,1200000,1500000,1700000,2000000,2500000,2700000,3000000,4000000,5000000};
-    private static final int[] UPGRADE_COST_GOLD = {0, 0, 0, 0, 0, 0, 0, 200,500,600,700,1000,1000 ,1200 ,1500 ,1700 ,2000 ,2500 ,2700 ,3000 ,4000 ,5000 };
-    public boolean AutoFish;
+    private static final int[] UPGRADE_COST_GOLD = {0, 0, 0, 0, 0, 0, 0, 200,500,600,700,1000,1000 ,1200 ,1500 ,1700 ,2000 ,2500 ,2700 ,3000 ,4000 ,5000 };public boolean AutoFish;
 
     public int bossMapId;
-
     public int TopPhaoLuong;
     public int TopPhaoXu;
 
@@ -77,6 +72,8 @@ public class User {
     public int luong;
     public int luongKhoa;
 
+    private List<Integer> availableSkills;
+    private int useSkill;
     private int dame;
     private int dameToXu;
     public long randomTimeInMillis; // Random time in milliseconds
@@ -139,6 +136,8 @@ public class User {
         this.isSpam = false;
         this.boardIDs = new ArrayList<>();
         this.moneyPutList = new ArrayList<>();
+        this.availableSkills = new ArrayList<>();
+        this.useSkill = 0;
     }
 
     public int getIntSpanboss() {
@@ -162,10 +161,9 @@ public class User {
         return spamclickBoss;
     }
 
-    public void setspamclickBoss(boolean spamclickBoss) {
+    public synchronized void setspamclickBoss(boolean spamclickBoss) {
         this.spamclickBoss = spamclickBoss;
     }
-
 
     public synchronized boolean isHaPhom() {
         return this.isHaPhom;
@@ -213,12 +211,69 @@ public class User {
         }
     }
 
-    public void calculateDameToXu() {
+
+    public synchronized void setUseSkill(int skill) {
+        this.useSkill = skill;
+    }
+    public List<Integer> getListSkill() {
+        return this.availableSkills;
+    }
+
+    public synchronized void calculateDameToXu() {
         int totalDamage = 30;
+        List<Integer> Item1 = Arrays.asList(3440, 2, 9);  // Set mũ
+        List<Integer> Item2 = Arrays.asList(3441, 2, 9);  // Set áo
+        List<Integer> Item3 = Arrays.asList(3442, 2, 9);  // Set quần
+        int countItem1 = 0, countItem2 = 0, countItem3 = 0;
+        boolean cung = false, maybay = false,haoquanhoalong = false,bang = false;
+// Kiểm tra toàn bộ items nhân vật đang mặc
         for (Item item : wearing) {
             totalDamage += item.getPart().getLevel();
+
+            // Kiểm tra các item đặc biệt
+            cung = cung || item.getId() == 6400;
+            maybay = maybay || item.getId() == 4715;
+            haoquanhoalong = haoquanhoalong || item.getId() == 5455;
+            bang = bang || item.getId() == 6485;
+            // Kiểm tra nếu item thuộc set siêu anh hùng
+            if (Item1.contains(item.getId())) countItem1++;
+            if (Item2.contains(item.getId())) countItem2++;
+            if (Item3.contains(item.getId())) countItem3++;
         }
+// Xử lý các kỹ năng tương ứng
+        handleSkillSet(countItem1, countItem2, countItem3);
+        handleSkill(cung, 2);  // Kỹ năng cung
+        handleSkill(maybay, 4);  // Kỹ năng máy bay
+        handleSkill(haoquanhoalong, 5);
+        handleSkill(bang, 6);
+
+// Cập nhật damage cuối cùng
+
         this.dameToXu = totalDamage;
+    }
+    private void handleSkill(boolean hasItem, int skillId) {
+        if (hasItem) {
+            addSkill(skillId);  // Thêm kỹ năng
+        } else {
+            removeSkill(skillId);  // Xóa kỹ năng nếu không còn item đặc biệt
+        }
+    }
+
+    private void handleSkillSet(int countItem1, int countItem2, int countItem3) {
+        if (countItem1 > 0 && countItem2 > 0 && countItem3 > 0) {
+            addSkill(1);  // Thêm skill 1 nếu mặc đủ set trang bị
+        } else {
+            removeSkill(1);  // Thiếu món nào thì xóa skill 1
+        }
+    }
+    private void addSkill(int skillId) {
+        if (!this.availableSkills.contains(skillId)) {
+            this.availableSkills.add(skillId);
+        }
+    }
+    private void removeSkill(int skillId) {
+        this.availableSkills.remove(Integer.valueOf(skillId));
+        this.useSkill = 0;  // Reset skill được sử dụng nếu xóa
     }
 
     public User(String username, int xuFromBoss) {
@@ -675,7 +730,7 @@ public class User {
         //listCmdRotate.add(new Command((short) 9, "triệu hồi con chim k nhớ tên", 1082, (byte) 0));
         //listCmdRotate.add(new Command((short) 10, "Rương chỉ sử dụng không được bỏ(sẽ bị xóa item ở rương gốc)", 1204, (byte) 0));
         listCmdRotate.add(new Command((short) 11, "thả bóng bay (20k xu)", 577, (byte) 0)); // sk
-        listCmdRotate.add(new Command((short) 23, "Cuốc", 869, (byte) 0));
+        listCmdRotate.add(new Command((short) 23, "Đổi Skill", 355, (byte) 0));
         //listCmdRotate.add(new Command((short) 36, "Hẹn hò", 1096, (byte) 1));
     }
 
@@ -909,6 +964,7 @@ public class User {
             Utils.writeLog(this, message + " " + item.getQuantity() + " Item " + (item.getPart() != null ? item.getPart().getName() : "Unknown"));
         }
     }
+
     public void addItemToChestsHome(Item item) {
         synchronized (chestsHome) {
             if(this.chestHomeSlot <= chestsHome.size()){

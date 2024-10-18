@@ -180,16 +180,39 @@ public class NpcHandler {
 
             List<User> lstUs = us.getZone().getPlayers();
 
-            if (us.findItemInWearing(3174)!=null){
-                us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)25,(byte)26);
-                boss.updateHP(-us.getDameToXu(),(Boss)boss, us);
-            }else if (us.findItemInWearing(4715)!=null) {
-                us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)38,(byte)39);
-                boss.updateHP(-us.getDameToXu(),(Boss)boss, us);
-            }else {
-                us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)23,(byte)24);
-                boss.updateHP(-us.getDameToXu(),(Boss)boss, us);
+            int skill = us.getUseSkill();
+            switch (skill) {
+                case 0:
+                    us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)23,(byte)24);
+                    break;
+                case 1:
+                    us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)25,(byte)26);
+                    break;
+                case 2:
+                    us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)12,(byte)13);
+                    break;
+                case 3:
+                    // Thực hiện hành động khi skill = 3
+                    break;
+                case 4:
+                    us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)38,(byte)39);
+                    break;
+                case 5:
+                    us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)42,(byte)43);
+                    break;
+                case 6:
+                    us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)36,(byte)37);
+                    break;
+                default:
+                    us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)23,(byte)24);
+                    break;
             }
+            boss.updateHP(-us.getDameToXu(),(Boss)boss, us);
+
+
+//            }else if (us.findItemInWearing(4715)!=null) {
+//                boss.updateHP(-us.getDameToXu(),(Boss)boss, us);
+
 
         } else if (npcIdCase >= 10000) {
             if (distance > maxDistance) {
@@ -654,7 +677,7 @@ public class NpcHandler {
                     ListDacBiet.add(Menu.builder().name("Shop Nâng Cấp Chay To Win").id(npcId)
                             .menus(listItemUpgradeChay(npcId, us, BossShopHandler.SELECT_DNS))
                             .build());
-                    ListDacBiet.add(Menu.builder().name("Shop Đổi Bằng Đá Ngũ Sắc demo").action(() -> {
+                    ListDacBiet.add(Menu.builder().name("Shop Đổi Bằng Đá Ngũ Sắc").action(() -> {
                         ShopEventHandler.displayUI(us, Pay_To_Win,3743,3742);
                     }).build());
                     ListDacBiet.add(Menu.builder().name("Sen Ngũ Sắc, Đá Ngũ Sắc ở đâu ?")

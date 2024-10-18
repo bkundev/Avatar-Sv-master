@@ -3,6 +3,8 @@ import java.io.*;
 import java.lang.reflect.Field;
 import avatar.common.BossShopItem;
 import avatar.db.DbManager;
+import avatar.handler.BossShopHandler;
+import avatar.handler.ShopEventHandler;
 import avatar.item.Item;
 import avatar.item.PartManager;
 import avatar.item.Part;
@@ -13,6 +15,7 @@ import avatar.model.*;
 import avatar.server.Avatar;
 import avatar.server.ServerManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +28,9 @@ import avatar.play.Zone;
 import avatar.server.UserManager;
 import lombok.Builder;
 import org.apache.log4j.Logger;
+
+import static avatar.constants.NpcName.Chay_To_Win;
+import static avatar.constants.NpcName.Pay_To_Win;
 
 public class AvatarService extends Service {
 
@@ -190,9 +196,9 @@ public class AvatarService extends Service {
             ds.writeByte(us.getLeverMainPercen());
             ds.writeInt(Math.toIntExact(us.getXu()));
             ds.writeByte(us.getFriendly());
-            ds.writeByte(0);//us.getCrazy()
-            ds.writeByte(us.getStylish());
-            ds.writeByte(us.getHappy());
+            ds.writeByte(10);//us.getCrazy()
+            ds.writeByte(100);//us.getStylish()
+            ds.writeByte(100);//us.getHappy()
             ds.writeByte(100 - us.getHunger());
             ds.writeInt(us.getLuong());
             ds.writeByte(us.getStar());
@@ -1049,6 +1055,63 @@ public class AvatarService extends Service {
                     us.updateTopPhaoXu(-20000);
                     us.getAvatarService().updateMoney(0);
                     break;
+                }
+                case 23:{
+                    List<Menu> ListDacBiet = new ArrayList<>();
+                    ListDacBiet.add(Menu.builder().name("skill mặc định").action(() -> {
+                        us.setUseSkill(0);
+                    }).build());
+                    ListDacBiet.add(Menu.builder().name("skill Siêu Anh Hùng").action(() -> {
+                        if (us.getListSkill() != null && us.getListSkill().contains(1)) {
+                            us.getAvatarService().serverDialog("Đổi thành công");
+                            us.setUseSkill(1);
+                        } else {
+                            us.getAvatarService().serverDialog("Bạn phải mặc trên 3 món có dame của các set siêu anh hùng");
+                        }
+                    }).build());
+                    ListDacBiet.add(Menu.builder().name("skill Cung").action(() -> {
+                        if (us.getListSkill() != null && us.getListSkill().contains(2)) {
+                            us.getAvatarService().serverDialog("Đổi thành công");
+                            us.setUseSkill(2);
+                        } else {
+                            us.getAvatarService().serverDialog("Bạn phải sử dụng demo 01001");
+                        }
+                    }).build());
+                    ListDacBiet.add(Menu.builder().name("skill Thú Cưỡi").action(() -> {
+                        if (us.getListSkill() != null && us.getListSkill().contains(3)) {
+                            us.getAvatarService().serverDialog("Đổi thành công");
+                            us.setUseSkill(3);
+                        } else {
+                            us.getAvatarService().serverDialog("Bạn phải sử dụng demo 01002");
+                        }
+                    }).build());
+                    ListDacBiet.add(Menu.builder().name("skill Máy Bay").action(() -> {
+                        if (us.getListSkill() != null && us.getListSkill().contains(4)) {
+                            us.getAvatarService().serverDialog("Đổi thành công");
+                            us.setUseSkill(4);
+                        } else {
+                            us.getAvatarService().serverDialog("Bạn phải sử dụng demo 01003");
+                        }
+                    }).build());
+                    ListDacBiet.add(Menu.builder().name("skill Thiêu Đốt").action(() -> {
+                        if (us.getListSkill() != null && us.getListSkill().contains(5)) {
+                            us.getAvatarService().serverDialog("Đổi thành công");
+                            us.setUseSkill(5);
+                        } else {
+                            us.getAvatarService().serverDialog("Bạn phải sử dụng demo 01004");
+                        }
+                    }).build());
+                    ListDacBiet.add(Menu.builder().name("skill Băng").action(() -> {
+                        if (us.getListSkill() != null && us.getListSkill().contains(6)) {
+                            us.getAvatarService().serverDialog("Đổi thành công");
+                            us.setUseSkill(6);
+                        } else {
+                            us.getAvatarService().serverDialog("Bạn phải sử dụng demo 01005");
+                        }
+                    }).build());
+                    ListDacBiet.add(Menu.builder().name("Thoát").id(0).build());
+                    us.setMenus(ListDacBiet);
+                    us.getAvatarService().openMenuOption(0, 0, ListDacBiet);
                 }
             }
             ds.flush();
