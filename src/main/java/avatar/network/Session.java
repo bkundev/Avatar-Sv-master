@@ -483,22 +483,23 @@ public class Session implements ISession {
             checkThuongNapLanDau();
             checkThuongNapSet();
 
-            int diamondsPerThousand = 1; // Tặng 1 kim cương vũ trụ cho mỗi 1.000 VND đã nạp
+            int diamondsPerThousand = 5; // Tặng 5 kim cương vũ trụ cho mỗi 2.000 VND đã nạp
             int tongNap = getTotalDeposited(user); // Tổng số tiền người chơi đã nạp
             int nhanthuongTongNap = getNhanThuongTongNap(); // Số tiền nạp đã nhận thưởng
 
             // Tính phần thưởng dựa trên tổng tiền nạp chưa nhận
-            int rewardableAmount = (tongNap - nhanthuongTongNap) / 1000;
+            int rewardableAmount = (tongNap - nhanthuongTongNap) / 2000;
 
             if (rewardableAmount > 0) {
                 // Tặng số kim cương tương ứng
-                Item Kimcuong =  new Item(690,-1, rewardableAmount * diamondsPerThousand);
+                Item Kimcuong =  new Item(5389,-1, rewardableAmount * diamondsPerThousand);
                 this.user.addItemToChests(Kimcuong);
-                this.user.getAvatarService().SendTabmsg("Bạn vừa donate nhận được " + rewardableAmount * diamondsPerThousand + " kim cương vũ trụ");
+                this.user.getAvatarService().SendTabmsg("Bạn vừa donate nhận được " + rewardableAmount * diamondsPerThousand + " Hoa Ngũ Sắc");
                 // Cập nhật lại nhanthuongTongNap trong cơ sở dữ liệu
-                int newNhanThuong = nhanthuongTongNap + (rewardableAmount * 1000);
+                int newNhanThuong = nhanthuongTongNap + (rewardableAmount * 2000);
                 updateNhanThuongTongNap(newNhanThuong);
             }
+
 
             //NhanThuongEventluong();
 

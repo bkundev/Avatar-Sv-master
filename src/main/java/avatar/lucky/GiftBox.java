@@ -91,6 +91,7 @@ public class GiftBox {
 
         List<Item> iron = new ArrayList<>();
         for (int i = 3174; i <= 3177; i++) {
+            if (i == 3175) {continue;}
             iron.add(new Item(i));
         }
         setVuTru.add(iron);

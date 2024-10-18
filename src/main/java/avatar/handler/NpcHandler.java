@@ -606,17 +606,37 @@ public class NpcHandler {
                 }
                 case NpcName.Pay_To_Win: {
                     List<Menu> ListDacBiet = new ArrayList<>();
-                    Menu ShopDacBiet = Menu.builder().name("Đổi quà").action(() -> {
+                    Menu ShopDacBiet = Menu.builder().name("Pay To Win").action(() -> {
                         ShopEventHandler.displayUI(us, Pay_To_Win,6803,6824,3076);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
-                    Menu ShopQuaSet = Menu.builder().name("Đổi quà cả Set").action(() -> {
+                    Menu ShopQuaSet = Menu.builder().name("Pay To Win cả Set").action(() -> {
                         ShopEventHandler.displayUI(us, Pay_To_Win,5880,5324,5408,4345);
                     }).build();
                     ListDacBiet.add(ShopQuaSet);
-                    ListDacBiet.add(Menu.builder().name("Hướng dẫn")
+                    ListDacBiet.add(Menu.builder().name("Đổi quà cả Set là gì ?")
                             .action(() -> {
                                 us.getAvatarService().customTab("Hướng dẫn", "Đổi cả set là được cả set(ít nhất 3 món) , Hộp quà vũ trụ mở ra set 80 dame như : iron , Venmon , DeadPool,(nam,nữ) Dr Strange(nam),  TiDus(nam)/Yuna(nữ), Batman(nam), Người mèo(nữ) | hộp quà siêu nhân 50 dame : gao xanh, đỏ ,đen,| hộp quà hải tặc (80 dame) : Luffy: Nam,Nami: Nữ,Mihawk: Nam,Nico Robin: Nữ,Zoro: Nam");
+                            })
+                            .build());
+                    ListDacBiet.add(Menu.builder().name("Sen Ngũ Sắc, Đá Ngũ Sắc ở đâu?")
+                            .action(() -> {
+                                us.getAvatarService().customTab("Hướng dẫn", "Sen Ngũ Sắc khi nạp 20k(1400lg) bạn sẽ được kèm thêm 50 Sen Ngũ Sắc chỉ nạp mới có, còn Đá ngũ sắc mở từ hộp quà may mắn (nhặt khi đánh boss) , mua bằng xu lượng thì đang xem xét");
+                            })
+                            .build());
+                    ListDacBiet.add(Menu.builder().name("đổi từ Kim Cương Vũ Trụ qua Hoa Ngũ sắc")
+                            .action(() -> {
+                                Item kcvt = us.findItemInChests(690);
+                                if (kcvt != null && kcvt.getQuantity() > 0) {
+                                    int quantity = kcvt.getQuantity();
+                                    double quantityDouble = quantity * 2.5;
+                                    us.removeItem(kcvt.getId(),quantity);
+                                    Item senns = new Item(5389,-1,(int)quantityDouble);
+                                    us.addItemToChests(senns);
+                                    us.getAvatarService().serverDialog("Bạn vừa đổi thành công "+ quantity +" Kim Cương thành "+ quantityDouble + " Sen ngũ sắc");
+                                }else {
+                                    us.getAvatarService().serverDialog("Bạn không có kim cương vũ trụ để đổi");
+                                }
                             })
                             .build());
                     ListDacBiet.add(Menu.builder().name("Thoát").id(npcId).build());
@@ -631,17 +651,15 @@ public class NpcHandler {
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
 
-                    ListDacBiet.add(Menu.builder().name("Shop Đá Ngũ Sắc").action(() -> {
-                        ShopEventHandler.displayUI(us, Pay_To_Win,3743);
-                    }).build());
-
                     ListDacBiet.add(Menu.builder().name("Shop Nâng Cấp Chay To Win").id(npcId)
                             .menus(listItemUpgradeChay(npcId, us, BossShopHandler.SELECT_DNS))
                             .build());
-
-                    ListDacBiet.add(Menu.builder().name("Hướng dẫn")
+                    ListDacBiet.add(Menu.builder().name("Shop Đổi Bằng Đá Ngũ Sắc demo").action(() -> {
+                        ShopEventHandler.displayUI(us, Pay_To_Win,3743,3742);
+                    }).build());
+                    ListDacBiet.add(Menu.builder().name("Sen Ngũ Sắc, Đá Ngũ Sắc ở đâu ?")
                             .action(() -> {
-                                us.getAvatarService().customTab("Hướng dẫn", "Đá ngũ sắc mở từ hộp quà may mắn (nhặt khi đánh boss)");
+                                us.getAvatarService().customTab("Hướng dẫn", "Sen Ngũ Sắc khi nạp trên 20k(1400lg) bạn sẽ được kèm thêm 50 Sen Ngũ Sắc chỉ nạp mới có, còn Đá ngũ sắc mở từ hộp quà may mắn (nhặt khi đánh boss) , mua bằng xu lượng thì đang xem xét");
                             })
                             .build());
                     ListDacBiet.add(Menu.builder().name("Thoát").id(npcId).build());
@@ -707,23 +725,21 @@ public class NpcHandler {
     public static List<Menu> listItemUpgradeChay(int npcId, User us, byte type) {
         return List.of(
                 Menu.builder()
-                        .name("nâng cấp item Chay To Win")
+                        .name("Nâng cấp item Chay To Win")
                         .id(npcId)
                         .action(() -> {
-
-                            us.getAvatarService().serverDialog("chưa update");
-                            //BossShopHandler.displayUI(us, type, 2217);
+                            BossShopHandler.displayUI(us, BossShopHandler.SELECT_DNS, 3774,3776,3775,4157);
                         })
                         .build(),
                 Menu.builder()
-                        .name("Nâng cấp Item sự kiện/mảnh")
+                        .name("Nâng cấp Item sự kiện/mảnh")//đổi mảnh ghép thành item
                         .id(npcId)
                         .action(() -> {
                             BossShopHandler.displayUI(us, BossShopHandler.SELECT_ManhGhep, 6837);
                         })
                         .build(),
                 Menu.builder()
-                        .name("Nâng cấp Item Quay Số/Nâng Cấp")
+                        .name("Nâng cấp Item Quay Số/Nâng Cấp")//Nâng bằng đá ngũ sắc;
                         .id(npcId)
                         .action(() -> {
                             BossShopHandler.displayUI(us, BossShopHandler.SELECT_DNS, 4907,4119);
