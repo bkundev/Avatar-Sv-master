@@ -221,11 +221,11 @@ public class User {
 
     public synchronized void calculateDameToXu() {
         int totalDamage = 30;
-        List<Integer> Item1 = Arrays.asList(3440, 2, 9);  // Set mũ
-        List<Integer> Item2 = Arrays.asList(3441, 2, 9);  // Set áo
-        List<Integer> Item3 = Arrays.asList(3442, 2, 9);  // Set quần
+        List<Integer> Item1 = Arrays.asList(3440,3443, 3174, 3972);  // Set mũ
+        List<Integer> Item2 = Arrays.asList(3441,3445, 3176, 3974);  // Set áo
+        List<Integer> Item3 = Arrays.asList(3442,3446, 3177, 3975);  // Set quần
         int countItem1 = 0, countItem2 = 0, countItem3 = 0;
-        boolean cung = false, maybay = false,haoquanhoalong = false,bang = false;
+        boolean cung = false, maybay = false,haoquanhoalong = false,bang = false,hophong = false;
 // Kiểm tra toàn bộ items nhân vật đang mặc
         for (Item item : wearing) {
             totalDamage += item.getPart().getLevel();
@@ -235,6 +235,7 @@ public class User {
             maybay = maybay || item.getId() == 4715;
             haoquanhoalong = haoquanhoalong || item.getId() == 5455;
             bang = bang || item.getId() == 6485;
+            hophong = hophong || item.getId() == 5828;
             // Kiểm tra nếu item thuộc set siêu anh hùng
             if (Item1.contains(item.getId())) countItem1++;
             if (Item2.contains(item.getId())) countItem2++;
@@ -246,6 +247,7 @@ public class User {
         handleSkill(maybay, 4);  // Kỹ năng máy bay
         handleSkill(haoquanhoalong, 5);
         handleSkill(bang, 6);
+        handleSkill(hophong, 7);
 
 // Cập nhật damage cuối cùng
 
@@ -254,6 +256,7 @@ public class User {
     private void handleSkill(boolean hasItem, int skillId) {
         if (hasItem) {
             addSkill(skillId);  // Thêm kỹ năng
+            this.useSkill = skillId;
         } else {
             removeSkill(skillId);  // Xóa kỹ năng nếu không còn item đặc biệt
         }
@@ -262,6 +265,7 @@ public class User {
     private void handleSkillSet(int countItem1, int countItem2, int countItem3) {
         if (countItem1 > 0 && countItem2 > 0 && countItem3 > 0) {
             addSkill(1);  // Thêm skill 1 nếu mặc đủ set trang bị
+            this.useSkill = 1;
         } else {
             removeSkill(1);  // Thiếu món nào thì xóa skill 1
         }

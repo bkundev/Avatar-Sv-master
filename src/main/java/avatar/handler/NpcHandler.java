@@ -203,6 +203,9 @@ public class NpcHandler {
                 case 6:
                     us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)36,(byte)37);
                     break;
+                case 7:
+                    us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)44,(byte)48);
+                    break;
                 default:
                     us.skillUidToBoss(lstUs,us.getId(),npcId,(byte)23,(byte)24);
                     break;

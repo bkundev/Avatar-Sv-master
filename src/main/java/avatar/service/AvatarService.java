@@ -1109,6 +1109,14 @@ public class AvatarService extends Service {
                             us.getAvatarService().serverDialog("Bạn phải sử dụng demo 01005");
                         }
                     }).build());
+                    ListDacBiet.add(Menu.builder().name("skill Hô Phong Hoán Vũ").action(() -> {
+                        if (us.getListSkill() != null && us.getListSkill().contains(7)) {
+                            us.getAvatarService().serverDialog("Đổi thành công");
+                            us.setUseSkill(7);
+                        } else {
+                            us.getAvatarService().serverDialog("Bạn phải sử dụng demo 01005");
+                        }
+                    }).build());
                     ListDacBiet.add(Menu.builder().name("Thoát").id(0).build());
                     us.setMenus(ListDacBiet);
                     us.getAvatarService().openMenuOption(0, 0, ListDacBiet);
