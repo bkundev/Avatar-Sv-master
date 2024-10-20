@@ -1706,9 +1706,13 @@ public class Session implements ISession {
     }
 
     public void requestFriendList(Message ms) throws IOException {
-        ms = new Message(-81);
-        DataOutputStream ds = ms.writer();
-        ds.flush();
+
+        this.user.getAvatarService().chatTo("admin","ok",-1);
+        this.user.getAvatarService().serverDialog("comingsion");
+        return;
+//        ms = new Message(Cmd.CUSTOM_LIST);
+//        DataOutputStream ds = ms.writer();
+//        ds.flush();
     }
 
     public void joinHouse(Message ms) throws IOException {

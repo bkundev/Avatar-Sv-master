@@ -59,6 +59,9 @@ public class CasinoMsgHandler extends MessageHandler {
                 case Cmd.JOIN_BOARD:
                     joinBoard(mss,this.client.user);
                     break;
+                case Cmd.CHAT_TO_BOARD:
+                    chatToBoard(mss);
+                    break;
                 case Cmd.LEAVE_BOARD:
                     leaveBoard(mss,this.client.user);
                     break;
@@ -127,6 +130,29 @@ public class CasinoMsgHandler extends MessageHandler {
 
     }
 
+
+    private void chatToBoard(Message ms) throws IOException {//ms 7
+        byte roomID = ms.reader().readByte();
+        byte boardID = ms.reader().readByte();
+        String text = ms.reader().readUTF();
+        BoardInfo board = BoardManager.getInstance().find(boardID);
+        List<User> BoardUs = board.getLstUsers();
+
+        ms = new Message(Cmd.CHAT_TO_BOARD);
+        DataOutputStream ds = ms.writer();
+        ds.writeByte(roomID);
+        ds.writeByte(boardID);
+        ds.writeByte(this.client.user.getId());//lv
+        ds.writeUTF(text);
+        ds.flush();
+
+        for(User u : BoardUs)
+        {
+            u.sendMessage(ms);
+        }
+        //this.client.user.sendMessage(ms);
+
+    }
 
     private void joinBoard(Message ms, User us) throws IOException {//ms 8
         byte roomID = ms.reader().readByte();

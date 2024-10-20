@@ -33,9 +33,10 @@ public class ParkService extends Service {
         try {
 
             int userId = ms.reader().readInt(); // id người nhận
-            ms = new Message(Cmd.AVATAR_REQUEST_ADD_FRIEND);
+            ms = new Message(Cmd.ADD_FRIEND);
             DataOutputStream ds = ms.writer();
-            ds.writeInt(this.session.user.getId());
+            ds.writeInt(userId);
+            ds.writeBoolean(true);
             ds.flush();
             this.session.sendMessage(ms);
         } catch (IOException e) {
