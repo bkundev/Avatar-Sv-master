@@ -11395,3 +11395,52 @@
 2024-10-20 16:14:59 DEBUG User:1124 - Item Gender=0
 2024-10-20 16:14:59 DEBUG User:1129 - Get Type
 2024-10-20 16:14:59 DEBUG User:1131 - Type =-1
+2024-10-20 16:16:10 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-20 16:16:13 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-20 16:18:30 DEBUG User:1112 - itemID: 3509 type: 0
+2024-10-20 16:18:49 DEBUG User:1112 - itemID: 2691 type: 1
+2024-10-20 16:18:49 DEBUG User:1114 - Find Item
+2024-10-20 16:18:49 DEBUG User:1116 - Find Done
+2024-10-20 16:18:49 DEBUG User:1121 - Find Detail Item
+2024-10-20 16:18:49 DEBUG User:1124 - Item Gender=0
+2024-10-20 16:18:49 DEBUG User:1129 - Get Type
+2024-10-20 16:18:49 DEBUG User:1131 - Type =-1
+2024-10-20 16:24:12 DEBUG User:1112 - itemID: 4215 type: 1
+2024-10-20 16:24:12 DEBUG User:1114 - Find Item
+2024-10-20 16:24:12 DEBUG User:1116 - Find Done
+2024-10-20 16:24:12 DEBUG User:1121 - Find Detail Item
+2024-10-20 16:24:12 DEBUG User:1124 - Item Gender=0
+2024-10-20 16:24:12 DEBUG User:1129 - Get Type
+2024-10-20 16:24:12 DEBUG User:1131 - Type =-1
+2024-10-20 16:29:24 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-20 16:29:27 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-20 16:29:46 DEBUG User:1112 - itemID: 4443 type: 1
+2024-10-20 16:29:46 DEBUG User:1114 - Find Item
+2024-10-20 16:29:46 DEBUG User:1116 - Find Done
+2024-10-20 16:29:46 DEBUG User:1121 - Find Detail Item
+2024-10-20 16:29:46 DEBUG User:1124 - Item Gender=0
+2024-10-20 16:29:46 DEBUG User:1129 - Get Type
+2024-10-20 16:29:46 DEBUG User:1131 - Type =-1
+2024-10-20 16:30:07 DEBUG User:1112 - itemID: 6142 type: 1
+2024-10-20 16:30:07 DEBUG User:1114 - Find Item
+2024-10-20 16:30:07 DEBUG User:1116 - Find Done
+2024-10-20 16:30:07 DEBUG User:1121 - Find Detail Item
+2024-10-20 16:30:07 DEBUG User:1124 - Item Gender=0
+2024-10-20 16:30:07 DEBUG User:1129 - Get Type
+2024-10-20 16:30:07 DEBUG User:1131 - Type =-1
+2024-10-20 16:30:31 DEBUG User:1112 - itemID: 6670 type: 1
+2024-10-20 16:30:31 DEBUG User:1114 - Find Item
+2024-10-20 16:30:31 DEBUG User:1116 - Find Done
+2024-10-20 16:30:31 DEBUG User:1121 - Find Detail Item
+2024-10-20 16:30:31 DEBUG User:1124 - Item Gender=0
+2024-10-20 16:30:31 DEBUG User:1129 - Get Type
+2024-10-20 16:30:31 DEBUG User:1131 - Type =-1
+2024-10-20 16:32:39 DEBUG User:1112 - itemID: 5532 type: 1
+2024-10-20 16:32:39 DEBUG User:1114 - Find Item
+2024-10-20 16:32:39 DEBUG User:1116 - Find Done
+2024-10-20 16:32:39 DEBUG User:1121 - Find Detail Item
+2024-10-20 16:32:39 DEBUG User:1124 - Item Gender=0
+2024-10-20 16:32:39 DEBUG User:1129 - Get Type
+2024-10-20 16:32:39 DEBUG User:1131 - Type =-1
+2024-10-20 16:38:41 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-20 16:38:44 DEBUG DbManager:81 - DB Connection Pool has created.

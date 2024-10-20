@@ -221,9 +221,9 @@ public class User {
 
     public synchronized void calculateDameToXu() {
         int totalDamage = 30;
-        List<Integer> Item1 = Arrays.asList(3440,3443, 3174, 3972);  // Set mũ
-        List<Integer> Item2 = Arrays.asList(3441,3445, 3176, 3974);  // Set áo
-        List<Integer> Item3 = Arrays.asList(3442,3446, 3177, 3975);  // Set quần
+        List<Integer> Item1 = Arrays.asList(3440,3443, 3174, 3972,4442,6142,4121);  // Set mũ
+        List<Integer> Item2 = Arrays.asList(3441,3445, 3176, 3974,4443,4122);  // Set áo
+        List<Integer> Item3 = Arrays.asList(3442,3446, 3177, 3975,4444,4123);  // Set quần
         int countItem1 = 0, countItem2 = 0, countItem3 = 0;
         boolean cung = false, maybay = false,haoquanhoalong = false,bang = false,hophong = false;
 // Kiểm tra toàn bộ items nhân vật đang mặc
@@ -265,7 +265,6 @@ public class User {
     private void handleSkillSet(int countItem1, int countItem2, int countItem3) {
         if (countItem1 > 0 && countItem2 > 0 && countItem3 > 0) {
             addSkill(1);  // Thêm skill 1 nếu mặc đủ set trang bị
-            this.useSkill = 1;
         } else {
             removeSkill(1);  // Thiếu món nào thì xóa skill 1
         }
@@ -273,6 +272,7 @@ public class User {
     private void addSkill(int skillId) {
         if (!this.availableSkills.contains(skillId)) {
             this.availableSkills.add(skillId);
+            this.useSkill = skillId;
         }
     }
     private void removeSkill(int skillId) {
