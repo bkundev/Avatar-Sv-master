@@ -142,6 +142,47 @@ public class GiftCodeService {
         User us = UserManager.getInstance().find(userId);
 
         switch (MaCode) {
+            case "20thang10":
+
+                if(us.chests.size() >= us.getChestSlot()-6){
+                    us.getAvatarService().serverDialog("chào bạn " + us.getUsername() +" bạn phải trống trên 7 ô rương");
+                    return;
+                }
+
+                Item hopquask1 = new Item(683,-1,200);
+                if(us.findItemInChests(683) !=null){
+                    int quantity = us.findItemInChests(683).getQuantity();
+                    us.findItemInChests(683).setQuantity(quantity+200);
+                }else {
+                    us.addItemToChests(hopquask1);
+                }
+                Item qs = new Item(593, -1, 100);
+                us.addItemToChests(qs);
+
+                Item canh = new Item(6723);
+                canh.setExpired(System.currentTimeMillis() + (86400000L * 3));
+                us.addItemToChests(canh);
+
+                Item daixen = new Item(6670);
+
+                if(us.getGender() == 2)
+                {
+                    daixen.setExpired(System.currentTimeMillis() + (86400000L * 3));
+                    Item hoahong = new Item(5485);
+                    hoahong.setExpired(System.currentTimeMillis() + (86400000L * 3));
+                    us.addItemToChests(hoahong);
+                }else {
+                    daixen.setExpired(System.currentTimeMillis() + (86400000L * 1));
+                }
+                us.addItemToChests(daixen);
+                Item traiTim = new Item(6793);
+                traiTim.setExpired(System.currentTimeMillis() + (86400000L * 3));
+                Item traiTim1 = new Item(6794);
+                traiTim1.setExpired(System.currentTimeMillis() + (86400000L * 3));
+                us.addItemToChests(traiTim);
+                us.addItemToChests(traiTim1);
+                us.getAvatarService().serverDialog("chuc mung 20 thang 10 " + us.getUsername());
+                break;
 
             case "lenhinh":
                 List<Integer> itemIds = new ArrayList<>();
@@ -224,8 +265,8 @@ public class GiftCodeService {
                 }else {
                     us.addItemToChests(hopquask);
                 }
-                Item qs = new Item(593, -1, 200);
-                us.addItemToChests(qs);
+                Item qs1 = new Item(593, -1, 200);
+                us.addItemToChests(qs1);
                 us.getAvatarService().serverDialog("100tv bạn nhận được 100 hộp quà và");
                 if(us.getGender() == 2)
                 {

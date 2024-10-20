@@ -361,12 +361,12 @@ public class NpcHandler {
 
 
                     Menu vegenta = Menu.builder().name("Quà Thẻ VIP PREMIUM").action(() -> {
-                        ShopEventHandler.displayUI(us, Vegeta, 6430,6450);
+                        ShopEventHandler.displayUI(us, Vegeta, 6450,6314,6555,5822,4560,4698,4699,6430,5651,5455,5341);
                     }).build();
                     lstVegeta.add(vegenta);
 
                     lstVegeta.add(Menu.builder().name("Quà Thẻ VIP Cao Cấp").action(() -> {
-                        ShopEventHandler.displayUI(us, Vegeta, 4304,6449,6431);
+                        ShopEventHandler.displayUI(us, Vegeta, 6113,6553,4561,4562,4563,4304,6449,5761);
                     }).build());
 
                     lstVegeta.add(Menu.builder().name("Quà Thẻ VIP").action(() -> {
@@ -465,28 +465,28 @@ public class NpcHandler {
                     us.getAvatarService().openMenuOption(npcId, 0, DauGia);
                     break;
                 }
-//                case NpcName.VE_SO:{
-//                    List<Menu> listet = new ArrayList<>();
-//                    List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
-//                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
-//                                    List.of(
-//                                            Menu.builder().name("demo item").action(() -> {
-//                                                us.getAvatarService().openUIShop(-49,"em.thinh",Items);
-//                                            }).build()
-//                                    ))
-//                            .id(npcId)
-//                            .npcName("donate đi")
-//                            .npcChat("show Item")
-//                            .build();
-//                    listet.add(quaySo);
-//                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
-//                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
-//                    }).build());
-//                    listet.add(Menu.builder().name("Thoát").build());
-//                    us.setMenus(listet);
-//                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
-//                    break;
-//                }
+                case NpcName.VE_SO:{
+                    List<Menu> listet = new ArrayList<>();
+                    List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
+                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
+                                    List.of(
+                                            Menu.builder().name("demo item").action(() -> {
+                                                us.getAvatarService().openUIShop(-49,"em.thinh",Items);
+                                            }).build()
+                                    ))
+                            .id(npcId)
+                            .npcName("donate đi")
+                            .npcChat("show Item")
+                            .build();
+                    listet.add(quaySo);
+                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
+                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
+                    }).build());
+                    listet.add(Menu.builder().name("Thoát").build());
+                    us.setMenus(listet);
+                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
+                    break;
+                }
                 case NpcName.QUAY_SO: {
                     List<Menu> qs = new ArrayList<>();
                     Menu quaySo1 = Menu.builder().name("Quay số").menus(
