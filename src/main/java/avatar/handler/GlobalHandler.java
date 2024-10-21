@@ -209,6 +209,7 @@ public class GlobalHandler {
                             this.us.updateLuong(-tienCuoc);
                         }else{
                             this.us.updateXu(-tienCuoc);
+                            us.getAvatarService().updateMoney(0);
                         }
                         this.us.getAvatarService().updateMoney(0);
                         int totalBid = currentBid + tienCuoc;

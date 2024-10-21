@@ -133,14 +133,12 @@ public class DialLucky {
 
                 gift.setXu(xu);
                 us.updateXu(xu);
+                us.getAvatarService().updateMoney(0);
             } else if (type == XP) {
                 int xp = Utils.nextInt(1, 10) * 10;
                 gift.setXp(xp);
                 us.addExp(xp);
             } else if (type == LUONG) {
-                int luong = Utils.nextInt(1, 2);
-                gift.setLuong(luong);
-                us.updateLuongKhoa(luong);
             }
 
             gifts.add(gift);

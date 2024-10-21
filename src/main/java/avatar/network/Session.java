@@ -825,6 +825,7 @@ public class Session implements ISession {
         DbManager.getInstance().executeUpdate("UPDATE `users` SET `ThuongNapLanDau` = ? WHERE `id` = ? LIMIT 1;",
                 1, user.getId());
         user.updateLuong(+10000);
+        user.getAvatarService().updateMoney(0);
         user.updateXu(+5000000);
         user.getAvatarService().updateMoney(0);
         Item item = new Item(593, -1, 200);
@@ -1001,6 +1002,7 @@ public class Session implements ISession {
                         return;
                     }
                     this.user.updateXu(-price);
+                    this.getAvatarService().updateMoney(0);
                 } else {
                     price = priceLuong;
                     if (user.getLuong() < price) {
@@ -1008,6 +1010,7 @@ public class Session implements ISession {
                         return;
                     }
                     this.user.updateLuong(-price);
+                    this.getAvatarService().updateMoney(0);
                 }
                 long expired = System.currentTimeMillis() + ((long) part.getExpiredDay() * 86400000L);
                 if (part.getExpiredDay() == 0) {
@@ -1275,6 +1278,7 @@ public class Session implements ISession {
                         return;
                     }
                     user.updateXu(-upgradeItem.getXu());
+                    user.getAvatarService().updateMoney(0);
                     Utils.writeLog(this.user,"xu Nâng Cấp Item " +upgradeItem.getItem().getPart().getName() + " " + this.user.getXu());
                     doFinalUpgrade(upgradeItem, item);
                     return;
@@ -1284,6 +1288,7 @@ public class Session implements ISession {
                         return;
                     }
                     user.updateLuong(-upgradeItem.getLuong());
+                    user.getAvatarService().updateMoney(0);
                     Utils.writeLog(this.user,"Luong Nâng Cấp Item " +upgradeItem.getItem().getPart().getName()+ " " +this.user.getLuong());
                     doFinalUpgrade(upgradeItem, item);
                     return;
@@ -1305,7 +1310,9 @@ public class Session implements ISession {
                     }
                     user.removeItem(3672,upgradeItem.getScores());
                     user.updateLuong(-upgradeItem.getLuong());
+                    user.getAvatarService().updateMoney(0);
                     user.updateXu(-upgradeItem.getXu());
+                    user.getAvatarService().updateMoney(0);
                     Utils.writeLog(this.user,"Xu Luong Nâng Cấp Item " +upgradeItem.getItem().getPart().getName() + this.user.getXu()+" luong " + this.user.getLuong());
                     doFinalUpgrade(upgradeItem, item);
                     return;

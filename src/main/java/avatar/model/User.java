@@ -830,6 +830,7 @@ public class User {
 
         if (xu >= coinCost && luong >= goldCost) {
             this.updateXu(-coinCost);
+            this.getAvatarService().updateMoney(0);
             this.updateLuong(-goldCost);
             this.updateChestSlot(+5);
             this.getAvatarService().updateMoney(0);

@@ -34,6 +34,7 @@ public class HomeService extends Service {
         byte y = ms.reader().readByte();
         byte type = ms.reader().readByte();
         this.session.user.updateXu(-2000);
+        this.session.getAvatarService().updateMoney(0);
         int result = 0;
         try (Connection connection = DbManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement("INSERT INTO `house_player_item` (`user_id`, `house_item_id`, `x`, `y`) VALUES (?, ?, ?, ?)");) {
@@ -164,6 +165,7 @@ public class HomeService extends Service {
                     int result_update = ps.executeUpdate();
                     ps.close();
                     this.session.user.updateXu(-2000);
+                    this.session.user.getAvatarService().updateMoney(0);
                     ms = new Message(-46);
                     DataOutputStream ds = ms.writer();
                     ds.writeShort(1);
@@ -378,6 +380,7 @@ public class HomeService extends Service {
             // Kiểm tra người chơi có đủ xu hoặc lượng để nâng cấp không
             if (this.session.user.xu >= upgradeCostXu && this.session.user.luong >= upgradeCostLuong) {
                 this.session.user.updateXu(- upgradeCostXu); // Trừ xu người chơi
+                this.session.user.getAvatarService().updateMoney(0);
                 this.session.user.updateLuong(- upgradeCostLuong); // Trừ xu người chơi
                 this.session.user.getAvatarService().updateMoney(0);
                 this.session.user.updateChest_homeSlot(+5);

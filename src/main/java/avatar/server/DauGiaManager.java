@@ -251,6 +251,7 @@ public class DauGiaManager {
                         // Hoàn lại lượng
                         user.updateLuong(+refundAmount);
                     }
+                    user.getAvatarService().updateMoney(0);
                     user.getAvatarService().serverInfo("Bạn đã được hoàn lại " + refundAmount + " " + currency + " (90 phần trăm) từ phiên đấu giá.");
                 }
             }
