@@ -114,7 +114,7 @@ public class DauGiaManager {
     public void startAuction(int currencyType, Item item) {
         this.auctionCurrency = currencyType; // Gán loại tiền cho phiên đấu giá
         this.auctionItem = item; // Gán vật phẩm cho phiên đấu giá
-        long duration = 1 * 60 * 1000;
+        long duration = 5 * 60 * 1000;
         endTime = System.currentTimeMillis() + duration;
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
