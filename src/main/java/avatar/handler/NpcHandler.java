@@ -269,7 +269,7 @@ public class NpcHandler {
                 case NpcName.bunma: {
                     List<Menu> list1 = new ArrayList<>();
                     Menu Event = Menu.builder().name("Đổi Quà").action(() -> {
-                        ShopEventHandler.displayUI(us, bunma, 2295,2543,4277,3494,4261,5103,3962,5104,3964,5130,4726,4903,3364,3509,3679,4195,3358,5303,5304,5305,5306,5307,5308,6415,5501,5502,6429);
+                        ShopEventHandler.displayUI(us, bunma, 2295,2543,4277,3494,4261,5103,3962,5104,3964,5130,4726,4903,3364,3509,3679,2577,4195,3358,5303,5304,5305,5306,5307,5308,6415,5501,5502,6429);
                     }).build();
                     list1.add(Event);
                     list1.add(Menu.builder().name("Góp Kẹo")
@@ -398,6 +398,7 @@ public class NpcHandler {
                     us.getAvatarService().openMenuOption(npcId, 0, chudautu);
                     break;
                 }
+
                 case NpcName.DAU_GIA: {
                     if (distance > 100.0 || us.getZone().getId() > 2 || us.getZone().getMap().getId() != 9) {
                         us.getAvatarService().serverDialog("Bạn đứng xa rồi : v");
@@ -465,28 +466,28 @@ public class NpcHandler {
                     us.getAvatarService().openMenuOption(npcId, 0, DauGia);
                     break;
                 }
-//                case NpcName.VE_SO:{
-//                    List<Menu> listet = new ArrayList<>();
-//                    List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
-//                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
-//                                    List.of(
-//                                            Menu.builder().name("demo item").action(() -> {
-//                                                us.getAvatarService().openUIShop(-49,"em.thinh",Items);
-//                                            }).build()
-//                                    ))
-//                            .id(npcId)
-//                            .npcName("donate đi")
-//                            .npcChat("show Item")
-//                            .build();
-//                    listet.add(quaySo);
-//                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
-//                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
-//                    }).build());
-//                    listet.add(Menu.builder().name("Thoát").build());
-//                    us.setMenus(listet);
-//                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
-//                    break;
-//                }
+                case NpcName.VE_SO:{
+                    List<Menu> listet = new ArrayList<>();
+                    List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
+                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
+                                    List.of(
+                                            Menu.builder().name("demo item").action(() -> {
+                                                us.getAvatarService().openUIShop(-49,"em.thinh",Items);
+                                            }).build()
+                                    ))
+                            .id(npcId)
+                            .npcName("donate đi")
+                            .npcChat("show Item")
+                            .build();
+                    listet.add(quaySo);
+                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
+                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
+                    }).build());
+                    listet.add(Menu.builder().name("Thoát").build());
+                    us.setMenus(listet);
+                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
+                    break;
+                }
                 case NpcName.QUAY_SO: {
                     List<Menu> qs = new ArrayList<>();
                     Menu quaySo1 = Menu.builder().name("Quay số").menus(
@@ -617,7 +618,7 @@ public class NpcHandler {
                 case NpcName.Shop_Buy_Luong: {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Đổi Quà").action(() -> {
-                        ShopEventHandler.displayUI(us, Shop_Buy_Luong,5898,4331);
+                        ShopEventHandler.displayUI(us, Shop_Buy_Luong,5898,4331,3112);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
                     ListDacBiet.add(Menu.builder().name("Xem hướng dẫn")
@@ -634,12 +635,16 @@ public class NpcHandler {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Pay To Win").action(() -> {
                         ShopEventHandler.displayUI(us, Pay_To_Win,6803,6824,3076);
+                        ShopEventHandler.displayUI(us, Shop_Buy_Luong,3672);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
                     Menu ShopQuaSet = Menu.builder().name("Pay To Win cả Set").action(() -> {
                         ShopEventHandler.displayUI(us, Pay_To_Win,5880,5324,5408,4345);
                     }).build();
                     ListDacBiet.add(ShopQuaSet);
+                    ListDacBiet.add(Menu.builder().name("Shop Nâng Cấp Pay To Win").id(npcId)
+                            .menus(listItemUpgradePay(npcId, us, BossShopHandler.SELECT_HoaNS))
+                            .build());
                     ListDacBiet.add(Menu.builder().name("Đổi quà cả Set là gì ?")
                             .action(() -> {
                                 us.getAvatarService().customTab("Hướng dẫn", "Đổi cả set là được cả set(ít nhất 3 món) , Hộp quà vũ trụ mở ra set 80 dame như : iron , Venmon , DeadPool,(nam,nữ) Dr Strange(nam),  TiDus(nam)/Yuna(nữ), Batman(nam), Người mèo(nữ) | hộp quà siêu nhân 50 dame : gao xanh, đỏ ,đen,| hộp quà hải tặc (80 dame) : Luffy: Nam,Nami: Nữ,Mihawk: Nam,Nico Robin: Nữ,Zoro: Nam");
@@ -650,21 +655,21 @@ public class NpcHandler {
                                 us.getAvatarService().customTab("Hướng dẫn", "Sen Ngũ Sắc khi nạp 20k(1400lg) bạn sẽ được kèm thêm 50 Sen Ngũ Sắc chỉ nạp mới có, còn Đá ngũ sắc mở từ hộp quà may mắn (nhặt khi đánh boss) , mua bằng xu lượng thì đang xem xét");
                             })
                             .build());
-                    ListDacBiet.add(Menu.builder().name("đổi từ Kim Cương Vũ Trụ qua Hoa Ngũ sắc")
-                            .action(() -> {
-                                Item kcvt = us.findItemInChests(690);
-                                if (kcvt != null && kcvt.getQuantity() > 0) {
-                                    int quantity = kcvt.getQuantity();
-                                    double quantityDouble = quantity * 2.5;
-                                    us.removeItem(kcvt.getId(),quantity);
-                                    Item senns = new Item(5389,-1,(int)quantityDouble);
-                                    us.addItemToChests(senns);
-                                    us.getAvatarService().serverDialog("Bạn vừa đổi thành công "+ quantity +" Kim Cương thành "+ quantityDouble + " Sen ngũ sắc");
-                                }else {
-                                    us.getAvatarService().serverDialog("Bạn không có kim cương vũ trụ để đổi");
-                                }
-                            })
-                            .build());
+//                    ListDacBiet.add(Menu.builder().name("đổi từ Kim Cương Vũ Trụ qua Hoa Ngũ sắc")
+//                            .action(() -> {
+//                                Item kcvt = us.findItemInChests(690);
+//                                if (kcvt != null && kcvt.getQuantity() > 0) {
+//                                    int quantity = kcvt.getQuantity();
+//                                    double quantityDouble = quantity * 2.5;
+//                                    us.removeItem(kcvt.getId(),quantity);
+//                                    Item senns = new Item(5389,-1,(int)quantityDouble);
+//                                    us.addItemToChests(senns);
+//                                    us.getAvatarService().serverDialog("Bạn vừa đổi thành công "+ quantity +" Kim Cương thành "+ quantityDouble + " Sen ngũ sắc");
+//                                }else {
+//                                    us.getAvatarService().serverDialog("Bạn không có kim cương vũ trụ để đổi");
+//                                }
+//                            })
+//                            .build());
                     ListDacBiet.add(Menu.builder().name("Thoát").id(npcId).build());
                     us.setMenus(ListDacBiet);
                     us.getAvatarService().openMenuOption(npcId, 0, ListDacBiet);
@@ -673,13 +678,16 @@ public class NpcHandler {
                 case NpcName.Chay_To_Win: {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Chay To Win (Xu)").action(() -> {
-                        ShopEventHandler.displayUI(us, Chay_To_Win,2049,2050,2051,2054,2041,2056,2354,2355,3440,3441,3442,3443,3445,3446,3627,3628,3629,3630,3631,3632,3633,3634,3360,6822);
+                        ShopEventHandler.displayUI(us, Chay_To_Win,2049,2050,2051,2054,2041,2056,2354,2355,3440,3441,3442,3443,3445,3446,3627,3628,3629,3630,3631,3632,3633,3634,3360,6822,2577);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
-
                     ListDacBiet.add(Menu.builder().name("Shop Nâng Cấp Chay To Win").id(npcId)
                             .menus(listItemUpgradeChay(npcId, us, BossShopHandler.SELECT_DNS))
                             .build());
+                    Menu ShopMuaDns = Menu.builder().name("Mua đá ngũ sắc").action(() -> {
+                        ShopEventHandler.displayUI(us, Shop_Buy_Luong,3672);
+                    }).build();
+                    ListDacBiet.add(ShopMuaDns);
                     ListDacBiet.add(Menu.builder().name("Shop Đổi Bằng Đá Ngũ Sắc").action(() -> {
                         ShopEventHandler.displayUI(us, Pay_To_Win,3743,3742);
                     }).build());
@@ -758,23 +766,33 @@ public class NpcHandler {
                         })
                         .build(),
                 Menu.builder()
-                        .name("Nâng cấp Item sự kiện/mảnh")//đổi mảnh ghép thành item
-                        .id(npcId)
-                        .action(() -> {
-                            BossShopHandler.displayUI(us, BossShopHandler.SELECT_ManhGhep, 6837);
-                        })
-                        .build(),
-                Menu.builder()
                         .name("Nâng cấp Item Quay Số/Nâng Cấp")//Nâng bằng đá ngũ sắc;
                         .id(npcId)
                         .action(() -> {
-                            BossShopHandler.displayUI(us, BossShopHandler.SELECT_DNS, 4907,4119);
+                            BossShopHandler.displayUI(us, BossShopHandler.SELECT_DNS, 4907,4119,5516,5099,5337,5342,5470);
+                        })
+                        .build(),
+                Menu.builder()
+                        .name("Đổi item từ mảnh ghép")//đổi mảnh ghép thành item
+                        .id(npcId)
+                        .action(() -> {
+                            BossShopHandler.displayUI(us, BossShopHandler.SELECT_ManhGhep, 6837);
                         })
                         .build()
         );
     }
 
-
+    public static List<Menu> listItemUpgradePay(int npcId, User us, byte type) {
+        return List.of(
+                Menu.builder()
+                        .name("Pay, Nâng cấp Item Quay Số/Nâng Cấp")
+                        .id(npcId)
+                        .action(() -> {
+                            BossShopHandler.displayUI(us, BossShopHandler.SELECT_HoaNS, 6671,6672);
+                        })
+                        .build()
+        );
+    }
 
 
     public static List<Menu> listItemUpgrade(int npcId, User us, byte type) {
@@ -862,6 +880,9 @@ public class NpcHandler {
                 Menu.builder().name("Cánh")
                         .menus(
                                 List.of(
+                                        Menu.builder().name("Cánh Thần Mặt Trời").action(() -> {
+                                            BossShopHandler.displayUI(us, type, 5312);
+                                        }).build(),
                                         Menu.builder().name("Cánh chiến thần hắc hoá").action(() -> {
                                             BossShopHandler.displayUI(us, type, 5971, 5972, 5973, 5974);
                                         }).build(),
@@ -958,7 +979,15 @@ public class NpcHandler {
                                     BossShopHandler.displayUI(us, type, 2726, 2727, 2728, 2729, 2730);
                                 }).build()
                         ))
+                        .build(),
+                Menu.builder().name("Tóc")
+                        .menus(List.of(
+                                Menu.builder().name("Tóc Siêu Xaya").action(() -> {
+                                    BossShopHandler.displayUI(us, type, 2019);
+                                }).build()
+                        ))
                         .build()
+
         );
     }
 

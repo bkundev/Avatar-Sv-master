@@ -31,7 +31,6 @@ public class UpgradeItem extends BossShopItem {
                     "Bạn có muốn đổi {0} bằng {1} điểm sự kiện không?",
                     super.getItem().getPart().getName(),
                     this.scores
-
             );
         }else if (bossShop.getIdShop() == BossShopHandler.SELECT_DNS) {
             StringBuilder resources = new StringBuilder();
@@ -52,7 +51,27 @@ public class UpgradeItem extends BossShopItem {
                     resources.toString(), // Sử dụng chuỗi tài nguyên đã xây dựng
                     ratio > 0 ? (ratio + "%") : "Không xác định"
             );
-        }else if (bossShop.getIdShop() == BossShopHandler.SELECT_ManhGhep) {
+        }else if (bossShop.getIdShop() == BossShopHandler.SELECT_HoaNS) {
+            StringBuilder resources = new StringBuilder();
+            if (luong > 0) {
+                resources.append(luong).append(" Lượng");
+            }
+            if (xu > 0) {
+                if (resources.length() > 0) {
+                    resources.append(" + "); // Thêm dấu "+" nếu đã có Lượng
+                }
+                resources.append(xu).append(" Xu");
+            }
+            return MessageFormat.format(
+                    "Bạn có muốn nâng cấp {0} từ {1} + {2} + {3} (xác suất {4})",
+                    super.getItem().getPart().getName(),
+                    PartManager.getInstance().findPartById(itemNeed).getName(),
+                    scores + " Sen Ngũ Sắc",
+                    resources.toString(), // Sử dụng chuỗi tài nguyên đã xây dựng
+                    ratio > 0 ? (ratio + "%") : "Không xác định"
+            );
+        }
+        else if (bossShop.getIdShop() == BossShopHandler.SELECT_ManhGhep) {
             return MessageFormat.format(
                     "Bạn có muốn đổi {0} bằng {1} {2} không ?",
                     super.getItem().getPart().getName(),

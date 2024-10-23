@@ -1316,7 +1316,32 @@ public class Session implements ISession {
                     Utils.writeLog(this.user,"Xu Luong Nâng Cấp Item " +upgradeItem.getItem().getPart().getName() + this.user.getXu()+" luong " + this.user.getLuong());
                     doFinalUpgrade(upgradeItem, item);
                     return;
-                }else if (type == BossShopHandler.SELECT_ManhGhep) {
+                }else if (type == BossShopHandler.SELECT_HoaNS) {
+                    Item item1 = user.findItemInChests(5389);
+                    if (item1 == null || item1.getQuantity() < upgradeItem.getScores()) {
+                        getService().serverDialog(MessageFormat.format("Bạn cần có {0} Sen Ngũ Sắc để nâng cấp món đồ này", upgradeItem.getScores()));
+                        return;
+                    }
+
+                    if (user.getLuong() < upgradeItem.getLuong()) {
+                        getService().serverDialog(MessageFormat.format("Bạn cần có {0} lượng để nâng cấp món đồ này", upgradeItem.getLuong()));
+                        return;
+                    }
+
+                    if (user.getXu() < upgradeItem.getXu()) {
+                        getService().serverDialog(MessageFormat.format("Bạn cần có {0} xu để nâng cấp món đồ này", upgradeItem.getXu()));
+                        return;
+                    }
+                    user.removeItem(5389,upgradeItem.getScores());
+                    user.updateLuong(-upgradeItem.getLuong());
+                    user.getAvatarService().updateMoney(0);
+                    user.updateXu(-upgradeItem.getXu());
+                    user.getAvatarService().updateMoney(0);
+                    Utils.writeLog(this.user,"Xu Luong Nâng Cấp Item " +upgradeItem.getItem().getPart().getName() + this.user.getXu()+" luong " + this.user.getLuong());
+                    doFinalUpgrade(upgradeItem, item);
+                    return;
+                }
+                else if (type == BossShopHandler.SELECT_ManhGhep) {
                     Item ManhGhep = user.findItemInChests(upgradeItem.getItemNeed());
                     if (ManhGhep == null || ManhGhep.getQuantity() < upgradeItem.getScores()) {
                         getService().serverDialog(MessageFormat.format("Bạn cần có {0} Mảnh ghép để đổi {1} ", upgradeItem.getScores(),upgradeItem.getItem().getPart().getName()));
@@ -1330,6 +1355,7 @@ public class Session implements ISession {
                 }
             }
         }
+
         if (idBoss == Npc.ID_ADD + NpcName.Chay_To_Win && user.getBossShopItems() != null) {
             System.out.println(MessageFormat.format("do Event item boss shop Chay_To_Win {0}, {1}, {2},"
                     , idBoss, type, indexItem));

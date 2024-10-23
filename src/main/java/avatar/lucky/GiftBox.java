@@ -147,11 +147,11 @@ public class GiftBox {
         randomType.add(15, XP);   // Tỷ lệ
         randomType.add(15, LUONG); // Tỷ lệ 10%
 
-        randomItemList1.add(30, 3672);//nro rac
+        randomItemList1.add(33, 3672);//dns
 
-        randomItemList2.add(30, 593);//item
+        randomItemList2.add(33, 593);//item
 
-        randomItemList3.add(40, 0);//item
+        randomItemList3.add(34, 0);//item
 
         randomType1.add(45, Items);
         randomType1.add(15, XP);   // Tỷ lệ
@@ -336,8 +336,8 @@ public class GiftBox {
 
     private RandomCollection<Integer> choseItemGiftEvent() {
         RandomCollection<RandomCollection<Integer>> itemCollections = new RandomCollection<>();
-        itemCollections.add(80, randomEvent1);
-        itemCollections.add(20, randomEvent2);
+        itemCollections.add(70, randomEvent1);
+        itemCollections.add(30, randomEvent2);
         return itemCollections.next();
     }
 }
