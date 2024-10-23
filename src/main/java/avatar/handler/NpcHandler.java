@@ -652,7 +652,7 @@ public class NpcHandler {
                             .build());
                     ListDacBiet.add(Menu.builder().name("Sen Ngũ Sắc, Đá Ngũ Sắc ở đâu?")
                             .action(() -> {
-                                us.getAvatarService().customTab("Hướng dẫn", "Sen Ngũ Sắc khi nạp 20k(1400lg) bạn sẽ được kèm thêm 50 Sen Ngũ Sắc chỉ nạp mới có, còn Đá ngũ sắc mở từ hộp quà may mắn (nhặt khi đánh boss) , mua bằng xu lượng thì đang xem xét");
+                                us.getAvatarService().customTab("Hướng dẫn", "Sen Ngũ Sắc khi nạp 20k(1400lg) bạn sẽ được kèm thêm 50 Sen Ngũ Sắc chỉ nạp mới có, còn Đá ngũ sắc mở từ hộp quà may mắn (nhặt khi đánh boss) , mua bằng lượng thì qua hawai");
                             })
                             .build());
 //                    ListDacBiet.add(Menu.builder().name("đổi từ Kim Cương Vũ Trụ qua Hoa Ngũ sắc")
@@ -689,7 +689,7 @@ public class NpcHandler {
                     }).build());
                     ListDacBiet.add(Menu.builder().name("Sen Ngũ Sắc, Đá Ngũ Sắc ở đâu ?")
                             .action(() -> {
-                                us.getAvatarService().customTab("Hướng dẫn", "Sen Ngũ Sắc khi nạp trên 20k(1400lg) bạn sẽ được kèm thêm 50 Sen Ngũ Sắc chỉ nạp mới có, còn Đá ngũ sắc mở từ hộp quà may mắn (nhặt khi đánh boss) , mua bằng xu lượng thì đang xem xét");
+                                us.getAvatarService().customTab("Hướng dẫn", "Sen Ngũ Sắc khi nạp trên 20k(1400lg) bạn sẽ được kèm thêm 50 Sen Ngũ Sắc chỉ nạp mới có, còn Đá ngũ sắc mở từ hộp quà may mắn (nhặt khi đánh boss) , mua bằng lượng thì qua hawai");
                             })
                             .build());
                     ListDacBiet.add(Menu.builder().name("Thoát").id(npcId).build());

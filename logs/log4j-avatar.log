@@ -11749,3 +11749,19 @@
 2024-10-23 18:33:47 DEBUG User:1126 - Item Gender=0
 2024-10-23 18:33:47 DEBUG User:1131 - Get Type
 2024-10-23 18:33:47 DEBUG User:1133 - Type =-2
+2024-10-23 18:34:37 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-23 18:34:40 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-23 18:35:08 DEBUG User:1114 - itemID: 3672 type: 1
+2024-10-23 18:35:08 DEBUG User:1116 - Find Item
+2024-10-23 18:35:08 DEBUG User:1118 - Find Done
+2024-10-23 18:35:08 DEBUG User:1123 - Find Detail Item
+2024-10-23 18:35:08 DEBUG User:1126 - Item Gender=0
+2024-10-23 18:35:08 DEBUG User:1131 - Get Type
+2024-10-23 18:35:08 DEBUG User:1133 - Type =-2
+2024-10-23 18:35:10 DEBUG User:1114 - itemID: 3672 type: 1
+2024-10-23 18:35:10 DEBUG User:1116 - Find Item
+2024-10-23 18:35:10 DEBUG User:1118 - Find Done
+2024-10-23 18:35:10 DEBUG User:1123 - Find Detail Item
+2024-10-23 18:35:10 DEBUG User:1126 - Item Gender=0
+2024-10-23 18:35:10 DEBUG User:1131 - Get Type
+2024-10-23 18:35:10 DEBUG User:1133 - Type =-2
