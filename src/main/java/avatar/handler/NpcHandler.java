@@ -678,7 +678,7 @@ public class NpcHandler {
                 case NpcName.Chay_To_Win: {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Chay To Win (Xu)").action(() -> {
-                        ShopEventHandler.displayUI(us, Chay_To_Win,2049,2050,2051,2054,2041,2056,2354,2355,3440,3441,3442,3443,3445,3446,3627,3628,3629,3630,3631,3632,3633,3634,3360,6822,2577);
+                        ShopEventHandler.displayUI(us, Chay_To_Win,2049,2050,2051,2054,2041,2056,2354,2355,3440,3441,3442,3443,3445,3446,3627,3628,3629,3630,3631,3632,3633,3634,3360,6822);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
                     ListDacBiet.add(Menu.builder().name("Shop Nâng Cấp Chay To Win").id(npcId)
