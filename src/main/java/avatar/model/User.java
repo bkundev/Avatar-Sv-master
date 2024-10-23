@@ -100,7 +100,6 @@ public class User {
     private List<Item> wearing;
     public List<Item> chests;
     public List<Item> chestsHome;
-    public List<Item> chestsMat;
 
     private Zone zone;
     private short x, y;
@@ -131,7 +130,6 @@ public class User {
         this.role = -1;
         this.chests = new ArrayList<>();
         this.wearing = new ArrayList<>();
-        this.chestsMat = new ArrayList<>();
         this.listCmd = new ArrayList<>();
         this.listCmdRotate = new ArrayList<>();
         this.isDefeated = false;

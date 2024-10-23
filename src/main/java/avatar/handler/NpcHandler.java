@@ -253,6 +253,7 @@ public class NpcHandler {
                             return item.getPart().getZOrder() == 30;
                         }).collect(Collectors.toList());
                         us.getAvatarService().viewChest(_chests);
+
                     }).build();
                     QuanLyItem.add(QuanLyeye);
                     QuanLyItem.add(Menu.builder().name("Quản Lý Mắt").action(() -> {
