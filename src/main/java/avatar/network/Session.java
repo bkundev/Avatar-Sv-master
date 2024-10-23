@@ -1695,11 +1695,25 @@ public class Session implements ISession {
                         getAvatarService().serverDialog("Rương đồ đã đầy");
                         return;
                     }
-                    Eventitem.getItem().setExpired(-1);
-                    user.addItemToChests(Eventitem.getItem());
-                    user.updateLuong(-Eventitem.getItem().getPart().getGold());
-                    getAvatarService().updateMoney(0);
-                    getService().serverDialog("Chúc mừng bạn đã đổi thành công");
+                    if(Eventitem.getItem().getPart().getType() == -2){
+                        if(this.user.findItemInChests(Eventitem.getItem().getId()) !=null){
+                            Eventitem.getItem().setExpired(-1);
+                            int quantity = this.user.findItemInChests(Eventitem.getItem().getId()).getQuantity();
+                            this.user.findItemInChests(Eventitem.getItem().getId()).setQuantity(quantity+1);
+                        }else {
+                            Eventitem.getItem().setExpired(-1);
+                            this.user.addItemToChests(Eventitem.getItem());
+                        }
+                        getService().serverDialog("Chúc mừng bạn đã đổi thành công");
+                        user.updateLuong(-Eventitem.getItem().getPart().getGold());
+                        getAvatarService().updateMoney(0);
+                    }else {
+                        Eventitem.getItem().setExpired(-1);
+                        user.addItemToChests(Eventitem.getItem());
+                        user.updateLuong(-Eventitem.getItem().getPart().getGold());
+                        getAvatarService().updateMoney(0);
+                        getService().serverDialog("Chúc mừng bạn đã đổi thành công");
+                    }
                 } else {
                     getService().serverDialog("Bạn chưa đủ điều kiện để đổi");
                 }

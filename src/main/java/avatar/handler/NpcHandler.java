@@ -619,7 +619,7 @@ public class NpcHandler {
                 case NpcName.Shop_Buy_Luong: {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Đổi Quà").action(() -> {
-                        ShopEventHandler.displayUI(us, Shop_Buy_Luong,5898,4331,3112);
+                        ShopEventHandler.displayUI(us, Shop_Buy_Luong,3672,5898,4331,3112);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
                     ListDacBiet.add(Menu.builder().name("Xem hướng dẫn")
@@ -636,7 +636,6 @@ public class NpcHandler {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Pay To Win").action(() -> {
                         ShopEventHandler.displayUI(us, Pay_To_Win,6803,6824,3076);
-                        ShopEventHandler.displayUI(us, Shop_Buy_Luong,3672);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
                     Menu ShopQuaSet = Menu.builder().name("Pay To Win cả Set").action(() -> {
@@ -685,10 +684,6 @@ public class NpcHandler {
                     ListDacBiet.add(Menu.builder().name("Shop Nâng Cấp Chay To Win").id(npcId)
                             .menus(listItemUpgradeChay(npcId, us, BossShopHandler.SELECT_DNS))
                             .build());
-                    Menu ShopMuaDns = Menu.builder().name("Mua đá ngũ sắc").action(() -> {
-                        ShopEventHandler.displayUI(us, Shop_Buy_Luong,3672);
-                    }).build();
-                    ListDacBiet.add(ShopMuaDns);
                     ListDacBiet.add(Menu.builder().name("Shop Đổi Bằng Đá Ngũ Sắc").action(() -> {
                         ShopEventHandler.displayUI(us, Pay_To_Win,3743,3742);
                     }).build());
