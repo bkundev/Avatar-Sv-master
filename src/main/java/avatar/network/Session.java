@@ -501,9 +501,9 @@ public class Session implements ISession {
             }
 
 
-            NhanThuongEventluong();
-            NhanThuongEventPhaoXu();
-            NhanThuongEventXuBoss();
+//            NhanThuongEventluong();
+//            NhanThuongEventPhaoXu();
+//            NhanThuongEventXuBoss();
 
         } else {
             if (isCharCreatedPopup) {
