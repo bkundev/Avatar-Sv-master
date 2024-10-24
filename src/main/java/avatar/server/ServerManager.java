@@ -302,6 +302,17 @@ public class ServerManager {
                 }
             }
 
+            String UNLOCK_ACCOUNT_SQL = "UPDATE users SET login_lock = 0 WHERE id = ?";
+            try (Connection connection = DbManager.getInstance().getConnection();
+                 PreparedStatement ps = connection.prepareStatement(UNLOCK_ACCOUNT_SQL)) {
+                ps.setInt(1, cl.user.getId());
+                ps.executeUpdate();
+                System.out.println("Account unlocked successfully.");
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+
         }
     }
 

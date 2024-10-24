@@ -545,11 +545,16 @@ public class User {
             getService().serverMessage("Máy chủ đang bảo trì. Vui lòng quay lại sau : v");
             return false;
         }
-        String ACCOUNT_LOGIN = "SELECT * FROM `users` WHERE `username` = ? AND `password` = ? LIMIT 1;";
+
+        String ACCOUNT_LOGIN = "SELECT * FROM `users` WHERE `username` = ? AND `password` = ? LIMIT 1 FOR UPDATE;";
+        String SET_LOCK_ACCOUNT = "UPDATE `users` SET `login_lock` = 1 WHERE `id` = ?;";
         try (Connection connection = DbManager.getInstance().getConnection();
-             PreparedStatement ps = connection.prepareStatement(ACCOUNT_LOGIN);) {
+             PreparedStatement ps = connection.prepareStatement(ACCOUNT_LOGIN)) {
+
             ps.setString(1, this.username);
             ps.setString(2, Utils.md5(password));
+            connection.setAutoCommit(false);  // Bắt đầu transaction
+
             try (ResultSet red = ps.executeQuery()) {
                 if (red.next()) {
                     this.id = red.getInt("id");
@@ -557,8 +562,31 @@ public class User {
                     boolean active = red.getBoolean("active");
                     if (!active) {
                         getService().serverMessage(GameString.userLoginActive());
+                        connection.rollback();
                         return false;
                     }
+
+                    // Kiểm tra khóa đăng nhập
+                    if (red.getInt("login_lock") == 1) {
+                        getService().serverMessage(GameString.userLoginMany());
+                        connection.rollback();  // Rollback nếu phát hiện người dùng đang đăng nhập
+                        User us = UserManager.getInstance().find(this.id);
+                        if (us != null) {
+                            // Ngắt kết nối người dùng cũ
+                            us.getService().serverMessage(GameString.userLoginMany()); // Thông báo người dùng cũ bị ngắt kết nối
+                            us.session.close(); // Đóng kết nối người dùng cũ
+                            UserManager.getInstance().remove(us); // Xóa người dùng cũ khỏi quản lý
+                        }
+                        return false;
+                    }
+
+                    // Đặt khóa đăng nhập
+                    try (PreparedStatement setLockStmt = connection.prepareStatement(SET_LOCK_ACCOUNT)) {
+                        setLockStmt.setInt(1, this.id);
+                        setLockStmt.executeUpdate();
+                    }
+
+                    // Kiểm tra nếu tài khoản bị cấm
                     JSONObject banData = (JSONObject) ((red.getString("ban") != null)
                             ? JSONValue.parse(red.getString("ban"))
                             : new JSONObject());
@@ -567,6 +595,7 @@ public class User {
                         if (banType == 2) {
                             if (banData.get("forever") != null) {
                                 getService().serverMessage(GameString.userLoginLockForever());
+                                connection.rollback();
                                 return false;
                             }
                             int minutes = ((Long) banData.get("minutes")).intValue();
@@ -576,19 +605,27 @@ public class User {
                             if (banEnd.after(timeNowwww)) {
                                 minutes = (int) ((banEnd.getTime() - timeNowwww.getTime()) / 60000L);
                                 getService().serverMessage(GameString.userLoginLock(minutes));
+                                connection.rollback();
                                 return false;
                             }
                         }
                     }
+
+                    // Kiểm tra nếu người dùng đã đăng nhập từ thiết bị khác
                     User us = UserManager.getInstance().find(this.id);
                     if (us != null) {
                         getService().serverMessage(GameString.userLoginMany());
                         us.getService().serverMessage(GameString.userLoginMany());
                         Utils.setTimeout(() -> {
                             us.session.close();
+                            UserManager.getInstance().remove(this);
                         }, Utils.nextInt(1500));
+                        connection.rollback();
                         return false;
                     }
+
+                    // Mọi thứ OK, commit và giữ khóa đăng nhập
+                    connection.commit();
                     return true;
                 } else {
                     getService().serverMessage(GameString.loginPassFail());
