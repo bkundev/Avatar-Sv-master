@@ -116,6 +116,70 @@ public class GlobalHandler {
         }
     }
 
+    private boolean hasSufficientBalance(User user, String currency, int betAmount) {
+        if (currency.equals("Xu")) {
+            return user.getXu() >= betAmount; // Giả sử có phương thức getXu() để lấy số xu của người chơi
+        } else if (currency.equals("Lượng")) {
+            return user.getLuong() >= betAmount; // Giả sử có phương thức getLuong() để lấy số lượng của người chơi
+        }
+        return false;
+    }
+
+    // Hàm xử lý cược
+    private void handleBet(User user, String choice, String currency, int betAmount) {
+        //updateBalance(user, currency, -betAmount); // Trừ số tiền cược
+        user.getAvatarService().serverDialog("Bạn đã đặt cược " + betAmount + " " + currency + " vào " + choice + ".");
+
+        // Ghi lại cược vào hệ thống (database)
+        //saveBetToDatabase(user, choice, currency, betAmount);
+    }
+
+    private void handleBetWithInput(int menuId, int userId, String text) {
+        try {
+            int betAmount = Integer.parseInt(text); // Chuyển text thành số nguyên để lấy số cược
+
+            // Kiểm tra số tiền cược hợp lệ
+            if (betAmount <= 0) {
+                this.us.getAvatarService().serverDialog("Vui lòng nhập số tiền cược hợp lệ.");
+                return;
+            }
+
+            String betType = ""; // Loại cược: "Tài" hoặc "Xỉu"
+            String currency = ""; // Loại tiền tệ: "Xu" hoặc "Lượng"
+
+            // Xác định loại cược và loại tiền tệ dựa trên menuId
+            switch (menuId) {
+                case 0: // Cược Tài (Xu)
+                    betType = "Tài";
+                    currency = "Xu";
+                    break;
+                case 1: // Cược Xỉu (Xu)
+                    betType = "Xỉu";
+                    currency = "Xu";
+                    break;
+                case 2: // Cược Tài (Lượng)
+                    betType = "Tài";
+                    currency = "Lượng";
+                    break;
+                case 3: // Cược Xỉu (Lượng)
+                    betType = "Xỉu";
+                    currency = "Lượng";
+                    break;
+            }
+
+            // Kiểm tra số dư và thực hiện đặt cược tương ứng
+            if (hasSufficientBalance(this.us, currency, betAmount)) {
+                handleBet(this.us, betType, currency, betAmount);
+                // Thông báo đặt cược thành công
+                this.us.getAvatarService().serverDialog("Bạn đã đặt cược " + betAmount + " " + currency + " vào " + betType + ".");
+            } else {
+                this.us.getAvatarService().serverDialog("Bạn không đủ " + currency + " để đặt cược.");
+            }
+
+        } catch (NumberFormatException e) {
+            this.us.getAvatarService().serverDialog("Vui lòng nhập một số hợp lệ.");
+        }
+    }
 
 
     public void handleTextBox(Message ms) throws IOException {
@@ -126,6 +190,12 @@ public class GlobalHandler {
 
         switch (menuId) {
 
+            case 0: // Cược Tài (Xu)
+            case 1: // Cược Xỉu (Xu)
+            case 2: // Cược Tài (Lượng)
+            case 3: // Cược Xỉu (Lượng)
+                handleBetWithInput(menuId, userId, text);
+                break;
             case 102:
                 try {
                     int userAnswer = Integer.parseInt(text);

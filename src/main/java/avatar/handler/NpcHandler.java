@@ -229,6 +229,37 @@ public class NpcHandler {
             us.updateSpam(-1,(Boss)boss,us);
         }else {
             switch (npcIdCase) {
+                case NpcName.Than_Tai_Xiu: {
+                    List<Menu> menuList = List.of(
+                            Menu.builder().name("Cược bằng Xu").menus(
+                                    List.of(
+                                            Menu.builder().name("Cược Tài (Xu)").action(() -> {
+                                                us.getAvatarService().sendTextBoxPopup(us.getId(), 0, "Nhập số xu bạn muốn cược vào Tài:", 1);
+                                            }).build(),
+                                            Menu.builder().name("Cược Xỉu (Xu)").action(() -> {
+                                                us.getAvatarService().sendTextBoxPopup(us.getId(), 1, "Nhập số xu bạn muốn cược vào Xỉu:", 1);
+                                            }).build()
+                                    )).build(),
+
+                            Menu.builder().name("Cược bằng Lượng").menus(
+                                    List.of(
+                                            Menu.builder().name("Cược Tài (Lượng)").action(() -> {
+                                                us.getAvatarService().sendTextBoxPopup(us.getId(), 2, "Nhập số lượng bạn muốn cược vào Tài:", 1);
+                                            }).build(),
+                                            Menu.builder().name("Cược Xỉu (Lượng)").action(() -> {
+                                                us.getAvatarService().sendTextBoxPopup(us.getId(), 3, "Nhập số lượng bạn muốn cược vào Xỉu:", 1);
+                                            }).build()
+                                    )).build(),
+
+                            // Lựa chọn Thoát
+                            Menu.builder().name("Thoát").action(() -> {
+                            }).build()
+                    );
+                    us.setMenus(menuList);
+                    us.getAvatarService().openMenuOption(npcId, 0, menuList);
+                    break;
+                }
+
                 case NpcName.Tien_chi_mu_Lovanga: {
                     List<Menu> list = new ArrayList<>();
                     Menu tienchi = Menu.builder().name("Dự đoán vị trí người yêu").action(() -> {

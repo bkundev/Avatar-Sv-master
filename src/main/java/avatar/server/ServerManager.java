@@ -2,6 +2,7 @@ package avatar.server;
 
 import avatar.constants.Cmd;
 import avatar.message.CasinoMsgHandler;
+import avatar.minigame.TaiXiu;
 import avatar.model.*;
 import avatar.db.DbManager;
 import avatar.item.Item;
@@ -173,7 +174,6 @@ public class ServerManager {
                             z.enter(npc, X, Y);
                             break; // Dừng lại sau khi đã thêm NPC
                         }
-                        // Kiểm tra nếu botID là boss ID
                         else if (botID == 864) { // Thay đổi ID theo ý muốn
                             Npc npc = Npc.builder()
                                     .id(botID)
@@ -183,6 +183,7 @@ public class ServerManager {
                                     .wearing(items)
                                     .build();
                             npc.setTextChats(chat);
+                            TaiXiu.getInstance().setNpcTaiXiu(npc);
                             NpcManager.getInstance().add(npc);
                             z.enter(npc, X, Y);
                             break; // Dừng lại sau khi đã thêm boss
@@ -199,13 +200,18 @@ public class ServerManager {
                             NpcManager.getInstance().add(npc);
                             z.enter(npc, X, Y);
                         }
+
                     }
                 }
-                System.out.println("Load success " + numNPC + " NPC !");
+                System.out.println("  + NPC " + Utils.removeAccent(botName) + " - " + botID);
+                ++numNPC;
             }
             //auto đấu giá
             //AuctionScheduler scheduler = new AuctionScheduler();
             //scheduler.startScheduling();
+            res.close();
+            ps.close();
+            System.out.println("Load success " + numNPC + " NPC !");
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(0);

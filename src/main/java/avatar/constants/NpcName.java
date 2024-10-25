@@ -44,5 +44,5 @@ public class NpcName {
     public static final int Shop_Buy_Luong = 861;
     public static final int Pay_To_Win = 862;//itemneed -1
     public static final int Chay_To_Win = 863;//itemeed -2
-    public static final int Nhan_Vien_Dau_Gia = 864;//itemeed -2
+    public static final int Than_Tai_Xiu = 864;//itemeed -2
 }
