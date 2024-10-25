@@ -285,8 +285,8 @@ public class NpcHandler {
                                 int rankPhaoLuong = us.getService().getUserRankPhaoLuong(us);
                                 detailedMessage.append(String.format("\n Bạn đang ở top %d thả pháo lượng : %d", rankPhaoLuong, us.getTopPhaoLuong()));
 
-                                int rankPhaoXu = us.getService().getUserRankPhaoXu(us);
-                                detailedMessage.append(String.format("\n Bạn đang ở top %d thả pháo xu : %d", rankPhaoXu, us.getTopPhaoXu()));
+//                                int rankPhaoXu = us.getService().getUserRankPhaoXu(us);
+//                                detailedMessage.append(String.format("\n Bạn đang ở top %d thả pháo xu : %d", rankPhaoXu, us.getTopPhaoXu()));
 
                                 int rankXuboss = us.getService().getUserRankXuBoss(us);
                                 detailedMessage.append(String.format("\n Bạn đang ở top %d điểm đánh boss : %d", rankXuboss, us.getXu_from_boss()));
@@ -311,24 +311,24 @@ public class NpcHandler {
                                 us.getAvatarService().customTab("Top 10 thả pháo lượng", result.toString());
                             })
                             .build());
-                    list1.add(Menu.builder().name("Bảng xếp hạng thả pháo Xu")
-                            .action(() -> {
-                                List<User> topPlayers = us.getService().getTopPhaoXu();
-                                StringBuilder result = new StringBuilder();
-                                int rank = 1; // Biến đếm để theo dõi thứ hạng
-
-                                for (User player : topPlayers) {
-                                    if (player.getTopPhaoXu() > 0) {
-                                        result.append(player.getUsername())
-                                                .append(" Top ").append(rank).append(" : ")
-                                                .append(player.getTopPhaoXu())
-                                                .append("\n");
-                                        rank++; // Tăng thứ hạng sau mỗi lần thêm người chơi vào kết quả
-                                    }
-                                }
-                                us.getAvatarService().customTab("Top 10 thả pháo xu", result.toString());
-                            })
-                            .build());
+//                    list1.add(Menu.builder().name("Bảng xếp hạng thả pháo Xu")
+//                            .action(() -> {
+//                                List<User> topPlayers = us.getService().getTopPhaoXu();
+//                                StringBuilder result = new StringBuilder();
+//                                int rank = 1; // Biến đếm để theo dõi thứ hạng
+//
+//                                for (User player : topPlayers) {
+//                                    if (player.getTopPhaoXu() > 0) {
+//                                        result.append(player.getUsername())
+//                                                .append(" Top ").append(rank).append(" : ")
+//                                                .append(player.getTopPhaoXu())
+//                                                .append("\n");
+//                                        rank++; // Tăng thứ hạng sau mỗi lần thêm người chơi vào kết quả
+//                                    }
+//                                }
+//                                us.getAvatarService().customTab("Top 10 thả pháo xu", result.toString());
+//                            })
+//                            .build());
                     list1.add(Menu.builder().name("Bảng xếp hạng điểm đánh boss")
                             .action(() -> {
                                 List<User> topPlayers = us.getService().getTop10PlayersByXuFromBoss();
@@ -401,70 +401,7 @@ public class NpcHandler {
                 }
 
                 case NpcName.DAU_GIA: {
-                    if (distance > 100.0 || us.getZone().getId() > 2 || us.getZone().getMap().getId() != 9) {
-                        us.getAvatarService().serverDialog("Bạn đứng xa rồi : v");
-                        return;
-                    }
-
-                    List<Menu> DauGia = new ArrayList<>();
-
-                    long currentTimes = System.currentTimeMillis();
-                    DauGiaManager dauGiaManager = DauGiaManager.getInstance();
-
-                    if (currentTimes >= dauGiaManager.getEndTime()) {
-                        Menu infoMenu = Menu.builder()
-                                .name("Thông Tin Phiên Đấu Giá")
-                                .action(() -> {
-                                    us.getAvatarService().serverDialog("Thời gian đấu giá tiếp: " + dauGiaManager.getTimeToNextAuction());
-                                })
-                                .build();
-                        DauGia.add(infoMenu);
-                    } else {
-                        // Nếu phiên đấu giá đang diễn ra, cho phép đặt giá
-                        Menu Daugia = Menu.builder()
-                                .name("Đặt Giá")
-                                .action(() -> {
-                                    String currency = dauGiaManager.getAuctionCurrency() == 0 ? "xu" : "lượng";
-                                    us.getAvatarService().sendTextBoxPopup(us.getId(), 110, "Đặt giá cho phiên đấu giá " + currency, 1);
-                                })
-                                .build();
-                        DauGia.add(Daugia);
-                    }
-
-                    DauGia.add(Menu.builder().name("Thông tin đấu giá").action(() -> {
-                        int highestBid = dauGiaManager.getHighestBid(); // Lấy giá cao nhất
-                        User highestBidder = dauGiaManager.getHighestBidder(); // Lấy người chơi đấu giá cao nhất
-                        int userBid = DauGiaManager.userBids.getOrDefault(us.getId(), 0); // Lấy tổng giá mà người chơi đã đặt
-
-                        String currencyType = dauGiaManager.getAuctionCurrency() == 0 ? "xu" : "lượng"; // Kiểm tra loại tiền
-                        String auctionItemName = dauGiaManager.getAuctionItem() != null ? dauGiaManager.getAuctionItem().getPart().getName() : "Không có vật phẩm";
-
-                        String message = String.format(
-                                "Vật phẩm đấu giá: %s\nLoại tiền: %s\nGiá cao nhất hiện tại: %d bởi %s\nTổng giá bạn đã đặt: %d %s",
-                                auctionItemName,
-                                currencyType,
-                                highestBid,
-                                highestBidder != null ? highestBidder.getUsername() : "Chưa có",
-                                userBid,
-                                currencyType
-                        );
-
-                        us.getAvatarService().serverDialog(message);
-                    }).build());
-
-                    Menu infoMenu1 = Menu.builder()
-                            .name("Giới Thiệu")
-                            .action(() -> {
-                                us.getAvatarService().serverDialog("Đấu giá để kiếm những vật phẩm hiếm có, mặc định đấu giá xu: 5.000.000 xu, đấu giá lượng: 1000 lượng, ai đặt tổng cao nhất sẽ chiến thắng ! ai thua sẽ được hoàn 90 phần trăm tổng đặt.");
-                            })
-                            .build();
-                    DauGia.add(infoMenu1);
-
-                    DauGia.add(Menu.builder().name("Thoát").action(() -> {
-                    }).build());
-
-                    us.setMenus(DauGia);
-                    us.getAvatarService().openMenuOption(npcId, 0, DauGia);
+                    us.getAvatarService().serverDialog("đấu giá đang bảo trì các bạn vui lòng quay lại sau");
                     break;
                 }
                 case NpcName.VE_SO:{

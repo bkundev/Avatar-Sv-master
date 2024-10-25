@@ -2,8 +2,6 @@ package avatar.server;
 
 import avatar.constants.Cmd;
 import avatar.message.CasinoMsgHandler;
-import avatar.message.ParkMsgHandler;
-import avatar.message.minigame.BauCuaMsgHandler;
 import avatar.model.*;
 import avatar.db.DbManager;
 import avatar.item.Item;
@@ -15,7 +13,6 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-import avatar.service.AuctionScheduler;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
 
@@ -33,8 +30,6 @@ import avatar.play.MapManager;
 import avatar.play.NpcManager;
 
 import java.net.ServerSocket;
-
-import static avatar.constants.NpcName.boss;
 
 public class ServerManager {
 
@@ -175,7 +170,6 @@ public class ServerManager {
                                     .build();
                             npc.setTextChats(chat);
                             NpcManager.getInstance().add(npc);
-                            DauGiaManager.getInstance().setDauGia(npc);
                             z.enter(npc, X, Y);
                             break; // Dừng lại sau khi đã thêm NPC
                         }
@@ -190,7 +184,6 @@ public class ServerManager {
                                     .build();
                             npc.setTextChats(chat);
                             NpcManager.getInstance().add(npc);
-                            DauGiaManager.getInstance().setNhanVienDauGia(npc); // Giả sử có phương thức setBoss()
                             z.enter(npc, X, Y);
                             break; // Dừng lại sau khi đã thêm boss
                         } else {

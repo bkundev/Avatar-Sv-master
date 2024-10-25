@@ -1,45 +1,26 @@
 package avatar.handler;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
-import avatar.constants.NpcName;
+
 import avatar.db.DbManager;
 import avatar.item.Item;
 import avatar.model.GiftCodeService;
 import avatar.model.Menu;
-import avatar.model.Npc;
 import avatar.model.User;
 
-import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
-import java.text.MessageFormat;
-import java.util.concurrent.CountDownLatch;
 import java.io.IOException;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
-
-import javax.swing.*;
-import java.text.MessageFormat;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 
 import avatar.network.Message;
-import avatar.play.Map;
-import avatar.play.MapManager;
-import avatar.play.NpcManager;
-import avatar.play.Zone;
 import avatar.server.Avatar;
-import avatar.server.DauGiaManager;
 import avatar.server.ServerManager;
 import avatar.server.UserManager;
 import avatar.service.EffectService;
@@ -47,7 +28,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-import static avatar.server.DauGiaManager.userBids;
 
 public class GlobalHandler {
     private User us;
@@ -158,74 +138,6 @@ public class GlobalHandler {
                     }
                 } catch (NumberFormatException e) {
                     this.us.getAvatarService().serverDialog("Vui lòng nhập một số hợp lệ.");
-                }
-                break;
-            case 81:
-                try {
-                    // Tách id và username
-                    String[] idAndName = text.split(" ");
-                    String typeDauGia = idAndName[0];
-                    String ItemDauGia = idAndName[1];
-                    int type = Integer.parseInt(typeDauGia);
-                    short idItem = Short.parseShort(ItemDauGia);
-
-                    DauGiaManager.getInstance().startAuction(type, new Item(idItem, -1, 0));
-                } catch (NumberFormatException e) {
-                    us.getAvatarService().serverDialog("dau gia");
-                }
-                break;
-
-            case 110: // Đấu giá
-                try {
-                    DauGiaManager dauGiaManager = DauGiaManager.getInstance();
-
-                    int tienCuoc = Integer.parseInt(text);
-
-                    int tiencuocToiThieu = dauGiaManager.getAuctionCurrency() == 1 ? 1000 : 5000000;
-
-                    int typeXuLuong = dauGiaManager.getAuctionCurrency();
-                    if (typeXuLuong == 0) {
-                        if (tienCuoc > this.us.getXu()) {
-                            this.us.getAvatarService().serverDialog("Bạn không đủ Xu để đặt cược.");
-                            return;
-                        }
-                    }
-                    else {
-                        if (tienCuoc > this.us.getLuong()) {
-                            this.us.getAvatarService().serverDialog("Bạn không đủ Lượng để đặt cược.");
-                            return;
-                        }
-                    }
-
-                    // Cập nhật thông tin đặt cược
-                    synchronized (userBids) { // Đảm bảo đồng bộ khi nhiều người cùng đặt cược
-                        int currentBid = userBids.getOrDefault(userId, 0);
-
-                        if (currentBid <= 0 && tienCuoc < tiencuocToiThieu) {
-                            this.us.getAvatarService().serverDialog("Bạn phải đặt ít nhất " + tiencuocToiThieu + " " + dauGiaManager.getauctionCurrency() + " cho lần đầu ");
-                            return;
-                        }
-                        if(dauGiaManager.getAuctionCurrency() == 1){
-                            this.us.updateLuong(-tienCuoc);
-                        }else{
-                            this.us.updateXu(-tienCuoc);
-                            us.getAvatarService().updateMoney(0);
-                        }
-                        this.us.getAvatarService().updateMoney(0);
-                        int totalBid = currentBid + tienCuoc;
-                        userBids.put(userId, totalBid);
-
-                        if (totalBid > dauGiaManager.getHighestBid()) {
-                            dauGiaManager.setPreviousHighestBid(dauGiaManager.getHighestBid());
-                            dauGiaManager.setHighestBid(totalBid);
-                            dauGiaManager.setHighestBidder(us);
-                            dauGiaManager.updateNpcAuctionInfo();
-                        }
-                    }
-
-
-                } catch (NumberFormatException e) {
-                    us.getAvatarService().serverDialog("invalid input, item code must be number");
                 }
                 break;
             case 20:

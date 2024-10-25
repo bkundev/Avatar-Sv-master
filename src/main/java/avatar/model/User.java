@@ -221,6 +221,9 @@ public class User {
 
     public synchronized void calculateDameToXu() {
         int totalDamage = 30;
+        if(this.getStar() == 2){
+            totalDamage = 80;
+        }
         List<Integer> Item1 = Arrays.asList(3440,3443, 3174, 3972,4442,6142,4121);  // Set mũ
         List<Integer> Item2 = Arrays.asList(3441,3445, 3176, 3974,4443,4122);  // Set áo
         List<Integer> Item3 = Arrays.asList(3442,3446, 3177, 3975,4444,4123);  // Set quần
@@ -250,7 +253,6 @@ public class User {
         handleSkill(hophong, 7);
 
 // Cập nhật damage cuối cùng
-
         this.dameToXu = totalDamage;
     }
     private void handleSkill(boolean hasItem, int skillId) {
@@ -771,7 +773,7 @@ public class User {
         listCmdRotate.add(new Command((short) 8, "Pháo thịnh vượng (5 lượng)", 241, (byte) 0));//sk
         //listCmdRotate.add(new Command((short) 9, "triệu hồi con chim k nhớ tên", 1082, (byte) 0));
         //listCmdRotate.add(new Command((short) 10, "Rương chỉ sử dụng không được bỏ(sẽ bị xóa item ở rương gốc)", 1204, (byte) 0));
-        listCmdRotate.add(new Command((short) 11, "thả bóng bay (20k xu)", 577, (byte) 0)); // sk
+        //listCmdRotate.add(new Command((short) 11, "thả bóng bay (20k xu)", 577, (byte) 0)); // sk
         listCmdRotate.add(new Command((short) 23, "Đổi Skill", 355, (byte) 0));
         //listCmdRotate.add(new Command((short) 36, "Hẹn hò", 1096, (byte) 1));
     }
