@@ -579,6 +579,15 @@ public class User {
                             us.session.close(); // Đóng kết nối người dùng cũ
                             UserManager.getInstance().remove(us); // Xóa người dùng cũ khỏi quản lý
                         }
+                        String UNLOCK_ACCOUNT_SQL = "UPDATE users SET login_lock = 0 WHERE id = ?";
+                        try (Connection connection1 = DbManager.getInstance().getConnection();
+                             PreparedStatement ps1 = connection1.prepareStatement(UNLOCK_ACCOUNT_SQL)) {
+                            ps1.setInt(1, this.id);
+                            ps1.executeUpdate();
+                            System.out.println("Account unlocked successfully.");
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
                         return false;
                     }
 

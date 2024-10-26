@@ -7,6 +7,7 @@ import avatar.constants.NpcName;
 import avatar.item.Item;
 import avatar.item.Part;
 import avatar.item.PartManager;
+import avatar.minigame.TaiXiu;
 import avatar.model.*;
 
 import java.util.*;
@@ -251,7 +252,12 @@ public class NpcHandler {
                                             }).build()
                                     )).build(),
 
-                            // Lựa chọn Thoát
+                            Menu.builder().name("lịch sử 10 ván").action(() -> {
+                                TaiXiu.getInstance().viewGameRoundHistory(us);
+                            }).build(),
+                            Menu.builder().name("Thành tích").action(() -> {
+                                TaiXiu.getInstance().viewBetHistory(us);
+                            }).build(),
                             Menu.builder().name("Thoát").action(() -> {
                             }).build()
                     );
@@ -435,28 +441,28 @@ public class NpcHandler {
                     us.getAvatarService().serverDialog("đấu giá đang bảo trì các bạn vui lòng quay lại sau");
                     break;
                 }
-                case NpcName.VE_SO:{
-                    List<Menu> listet = new ArrayList<>();
-                    List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
-                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
-                                    List.of(
-                                            Menu.builder().name("demo item").action(() -> {
-                                                us.getAvatarService().openUIShop(-49,"em.thinh",Items);
-                                            }).build()
-                                    ))
-                            .id(npcId)
-                            .npcName("donate đi")
-                            .npcChat("show Item")
-                            .build();
-                    listet.add(quaySo);
-                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
-                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
-                    }).build());
-                    listet.add(Menu.builder().name("Thoát").build());
-                    us.setMenus(listet);
-                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
-                    break;
-                }
+//                case NpcName.VE_SO:{
+//                    List<Menu> listet = new ArrayList<>();
+//                    List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
+//                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
+//                                    List.of(
+//                                            Menu.builder().name("demo item").action(() -> {
+//                                                us.getAvatarService().openUIShop(-49,"em.thinh",Items);
+//                                            }).build()
+//                                    ))
+//                            .id(npcId)
+//                            .npcName("donate đi")
+//                            .npcChat("show Item")
+//                            .build();
+//                    listet.add(quaySo);
+//                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
+//                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
+//                    }).build());
+//                    listet.add(Menu.builder().name("Thoát").build());
+//                    us.setMenus(listet);
+//                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
+//                    break;
+//                }
                 case NpcName.QUAY_SO: {
                     List<Menu> qs = new ArrayList<>();
                     Menu quaySo1 = Menu.builder().name("Quay số").menus(

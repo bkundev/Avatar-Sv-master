@@ -1,6 +1,14 @@
 package avatar.minigame;
 
+import avatar.db.DbManager;
 import avatar.model.Npc;
+import avatar.model.User;
+import avatar.server.UserManager;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +17,10 @@ import java.util.Random;
 public class TaiXiu {
     private static TaiXiu instance; // Singleton instance
     private List<Npc> TaiXiu = new ArrayList<>();
+    private int gameId;
+    private int countdown = 40;
+    private static final int GAME_DURATION_SECONDS = 40;
+    private static final int RESULT_DISPLAY_DURATION_SECONDS = 5;
 
     public static TaiXiu getInstance() {
         if (instance == null) {
@@ -16,59 +28,96 @@ public class TaiXiu {
         }
         return instance;
     }
-    private TaiXiu() {
-    }
+
+    private TaiXiu() {this.gameId = getLastGameId();}
+
     // Thêm một NPC vào danh sách
     public void setNpcTaiXiu(Npc npc) {
         if (npc != null && this.TaiXiu.size() == 0) {  // Đảm bảo chỉ có 1 NPC
             this.TaiXiu.add(npc);
             System.out.println("NPC đã được thêm vào TaiXiu, kích thước hiện tại: " + TaiXiu.size());
-            autoChat.start();  // Bắt đầu luồng autoChat khi đã thêm NPC
+            startCountdown();  // Bắt đầu luồng autoChat khi đã thêm NPC
         }
     }
+
     public List<Npc> getNpcTaiXiu() {
         return new ArrayList<>(TaiXiu);
     }
 
-    public Thread autoChat = new Thread(() -> {
-        while (true) {
+    public void startCountdown() {
+        new Thread(() -> {
+            long startTime = System.currentTimeMillis();
             try {
-                long startTime = System.currentTimeMillis();
-                int countdown = 40;
-
-                // Đếm ngược cho thời gian ván đang diễn ra
                 while (countdown > 0) {
-                    if (!getNpcTaiXiu().isEmpty()) {
-                        Npc npc = TaiXiu.get(0);
-                        npc.setTextChats(List.of(
-                                MessageFormat.format("Demo Ván đang diễn ra. Thời gian còn lại: {0} giây", countdown)
-                        ));
-                    }
+                    long elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000;
+                    countdown = 40 - (int) elapsedSeconds;
+                    updateNpcChat(countdown);
                     Thread.sleep(1000);
-                    countdown = 40 - (int) ((System.currentTimeMillis() - startTime) / 1000);
                 }
+                handleEndGame(); // Kết thúc game, trả kết quả
+                startNewGame(); // Bắt đầu phiên mới
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
 
-                String result = calculateResult();
-                long preStart = System.currentTimeMillis();
-                int preCountdown = 5;
+    // Cập nhật chat của NPC với thời gian còn lại
+    private void updateNpcChat(int countdown) {
+        for (Npc npc : this.TaiXiu) {
+            npc.setTextChats(List.of(MessageFormat.format("Thời gian còn lại: {0} giây", countdown)));
+        }
+    }
 
-                while (preCountdown > 0) {
-                    if (!getNpcTaiXiu().isEmpty()) {
-                        Npc npc = TaiXiu.get(0);
-                        npc.setTextChats(List.of(
-                                MessageFormat.format("Kết quả: {0}, Ván mới sẽ bắt đầu sau: {1} giây", result, preCountdown)
-                        ));
-                    }
-                    Thread.sleep(1000);
-                    preCountdown = 5 - (int) ((System.currentTimeMillis() - preStart) / 1000);
-                }
+    // Bắt đầu phiên cược mới
+    private void startNewGame() {
+        countdown = 40;
+        gameId++;
+        saveGameRoundResult(gameId, "Pending");
+        System.out.println("Bắt đầu phiên mới với ID: " + gameId);
+        startCountdown();
+    }
 
-            } catch (InterruptedException ignored) {
+    // Xử lý khi hết thời gian, tính toán và trả kết quả cho người chơi
+    private void handleEndGame() throws InterruptedException {
+        String result = calculateResult();
+        List<Bet> bets = getAllBetsForGame(gameId);
+        endGame(result);
+
+        long preStart = System.currentTimeMillis();
+        int preCountdown = RESULT_DISPLAY_DURATION_SECONDS;
+
+        for (Bet bet : bets) {
+            User user = bet.getUser();
+            if (bet.getBetType().equals(result)) {
+                // Trả thưởng
+               // user.addBalance(bet.getCurrency(), bet.getAmount() * 2); // Trả lại tiền gấp đôi nếu thắng
+                user.getAvatarService().serverDialog("Chúc mừng! Bạn đã thắng cược.");
+                updateBetStatus(bet.getId(), "Win");
+            } else {
+                user.getAvatarService().serverDialog("Rất tiếc, bạn đã thua cược.");
+                updateBetStatus(bet.getId(), "Lose");
             }
         }
-    });
 
+        // Cập nhật kết quả và đếm ngược hiển thị
+        while (preCountdown > 0) {
+            if (!getNpcTaiXiu().isEmpty()) {
+                Npc npc = TaiXiu.get(0);
+                npc.setTextChats(List.of(
+                        MessageFormat.format("Kết quả: {0}, Ván mới sẽ bắt đầu sau: {1} giây", result, preCountdown)
+                ));
+            }
+            Thread.sleep(1000);
+            preCountdown = RESULT_DISPLAY_DURATION_SECONDS - (int) ((System.currentTimeMillis() - preStart) / 1000);
+        }
 
+        //clearBetsForGame(gameId); // Xóa cược cho ván hiện tại
+        updateGameRewardStatus(gameId); // Cập nhật trạng thái trả thưởng
+        System.out.println("Kết quả phiên " + gameId + ": " + result);
+    }
+
+    // Tính kết quả ngẫu nhiên cho phiên cược
     private String calculateResult() {
         Random random = new Random();
         int dice1 = random.nextInt(6) + 1;
@@ -79,5 +128,350 @@ public class TaiXiu {
         String result = (total >= 11 && total <= 17) ? "Tài" : "Xỉu";
         return "Kết quả: " + dice1 + ", " + dice2 + ", " + dice3 + " = " + total + " " + result;
     }
+    public void handleBetWithInput(User us, int menuId, int userId, String text) {
+        try {
+            int betAmount = Integer.parseInt(text); // Chuyển text thành số nguyên để lấy số cược
 
+            // Kiểm tra số tiền cược hợp lệ
+            if (betAmount <= 0) {
+                us.getAvatarService().serverDialog("Vui lòng nhập số tiền cược hợp lệ.");
+                return;
+            }
+
+            String betType = ""; // Loại cược: "Tài" hoặc "Xỉu"
+            String currency = ""; // Loại tiền tệ: "Xu" hoặc "Lượng"
+
+            // Xác định loại cược và loại tiền tệ dựa trên menuId
+            switch (menuId) {
+                case 0: // Cược Tài (Xu)
+                    betType = "Tài";
+                    currency = "Xu";
+                    break;
+                case 1: // Cược Xỉu (Xu)
+                    betType = "Xỉu";
+                    currency = "Xu";
+                    break;
+                case 2: // Cược Tài (Lượng)
+                    betType = "Tài";
+                    currency = "Lượng";
+                    break;
+                case 3: // Cược Xỉu (Lượng)
+                    betType = "Xỉu";
+                    currency = "Lượng";
+                    break;
+            }
+
+            // Kiểm tra số dư và thực hiện đặt cược tương ứng
+            if (hasSufficientBalance(us, currency, betAmount)) {
+                handleBet(us, betType, currency, betAmount);
+                // Thông báo đặt cược thành công
+                //us.getAvatarService().serverDialog("Bạn đã đặt cược " + betAmount + " " + currency + " vào " + betType + ".");
+            } else {
+                us.getAvatarService().serverDialog("Bạn không đủ " + currency + " để đặt cược.");
+            }
+
+        } catch (NumberFormatException e) {
+            us.getAvatarService().serverDialog("Vui lòng nhập một số hợp lệ.");
+        }
+    }
+
+
+    // Kiểm tra số dư của người chơi cho loại tiền tệ cụ thể
+    private boolean hasSufficientBalance(User user, String currency, int betAmount) {
+        if (currency.equals("Xu")) {
+            return user.getXu() >= betAmount;
+        } else if (currency.equals("Lượng")) {
+            return user.getLuong() >= betAmount;
+        }
+        return false;
+    }
+
+    // Xử lý cược và trừ số tiền cược từ số dư của người chơi
+    private void handleBet(User user, String choice, String currency, int betAmount) {
+        // Trừ số tiền cược từ tài khoản của người chơi
+        if (!hasSufficientBalance(user, currency, betAmount)) {
+            user.getAvatarService().serverDialog("Bạn không đủ tiền để đặt cược!");
+            return; // Kết thúc hàm nếu không đủ tiền
+        }
+
+        // Kiểm tra xem người chơi đã cược trong phiên này chưa
+        if (hasBetInCurrentRound(user.getId(), gameId)) {
+            user.getAvatarService().serverDialog("Bạn đã cược trong phiên này rồi. Không thể đặt cược thêm!");
+            return; // Kết thúc hàm nếu đã cược
+        }
+
+        // Cập nhật số dư
+        updateBalance(user, currency, -betAmount); // Giả sử có phương thức updateBalance để cập nhật số dư
+
+        // Ghi lại cược vào hệ thống (database)
+        saveBetToDatabase(user.getId(), gameId, choice, currency, betAmount);
+
+        // Thông báo cho người chơi
+        user.getAvatarService().serverDialog("Bạn đã đặt cược " + betAmount + " " + currency + " vào " + choice + ".");
+    }
+
+    // Cập nhật số dư của người chơi dựa trên loại tiền tệ
+    private void updateBalance(User user, String currency, int amount) {
+        if (currency.equals("Xu")) {
+            //user.setXu(user.getXu() + amount); // Cập nhật số dư Xu
+        } else if (currency.equals("Lượng")) {
+            //user.setLuong(user.getLuong() + amount); // Cập nhật số dư Lượng
+        }
+    }
+
+    // Lưu thông tin đặt cược vào cơ sở dữ liệu
+    private void saveBetToDatabase(int userId, int gameId, String betType, String currency, int betAmount) {
+        String insertQuery = "INSERT INTO betgame (user_id, game_id, bet_type, currency, bet_amount, status) VALUES (?, ?, ?, ?, ?, 'Pending')";
+
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(insertQuery)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, gameId);
+            ps.setString(3, betType);
+            ps.setString(4, currency);
+            ps.setInt(5, betAmount);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // Lấy tất cả các cược trong phiên hiện tại từ database
+    private List<Bet> getAllBetsForGame(int gameId) {
+        List<Bet> bets = new ArrayList<>();
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT * FROM betgame WHERE game_id = ?")) {
+            ps.setInt(1, gameId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int userId = rs.getInt("user_id");
+                User user = UserManager.getInstance().find(userId);
+                String betType = rs.getString("bet_type");
+                String currency = rs.getString("currency");
+                int amount = rs.getInt("bet_amount");
+                int betId = rs.getInt("bet_id");
+                bets.add(new Bet(betId, user, betType, currency, amount));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return bets;
+    }
+
+    // Xóa tất cả các cược trong phiên sau khi xử lý
+    private void clearBetsForGame(int gameId) {
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement("DELETE FROM betgame WHERE game_id = ?")) {
+            ps.setInt(1, gameId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Cập nhật trạng thái cược
+    private void updateBetStatus(int betId, String status) {
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement("UPDATE betgame SET status = ? WHERE bet_id = ?")) {
+            ps.setString(1, status);
+            ps.setInt(2, betId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Lưu kết quả phiên chơi
+// Lưu kết quả phiên chơi
+    public void saveGameRoundResult(int gameId, String result) {
+        String insertQuery = "INSERT INTO game_rounds (game_id, result, created_at, game_status, reward_status) VALUES (?, ?, NOW(), 'Open', 'chưa')"; // Đã sửa 'ceate' thành 'chưa
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(insertQuery)) {
+            ps.setInt(1, gameId);
+            ps.setString(2, result);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // Cập nhật trạng thái trả thưởng
+    public void updateGameRewardStatus(int gameId) {
+        String updateQuery = "UPDATE game_rounds SET reward_status = 'đã trả' WHERE game_id = ?";
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(updateQuery)) {
+            ps.setInt(1, gameId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void endGame(String result) {
+        // Cập nhật trạng thái trò chơi và thời gian kết thúc
+        updateGameEndStatus(gameId, result);
+        System.out.println("Kết thúc phiên với ID: " + gameId + " với kết quả: " + result);
+    }
+
+    // Cập nhật trạng thái khi kết thúc trò chơi
+    public void updateGameEndStatus(int gameId, String result) {
+        String updateQuery = "UPDATE game_rounds SET game_status = 'Closed', end_time = CURRENT_TIMESTAMP, result = ? WHERE game_id = ?";
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(updateQuery)) {
+            ps.setString(1, result);
+            ps.setInt(2, gameId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private int getLastGameId() {
+        int lastGameId = 0; // Mặc định là 0 nếu không tìm thấy
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT MAX(game_id) FROM game_rounds")) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                lastGameId = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lastGameId;
+    }
+    private boolean hasBetInCurrentRound(int userId, int gameId) {
+        String query = "SELECT COUNT(*) FROM betgame WHERE user_id = ? AND game_id = ?";
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, gameId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                System.out.println("co cuoc");
+                return rs.getInt(1) > 0; // Trả về true nếu có cược
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Không có cược
+    }
+
+    public void viewBetHistory(User us) {
+        String query = "SELECT bg.bet_amount, gr.result, gr.game_status " +
+                "FROM betgame bg " +
+                "JOIN game_rounds gr ON bg.game_id = gr.game_id " +
+                "WHERE bg.user_id = ?";
+
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, us.getId());
+            ResultSet rs = ps.executeQuery();
+
+            int totalBets = 0;
+            int totalWins = 0;
+            double totalAmountBet = 0;
+
+            while (rs.next()) {
+                double betAmount = rs.getDouble("bet_amount");
+                String result = rs.getString("result");
+                String gameStatus = rs.getString("game_status");
+
+                totalBets++;
+                totalAmountBet += betAmount;
+
+                // Giả sử 'Tài' là kết quả thắng
+                if (result.equals("Tài") && gameStatus.equals("Closed")) {
+                    totalWins++;
+                }
+            }
+
+            // Tính tỷ lệ thắng thua
+            double winRate = totalBets > 0 ? (double) totalWins / totalBets * 100 : 0;
+            double totalLosses = totalBets - totalWins;
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Lịch sử đặt cược của người chơi: ").append(us.getUsername()).append("\n");
+            sb.append("Tổng số cược: ").append(totalBets).append("\n");
+            sb.append("Tổng số thắng: ").append(totalWins).append("\n");
+            sb.append("Tổng số thua: ").append(totalLosses).append("\n");
+            sb.append("Tỷ lệ thắng: ").append(winRate).append("%\n");
+            sb.append("Tổng số tiền đã cược: ").append(totalAmountBet).append("\n");
+            us.getAvatarService().serverDialog(sb.toString());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void viewGameRoundHistory(User us) {
+        String query = "SELECT game_id, result " +
+                "FROM game_rounds " +
+                "ORDER BY created_at DESC " + // Sắp xếp theo thời gian tạo
+                "LIMIT 10"; // Giới hạn 10 kết quả
+
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Lịch sử 10 vòng chơi gần nhất:\n");
+
+            while (rs.next()) {
+                int gameId = rs.getInt("game_id");
+                String result = rs.getString("result");
+
+                sb.append("ID : ").append(gameId).append(", ")
+                        .append("Kết quả: ").append(result).append("\n");
+            }
+
+            us.getAvatarService().serverDialog(sb.toString());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+    // Lớp đại diện cho cược của người chơi
+    private static class Bet {
+        private final int id;
+        private final User user;
+        private final String betType;
+        private final String currency;
+        private final int amount;
+
+        public Bet(int id, User user, String betType, String currency, int amount) {
+            this.id = id;
+            this.user = user;
+            this.betType = betType;
+            this.currency = currency;
+            this.amount = amount;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public User getUser() {
+            return user;
+        }
+
+        public String getBetType() {
+            return betType;
+        }
+
+        public String getCurrency() {
+            return currency;
+        }
+
+        public int getAmount() {
+            return amount;
+        }
+    }
 }
