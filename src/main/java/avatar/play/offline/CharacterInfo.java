@@ -32,7 +32,6 @@ public class CharacterInfo {
         characterMap.put("ngoctiem9x", (byte) 2);
 
 
-
         characterMap.put("souuth", (byte) 1);
         characterMap.put("sadboy", (byte) 1);
         characterMap.put("dunglk2", (byte) 1);
@@ -51,6 +50,10 @@ public class CharacterInfo {
         characterMap.put("giangcute1991", (byte) 2);
         characterMap.put("lplplp0", (byte) 1);
         characterMap.put("baongoc91", (byte) 2);
+
+        characterMap.put("bengoc097", (byte) 2);
+        characterMap.put("adugamevip", (byte) 1);
+        characterMap.put("0987888712", (byte) 2);
         shuffleCharacterMap();
     }
     // Method thêm tên và giới tính vào Map
