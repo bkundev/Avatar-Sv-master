@@ -489,33 +489,82 @@ public class AvatarService extends Service {
             }
             ds.writeByte(0);
             ds.writeByte(0);
-            List<MapItem> mapItems = map.getMapItems();
-            List<MapItemType> mapItemTypes = map.getMapItemTypes();
-            ds.writeShort(mapItems.size());
-            ds.writeByte(mapItemTypes.size());
-            for (MapItemType mapItemType : mapItemTypes) {
-                ds.writeByte(mapItemType.getId());
-                ds.writeShort(mapItemType.getImgID());
-                ds.writeByte(mapItemType.getIconID());
-                ds.writeShort(mapItemType.getDx());
-                ds.writeShort(mapItemType.getDy());
-                List<Position> positions = mapItemType.getListNotTrans();
-                ds.writeByte(positions.size());
-                for (Position position : positions) {
-                    ds.writeByte(position.getX());
-                    ds.writeByte(position.getY());
+
+
+//            List<MapItem> mapItems = map.getMapItems();
+//            List<MapItemType> mapItemTypes = map.getMapItemTypes();
+//            ds.writeShort(mapItems.size());
+//            ds.writeByte(mapItemTypes.size());
+//            for (MapItemType mapItemType : mapItemTypes) {
+//                ds.writeByte(mapItemType.getId());
+//                ds.writeShort(mapItemType.getImgID());
+//                ds.writeByte(mapItemType.getIconID());
+//                ds.writeShort(mapItemType.getDx());
+//                ds.writeShort(mapItemType.getDy());
+//                List<Position> positions = mapItemType.getListNotTrans();
+//                ds.writeByte(positions.size());
+//                for (Position position : positions) {
+//                    ds.writeByte(position.getX());
+//                    ds.writeByte(position.getY());
+//                }
+//            }
+//            ds.writeByte(mapItems.size());
+//            for (MapItem mapItem : mapItems) {
+//                ds.writeByte(mapItem.getType());
+//                ds.writeByte(mapItem.getTypeID());
+//                ds.writeByte(mapItem.getX());
+//                ds.writeByte(mapItem.getY());
+//            }
+//            for (int i = 0; i < numUser; ++i) {
+//                ds.writeShort(-1);
+//            }
+//            ds.flush();
+
+            if (map.getId() != 17) {
+                ds.writeShort(0);
+            } else {
+                ds.writeShort(224);
+                short[] objectID = new short[]{11791, 11791, 11791, 11791, 11791, 11791, 11791, 11791, 11791, 11791, 11791, 11791, 11791, 11791, 11791, 11791};
+                short[] objectX = new short[]{-8, -9, -15, 0, 0, -20, 0, -26, 0, 0, 0, -10, -2, -22, -4, -5};
+                short[] objectY = new short[]{-37, -58, -8, -33, 0, -6, 0, -23, 0, 0, -9, -12, -15, -22, -13, -9};
+                byte[][] obj_a = new byte[][]{{0, 1, -1, 2}, new byte[0], new byte[0], {0}, {0, 3}, new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], {0}, {0}, {0, 1}, {-1, 0, 1, 2}, {0}, {0}};
+                byte[][] obj_b = new byte[][]{{0, 0, 0, 0}, new byte[0], new byte[0], {0}, {0, 0}, new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], {0}, {0}, {0, 0}, {0, 0, 0, 0}, {0}, {0}};
+                int numObject = 16;
+                ds.writeByte(numObject);
+
+                for(int j = 0; j < numObject; ++j) {
+                    ds.writeByte(j);
+                    ds.writeShort(objectID[j]);
+                    ds.writeByte(0);
+                    ds.writeShort(objectX[j]);
+                    ds.writeShort(objectY[j]);
+                    byte nObj = (byte)obj_a[j].length;
+                    ds.writeByte(nObj);
+
+                    for(int m = 0; m < nObj; ++m) {
+                        ds.writeByte(obj_a[j][m]);
+                        ds.writeByte(obj_b[j][m]);
+                    }
+                }
+
+                byte[] mapItemA = new byte[]{70, 71, 72, 111, 112, 113, 114, 115, 116, 117, 118};
+                byte[] mapItemB = new byte[]{1, 1, 1, 1, 11, 11, 11, 10, 10, 10, 12};
+                byte[] mapItemC = new byte[]{1, 18, 10, 23, 2, 9, 21, 5, 24, 17, 13};
+                byte[] mapItemD = new byte[]{1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 3};
+                ds.writeByte(mapItemA.length);
+
+                for(int k = 0; k < mapItemA.length; ++k) {
+                    ds.writeByte(mapItemA[k]);
+                    ds.writeByte(mapItemB[k]);
+                    ds.writeByte(mapItemC[k]);
+                    ds.writeByte(mapItemD[k]);
                 }
             }
-            ds.writeByte(mapItems.size());
-            for (MapItem mapItem : mapItems) {
-                ds.writeByte(mapItem.getType());
-                ds.writeByte(mapItem.getTypeID());
-                ds.writeByte(mapItem.getX());
-                ds.writeByte(mapItem.getY());
-            }
-            for (int i = 0; i < numUser; ++i) {
+
+            for(int i = 0; i < numUser; ++i) {
                 ds.writeShort(-1);
             }
+
             ds.flush();
             sendMessage(ms);
         } catch (IOException ex) {
@@ -632,7 +681,7 @@ public class AvatarService extends Service {
 
     public void getMapItemTypes(Message ms) {
         try {
-            byte[] dat = Avatar.getFile("res/data/map_item_type.dat");
+            byte[] dat = Avatar.getFile("res/data/getMapItemTypes.dat");
             ms = new Message(-40);
             DataOutputStream ds = ms.writer();
             ds.write(dat);

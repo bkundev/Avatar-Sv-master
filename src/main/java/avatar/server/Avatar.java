@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static avatar.server.Utils.decodeMapItemFile;
+
 public class
 
 
@@ -33,7 +35,6 @@ Avatar {
 //           byte[] dat = Avatar.getFile("res/p/part_"+i+".dat");
 //            Utils.decodeItemDataFile(dat,true);
 //         }
-
 
 
         T = new Thread(() -> {
