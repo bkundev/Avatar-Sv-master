@@ -204,6 +204,8 @@ public class GiftCodeService {
                 break;
             case "tanthu":
 
+                us.updateXu(+500000);
+
                 Item canCau = new Item(446);
                 canCau.setExpired(System.currentTimeMillis() + (86400000L * 30));
                 us.addItemToChests(canCau);

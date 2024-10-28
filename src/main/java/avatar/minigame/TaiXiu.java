@@ -160,7 +160,7 @@ public class TaiXiu {
         int total = dice1 + dice2 + dice3;
         endGame("khóa");
         System.out.println("khóa cuoc");
-        String result = (total >= 11 && total <= 17) ? "Tài" : "Xỉu";
+        String result = (total >= 11 && total <= 18) ? "Tài" : "Xỉu";
         return " " + dice1 + ", " + dice2 + ", " + dice3 + " " + total + " " + result;
     }
 

@@ -14,6 +14,7 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
+import avatar.play.offline.botPlayer;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
 
@@ -186,7 +187,6 @@ public class ServerManager {
                             TaiXiu.getInstance().setNpcTaiXiu(npc);
                             NpcManager.getInstance().add(npc);
                             z.enter(npc, X, Y);
-                            break; // Dừng lại sau khi đã thêm boss
                         } else {
                             // Tạo NPC cho các ID khác
                             Npc npc = Npc.builder()
@@ -232,6 +232,12 @@ public class ServerManager {
             for (int mapId : mapIds) {
                 Boss.spawnBossesForMap(mapId, 2);
             }
+            List<Integer> mapIds1 = List.of(11,9,23,0);
+
+            for (int mapId : mapIds1) {
+                botPlayer.getInstance().spawnBotesForMap(mapId);
+            }
+
             while (ServerManager.start) {
                 try {
                     Socket client = ServerManager.server.accept();

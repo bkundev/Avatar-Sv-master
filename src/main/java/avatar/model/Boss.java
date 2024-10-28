@@ -103,9 +103,9 @@ public class Boss extends User {
                 new int[]{264, 69}
         );
         zoneCoordinates.put(8, map8);
-
-
     }
+
+
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private static final int TOTAL_BOSSES = 400000000; // Tổng số Boss muốn tạo
     public static int currentBossId = 1001 + Npc.ID_ADD; // ID bắt đầu cho Boss
@@ -497,10 +497,8 @@ public class Boss extends User {
         }
         return null;
     }
+
     @Builder
-
-
-
     public void addChat(String chat) {
         textChats.add(chat);
     }

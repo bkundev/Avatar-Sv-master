@@ -11951,3 +11951,85 @@
 2024-10-27 16:09:34 DEBUG DbManager:81 - DB Connection Pool has created.
 2024-10-27 16:10:57 DEBUG DbManager:81 - DB Connection Pool has created.
 2024-10-27 16:12:59 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 09:59:57 ERROR DbManager:84 - DB Connection Pool Creation has failed.
+2024-10-28 10:17:06 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:19:25 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:21:48 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:22:41 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:24:43 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:26:25 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:28:40 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:30:28 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:32:00 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:34:49 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:34:52 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:36:31 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:42:43 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:46:22 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:47:16 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:53:14 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:56:02 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:58:32 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 10:59:08 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:00:59 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:04:17 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:06:38 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:08:14 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:09:51 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:10:54 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:17:12 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:19:37 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:24:14 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:25:46 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:26:32 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:27:36 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:28:18 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:29:09 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:30:24 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:30:48 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:31:36 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:36:46 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:37:34 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 11:59:40 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:03:13 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:03:38 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:15:43 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:16:50 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:18:23 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:18:46 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:19:47 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:21:15 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:23:18 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:26:28 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:28:09 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:29:35 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:30:14 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:31:10 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:32:10 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:34:02 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:36:12 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-28 12:36:14 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:36:32 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-28 12:36:34 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:36:58 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-28 12:37:00 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:44:10 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:45:24 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:49:37 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 12:53:01 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 13:02:46 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 13:05:51 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 13:17:08 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 13:18:44 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 13:18:54 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-28 13:18:56 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 13:19:28 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-28 13:19:30 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 13:19:37 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-28 13:19:38 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 13:20:16 DEBUG DbManager:93 - DB Connection Pool is shutting down.
+2024-10-28 13:20:18 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 13:20:53 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 13:21:24 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 13:21:43 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-28 13:22:04 DEBUG DbManager:81 - DB Connection Pool has created.
