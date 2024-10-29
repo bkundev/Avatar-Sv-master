@@ -256,6 +256,7 @@ public class AvatarService extends Service {
             us.getAvatarService().SendTabmsg("donate lần đầu trên 20k nhận được 5.000.000 xu và 10.000 lượng và 200 thẻ quay số miễn phí" +
                     " Và Auto Câu Cá");
             us.getAvatarService().SendTabmsg("update các loại cáo tiên ở shop nâng cấp chay to win, update pet labubu ở shop cày chay.");
+            us.getAvatarService().SendTabmsg("update cách ngũ sắc chay và pay ok hết, có thể chọn nâng cấp 5 loại khác nhau");
 
         } catch (IOException ex) {
             logger.error("onLoginSuccess err", ex);

@@ -12309,3 +12309,11 @@
 2024-10-29 17:16:44 DEBUG User:1179 - Get Type
 2024-10-29 17:16:44 DEBUG User:1181 - Type =-2
 2024-10-29 17:18:31 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-29 17:20:27 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-29 17:21:18 DEBUG User:1162 - itemID: 5012 type: 1
+2024-10-29 17:21:18 DEBUG User:1164 - Find Item
+2024-10-29 17:21:18 DEBUG User:1166 - Find Done
+2024-10-29 17:21:18 DEBUG User:1171 - Find Detail Item
+2024-10-29 17:21:18 DEBUG User:1174 - Item Gender=0
+2024-10-29 17:21:18 DEBUG User:1179 - Get Type
+2024-10-29 17:21:18 DEBUG User:1181 - Type =-1
