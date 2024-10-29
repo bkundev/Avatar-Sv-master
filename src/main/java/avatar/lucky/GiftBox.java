@@ -162,7 +162,6 @@ public class GiftBox {
         randomEvent1.add(10,4882);
         randomEvent1.add(10,4689);
         randomEvent1.add(10,4692);
-        randomEvent1.add(10,6496);
 
         randomEvent2.add(10,6428);
         randomEvent2.add(10,3495);
@@ -170,7 +169,7 @@ public class GiftBox {
         randomEvent2.add(10,6030);
         randomEvent2.add(10,6040);
         randomEvent2.add(10,4686);
-        randomEvent2.add(10,6499);
+        randomEvent2.add(10,4282);
 
 
     }

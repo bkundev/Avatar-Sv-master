@@ -51,14 +51,28 @@ public class UpgradeItem extends BossShopItem {
                 }
                 resources.append(xu).append(" Xu");
             }
+            String ratioDisplay = "";
+            if (ratio > 0 && ratio < 100) {
+                ratioDisplay = ratio + "%";
+            } else if (ratio == 0) {
+                ratioDisplay = "Không xác định";
+            }
+
+// Điều kiện định dạng dựa vào tỷ lệ xác suất
+            String formatString = ratioDisplay.isEmpty()
+                    ? "Bạn có muốn đổi {0} từ {1} + {2} + {3}"
+                    : "Bạn có muốn nâng cấp {0} từ {1} + {2} + {3} (xác suất {4})";
+
+// Sử dụng formatString tùy vào điều kiện ratioDisplay
             return MessageFormat.format(
-                    "Bạn có muốn nâng cấp {0} từ {1} + {2} + {3} (xác suất {4})",
+                    formatString,
                     super.getItem().getPart().getName(),
                     PartManager.getInstance().findPartById(itemNeed).getName(),
                     scores + " Đá ngũ sắc",
-                    resources.toString(), // Sử dụng chuỗi tài nguyên đã xây dựng
-                    ratio > 0 ? (ratio + "%") : "Không xác định"
+                    resources.toString(),
+                    ratioDisplay
             );
+
         }else if (bossShop.getIdShop() == BossShopHandler.SELECT_HoaNS) {
             StringBuilder resources = new StringBuilder();
             if (luong > 0) {

@@ -1826,7 +1826,7 @@ public class Session implements ISession {
             int correctNumber = Utils.nextInt(0, ratio);
             isUpgradeSuccess = correctNumber == Utils.nextInt(0, ratio);
         }
-        if (isUpgradeSuccess) {
+        if (isUpgradeSuccess||item.getRatio() == 100) {
             user.removeItemFromChests(itemOld);
             item.getItem().setExpired(-1);
             user.addItemToChests(item.getItem());
@@ -1846,8 +1846,6 @@ public class Session implements ISession {
                         .idPlayer(NpcName.THO_KIM_HOAN+Npc.ID_ADD)
                         .send();
             };
-
-
             getService().serverDialog("Chúc mừng bạn đã ghép đồ thành công");
 
             Zone z = user.getZone();

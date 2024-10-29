@@ -12287,3 +12287,25 @@
 2024-10-29 16:34:37 DEBUG DbManager:81 - DB Connection Pool has created.
 2024-10-29 16:41:57 DEBUG DbManager:81 - DB Connection Pool has created.
 2024-10-29 16:45:58 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-29 16:52:33 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-29 17:05:56 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-29 17:08:28 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-29 17:09:56 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-29 17:10:33 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-29 17:13:36 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-29 17:15:44 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-29 17:16:06 DEBUG User:1162 - itemID: 3672 type: 1
+2024-10-29 17:16:06 DEBUG User:1164 - Find Item
+2024-10-29 17:16:06 DEBUG User:1166 - Find Done
+2024-10-29 17:16:06 DEBUG User:1171 - Find Detail Item
+2024-10-29 17:16:06 DEBUG User:1174 - Item Gender=0
+2024-10-29 17:16:06 DEBUG User:1179 - Get Type
+2024-10-29 17:16:06 DEBUG User:1181 - Type =-2
+2024-10-29 17:16:44 DEBUG User:1162 - itemID: 3672 type: 1
+2024-10-29 17:16:44 DEBUG User:1164 - Find Item
+2024-10-29 17:16:44 DEBUG User:1166 - Find Done
+2024-10-29 17:16:44 DEBUG User:1171 - Find Detail Item
+2024-10-29 17:16:44 DEBUG User:1174 - Item Gender=0
+2024-10-29 17:16:44 DEBUG User:1179 - Get Type
+2024-10-29 17:16:44 DEBUG User:1181 - Type =-2
+2024-10-29 17:18:31 DEBUG DbManager:81 - DB Connection Pool has created.

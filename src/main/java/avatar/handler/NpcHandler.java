@@ -307,7 +307,7 @@ public class NpcHandler {
                 case NpcName.bunma: {
                     List<Menu> list1 = new ArrayList<>();
                     Menu Event = Menu.builder().name("Đổi Quà").action(() -> {
-                        ShopEventHandler.displayUI(us, bunma, 3861,2295,2543,4277,3494,4261,5103,3962,5104,3964,5130,5539,4726,4903,3364,3509,3679,2577,4195,3358,5303,5304,5305,5306,5307,5308,6415,5501,5502,6429);
+                        ShopEventHandler.displayUI(us, bunma, 3861,2295,2543,4277,3494,4261,5103,3962,5104,3964,5130,5539,4726,4903,3364,3509,3679,2577,4195,3358,5303,5304,5305,5306,5307,5308,6415,5501,5502,6429,5126,4044,2119);
                     }).build();
                     list1.add(Event);
                     list1.add(Menu.builder().name("Góp Kẹo")
@@ -732,7 +732,7 @@ public class NpcHandler {
                         .name("Nâng cấp item Chay To Win")
                         .id(npcId)
                         .action(() -> {
-                            BossShopHandler.displayUI(us, BossShopHandler.SELECT_DNS, 3774,3776,3775,4157,5012,5010,5011,5401,6491);
+                            BossShopHandler.displayUI(us, BossShopHandler.SELECT_DNS, 3774,3776,3775,4157,5012,5010,5011,5401,6491,3855);
                         })
                         .build(),
                 Menu.builder()
