@@ -255,9 +255,11 @@ public class HomeService extends Service {
         DataOutputStream ds = ms.writer();
         ds.writeShort(lstChest.size());
         for (Item item : lstChest) {
-            ds.writeShort(item.getId());
-            ds.writeByte(0);
-            ds.writeUTF("");
+            if(item.getId() != 40){
+                ds.writeShort(item.getId());
+                ds.writeByte(0);
+                ds.writeUTF("");
+            }
         }
         ds.writeInt(0);
         ds.writeByte(1);
