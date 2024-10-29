@@ -26,7 +26,15 @@ public class UpgradeItem extends BossShopItem {
     public String initDialog(BossShop bossShop) {
         if (isOnlyLuong && bossShop.getIdShop() == BossShopHandler.SELECT_XU) {
             return "Bạn chỉ có thể nâng cấp vật phẩm này bằng lượng";
-        } else if (bossShop.getIdBoss() == NpcName.bunma + Npc.ID_ADD) {
+        }
+        else if (bossShop.getIdBoss() == NpcName.bunma + Npc.ID_ADD) {
+            if(getItem().getId() == 3861 ){
+                return MessageFormat.format(
+                        "Bạn có muốn đổi {0} bằng {1} điểm sự kiện không?(tối đa 1)",
+                        super.getItem().getPart().getName(),
+                        this.scores
+                );
+            }
             return MessageFormat.format(
                     "Bạn có muốn đổi {0} bằng {1} điểm sự kiện không?",
                     super.getItem().getPart().getName(),
@@ -66,7 +74,7 @@ public class UpgradeItem extends BossShopItem {
                     "Bạn có muốn nâng cấp {0} từ {1} + {2} + {3} (xác suất {4})",
                     super.getItem().getPart().getName(),
                     PartManager.getInstance().findPartById(itemNeed).getName(),
-                    scores + " Sen Ngũ Sắc",
+                    scores == 12 ?  " 20 Sen Ngũ Sắc": scores + " Sen Ngũ Sắc",
                     resources.toString(), // Sử dụng chuỗi tài nguyên đã xây dựng
                     ratio > 0 ? (ratio + "%") : "Không xác định"
             );

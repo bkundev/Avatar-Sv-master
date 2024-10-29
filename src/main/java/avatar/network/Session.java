@@ -478,8 +478,8 @@ public class Session implements ISession {
             UserManager.getInstance().add(user);
             getAvatarService().onLoginSuccess();
             getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thanh Pho lo");
-            getAvatarService().serverInfo("từ hôm nay mở x2 donate đến hết ngày 21/10/2024, donate trên 100k nhận thêm set Người sói và Mèo đen vĩnh viễn");
-            getAvatarService().serverInfo("sự kiện halloween đã về thanhpholo");
+            //getAvatarService().serverInfo("");
+            getAvatarService().serverInfo("sự kiện halloween p2 đến 22h ngày 08/11/2024, phần quà đua top đánh boss và thả pháo update sau");
             checkThuongNapLanDau();
             checkThuongNapSet();
 
@@ -1375,7 +1375,7 @@ public class Session implements ISession {
     }
 
 
-
+//Nâng cấp các shop
     public void handleBossShop(Message ms) throws IOException {
         int idBoss = ms.reader().readInt();
         byte type = ms.reader().readByte();
@@ -1441,8 +1441,12 @@ public class Session implements ISession {
                     return;
                 }else if (type == BossShopHandler.SELECT_HoaNS) {
                     Item item1 = user.findItemInChests(5389);
-                    if (item1 == null || item1.getQuantity() < upgradeItem.getScores()) {
-                        getService().serverDialog(MessageFormat.format("Bạn cần có {0} Sen Ngũ Sắc để nâng cấp món đồ này", upgradeItem.getScores()));
+                    int Quanty = upgradeItem.getScores();
+                    if(Quanty == 12){
+                        Quanty = 20;
+                    }
+                    if (item1 == null || item1.getQuantity() < Quanty) {
+                        getService().serverDialog(MessageFormat.format("Bạn cần có {0} Sen Ngũ Sắc để nâng cấp món đồ này", Quanty));
                         return;
                     }
 
@@ -1455,7 +1459,7 @@ public class Session implements ISession {
                         getService().serverDialog(MessageFormat.format("Bạn cần có {0} xu để nâng cấp món đồ này", upgradeItem.getXu()));
                         return;
                     }
-                    user.removeItem(5389,upgradeItem.getScores());
+                    user.removeItem(5389,Quanty);
                     user.updateLuong(-upgradeItem.getLuong());
                     user.getAvatarService().updateMoney(0);
                     user.updateXu(-upgradeItem.getXu());
@@ -1606,6 +1610,7 @@ public class Session implements ISession {
                 break;
             case NpcName.Pay_To_Win://shop đổi đá
                 Item huyhieu = this.user.findItemInChests(Eventitem.getItemNeed());
+
                 if(huyhieu!=null && huyhieu.getQuantity() >= Eventitem.getScores()){
                     Eventitem.getItem().setExpired(-1);
                     if(user.getChestSlot() <= user.chests.size())
@@ -1654,20 +1659,43 @@ public class Session implements ISession {
                 }
                 break;
             case NpcName.bunma:
-                if(user.getScores()> Eventitem.getScores()){
-                    Eventitem.getItem().setExpired(-1);
-                    if(user.getChestSlot() <= user.chests.size())
-                    {
-                        getAvatarService().serverDialog("Rương đồ đã đầy");
+                if (Eventitem.getItemRequest() == 3861) {
+                    // Kiểm tra nếu người dùng đã đổi vật phẩm này
+                    if (isItemExchanged(user.getId(), 3861)) {
+                        getService().serverDialog("Bạn đã đổi vật phẩm này trước đó, không thể đổi lại.");
                         return;
+                    } else {
+                        Eventitem.getItem().setExpired(System.currentTimeMillis() + (86400000L * 7));
+                        Eventitem.getItem().setQuantity(1);
+                        if (user.getChestSlot() <= user.chests.size()) {
+                            getAvatarService().serverDialog("Rương đồ đã đầy");
+                            return;
+                        }
+                        user.addItemToChests(Eventitem.getItem());
+                        user.setStylish((byte) (user.getStylish() - 1));
+                        user.updateScores(-Eventitem.getScores());
+                        getAvatarService().requestYourInfo(user);
+                        getService().serverDialog("Chúc mừng bạn đã đổi thành công");
+                        saveItemExchange(user.getId(), 3861);
                     }
-                    user.addItemToChests(Eventitem.getItem());
-                    user.setStylish((byte) (user.getStylish() - 1));
-                    user.updateScores(-Eventitem.getScores());
-                    getAvatarService().requestYourInfo(user);
-                    getService().serverDialog("Chúc mừng bạn đã đổi thành công");
                 } else {
-                    getService().serverDialog("Bạn chưa đủ điểm để đổi");
+                    // Kiểm tra điểm cho các vật phẩm khác (nếu cần)
+                    if (user.getScores() >= Eventitem.getScores()) {
+                        // Thực hiện đổi các vật phẩm khác
+                        Eventitem.getItem().setExpired(-1);
+                        if (user.getChestSlot() <= user.chests.size()) {
+                            getAvatarService().serverDialog("Rương đồ đã đầy");
+                            return;
+                        }
+                        user.addItemToChests(Eventitem.getItem());
+                        user.setStylish((byte) (user.getStylish() - 1));
+                        user.updateScores(-Eventitem.getScores());
+                        getAvatarService().requestYourInfo(user);
+                        getService().serverDialog("Chúc mừng bạn đã đổi thành công");
+                    } else {
+                        // Thông báo khi không đủ điểm cho vật phẩm khác
+                        getService().serverDialog("Bạn chưa đủ điểm để đổi");
+                    }
                 }
                 break;
             case NpcName.Vegeta:
@@ -1720,6 +1748,50 @@ public class Session implements ISession {
                 break;
         }
     }
+
+
+    public boolean isItemExchanged(int userId, int itemId) {
+        String query = "SELECT COUNT(*) FROM itemLimited WHERE user_id = ? AND item_id = ?";
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setInt(1, userId);
+            ps.setInt(2, itemId);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                return true; // Đã tồn tại bản ghi, nghĩa là đã đổi
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Chưa đổi
+    }
+
+
+    public void saveItemExchange(int userId, int itemId) {
+        String query = "INSERT INTO itemLimited (user_id, item_id) VALUES (?, ?)";
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setInt(1, userId);
+            ps.setInt(2, itemId);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Đã lưu vật phẩm vào bảng itemLimited.");
+            } else {
+                System.out.println("Không có dòng nào được thêm vào. Kiểm tra lại điều kiện.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
     private boolean isGenderCompatible(Item item, User user) {
         int itemGender = item.getPart().getGender(); // Giới tính của item (0 = cả hai giới, 1 = nam, 2 = nữ)
         int userGender = user.getGender(); // Giới tính của user (1 = nam, 2 = nữ)

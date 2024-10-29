@@ -187,6 +187,7 @@ public class ServerManager {
                             TaiXiu.getInstance().setNpcTaiXiu(npc);
                             NpcManager.getInstance().add(npc);
                             z.enter(npc, X, Y);
+                            break;
                         } else {
                             // Tạo NPC cho các ID khác
                             Npc npc = Npc.builder()
@@ -232,6 +233,7 @@ public class ServerManager {
             for (int mapId : mapIds) {
                 Boss.spawnBossesForMap(mapId, 2);
             }
+            //call bot join map
             List<Integer> mapIds1 = List.of(11,9,23,0);
 
             for (int mapId : mapIds1) {

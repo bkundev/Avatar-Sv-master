@@ -307,7 +307,7 @@ public class NpcHandler {
                 case NpcName.bunma: {
                     List<Menu> list1 = new ArrayList<>();
                     Menu Event = Menu.builder().name("Đổi Quà").action(() -> {
-                        ShopEventHandler.displayUI(us, bunma, 2295,2543,4277,3494,4261,5103,3962,5104,3964,5130,4726,4903,3364,3509,3679,2577,4195,3358,5303,5304,5305,5306,5307,5308,6415,5501,5502,6429);
+                        ShopEventHandler.displayUI(us, bunma, 3861,2295,2543,4277,3494,4261,5103,3962,5104,3964,5130,5539,4726,4903,3364,3509,3679,2577,4195,3358,5303,5304,5305,5306,5307,5308,6415,5501,5502,6429);
                     }).build();
                     list1.add(Event);
                     list1.add(Menu.builder().name("Góp Kẹo")
@@ -413,7 +413,7 @@ public class NpcHandler {
 
                     lstVegeta.add(Menu.builder().name("Xem hướng dẫn")
                             .action(() -> {
-                                us.getAvatarService().customTab("Hướng dẫn", "Top 5 thả pháo xu và điểm đánh boss được set thẻ vip, trong top 3 được set Zombie , riêng top 1 được thêm mũ cấp 3, top thả tháo lượng trong top 5 đc set zombie trong top 3  nhận 1 thẻ vip cao cấp và được tùy chọn zombie hoặc doremon, riêng top 1 nhận thêm sao xanh cạnh tên và 1 thẻ  vip preium");
+                                us.getAvatarService().customTab("Hướng dẫn", "Top comingsion");
                             })
                             .build());
                     lstVegeta.add(Menu.builder().name("Thoát").id(npcId).build());
@@ -593,7 +593,7 @@ public class NpcHandler {
                 case NpcName.Shop_Buy_Luong: {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Đổi Quà").action(() -> {
-                        ShopEventHandler.displayUI(us, Shop_Buy_Luong,3672,5898,4331,3112);
+                        ShopEventHandler.displayUI(us, Shop_Buy_Luong,3672,5898,4331,3112,4736);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
                     ListDacBiet.add(Menu.builder().name("Xem hướng dẫn")
@@ -652,7 +652,7 @@ public class NpcHandler {
                 case NpcName.Chay_To_Win: {
                     List<Menu> ListDacBiet = new ArrayList<>();
                     Menu ShopDacBiet = Menu.builder().name("Chay To Win (Xu)").action(() -> {
-                        ShopEventHandler.displayUI(us, Chay_To_Win,2049,2050,2051,2054,2041,2056,2354,2355,3440,3441,3442,3443,3445,3446,3627,3628,3629,3630,3631,3632,3633,3634,3360,6822);
+                        ShopEventHandler.displayUI(us, Chay_To_Win,2049,2050,2051,2054,2041,2056,2354,2355,3440,3441,3442,3443,3445,3446,3627,3628,3629,3630,3631,3632,3633,3634,3360,6822,6731,4736);
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
                     ListDacBiet.add(Menu.builder().name("Shop Nâng Cấp Chay To Win").id(npcId)
@@ -732,14 +732,14 @@ public class NpcHandler {
                         .name("Nâng cấp item Chay To Win")
                         .id(npcId)
                         .action(() -> {
-                            BossShopHandler.displayUI(us, BossShopHandler.SELECT_DNS, 3774,3776,3775,4157);
+                            BossShopHandler.displayUI(us, BossShopHandler.SELECT_DNS, 3774,3776,3775,4157,5012,5010,5011,5401,6491);
                         })
                         .build(),
                 Menu.builder()
                         .name("Nâng cấp Item Quay Số/Nâng Cấp")//Nâng bằng đá ngũ sắc;
                         .id(npcId)
                         .action(() -> {
-                            BossShopHandler.displayUI(us, BossShopHandler.SELECT_DNS, 4907,4119,5516,5099,5337,5342,5470);
+                            BossShopHandler.displayUI(us, BossShopHandler.SELECT_DNS, 4907,4119,5516,5099,5337,5342,5470,5667,5846,6575);
                         })
                         .build(),
                 Menu.builder()
@@ -754,6 +754,13 @@ public class NpcHandler {
 
     public static List<Menu> listItemUpgradePay(int npcId, User us, byte type) {
         return List.of(
+                Menu.builder()
+                        .name("Pay, Nâng cấp item")
+                        .id(npcId)
+                        .action(() -> {
+                            BossShopHandler.displayUI(us, BossShopHandler.SELECT_HoaNS, 6671,6672,5012,5010,5011,5401,6491);
+                        })
+                        .build(),
                 Menu.builder()
                         .name("Pay, Nâng cấp Item Quay Số/Nâng Cấp")
                         .id(npcId)

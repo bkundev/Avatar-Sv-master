@@ -1193,11 +1193,6 @@ public class User {
                         giftBox.openHopQuaMaQuai(this,item);
                         return;
                     }
-
-
-
-
-
                     int zOrder = part.getZOrder();
                     Item w = findItemWearingByZOrder(zOrder);
                     if(this.chestSlot <= chests.size()){
@@ -1258,6 +1253,7 @@ public class User {
                     else {
                         getService().serverMessage(String.format("Số lượng: %,d", item.getQuantity()));
                     }
+
                 } else {
 //                    item = findItemInWearing(itemID);
 //                    removeItemFromWearing(item);
