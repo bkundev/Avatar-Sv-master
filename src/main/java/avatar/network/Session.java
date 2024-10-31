@@ -479,6 +479,7 @@ public class Session implements ISession {
             getAvatarService().onLoginSuccess();
             getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thanh Pho lo");
             //getAvatarService().serverInfo("");
+            getAvatarService().serverInfo("Từ 17h ngày 31/10/2024 mở nạp x2 và nạp trên 100k nhận thêm set Akatsuki, update thêm item qs lg ,set đồ long... ");
             getAvatarService().serverInfo("sự kiện halloween p2 đến 22h ngày 08/11/2024, phần quà đua top đánh boss và thả pháo update sau");
             checkThuongNapLanDau();
 
