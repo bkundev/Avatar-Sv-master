@@ -6,14 +6,17 @@ import avatar.model.User;
 import avatar.server.UserManager;
 import avatar.server.Utils;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class TaiXiu {
     private static TaiXiu instance; // Singleton instance
@@ -556,6 +559,171 @@ public class TaiXiu {
         }
     }
 
+
+    public void getTopWinerXu(User user) {
+        String query = "SELECT bg.user_id, us.username, bg.currency, " +
+                "SUM(CASE WHEN gr.result LIKE CONCAT('%', bg.bet_type, '%') THEN bg.bet_amount * 0.95 ELSE 0 END) - " +
+                "SUM(CASE WHEN gr.result NOT LIKE CONCAT('%', bg.bet_type, '%') THEN bg.bet_amount ELSE 0 END) AS net_win " +
+                "FROM betgame bg " +
+                "JOIN game_rounds gr ON bg.game_id = gr.game_id " +
+                "JOIN users us ON bg.user_id = us.id " +
+                "WHERE gr.game_status = 'Closed' AND bg.currency = 'Xu' " +
+                "GROUP BY bg.user_id, us.username, bg.currency " +
+                "HAVING net_win > 0 " +
+                "ORDER BY net_win DESC " +
+                "LIMIT 5";
+
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Top 5 người WIN Xu:\n");
+
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String currency = rs.getString("currency");
+                double netWin = rs.getDouble("net_win");
+
+                sb.append("").append(username)
+                        .append(" - Tổng thắng : ").append((int) netWin).append(" ")
+                        .append(currency).append("\n");
+            }
+            sb.append(" ------------------------------------------------------ ").append("\n");
+            user.getAvatarService().SendTabmsg(sb.toString());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getTopLossXu(User user) {
+        String query = "SELECT bg.user_id, us.username, bg.currency, " +
+                "SUM(CASE WHEN gr.result LIKE CONCAT('%', bg.bet_type, '%') THEN bg.bet_amount * 0.95 " +
+                "ELSE -bg.bet_amount END) AS net_loss " +
+                "FROM betgame bg " +
+                "JOIN game_rounds gr ON bg.game_id = gr.game_id " +
+                "JOIN users us ON bg.user_id = us.id " +
+                "WHERE gr.game_status = 'Closed' AND bg.currency = 'Xu' " +
+                "GROUP BY bg.user_id, us.username, bg.currency " +
+                "HAVING net_loss < 0 " +  // chỉ lấy người thua
+                "ORDER BY net_loss ASC " +
+                "LIMIT 5";
+
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Top 5 người LOSS Xu :\n");
+
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String currency = rs.getString("currency");
+                double netLoss = rs.getDouble("net_loss");
+
+                sb.append("Người chơi: ").append(username)
+                        .append(" - Tổng thua: ").append((int) Math.abs(netLoss)).append(" ")
+                        .append(currency).append("\n");
+            }
+            sb.append(" ------------------------------------------------------ ").append("\n");
+
+
+            // Display the result
+            user.getAvatarService().SendTabmsg(sb.toString());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getTopLossLuong(User user) {
+        String query = "SELECT bg.user_id, us.username, bg.currency, " +
+                "SUM(CASE WHEN gr.result LIKE CONCAT('%', bg.bet_type, '%') THEN bg.bet_amount * 0.95 " +
+                "ELSE -bg.bet_amount END) AS net_loss " +
+                "FROM betgame bg " +
+                "JOIN game_rounds gr ON bg.game_id = gr.game_id " +
+                "JOIN users us ON bg.user_id = us.id " +
+                "WHERE gr.game_status = 'Closed' AND bg.currency = 'Lượng' " +
+                "GROUP BY bg.user_id, us.username, bg.currency " +
+                "HAVING net_loss < 0 " +  // chỉ lấy người thua
+                "ORDER BY net_loss ASC " +
+                "LIMIT 5";
+
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Top 5 người chơi thua Lượng:\n");
+
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String currency = rs.getString("currency");
+                double netLoss = rs.getDouble("net_loss");
+
+                sb.append("Người chơi: ").append(username)
+                        .append(" - Tổng thua: ").append((int) Math.abs(netLoss)).append(" ")
+                        .append(currency).append("\n");
+            }
+            sb.append(" Chúc bạn may mắn. ").append("\n");
+            // Display the result
+            user.getAvatarService().SendTabmsg(sb.toString());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getTopWinLuong(User user) {
+        String query = "SELECT bg.user_id, us.username, bg.currency, " +
+                "SUM(CASE WHEN gr.result LIKE CONCAT('%', bg.bet_type, '%') THEN bg.bet_amount * 0.95 " +
+                "ELSE -bg.bet_amount END) AS net_win " +
+                "FROM betgame bg " +
+                "JOIN game_rounds gr ON bg.game_id = gr.game_id " +
+                "JOIN users us ON bg.user_id = us.id " +
+                "WHERE gr.game_status = 'Closed' AND bg.currency = 'Lượng' " +
+                "GROUP BY bg.user_id, us.username, bg.currency " +
+                "HAVING net_win > 0 " +  // chỉ lấy người thắng
+                "ORDER BY net_win DESC " +
+                "LIMIT 5";
+
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Top 5 người chơi thắng Lượng:\n");
+
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String currency = rs.getString("currency");
+                double netWin = rs.getDouble("net_win");
+
+                sb.append("Người chơi: ").append(username)
+                        .append(" - Tổng thắng: ").append((int) netWin).append(" ")
+                        .append(currency).append("\n");
+            }
+            sb.append(" ------------------------------------------------------ ").append("\n");
+            // Display the result
+            user.getAvatarService().SendTabmsg(sb.toString());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 

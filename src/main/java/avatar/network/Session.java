@@ -974,7 +974,7 @@ public class Session implements ISession {
 
                 // Kiểm tra nếu đã nhận thưởng lần đầu và chưa nhận phần thưởng bổ sung và tổng nạp >= 200k
                 if (thuongNapSet && !thuongNapBoSung && tongnap >= 200000) {
-                    nhanThuongNapBoSung();
+                   // nhanThuongNapBoSung();
                 }
             }
             rs.close();

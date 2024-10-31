@@ -255,6 +255,13 @@ public class NpcHandler {
                             Menu.builder().name("lịch sử 10 ván").action(() -> {
                                 TaiXiu.getInstance().viewGameRoundHistory(us);
                             }).build(),
+                            Menu.builder().name("top cao thủ thắng và thua nhiều nhất").action(() -> {
+                                TaiXiu.getInstance().getTopWinerXu(us);
+                                TaiXiu.getInstance().getTopLossXu(us);
+                                TaiXiu.getInstance().getTopWinLuong(us);
+                                TaiXiu.getInstance().getTopLossLuong(us);
+                                us.getAvatarService().serverDialog("check tin nhắn đi");
+                            }).build(),
                             Menu.builder().name("Thành tích").action(() -> {
                                 TaiXiu.getInstance().viewBetHistory(us);
                             }).build(),
