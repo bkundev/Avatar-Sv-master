@@ -481,12 +481,12 @@ public class Session implements ISession {
             //getAvatarService().serverInfo("");
             getAvatarService().serverInfo("sự kiện halloween p2 đến 22h ngày 08/11/2024, phần quà đua top đánh boss và thả pháo update sau");
             checkThuongNapLanDau();
+
             checkThuongNapSet();
 
             int diamondsPerThousand = 5; // Tặng 5 kim cương vũ trụ cho mỗi 2.000 VND đã nạp
             int tongNap = getTotalDeposited(user); // Tổng số tiền người chơi đã nạp
             int nhanthuongTongNap = getNhanThuongTongNap(); // Số tiền nạp đã nhận thưởng
-
             // Tính phần thưởng dựa trên tổng tiền nạp chưa nhận
             int rewardableAmount = (tongNap - nhanthuongTongNap) / 2000;
 
@@ -499,7 +499,6 @@ public class Session implements ISession {
                 int newNhanThuong = nhanthuongTongNap + (rewardableAmount * 2000);
                 updateNhanThuongTongNap(newNhanThuong);
             }
-
 
 //            NhanThuongEventluong();
 //            NhanThuongEventPhaoXu();
@@ -957,18 +956,25 @@ public class Session implements ISession {
 
     ///////////
 
-    private void checkThuongNapSet(){
-        String checkNap = "SELECT tongnap,ThuongNapSet FROM users WHERE id = ? LIMIT 1;";
-        // Executing the query
+    private void checkThuongNapSet() {
+        String checkNap = "SELECT tongnap, ThuongNapSet, ThuongNapBoSung FROM users WHERE id = ? LIMIT 1;";
         try (Connection connection = DbManager.getInstance().getConnection();
-             PreparedStatement ps = connection.prepareStatement(checkNap);) {
+             PreparedStatement ps = connection.prepareStatement(checkNap)) {
             ps.setInt(1, user.getId());
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 int tongnap = rs.getInt("tongnap");
                 boolean thuongNapSet = rs.getBoolean("ThuongNapSet");
-                if(!thuongNapSet && tongnap>=100000){
+                boolean thuongNapBoSung = rs.getBoolean("ThuongNapBoSung");
+
+                // Kiểm tra nếu chưa nhận thưởng và tổng nạp >= 100k
+                if (!thuongNapSet && tongnap >= 100000) {
                     nhanThuongNapSet();
+                }
+
+                // Kiểm tra nếu đã nhận thưởng lần đầu và chưa nhận phần thưởng bổ sung và tổng nạp >= 200k
+                if (thuongNapSet && !thuongNapBoSung && tongnap >= 200000) {
+                    nhanThuongNapBoSung();
                 }
             }
             rs.close();
@@ -977,41 +983,61 @@ public class Session implements ISession {
         }
     }
 
-    private void nhanThuongNapSet(){
+    private void nhanThuongNapSet() {
         try {
-
-            user.getAvatarService().SendTabmsg("mèo đen và set Người sói");
-
+            user.getAvatarService().SendTabmsg("Nhận phần thưởng set tích lũy 100k : Akatsuki");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if(user.chests.size() >= user.getChestSlot()-4){
-            user.getAvatarService().serverDialog("Bạn phải có ít nhất 5 ô trống trong rương đồ");
+
+        // Kiểm tra số ô trống trong rương
+        if (user.chests.size() >= user.getChestSlot() - 5) {
+            user.getAvatarService().serverDialog("Bạn phải có ít nhất 6 ô trống trong rương đồ");
             return;
         }
 
-        DbManager.getInstance().executeUpdate("UPDATE `users` SET `ThuongNapSet` = ? WHERE `id` = ? LIMIT 1;",
-                1, user.getId());
+        // Cập nhật đã nhận thưởng vào database
+        DbManager.getInstance().executeUpdate("UPDATE `users` SET `ThuongNapSet` = ? WHERE `id` = ? LIMIT 1;", 1, user.getId());
 
-        Item toc = new Item(3972);//tóc nam
-        toc.setExpired(-1);
-        user.addItemToChests(toc);
+        // Danh sách ID item phần thưởng set đầu tiên
+        int[] itemIds = {5358, 5359, 5361, 5362, 5363};
+        for (int itemId : itemIds) {
+            Item item = new Item(itemId);
+            item.setExpired(-1);
+            user.addItemToChests(item);
+        }
 
-        Item ao = new Item(3973);
-        ao.setExpired(-1);
-        user.addItemToChests(ao);
+        if(user.getGender() == 1){
+            Item item = new Item(5357);
+            item.setExpired(-1);
+            user.addItemToChests(item);
+        }else{
+            Item item1 = new Item(5360);
+            item1.setExpired(-1);
+            user.addItemToChests(item1);
+        }
+    }
 
-        Item quan = new Item(3974);
-        quan.setExpired(-1);
-        user.addItemToChests(quan);
-
-        Item bongtai = new Item(3975);
-        bongtai.setExpired(-1);
-        user.addItemToChests(bongtai);
-
-        Item meoden = new Item(3496);
-        meoden.setExpired(-1);
-        user.addItemToChests(meoden);
+    private void nhanThuongNapBoSung() {
+        try {
+            user.getAvatarService().SendTabmsg("Nhận thêm phần thưởng cho tổng nạp 200k");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        if (user.chests.size() >= user.getChestSlot() - 4) {
+            user.getAvatarService().serverDialog("Bạn phải có ít nhất 5 ô trống trong rương đồ");
+            return;
+        }
+        // Cập nhật đã nhận phần thưởng bổ sung vào database
+        DbManager.getInstance().executeUpdate("UPDATE `users` SET `ThuongNapBoSung` = ? WHERE `id` = ? LIMIT 1;", 1, user.getId());
+        // Danh sách ID item phần thưởng bổ sung khi đạt 200k
+//        int[] additionalItemIds = {4001, 4002, 4003, 4004, 4005};
+//
+//        for (int itemId : additionalItemIds) {
+//            Item item = new Item(itemId);
+//            item.setExpired(-1);
+//            user.addItemToChests(item);
+//        }
     }
 
 
@@ -1610,7 +1636,6 @@ public class Session implements ISession {
                 break;
             case NpcName.Pay_To_Win://shop đổi đá
                 Item huyhieu = this.user.findItemInChests(Eventitem.getItemNeed());
-
                 if(huyhieu!=null && huyhieu.getQuantity() >= Eventitem.getScores()){
                     Eventitem.getItem().setExpired(-1);
                     if(user.getChestSlot() <= user.chests.size())
@@ -1622,18 +1647,45 @@ public class Session implements ISession {
                         user.removeItem(huyhieu.getId(),Eventitem.getScores());
                         Item quanpika = new Item(4346);
                         quanpika.setExpired(-1);
-                        user.addItemToChests(quanpika);
 
+                        user.addItemToChests(quanpika);
                         Item aopika = new Item(4347);
                         aopika.setExpired(-1);
-                        user.addItemToChests(aopika);
 
+                        user.addItemToChests(aopika);
                         getAvatarService().requestYourInfo(user);
 
                         getService().serverDialog(String.format("Chúc mừng bạn đã đổi thành công %s",Eventitem.getItem().getPart().getName()));
                         //user.addItemToChests(Eventitem.getItem());
                         //return;
                     }
+                    if(Eventitem.getItem().getId() == 6556) {
+                        int[] itemIdsPhapsudolong = {6557, 6558, 6559};
+
+                        for (int itemId : itemIdsPhapsudolong) {
+                            Item item = new Item(itemId);
+                            item.setExpired(-1);
+                            user.addItemToChests(item);
+                        }
+                        getAvatarService().requestYourInfo(user);
+                        getService().serverDialog(String.format("Chúc mừng bạn đã đổi thành công %s",Eventitem.getItem().getPart().getName()));
+                        //user.addItemToChests(Eventitem.getItem());
+                        //return;
+                    }
+                    if(Eventitem.getItem().getId() == 6560) {
+                        int[] itemIdsPhapsudolong = {6561, 6562, 6563};
+
+                        for (int itemId : itemIdsPhapsudolong) {
+                            Item item = new Item(itemId);
+                            item.setExpired(-1);
+                            user.addItemToChests(item);
+                        }
+                        getAvatarService().requestYourInfo(user);
+                        getService().serverDialog(String.format("Chúc mừng bạn đã đổi thành công %s",Eventitem.getItem().getPart().getName()));
+                        //user.addItemToChests(Eventitem.getItem());
+                        //return;
+                    }
+
                     user.removeItem(huyhieu.getId(),Eventitem.getScores());
                     getAvatarService().requestYourInfo(user);
                     getService().serverDialog(String.format("Chúc mừng bạn đã đổi thành công %s",Eventitem.getItem().getPart().getName()));
@@ -1649,7 +1701,6 @@ public class Session implements ISession {
                         }
                         return;
                     }
-
                     user.addItemToChests(Eventitem.getItem());
                 } else
                 {

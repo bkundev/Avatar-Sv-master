@@ -567,7 +567,7 @@ public class AvatarService extends Service {
 //                ds.writeShort(-1);
 //            }
 
-            ds.flush();
+//            ds.flush();
             sendMessage(ms);
         } catch (IOException ex) {
             logger.error("enter() ", ex);
@@ -683,7 +683,7 @@ public class AvatarService extends Service {
 
     public void getMapItemTypes(Message ms) {
         try {
-            byte[] dat = Avatar.getFile("res/data/getMapItemTypes.dat");
+            byte[] dat = Avatar.getFile("res/data/map_item_type.dat");
             ms = new Message(-40);
             DataOutputStream ds = ms.writer();
             ds.write(dat);

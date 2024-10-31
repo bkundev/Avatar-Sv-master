@@ -413,7 +413,7 @@ public class NpcHandler {
 
                     lstVegeta.add(Menu.builder().name("Xem hướng dẫn")
                             .action(() -> {
-                                us.getAvatarService().customTab("Hướng dẫn", "Top comingsion");
+                                us.getAvatarService().customTab("Hướng dẫn", "top đang update");
                             })
                             .build());
                     lstVegeta.add(Menu.builder().name("Thoát").id(npcId).build());
@@ -441,28 +441,28 @@ public class NpcHandler {
                     us.getAvatarService().serverDialog("đấu giá đang bảo trì các bạn vui lòng quay lại sau");
                     break;
                 }
-//                case NpcName.VE_SO:{
-//                    List<Menu> listet = new ArrayList<>();
-//                    List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
-//                    Menu quaySo = Menu.builder().name("vật phẩm").menus(
-//                                    List.of(
-//                                            Menu.builder().name("demo item").action(() -> {
-//                                                us.getAvatarService().openUIShop(-49,"em.thinh",Items);
-//                                            }).build()
-//                                    ))
-//                            .id(npcId)
-//                            .npcName("donate đi")
-//                            .npcChat("show Item")
-//                            .build();
-//                    listet.add(quaySo);
-//                    listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
-//                        us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
-//                    }).build());
-//                    listet.add(Menu.builder().name("Thoát").build());
-//                    us.setMenus(listet);
-//                    us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
-//                    break;
-//                }
+                    case NpcName.VE_SO:{
+                        List<Menu> listet = new ArrayList<>();
+                        List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
+                        Menu quaySo = Menu.builder().name("vật phẩm").menus(
+                                        List.of(
+                                                Menu.builder().name("demo item").action(() -> {
+                                                    us.getAvatarService().openUIShop(-49,"em.thinh",Items);
+                                                }).build()
+                                        ))
+                                .id(npcId)
+                                .npcName("donate đi")
+                                .npcChat("show Item")
+                                .build();
+                        listet.add(quaySo);
+                        listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
+                            us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
+                        }).build());
+                        listet.add(Menu.builder().name("Thoát").build());
+                        us.setMenus(listet);
+                        us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
+                        break;
+                    }
                 case NpcName.QUAY_SO: {
                     List<Menu> qs = new ArrayList<>();
                     Menu quaySo1 = Menu.builder().name("Quay số").menus(
@@ -613,7 +613,7 @@ public class NpcHandler {
                     }).build();
                     ListDacBiet.add(ShopDacBiet);
                     Menu ShopQuaSet = Menu.builder().name("Pay To Win cả Set").action(() -> {
-                        ShopEventHandler.displayUI(us, Pay_To_Win,5880,5324,5408,4345);
+                        ShopEventHandler.displayUI(us, Pay_To_Win,5880,5324,5408,4345,6556,6560);
                     }).build();
                     ListDacBiet.add(ShopQuaSet);
                     ListDacBiet.add(Menu.builder().name("Shop Nâng Cấp Pay To Win").id(npcId)

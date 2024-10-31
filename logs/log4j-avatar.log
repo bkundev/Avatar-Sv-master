@@ -12320,3 +12320,37 @@
 2024-10-29 17:31:47 DEBUG DbManager:81 - DB Connection Pool has created.
 2024-10-29 17:43:07 DEBUG DbManager:81 - DB Connection Pool has created.
 2024-10-29 17:43:24 DEBUG User:1162 - itemID: 6731 type: 0
+2024-10-31 14:31:10 ERROR DbManager:84 - DB Connection Pool Creation has failed.
+2024-10-31 14:31:50 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-31 14:33:21 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-31 14:54:30 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-31 14:59:20 DEBUG User:1162 - itemID: 5357 type: 1
+2024-10-31 14:59:20 DEBUG User:1164 - Find Item
+2024-10-31 14:59:20 DEBUG User:1166 - Find Done
+2024-10-31 14:59:20 DEBUG User:1171 - Find Detail Item
+2024-10-31 14:59:20 DEBUG User:1174 - Item Gender=1
+2024-10-31 14:59:20 DEBUG User:1179 - Get Type
+2024-10-31 14:59:20 DEBUG User:1181 - Type =-1
+2024-10-31 14:59:32 DEBUG User:1162 - itemID: 5358 type: 1
+2024-10-31 14:59:32 DEBUG User:1164 - Find Item
+2024-10-31 14:59:32 DEBUG User:1166 - Find Done
+2024-10-31 14:59:32 DEBUG User:1171 - Find Detail Item
+2024-10-31 14:59:32 DEBUG User:1174 - Item Gender=0
+2024-10-31 14:59:32 DEBUG User:1179 - Get Type
+2024-10-31 14:59:32 DEBUG User:1181 - Type =-1
+2024-10-31 15:00:06 DEBUG User:1162 - itemID: 5359 type: 1
+2024-10-31 15:00:06 DEBUG User:1164 - Find Item
+2024-10-31 15:00:06 DEBUG User:1166 - Find Done
+2024-10-31 15:00:06 DEBUG User:1171 - Find Detail Item
+2024-10-31 15:00:06 DEBUG User:1174 - Item Gender=0
+2024-10-31 15:00:06 DEBUG User:1179 - Get Type
+2024-10-31 15:00:06 DEBUG User:1181 - Type =-1
+2024-10-31 15:12:35 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-31 15:26:27 DEBUG DbManager:81 - DB Connection Pool has created.
+2024-10-31 15:26:58 DEBUG User:1162 - itemID: 5389 type: 1
+2024-10-31 15:26:58 DEBUG User:1164 - Find Item
+2024-10-31 15:26:58 DEBUG User:1166 - Find Done
+2024-10-31 15:26:58 DEBUG User:1171 - Find Detail Item
+2024-10-31 15:26:58 DEBUG User:1174 - Item Gender=0
+2024-10-31 15:26:58 DEBUG User:1179 - Get Type
+2024-10-31 15:26:58 DEBUG User:1181 - Type =-2
