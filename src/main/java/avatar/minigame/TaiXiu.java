@@ -602,7 +602,7 @@ public class TaiXiu {
 
     public void getTopLossXu(User user) {
         String query = "SELECT bg.user_id, us.username, bg.currency, " +
-                "SUM(CASE WHEN gr.result LIKE CONCAT('%', bg.bet_type, '%') THEN bg.bet_amount * 0.95 " +
+                "SUM(CASE WHEN gr.result LIKE CONCAT('%', bg.bet_type, '%') THEN bg.bet_amount * 2 " +
                 "ELSE -bg.bet_amount END) AS net_loss " +
                 "FROM betgame bg " +
                 "JOIN game_rounds gr ON bg.game_id = gr.game_id " +
@@ -645,7 +645,7 @@ public class TaiXiu {
 
     public void getTopLossLuong(User user) {
         String query = "SELECT bg.user_id, us.username, bg.currency, " +
-                "SUM(CASE WHEN gr.result LIKE CONCAT('%', bg.bet_type, '%') THEN bg.bet_amount * 0.95 " +
+                "SUM(CASE WHEN gr.result LIKE CONCAT('%', bg.bet_type, '%') THEN bg.bet_amount * 2 " +
                 "ELSE -bg.bet_amount END) AS net_loss " +
                 "FROM betgame bg " +
                 "JOIN game_rounds gr ON bg.game_id = gr.game_id " +
