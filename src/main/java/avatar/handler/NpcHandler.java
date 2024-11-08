@@ -420,7 +420,7 @@ public class NpcHandler {
 
                     lstVegeta.add(Menu.builder().name("Xem hướng dẫn")
                             .action(() -> {
-                                us.getAvatarService().customTab("Hướng dẫn", "top đang update");
+                                us.getAvatarService().customTab("Hướng dẫn", "Top 5 đánh boss nhận 1 thẻ vip trong top 3 được tùy chọn 1 trong 2 set Xác ướp hoặc Tù trưởng xác ướp riêng top 1 nhận thêm 1 thẻ vip. Top 4-5 thả pháo lượng nhận 2 thẻ vip trong top 3 nhận thẻ vip cao cấp và được tùy chọn 1 trong 3 set xác ướp , tù trưởng xác ướp, doremon (doremon thì ko có dame)");
                             })
                             .build());
                     lstVegeta.add(Menu.builder().name("Thoát").id(npcId).build());
@@ -448,28 +448,28 @@ public class NpcHandler {
                     us.getAvatarService().serverDialog("đấu giá đang bảo trì các bạn vui lòng quay lại sau");
                     break;
                 }
-                    case NpcName.VE_SO:{
-                        List<Menu> listet = new ArrayList<>();
-                        List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
-                        Menu quaySo = Menu.builder().name("vật phẩm").menus(
-                                        List.of(
-                                                Menu.builder().name("demo item").action(() -> {
-                                                    us.getAvatarService().openUIShop(-49,"em.thinh",Items);
-                                                }).build()
-                                        ))
-                                .id(npcId)
-                                .npcName("donate đi")
-                                .npcChat("show Item")
-                                .build();
-                        listet.add(quaySo);
-                        listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
-                            us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
-                        }).build());
-                        listet.add(Menu.builder().name("Thoát").build());
-                        us.setMenus(listet);
-                        us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
-                        break;
-                    }
+//                    case NpcName.VE_SO:{
+//                        List<Menu> listet = new ArrayList<>();
+//                        List<Item> Items = Part.shopByPart(PartManager.getInstance().getParts());
+//                        Menu quaySo = Menu.builder().name("vật phẩm").menus(
+//                                        List.of(
+//                                                Menu.builder().name("demo item").action(() -> {
+//                                                    us.getAvatarService().openUIShop(-49,"em.thinh",Items);
+//                                                }).build()
+//                                        ))
+//                                .id(npcId)
+//                                .npcName("donate đi")
+//                                .npcChat("show Item")
+//                                .build();
+//                        listet.add(quaySo);
+//                        listet.add(Menu.builder().name("Hướng dẫn").action(() -> {
+//                            us.getAvatarService().customTab("Hướng dẫn", "hãy nạp lần đầu để mở khóa mua =)))");
+//                        }).build());
+//                        listet.add(Menu.builder().name("Thoát").build());
+//                        us.setMenus(listet);
+//                        us.getAvatarService().openUIMenu(npcId, 0, listet, "donate đi", "");
+//                        break;
+//                    }
                 case NpcName.QUAY_SO: {
                     List<Menu> qs = new ArrayList<>();
                     Menu quaySo1 = Menu.builder().name("Quay số").menus(

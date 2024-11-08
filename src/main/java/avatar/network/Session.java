@@ -479,8 +479,8 @@ public class Session implements ISession {
             getAvatarService().onLoginSuccess();
             getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thanh Pho lo");
             //getAvatarService().serverInfo("");
-            getAvatarService().serverInfo("Từ 17h ngày 31/10/2024 mở nạp x2 và nạp trên 100k nhận thêm set Akatsuki, update thêm item qs lg ,set đồ long... ");
-            getAvatarService().serverInfo("sự kiện halloween p2 đến 22h ngày 08/11/2024, phần quà đua top đánh boss và thả pháo update sau");
+            //getAvatarService().serverInfo("");
+            getAvatarService().serverInfo("sự kiện halloween p2 đến 22h ngày 07/11/2024, phần quà đua top xem o npc Vegeta , do admin bận việc lên ko bảo trì đúng như tb này và ở zalo, hiện tại admin đóng đua top và code thêm chút và hoàn lại về 10h tối ngày hôm qua ( ở pháo lượng ai thả hơn sẽ hoàn đúng lúc 10h, nếu bạn trong top 3 thì liên hệ admin để tùy chọn set. thanks mn. tối admin sẽ rep zalo, hiện đt có zalo đang hết pin sạc hỏng chiều mới đi mua");
             checkThuongNapLanDau();
 
             checkThuongNapSet();
@@ -1761,7 +1761,7 @@ public class Session implements ISession {
                     }
                     user.addItemToChests(Eventitem.getItem());
                     user.setStylish((byte) (user.getStylish() - 1));
-                    user.removeItemFromChests(TheVip);
+                    user.removeItem(Eventitem.getItemNeed(),1);
                     getAvatarService().requestYourInfo(user);
                     getService().serverDialog(String.format("Chúc mừng bạn đã đổi thành công %s",Eventitem.getItem().getPart().getName()));
                 } else {
