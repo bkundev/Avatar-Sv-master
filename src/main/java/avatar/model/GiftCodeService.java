@@ -142,6 +142,46 @@ public class GiftCodeService {
         User us = UserManager.getInstance().find(userId);
 
         switch (MaCode) {
+
+            case "14tieng":
+                if(us.chests.size() >= us.getChestSlot()-6){
+                    us.getAvatarService().serverDialog("chào bạn " + us.getUsername() +" bạn phải trống trên 7 ô rương");
+                    return;
+                }
+                List<Integer> itemIds = new ArrayList<>();
+                itemIds.add(4732);
+                itemIds.add(4733);
+                itemIds.add(5724);
+                itemIds.add(6112);
+                itemIds.add(6112);
+                itemIds.add(6670);
+                // Bước 2: Tạo một đối tượng Random
+                Random random = new Random();// Bước 3: Lấy một ID ngẫu nhiên từ danh sách
+                int randomIndex = random.nextInt(itemIds.size()); // Lấy chỉ số ngẫu nhiên
+                int randomItemId = itemIds.get(randomIndex); // Lấy ID ngẫu nhiên
+                Item daisen = new Item(randomItemId);
+                daisen.setExpired(System.currentTimeMillis() + (86400000L * 3));
+                us.getAvatarService().serverDialog("bạn vừa nhận được " + daisen.getPart().getName() + " 3 ngay");
+                us.addItemToChests(daisen);
+                Item traiTim = new Item(6793);
+                traiTim.setExpired(System.currentTimeMillis() + (86400000L * 3));
+                Item traiTim1 = new Item(6794);
+                traiTim1.setExpired(System.currentTimeMillis() + (86400000L * 3));
+                us.addItemToChests(traiTim);
+                us.addItemToChests(traiTim1);
+
+                Item hopqua = new Item(593,-1,140);
+                //hopqua.setExpired(System.currentTimeMillis() + (86400000L * time));
+                if(us.findItemInChests(593) !=null){
+                    int quantity = us.findItemInChests(593).getQuantity();
+                    us.findItemInChests(593).setQuantity(quantity+140);
+                }else {
+                    us.addItemToChests(hopqua);
+                }
+
+
+                break;
+
             case "20thang10":
 
                 if(us.chests.size() >= us.getChestSlot()-6){
@@ -175,33 +215,14 @@ public class GiftCodeService {
                     daixen.setExpired(System.currentTimeMillis() + (86400000L * 1));
                 }
                 us.addItemToChests(daixen);
-                Item traiTim = new Item(6793);
-                traiTim.setExpired(System.currentTimeMillis() + (86400000L * 3));
-                Item traiTim1 = new Item(6794);
-                traiTim1.setExpired(System.currentTimeMillis() + (86400000L * 3));
-                us.addItemToChests(traiTim);
-                us.addItemToChests(traiTim1);
-                us.getAvatarService().serverDialog("chuc mung 20 thang 10 " + us.getUsername());
+                Item traiTim11 = new Item(6793);
+                traiTim11.setExpired(System.currentTimeMillis() + (86400000L * 3));
+                Item traiTim1111 = new Item(6794);
+                traiTim1111.setExpired(System.currentTimeMillis() + (86400000L * 3));
+                us.addItemToChests(traiTim11);
+                us.addItemToChests(traiTim1111);
                 break;
 
-            case "lenhinh":
-                List<Integer> itemIds = new ArrayList<>();
-                itemIds.add(4732);
-                itemIds.add(4733);
-                itemIds.add(5724);
-                itemIds.add(6112);
-                itemIds.add(6112);
-                itemIds.add(6670);
-                // Bước 2: Tạo một đối tượng Random
-                Random random = new Random();// Bước 3: Lấy một ID ngẫu nhiên từ danh sách
-                int randomIndex = random.nextInt(itemIds.size()); // Lấy chỉ số ngẫu nhiên
-                int randomItemId = itemIds.get(randomIndex); // Lấy ID ngẫu nhiên
-                Item daisen = new Item(randomItemId);
-
-                daisen.setExpired(System.currentTimeMillis() + (86400000L * 3));
-                us.getAvatarService().serverDialog("bạn vừa nhận được " + daisen.getPart().getName() + " 3 ngay");
-                us.addItemToChests(daisen);
-                break;
             case "tanthu":
 
                 us.updateXu(+500000);
@@ -221,13 +242,13 @@ public class GiftCodeService {
 
             case "denbu":
 
-                Item hopqua = new Item(683,-1,100);
+                Item hopqua12 = new Item(683,-1,100);
                 //hopqua.setExpired(System.currentTimeMillis() + (86400000L * time));
                 if(us.findItemInChests(683) !=null){
                     int quantity = us.findItemInChests(683).getQuantity();
                     us.findItemInChests(683).setQuantity(quantity+100);
                 }else {
-                    us.addItemToChests(hopqua);
+                    us.addItemToChests(hopqua12);
                 }
                 Item itemqs = new Item(593, -1, 200);
                 us.addItemToChests(itemqs);

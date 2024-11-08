@@ -257,6 +257,7 @@ public class AvatarService extends Service {
                     " Và Auto Câu Cá");
             us.getAvatarService().SendTabmsg("update các loại cáo tiên ở shop nâng cấp chay to win, update pet labubu ở shop cày chay.");
             us.getAvatarService().SendTabmsg("update cách ngũ sắc chay và pay ok hết, có thể chọn nâng cấp 5 loại khác nhau");
+            us.getAvatarService().SendTabmsg("den bu bao tri gift code : 14tieng");
 
         } catch (IOException ex) {
             logger.error("onLoginSuccess err", ex);
