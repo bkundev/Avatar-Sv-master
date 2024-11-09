@@ -1,6 +1,7 @@
 package avatar.message;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import avatar.constants.NpcName;
@@ -35,6 +36,14 @@ public class FarmMsgHandler extends MessageHandler {
             switch (mss.getCommand()) {
                 case Cmd.SET_BIG_FARM: {
                     this.service.setBigFarm(mss);
+                    break;
+                }
+                case Cmd.BUY_ITEM: {
+                    this.service.Buy_item_farm(mss);
+                    break;
+                }
+                case Cmd.BUY_ANIMAL: {
+                    this.service.Buy_ANIMAL(mss);
                     break;
                 }
                 case Cmd.GET_BIG_FARM: {
@@ -81,9 +90,6 @@ public class FarmMsgHandler extends MessageHandler {
                 }
 
 
-
-
-
                 case Cmd.REQUEST_FRIENDLIST: {
                     this.service.serverDialog("Ăn trộm đang xây dựng");
                     break;
@@ -119,6 +125,8 @@ public class FarmMsgHandler extends MessageHandler {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

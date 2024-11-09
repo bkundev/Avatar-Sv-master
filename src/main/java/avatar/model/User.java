@@ -1,8 +1,10 @@
 package avatar.model;
 
+import avatar.Farm.Animal;
 import avatar.common.BossShopItem;
 import avatar.db.DbManager;
 import avatar.item.Item;
+import avatar.Farm.LandItem;
 import avatar.item.Part;
 import avatar.lucky.DialLucky;
 import avatar.lucky.GiftBox;
@@ -101,6 +103,9 @@ public class User {
     public List<Item> chests;
     public List<Item> chestsHome;
 
+    public List<LandItem> landItems = new ArrayList<>();
+    public List<Animal> Animal = new ArrayList<>();
+
     private Zone zone;
     private short x, y;
     private byte direct;
@@ -130,6 +135,9 @@ public class User {
         this.role = -1;
         this.chests = new ArrayList<>();
         this.wearing = new ArrayList<>();
+        this.landItems = new ArrayList<>();
+        this.Animal = new ArrayList<>();
+
         this.listCmd = new ArrayList<>();
         this.listCmdRotate = new ArrayList<>();
         this.isDefeated = false;
@@ -151,7 +159,6 @@ public class User {
     public void resetIntSpanboss() {
         this.intSpanboss = 0;
     }
-
     // Phương thức để reset tất cả thông tin của người chơi
     public void resetUser() {
         resetIntSpanboss();
@@ -540,8 +547,133 @@ public class User {
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `chests` = ?, `wearing` = ?, `chests_home` = ? WHERE `user_id` = ? LIMIT 1;",
                 jChests.toJSONString(), jWearing.toJSONString(),jChestsHome.toJSONString(), this.id);
         System.out.println("Save data user " + this.getUsername());
-    }
 
+        try {
+            saveFarmData(this.id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void saveFarmData(int userId) throws SQLException {
+        // Chuẩn bị dữ liệu để lưu vào cơ sở dữ liệu
+        JSONArray landData = new JSONArray();
+        for (LandItem landItem : this.session.user.landItems) {
+            JSONObject landObject = new JSONObject();
+            landObject.put("growthTime", landItem.getGrowthTime());
+            landObject.put("type", landItem.getType());
+            landObject.put("resourceCount", landItem.getResourceCount());
+            landObject.put("isWatered", landItem.isWatered());
+            landObject.put("isFertilized", landItem.isFertilized());
+            landObject.put("isHarvestable", landItem.isHarvestable());
+            landData.add(landObject);
+        }
+
+        JSONArray animalData = new JSONArray();
+        for (Animal animal : this.session.user.Animal) {
+            JSONObject animalObject = new JSONObject();
+            animalObject.put("health", animal.getHealth());
+            animalObject.put("level", animal.getLevel());
+            animalObject.put("resourceCount", animal.getResourceCount());
+            animalObject.put("nextProductionTime", animal.getNextProductionTime());
+            animalObject.put("isAlive", animal.isAlive());
+            animalObject.put("isReadyForBreeding", animal.isReadyForBreeding());
+            animalObject.put("isHarvestable", animal.isHarvestable());
+            animalData.add(animalObject);
+        }
+
+        // Cập nhật cơ sở dữ liệu với dữ liệu đã tạo
+        String query = "INSERT INTO `farm_data` (user_id, land_data, animal_data) VALUES (?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE land_data = ?, animal_data = ?";
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+            // Chuyển đổi dữ liệu thành chuỗi JSON
+            String landDataString = landData.toString();
+            String animalDataString = animalData.toString();
+
+            // Cập nhật hoặc thêm mới dữ liệu vào bảng `farm_data`
+            ps.setInt(1, userId);
+            ps.setString(2, landDataString);
+            ps.setString(3, animalDataString);
+            ps.setString(4, landDataString);
+            ps.setString(5, animalDataString);
+
+            ps.executeUpdate();
+        }
+    }
+    public void loadFarmData(int userId) throws SQLException {
+
+        String query = "SELECT land_data, animal_data FROM `farm_data` WHERE user_id = ?";
+
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, userId);
+
+            try (ResultSet res = ps.executeQuery()) {
+                if (res.next()) {
+                    String landDataString = res.getString("land_data");
+                    String animalDataString = res.getString("animal_data");
+
+                    // Phân tích dữ liệu ô đất (land_data)
+                    JSONArray landData = (JSONArray) JSONValue.parse(landDataString);
+                    List<LandItem> landItems = new ArrayList<>();
+
+                    for (Object land : landData) {
+                        JSONObject obj = (JSONObject) land;
+                        int growthTime = ((Long) obj.get("growthTime")).intValue();
+                        int type = ((Long) obj.get("type")).intValue();
+                        int resourceCount = ((Long) obj.get("resourceCount")).intValue();
+                        boolean isWatered = (Boolean) obj.get("isWatered");
+                        boolean isFertilized = (Boolean) obj.get("isFertilized");
+                        boolean isHarvestable = (Boolean) obj.get("isHarvestable");
+
+                        LandItem landItem = new LandItem(growthTime, type, resourceCount, isWatered, isFertilized, isHarvestable);
+                        landItems.add(landItem);
+                    }
+
+                    // Cập nhật danh sách ô đất cho người chơi
+                    this.session.user.landItems = landItems;
+
+                    // Phân tích dữ liệu vật nuôi (animal_data)
+                    JSONArray animalData = (JSONArray) JSONValue.parse(animalDataString);
+                    List<Animal> animals = new ArrayList<>();
+
+                    for (Object animal : animalData) {
+                        JSONObject obj = (JSONObject) animal;
+                        int id = ((Long) obj.get("id")).intValue();
+                        int health = ((Long) obj.get("health")).intValue();
+                        int level = ((Long) obj.get("level")).intValue();
+                        int resourceCount = ((Long) obj.get("resourceCount")).intValue();
+                        int nextProductionTime = ((Long) obj.get("nextProductionTime")).intValue();
+                        boolean isAlive = (Boolean) obj.get("isAlive");
+                        boolean isReadyForBreeding = (Boolean) obj.get("isReadyForBreeding");
+                        boolean isHarvestable = (Boolean) obj.get("isHarvestable");
+
+                        Animal animalObj = new Animal(id,health, level, resourceCount, nextProductionTime, isAlive, isReadyForBreeding, isHarvestable);
+                        animals.add(animalObj);
+                    }
+
+                    // Cập nhật danh sách vật nuôi cho người chơi
+                    this.session.user.Animal = animals;
+                }
+            }
+        }
+
+        // Nếu không có dữ liệu, tạo mặc định cho người chơi
+        if (this.session.user.landItems.isEmpty()) {
+            // Tạo mặc định cho 6 ô đất
+            List<LandItem> defaultLandItems = new ArrayList<>();
+            for (int i = 0; i < 6; i++) {
+                defaultLandItems.add(new LandItem(0, -1, 0, false, false, false)); // Cây mặc định
+            }
+            this.session.user.landItems = defaultLandItems;
+        }
+
+        if (this.session.user.Animal.isEmpty()) {
+            // Không có vật nuôi, nên không cần thêm gì
+            this.session.user.Animal = new ArrayList<>();
+        }
+    }
     public synchronized boolean login() {
         if (!ServerManager.active) {
             getService().serverMessage("Máy chủ đang bảo trì. Vui lòng quay lại sau : v");
@@ -754,7 +886,7 @@ public class User {
                             this.chestsHome.add(item);
                         }
                     }
-
+                    loadFarmData(this.id);
                     calculateDameToXu();
 
                     setLoadDataFinish(true);
