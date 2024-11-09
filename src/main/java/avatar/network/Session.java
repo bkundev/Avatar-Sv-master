@@ -1128,6 +1128,12 @@ public class Session implements ISession {
             }
             Part part = PartManager.getInstance().findPartByID(partID);
 
+            Item itembyacc = user.findItemInChests(partID);
+            if(itembyacc!=null && (itembyacc.getPart().getZOrder() == 30 ||itembyacc.getPart().getZOrder() == 40 ))// mắt mặt ko mua trùng
+            {
+                user.getAvatarService().serverDialog("bạn đã có vật phẩm này ở rương đồ! đến npc saitama ở công viên để quản lý");
+                return;
+            }
             if (((part.getGender() == 2 || part.getGender() == 1) && (user.getGender() != part.getGender())))
             {
                 user.getAvatarService().serverDialog("gioi tinh khong phu hop");

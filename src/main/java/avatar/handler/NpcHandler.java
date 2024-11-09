@@ -306,6 +306,51 @@ public class NpcHandler {
                         }).collect(Collectors.toList());
                         us.getAvatarService().viewChest(_chests);
                     }).build());
+
+                    QuanLyItem.add(Menu.builder().name("Xem Ô Rương Còn Trống").action(() -> {
+                        int totalSlots = us.getChestSlot(); // Tổng số ô rương của người dùng
+                        int usedSlots = us.chests.size();   // Số ô hiện đang sử dụng trong rương
+                        int emptySlots = totalSlots - usedSlots; // Tính số ô trống còn lại
+
+                        // Kiểm tra nếu còn trống, không thì hiển thị rương đã đầy
+                        if (emptySlots > 0) {
+                            us.getAvatarService().serverDialog("Số ô trống còn lại trong rương: " + emptySlots + "/" + totalSlots + " Rương Lv " + us.session.user.getChestLevel());
+                        } else {
+                            us.getAvatarService().serverDialog("Rương đã đầy!");
+                        }
+                    }).build());
+
+
+                    QuanLyItem.add(Menu.builder().name("Xóa Vật Phẩm Trùng (Mặt và Mắt)").action(() -> {
+                        // Lọc ra các vật phẩm có ZOrder là 30 hoặc 40
+                        List<Item> filteredItems = us.chests.stream()
+                                .filter(item -> {
+                                    int zOrder = item.getPart().getZOrder();
+                                    return zOrder == 30 || zOrder == 40;
+                                })
+                                .collect(Collectors.toList());
+
+                        // Tạo một Map để giữ lại mỗi loại item duy nhất dựa trên ID
+                        Map<Integer, Item> uniqueItemsMap = filteredItems.stream()
+                                .collect(Collectors.toMap(
+                                        Item::getId,         // Sử dụng ID để xác định vật phẩm trùng
+                                        item -> item,
+                                        (existing, duplicate) -> existing // Giữ lại item đầu tiên nếu trùng
+                                ));
+
+                        // Xóa các vật phẩm có ZOrder 30 hoặc 40 trong `chests`
+                        us.chests.removeIf(item -> {
+                            int zOrder = item.getPart().getZOrder();
+                            return zOrder == 30 || zOrder == 40;
+                        });
+
+                        // Thêm lại các vật phẩm duy nhất vào `chests`
+                        us.chests.addAll(uniqueItemsMap.values());
+
+                        //us.getAvatarService().viewChest(us.chests);  // Hiển thị lại danh sách không còn vật phẩm trùng lặp
+                        us.getAvatarService().serverDialog("ok bạn ơi");
+                    }).build());
+
                     QuanLyItem.add(Menu.builder().name("Thoát").build());
                     us.setMenus(QuanLyItem);
                     us.getAvatarService().openMenuOption(npcId, 0, QuanLyItem);

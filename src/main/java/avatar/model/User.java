@@ -680,7 +680,6 @@ public class User {
                     this.xu_from_boss = res.getInt("xu_from_boss");
                     this.TopPhaoLuong = res.getInt("TopPhaoLuong");
                     this.TopPhaoXu = res.getInt("TopPhaoXu");
-
                     this.chests = new ArrayList<>();
                     JSONArray chests = (JSONArray) JSONValue.parse(res.getString("chests"));
                     for (Object chest : chests) {
