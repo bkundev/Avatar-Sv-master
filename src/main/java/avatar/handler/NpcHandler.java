@@ -367,6 +367,17 @@ public class NpcHandler {
                                 GopDiemSK(us);
                             })
                             .build());
+                    list1.add(Menu.builder().name("Nhận thưởng đua top")
+                            .action(() -> {
+                                try {
+                                    us.session.NhanThuongEventluong();
+                                    us.session.NhanThuongEventXuBoss();
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            })
+                            .build());
+
                     list1.add(Menu.builder().name("Thành tích bản thân")
                             .action(() -> {
                                 StringBuilder detailedMessage = new StringBuilder("Thành tích bản thân");

@@ -502,7 +502,6 @@ public class Session implements ISession {
             }
 
 //            NhanThuongEventluong();
-//            NhanThuongEventPhaoXu();
 //            NhanThuongEventXuBoss();
 
         } else {
@@ -576,7 +575,7 @@ public class Session implements ISession {
     }
 
 //chay
-    private void NhanThuongEventXuBoss() throws IOException {
+public void NhanThuongEventXuBoss() throws IOException {
 
         int TopXuboss = this.user.getService().getUserRankXuBoss(user);
 
@@ -589,67 +588,26 @@ public class Session implements ISession {
             return;
         };
 
-
         List<Item> TOP5XUBOSS = new ArrayList<>();
-        TOP5XUBOSS.add(new Item(3477,-1,1));
-        TOP5XUBOSS.add(new  Item(2740,System.currentTimeMillis() + (86400000L * 3),1));//the vip
-
-        List<Item> TOP3SET = new ArrayList<>();
-        TOP3SET.add(new Item(3478,-1,1));
-        TOP3SET.add(new Item(3479,-1,1));
-        TOP3SET.add(new Item(3480,-1,1));
-        TOP3SET.add(new Item(3481,-1,1));
+        TOP5XUBOSS.add(new  Item(2740,-1,1));//the vip
 
         if (TopXuboss == 1) {
             // Trao thưởng top 1
-            if(user.chests.size() >= user.getChestSlot()-5){
-                user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 6 ô trống trong rương đồ để nhận thưởng top 1");
+            if(user.chests.size() >= user.getChestSlot()-1){
+                user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 2 ô trống trong rương đồ để nhận thưởng top 1");
                 return;
             }
-
-            List<Item> phanThuongTop1boss = new ArrayList<>();
-            phanThuongTop1boss.add(new  Item(3476,-1,1));//tóc superblue6
-            phanThuongTop1boss.add(new  Item(2740,System.currentTimeMillis() + (86400000L * 3),1));//the vip
-
-            Utils.writeLogSystem(user,"Nhận Thưởng TOP 1 XU BOSS : ");
-            for (Item item : TOP3SET) {
-                this.user.addItemToChests(item);
-                Utils.writeLog(user,item.getPart().getName());
-            }
-            for (Item item : phanThuongTop1boss){
-                this.user.addItemToChests(item);
-                Utils.writeLog(user,item.getPart().getName());
-            }
-
-            Utils.writeLogSystem(user,"Username: " + user.getUsername() + ", rank" + TopXuboss);
-
-        } else if (TopXuboss == 2 || TopXuboss == 3) {
-
-            if(user.chests.size() >= user.getChestSlot()-4){
-                user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 5 ô trống trong rương đồ để nhận thưởng top lượng "+TopXuboss);
-                return;
-            }
-            Utils.writeLogSystem(user,"Nhận Thưởng TOP 2or3 xu boss :");
-            Item theCaoCao =  new  Item(2740,System.currentTimeMillis() + (86400000L * 7),1);
+            Utils.writeLogSystem(user,"Nhận Thưởng TOP 1 click boss :");
+            Item theCaoCao =  new  Item(2740,-1,2);
             user.addItemToChests(theCaoCao);
-            Utils.writeLogSystem(user,theCaoCao.getPart().getName());
+            Utils.writeLog(user,theCaoCao.getPart().getName());
 
-            Utils.writeLogSystem(user,  user.getUsername() + ", rank3" + TopXuboss);
-            for (Item item : TOP5XUBOSS){
-                this.user.addItemToChests(item);
-                Utils.writeLog(user,item.getPart().getName());
-            }
-            for (Item item : TOP3SET) {
-                this.user.addItemToChests(item);
-                Utils.writeLog(user,item.getPart().getName());
-            }
-
-        } else if (TopXuboss == 4 || TopXuboss == 5) {
+        } else if (TopXuboss == 2 || TopXuboss == 3 ||TopXuboss == 4 || TopXuboss == 5) {
             if(user.chests.size() >= user.getChestSlot()-1){
                 user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 2 ô trống trong rương đồ để nhận thưởng top lượng "+TopXuboss);
                 return;
             }
-            Utils.writeLogSystem(user,"Nhận Thưởng TOP 4or5 Pháo Lượng :");
+            Utils.writeLogSystem(user,"Nhận Thưởng TOP xu boss :");
             for (Item item : TOP5XUBOSS){
                 this.user.addItemToChests(item);
                 Utils.writeLogSystem(user,item.getPart().getName());
@@ -799,7 +757,7 @@ public class Session implements ISession {
 
 
     //eventThaPhaoLuong
-    private void NhanThuongEventluong() throws IOException {
+    public void NhanThuongEventluong() throws IOException {
 
         int rankPhaoLuong = this.user.getService().getUserRankPhaoLuong(user);
 
@@ -812,75 +770,57 @@ public class Session implements ISession {
             return;
         };
 
-        int slotChest = 5;
+        int slotChest = 2;
 
-        List<Item> TOP5Luong = new ArrayList<>();
-          TOP5Luong.add(new Item(3476,-1,1));
-//        TOP5Luong.add(new Item(4123,-1,1));
+//        List<Item> TOP5Luong = new ArrayList<>();
+//          TOP5Luong.add(new Item(3476,-1,1));
+//
+//        if (rankPhaoLuong == 1) {
+//            // Trao thưởng top 1
+//            if(user.chests.size() >= user.getChestSlot()-4){
+//                user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 5 ô trống trong rương đồ để nhận thưởng top 1");
+//                return;
+//            }
+//
+//            List<Item> phanThuongTop1 = new ArrayList<>();
+//            phanThuongTop1.add(new  Item(2742,System.currentTimeMillis() + (86400000L * 3),1));//preium
+//
+//            Utils.writeLogSystem(user,"Nhận Thưởng TOP 1 Pháo Lượng : ");
+//
+//            for (Item item : phanThuongTop1){
+//                this.user.addItemToChests(item);
+//                Utils.writeLogSystem(user,item.getPart().getName());
+//            }
+//            for (Item item : TOP5Luong){
+//                this.user.addItemToChests(item);
+//                Utils.writeLogSystem(user,item.getPart().getName());
+//            }
+//            System.out.println("Username: " + user.getUsername() + ", rank" + rankPhaoLuong);
+//
+//        } else if (rankPhaoLuong == 2 || rankPhaoLuong == 3) {
+//
+//            if(user.chests.size() >= user.getChestSlot()-3){
+//                user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 4 ô trống trong rương đồ để nhận thưởng top lượng "+rankPhaoLuong);
+//                return;
+//            }
+//
+//            Utils.writeLogSystem(user,"Nhận Thưởng TOP 2or3 Pháo Lượng :");
+//            Item theCaoCao =  new  Item(2741,System.currentTimeMillis() + (86400000L * 3),1);
+//            user.addItemToChests(theCaoCao);
+//            Utils.writeLog(user,theCaoCao.getPart().getName());
+//
+//            System.out.println("Username: " + user.getUsername() + ", rank3" + rankPhaoLuong);
+//            for (Item item : TOP5Luong){
+//                this.user.addItemToChests(item);
+//                Utils.writeLogSystem(user,item.getPart().getName());
+//            }
+//
+//
+//        } else
+        if (rankPhaoLuong == 4 || rankPhaoLuong == 5) {
 
-
-        if (rankPhaoLuong == 1) {
-            // Trao thưởng top 1
-            if(user.chests.size() >= user.getChestSlot()-4){
-                user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 5 ô trống trong rương đồ để nhận thưởng top 1");
-                return;
-            }
-
-            List<Item> phanThuongTop1 = new ArrayList<>();
-            phanThuongTop1.add(new  Item(2742,System.currentTimeMillis() + (86400000L * 3),1));//preium
-
-            Utils.writeLogSystem(user,"Nhận Thưởng TOP 1 Pháo Lượng : ");
-
-            for (Item item : phanThuongTop1){
-                this.user.addItemToChests(item);
-                Utils.writeLogSystem(user,item.getPart().getName());
-            }
-            for (Item item : TOP5Luong){
-                this.user.addItemToChests(item);
-                Utils.writeLogSystem(user,item.getPart().getName());
-            }
-            System.out.println("Username: " + user.getUsername() + ", rank" + rankPhaoLuong);
-
-        } else if (rankPhaoLuong == 2 || rankPhaoLuong == 3) {
-
-            if(user.chests.size() >= user.getChestSlot()-3){
-                user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 4 ô trống trong rương đồ để nhận thưởng top lượng "+rankPhaoLuong);
-                return;
-            }
-
-            Utils.writeLogSystem(user,"Nhận Thưởng TOP 2or3 Pháo Lượng :");
-            Item theCaoCao =  new  Item(2741,System.currentTimeMillis() + (86400000L * 3),1);
-            user.addItemToChests(theCaoCao);
-            Utils.writeLog(user,theCaoCao.getPart().getName());
-
-            System.out.println("Username: " + user.getUsername() + ", rank3" + rankPhaoLuong);
-            for (Item item : TOP5Luong){
-                this.user.addItemToChests(item);
-                Utils.writeLogSystem(user,item.getPart().getName());
-            }
-
-
-        } else if (rankPhaoLuong == 4 || rankPhaoLuong == 5) {
-            List<Item> TOP45Luong = new ArrayList<>();
-            TOP45Luong.add(new Item(3478,-1,1));
-            TOP45Luong.add(new Item(3479,-1,1));
-            TOP45Luong.add(new Item(3480,-1,1));
-            TOP45Luong.add(new Item(3481,-1,1));
-
-            if(user.chests.size() >= user.getChestSlot()-5){
-                user.getAvatarService().SendTabmsg("Bạn phải có ít nhất 6 ô trống trong rương đồ để nhận thưởng top lượng "+rankPhaoLuong);
-                return;
-            }
             Utils.writeLogSystem(user,"Nhận Thưởng TOP 4or5 Pháo Lượng :");
-            for (Item item : TOP45Luong){
-                this.user.addItemToChests(item);
-                Utils.writeLogSystem(user,item.getPart().getName());
-            }
-            for (Item item : TOP5Luong){
-                this.user.addItemToChests(item);
-                Utils.writeLogSystem(user,item.getPart().getName());
-            }
-            Item theCaoCao =  new  Item(2741,System.currentTimeMillis() + (86400000L * 3),1);
+            Item theCaoCao =  new  Item(2740,-1,2);
             user.addItemToChests(theCaoCao);
             Utils.writeLog(user,theCaoCao.getPart().getName());
         }
