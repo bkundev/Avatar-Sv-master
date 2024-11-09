@@ -945,6 +945,35 @@ public class AvatarService extends Service {
             DataOutputStream ds = ms.writer();
             ds.writeShort(id);
             switch (id) {
+                case 4: {
+                    mss = new Message(Cmd.MENU_ROTATE);
+                    DataOutputStream ds1 = mss.writer();
+                    short num73 = 3;
+                    ds1.writeShort(3);
+                    int newMoney = 0;
+                    ds1.writeInt(newMoney);
+                    byte typeBuy = 0;
+                    ds1.writeByte(typeBuy);
+                    if (num73 != -1)
+                    {
+                        newMoney = 1;
+                        ds1.writeInt(newMoney);
+                        typeBuy = 0;
+                        ds1.writeByte(typeBuy);
+                    }
+                    String text5 = "text";
+                    ds1.writeUTF(text5);
+                    int xu3 = 1;
+                    ds1.writeInt(xu3);
+                    int luong3 = 2;
+                    ds1.writeInt(luong3);
+                    int luongKhoa = 3;
+                    ds1.writeInt(luongKhoa);
+                    ds1.flush();
+                    this.session.sendMessage(mss);
+                    break;
+                }
+
                 case 48: {
                     us.getZone().getPlayers().forEach(u -> {
                         EffectService.createEffect()

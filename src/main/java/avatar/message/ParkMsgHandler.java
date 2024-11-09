@@ -28,6 +28,10 @@ public class ParkMsgHandler extends MessageHandler {
         System.out.println("ParkMsgHandler: " + mss.getCommand());
         try {
             switch (mss.getCommand()) {
+                case Cmd.MENU_ROTATE: {
+                    this.client.getAvatarService().HandlerMENU_ROTATE(this.client.user, mss);
+                    break;
+                }
                 case Cmd.AVATAR_REQUEST_ADD_FRIEND:
                     this.client.getParkService().handleAddFriendRequest(mss);
                     break;
