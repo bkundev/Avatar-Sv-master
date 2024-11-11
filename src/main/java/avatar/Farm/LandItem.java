@@ -92,12 +92,12 @@ public class LandItem {
     }
 
     public long getMinutesSincePlanted() {
-        if (plantedTime == null) {
+        if (this.plantedTime == null) {
             throw new IllegalStateException("plantedTime is not set");
         }
 
         LocalDateTime now = LocalDateTime.now();
-        Duration duration = Duration.between(plantedTime, now);
+        Duration duration = Duration.between(this.plantedTime, now);
         return duration.toMinutes();
     }
 }

@@ -569,14 +569,18 @@ public class User {
             landObject.put("isWatered", landItem.isWatered());
             landObject.put("isFertilized", landItem.isFertilized());
             landObject.put("isHarvestable", landItem.isHarvestable());
+
             LocalDateTime plantedTime = landItem.getPlantedTime();
             if (plantedTime != null) {
                 landObject.put("plantedTime", plantedTime.format(formatter));
             } else {
-                landObject.put("plantedTime", LocalDateTime.now().format(formatter)); // or handle differently
+                // Lưu giá trị mặc định hoặc không lưu trường này
+                landObject.put("plantedTime", "not_planted"); // Hoặc loại bỏ dòng này
             }
+
             landData.add(landObject);
         }
+
 
         JSONArray animalData = new JSONArray();
         for (Animal animal : this.session.user.Animal) {
