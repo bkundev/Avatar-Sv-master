@@ -12,6 +12,7 @@ import avatar.model.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Vector;
 import avatar.server.Avatar;
@@ -95,7 +96,7 @@ public void openLand(Message ms) throws IOException {
     int id = ms.reader().readInt(); // ID của nông trại
     byte typeBuy = ms.reader().readByte(); // Loại giao dịch hoặc mã người dùng
 
-    this.session.user.landItems.add(new LandItem(0, -1, 0, false, false, false)); // Ô đất mặc định
+    this.session.user.landItems.add(new LandItem(0, -1, 0, false, false, false, LocalDateTime.now())); // Ô đất mặc định
 
     ms = new Message(Cmd.OPEN_LAND);
     DataOutputStream ds = ms.writer();
@@ -300,7 +301,7 @@ public void openLand(Message ms) throws IOException {
     }
 
     private void writeInfoCell(DataOutputStream ds, LandItem land) throws IOException {
-        ds.writeShort(land.getGrowthTime());
+        ds.writeShort((int)land.getMinutesSincePlanted());
         ds.writeByte(land.getType());
         ds.writeByte(land.getResourceCount());
         ds.writeBoolean(land.isWatered());

@@ -1,6 +1,7 @@
 package avatar.Farm;
 
-public class Animal {
+public class
+Animal {
     private int id;//id vat nuoi
     private int health;              // Sức khỏe của động vật
     private int level;               // Cấp độ của động vật

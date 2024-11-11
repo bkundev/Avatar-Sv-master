@@ -15,6 +15,8 @@ import java.io.DataOutputStream;
 import java.sql.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import avatar.service.*;
@@ -557,6 +559,8 @@ public class User {
     public void saveFarmData(int userId) throws SQLException {
         // Chuẩn bị dữ liệu để lưu vào cơ sở dữ liệu
         JSONArray landData = new JSONArray();
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
         for (LandItem landItem : this.session.user.landItems) {
             JSONObject landObject = new JSONObject();
             landObject.put("growthTime", landItem.getGrowthTime());
@@ -565,6 +569,12 @@ public class User {
             landObject.put("isWatered", landItem.isWatered());
             landObject.put("isFertilized", landItem.isFertilized());
             landObject.put("isHarvestable", landItem.isHarvestable());
+            LocalDateTime plantedTime = landItem.getPlantedTime();
+            if (plantedTime != null) {
+                landObject.put("plantedTime", plantedTime.format(formatter));
+            } else {
+                landObject.put("plantedTime", LocalDateTime.now().format(formatter)); // or handle differently
+            }
             landData.add(landObject);
         }
 
@@ -618,6 +628,8 @@ public class User {
                     JSONArray landData = (JSONArray) JSONValue.parse(landDataString);
                     List<LandItem> landItems = new ArrayList<>();
 
+                    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
                     for (Object land : landData) {
                         JSONObject obj = (JSONObject) land;
                         int growthTime = ((Long) obj.get("growthTime")).intValue();
@@ -627,10 +639,12 @@ public class User {
                         boolean isFertilized = (Boolean) obj.get("isFertilized");
                         boolean isHarvestable = (Boolean) obj.get("isHarvestable");
 
-                        LandItem landItem = new LandItem(growthTime, type, resourceCount, isWatered, isFertilized, isHarvestable);
+                        String plantedTimeStr = (String) obj.get("plantedTime");
+                        LocalDateTime plantedTime = LocalDateTime.parse(plantedTimeStr, formatter);
+
+                        LandItem landItem = new LandItem(growthTime, type, resourceCount, isWatered, isFertilized, isHarvestable, plantedTime);
                         landItems.add(landItem);
                     }
-
                     // Cập nhật danh sách ô đất cho người chơi
                     this.session.user.landItems = landItems;
 
@@ -664,7 +678,7 @@ public class User {
             // Tạo mặc định cho 6 ô đất
             List<LandItem> defaultLandItems = new ArrayList<>();
             for (int i = 0; i < 6; i++) {
-                defaultLandItems.add(new LandItem(0, -1, 0, false, false, false)); // Cây mặc định
+                defaultLandItems.add(new LandItem(0, -1, 0, false, false, false,LocalDateTime.now())); // Cây mặc định
             }
             this.session.user.landItems = defaultLandItems;
         }

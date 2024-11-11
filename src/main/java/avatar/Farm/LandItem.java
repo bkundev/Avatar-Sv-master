@@ -1,5 +1,8 @@
 package avatar.Farm;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class LandItem {
     private int growthTime;        // Thời gian cần để cây trưởng thành
     private int type;              // Loại cây (ID hoặc mã số của cây)
@@ -7,17 +10,26 @@ public class LandItem {
     private boolean isWatered;     // Trạng thái tưới nước
     private boolean isFertilized;  // Trạng thái đã bón phân
     private boolean isHarvestable; // Trạng thái có thể thu hoạch
-
+    private LocalDateTime plantedTime; // Time when the plant was planted
     // Constructor
-    public LandItem(int growthTime, int type, int resourceCount, boolean isWatered, boolean isFertilized, boolean isHarvestable) {
+    public LandItem(int growthTime, int type, int resourceCount, boolean isWatered, boolean isFertilized, boolean isHarvestable, LocalDateTime plantedTime) {
         this.growthTime = growthTime;
         this.type = type;
         this.resourceCount = resourceCount;
         this.isWatered = isWatered;
         this.isFertilized = isFertilized;
         this.isHarvestable = isHarvestable;
+        this.plantedTime = plantedTime;
     }
 
+
+    public LocalDateTime getPlantedTime() {
+        return plantedTime;
+    }
+
+    public void setPlantedTime(LocalDateTime plantedTime) {
+        this.plantedTime = plantedTime;
+    }
     // Getters và Setters
     public int getGrowthTime() {
         return growthTime;
@@ -77,5 +89,15 @@ public class LandItem {
                 ", isFertilized=" + isFertilized +
                 ", isHarvestable=" + isHarvestable +
                 '}';
+    }
+
+    public long getMinutesSincePlanted() {
+        if (plantedTime == null) {
+            throw new IllegalStateException("plantedTime is not set");
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(plantedTime, now);
+        return duration.toMinutes();
     }
 }
