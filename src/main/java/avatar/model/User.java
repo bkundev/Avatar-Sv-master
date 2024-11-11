@@ -585,6 +585,7 @@ public class User {
         JSONArray animalData = new JSONArray();
         for (Animal animal : this.session.user.Animal) {
             JSONObject animalObject = new JSONObject();
+            animalObject.put("id", animal.getId());
             animalObject.put("health", animal.getHealth());
             animalObject.put("level", animal.getLevel());
             animalObject.put("resourceCount", animal.getResourceCount());
