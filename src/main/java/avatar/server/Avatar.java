@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static avatar.server.Utils.decodeMapItemFile;
+import static avatar.server.Utils.setTimeout;
 
 public class
 
@@ -24,6 +25,7 @@ Avatar {
 
     public static void main(String[] args) {
         //Utils.decodeMapItemFile();
+        //Utils.readTreeInfo();
         Avatar.start();
     }
 

@@ -417,6 +417,115 @@ public class Utils {
         //decodeItemFile();
     }
 
+
+    public static void readTreeInfo() {
+        byte[] dat = Avatar.getFile("res/data/tree_info.dat");
+        try (DataInputStream dataInputStream = new DataInputStream(new ByteArrayInputStream(dat))) {
+            short numTrees = dataInputStream.readShort();
+            System.out.println("Number of Trees: " + numTrees);
+            for (int i = 0; i < numTrees; i++) {
+                short treeID = dataInputStream.readByte();
+                String treeName = dataInputStream.readUTF();
+                String treeNameLower = treeName.toLowerCase();
+                byte phase0 = dataInputStream.readByte();
+                byte phase1 = dataInputStream.readByte();
+                short harvestTime = dataInputStream.readShort();
+                short dieTime = dataInputStream.readShort();
+                short priceSeed0 = dataInputStream.readShort();
+                short priceProduct = dataInputStream.readShort();
+                short numProduct = dataInputStream.readShort();
+
+                System.out.println("Tree " + (i + 1) + ":");
+                System.out.println("  ID: " + treeID);
+                System.out.println("  Name: " + treeName);
+                System.out.println("  Phases: " + phase0 + ", " + phase1);
+                System.out.println("  Harvest Time: " + harvestTime);
+                System.out.println("  Die Time: " + dieTime);
+                System.out.println("  Price Seed[0]: " + priceSeed0);
+                System.out.println("  Price Product: " + priceProduct);
+                System.out.println("  Num Product: " + numProduct);
+
+                for (int j = 0; j < 8; j++) {
+                    short idImg = dataInputStream.readShort();
+                    System.out.println("  Image ID[" + j + "]: " + idImg);
+                }
+            }
+
+            short numItems = dataInputStream.readShort();
+            System.out.println("Number of Items: " + numItems);
+            for (int k = 0; k < numItems; k++) {
+                short itemID = dataInputStream.readByte();
+                int price0 = dataInputStream.readShort();
+
+                System.out.println("Item " + (k + 1) + ":");
+                System.out.println("  ID: " + itemID);
+                System.out.println("  Price[0]: " + price0);
+            }
+
+            for (int l = 0; l < numTrees; l++) {
+                short priceSeed1 = dataInputStream.readShort();
+                System.out.println("Tree " + (l + 1) + " - Price Seed[1]: " + priceSeed1);
+            }
+
+            for (int m = 0; m < numItems; m++) {
+                int price1 = dataInputStream.readShort();
+                System.out.println("Item " + (m + 1) + " - Price[1]: " + price1);
+            }
+
+            short numAnimals = dataInputStream.readShort();
+            System.out.println("Number of Animals: " + numAnimals);
+            for (int n = 0; n < numAnimals; n++) {
+                byte species = dataInputStream.readByte();
+                String name = dataInputStream.readUTF();
+                String description = dataInputStream.readUTF();
+                int price0 = dataInputStream.readInt();
+                int price1 = dataInputStream.readShort();
+                int harvestTime = dataInputStream.readShort();
+                int priceProduct = dataInputStream.readShort();
+
+                System.out.println("Animal " + (n + 1) + ":");
+                System.out.println("  Species: " + species);
+                System.out.println("  Name: " + name);
+                System.out.println("  Description: " + description);
+                System.out.println("  Price[0]: " + price0);
+                System.out.println("  Price[1]: " + price1);
+                System.out.println("  Harvest Time: " + harvestTime);
+                System.out.println("  Price Product: " + priceProduct);
+
+                for (int num4 = 0; num4 < 3; num4++) {
+                    short idImg = dataInputStream.readShort();
+                    System.out.println("  Image ID[" + num4 + "]: " + idImg);
+                }
+            }
+
+            byte farmItemCount = dataInputStream.readByte();
+            System.out.println("Number of Farm Items: " + farmItemCount);
+            for (int num7 = 0; num7 < farmItemCount; num7++) {
+                short farmItemID = dataInputStream.readShort();
+                short farmItemImgID = dataInputStream.readShort();
+                byte type = dataInputStream.readByte();
+                byte action = dataInputStream.readByte();
+                String description = dataInputStream.readUTF();
+                int priceXu = dataInputStream.readShort();
+                int priceLuong = dataInputStream.readShort();
+
+                System.out.println("Farm Item " + (num7 + 1) + ":");
+                System.out.println("  ID: " + farmItemID);
+                System.out.println("  Image ID: " + farmItemImgID);
+                System.out.println("  Type: " + type);
+                System.out.println("  Action: " + action);
+                System.out.println("  Description: " + description);
+                System.out.println("  Price Xu: " + priceXu);
+                System.out.println("  Price Luong: " + priceLuong);
+            }
+
+        } catch (IOException e) {
+            System.err.println("Error reading data: " + e.getMessage());
+        }
+    }
+
+
+
     private static void decodeFoodFile() {
         try {
             byte[] dat = Avatar.getFile("res/data/food.dat");
