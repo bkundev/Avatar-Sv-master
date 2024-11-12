@@ -28,17 +28,34 @@ public class ParkService extends Service {
         randomItemList1.add(80, 2383);//nro
         randomItemList1.add(20, 2384);
     }
+///le duong
+    public void WEDDING_BIGINHanlder(User user, Message ms) {
+        try {
+            Message ms1 = new Message(Cmd.WEDDING_BIGIN);
+            DataOutputStream ds = ms1.writer();
+            ds.writeInt(user.getId());
+            ds.writeInt(7);//id girl
+            ds.flush();
+            user.getZone().getPlayers().forEach(u -> {
+                u.session.sendMessage(ms1);
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public void handleAddFriendRequest(Message ms) {
         try {
-
             int userId = ms.reader().readInt(); // id người nhận
-            ms = new Message(Cmd.ADD_FRIEND);
+            User user = UserManager.getInstance().find(userId);
+            ms = new Message(-19);
             DataOutputStream ds = ms.writer();
             ds.writeInt(userId);
-            ds.writeBoolean(true);
+            ds.writeBoolean(false);
             ds.flush();
-            this.session.sendMessage(ms);
+            user.session.sendMessage(ms);
         } catch (IOException e) {
             e.printStackTrace();
         }
