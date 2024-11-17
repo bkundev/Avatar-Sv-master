@@ -15,6 +15,10 @@ import avatar.model.*;
 import avatar.server.Avatar;
 import avatar.server.ServerManager;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -206,8 +210,23 @@ public class AvatarService extends Service {
                 ds.writeByte(1);
                 ds.writeUTF(itm.expiredString());
             }
-            //ds.writeShort(us.getIdImg());
-            ds.writeShort(-1); // id img clan
+            String sql = "SELECT c.icon,c.description FROM clan_members cm JOIN clans c ON cm.clan_id = c.id WHERE cm.user_id = ?";
+            try (Connection connection = DbManager.getInstance().getConnection();
+                 PreparedStatement ps = connection.prepareStatement(sql);) {
+                ps.setInt(1, us.getId());
+                try (ResultSet res = ps.executeQuery()) {
+                    if (res.next()) {
+                        short icon = res.getShort("icon");
+                        String thongbaonhom = res.getString("description");
+                        ds.writeShort(icon); // id img clan
+                        us.getAvatarService().SendTabmsg("Thông báo nhóm : "+ thongbaonhom);
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+
             ds.writeByte(listCmd.size());
             for (Command cmd : listCmd) {
                 ds.writeUTF(cmd.getName());

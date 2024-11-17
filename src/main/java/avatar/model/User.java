@@ -820,7 +820,7 @@ public class User {
                     Utils.writeLog(this,"luong load :" + this.luong);
                     this.luongKhoa = res.getInt("luong_khoa");
                     this.xeng = res.getInt("xeng");
-                    this.clanID = res.getShort("clan_id");                    //res.writeShort(2206);
+                    this.clanID = res.getShort("clan_id");
                     this.friendly = res.getByte("friendly");
                     this.crazy = res.getShort("crazy");//vp sk/
                     this.stylish = res.getByte("stylish");
