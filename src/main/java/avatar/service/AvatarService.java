@@ -210,21 +210,27 @@ public class AvatarService extends Service {
                 ds.writeByte(1);
                 ds.writeUTF(itm.expiredString());
             }
-            String sql = "SELECT c.icon,c.description FROM clan_members cm JOIN clans c ON cm.clan_id = c.id WHERE cm.user_id = ?";
+            String sql = "SELECT c.icon, c.description FROM clan_members cm JOIN clans c ON cm.clan_id = c.id WHERE cm.user_id = ?";
             try (Connection connection = DbManager.getInstance().getConnection();
-                 PreparedStatement ps = connection.prepareStatement(sql);) {
-                ps.setInt(1, us.getId());
+                 PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setInt(1, us.getId());  // Giả sử us.getId() trả về ID của user hiện tại
                 try (ResultSet res = ps.executeQuery()) {
                     if (res.next()) {
+                        // Nếu người dùng tham gia vào một clan, lấy thông tin
                         short icon = res.getShort("icon");
                         String thongbaonhom = res.getString("description");
-                        ds.writeShort(icon); // id img clan
-                        us.getAvatarService().SendTabmsg("Thông báo nhóm : "+ thongbaonhom);
+                        ds.writeShort(icon);  // Ghi ID icon của clan vào DataOutputStream
+                        us.getAvatarService().SendTabmsg("Thông báo nhóm: " + thongbaonhom);  // Gửi thông báo nhóm
+                    } else {
+                        // Nếu không có kết quả (người dùng không tham gia clan nào)
+                        ds.writeShort((short) -1);  // Ghi giá trị mặc định -1 cho icon
+                        us.getAvatarService().SendTabmsg("Bạn chưa tham gia vào nhóm nào.");  // Gửi thông báo mặc định
                     }
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException(e);  // Xử lý lỗi SQL nếu có
             }
+
 
 
             ds.writeByte(listCmd.size());
