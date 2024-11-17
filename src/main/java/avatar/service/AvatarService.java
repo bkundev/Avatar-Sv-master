@@ -210,7 +210,7 @@ public class AvatarService extends Service {
                 ds.writeByte(1);
                 ds.writeUTF(itm.expiredString());
             }
-            String sql = "SELECT c.icon, c.description FROM clan_members cm JOIN clans c ON cm.clan_id = c.id WHERE cm.user_id = ?";
+            String sql = "SELECT c.icon, c.description FROM clan_members cm JOIN clans c ON cm.clan_id = c.id WHERE cm.user_id = ? AND cm.accept = 1";
             try (Connection connection = DbManager.getInstance().getConnection();
                  PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setInt(1, us.getId());  // Giả sử us.getId() trả về ID của user hiện tại
