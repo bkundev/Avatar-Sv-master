@@ -46,8 +46,9 @@ import org.json.simple.JSONArray;
 @Setter
 public class User {
     private static int chestLevel;
-    private static final int[] UPGRADE_COST_COINS = {0, 0,0,20000, 50000, 100000, 200000 ,200000,500000,600000,70000,0,1000000,1200000,1500000,1700000,2000000,2500000,2700000,3000000,4000000,5000000};
-    private static final int[] UPGRADE_COST_GOLD = {0, 0, 0, 0, 0, 0, 0, 200,500,600,700,1000,1000 ,1200 ,1500 ,1700 ,2000 ,2500 ,2700 ,3000 ,4000 ,5000 };public boolean AutoFish;
+    private static final int[] UPGRADE_COST_COINS = {0, 0, 0, 20000, 50000, 100000, 200000, 200000, 500000, 600000, 70000, 0, 1000000, 1200000, 1500000, 1700000, 2000000, 2500000, 2700000, 3000000, 4000000, 5000000};
+    private static final int[] UPGRADE_COST_GOLD = {0, 0, 0, 0, 0, 0, 0, 200, 500, 600, 700, 1000, 1000, 1200, 1500, 1700, 2000, 2500, 2700, 3000, 4000, 5000};
+    public boolean AutoFish;
 
     public int bossMapId;
     public int TopPhaoLuong;
@@ -63,9 +64,13 @@ public class User {
 
     private boolean isDefeated;
     private boolean isSpam;
-
-    public int idUsHenHo;
-
+/// //////hen ho
+    private int idUsHenHo;
+    private String namehh;
+    private List<Item> wearingMarry;
+    private int levelMarry;
+    private int PerLevelMarry;
+/// //////////
     private int storedXuUpdate; // Biến lưu trữ xu đã cập nhật
     private static final Logger logger = Logger.getLogger(User.class);
     public Session session;
@@ -150,6 +155,9 @@ public class User {
         this.moneyPutList = new ArrayList<>();
         this.availableSkills = new ArrayList<>();
         this.useSkill = 0;
+
+
+        this.wearingMarry = new ArrayList<>();
     }
 
     public int getIntSpanboss() {
@@ -163,11 +171,13 @@ public class User {
     public void resetIntSpanboss() {
         this.intSpanboss = 0;
     }
+
     // Phương thức để reset tất cả thông tin của người chơi
     public void resetUser() {
         resetIntSpanboss();
         setspamclickBoss(false);
     }
+
     public synchronized boolean getspamclickBoss() {
         return spamclickBoss;
     }
@@ -196,6 +206,7 @@ public class User {
     public List<Byte> getMoneyPutList() {
         return this.moneyPutList;
     }
+
     public synchronized void updateMoneyPutList(List<Byte> newMoneyPutList) {
         if (this.moneyPutList == null) {
             this.moneyPutList = new ArrayList<>(); // Khởi tạo danh sách nếu chưa có
@@ -226,20 +237,21 @@ public class User {
     public synchronized void setUseSkill(int skill) {
         this.useSkill = skill;
     }
+
     public List<Integer> getListSkill() {
         return this.availableSkills;
     }
 
     public synchronized void calculateDameToXu() {
         int totalDamage = 30;
-        if(this.getStar() == 2){
+        if (this.getStar() == 2) {
             totalDamage = 80;
         }
-        List<Integer> Item1 = Arrays.asList(3440,3443, 3174, 3972,4442,6142,4121);  // Set mũ
-        List<Integer> Item2 = Arrays.asList(3441,3445, 3176, 3974,4443,4122);  // Set áo
-        List<Integer> Item3 = Arrays.asList(3442,3446, 3177, 3975,4444,4123);  // Set quần
+        List<Integer> Item1 = Arrays.asList(3440, 3443, 3174, 3972, 4442, 6142, 4121);  // Set mũ
+        List<Integer> Item2 = Arrays.asList(3441, 3445, 3176, 3974, 4443, 4122);  // Set áo
+        List<Integer> Item3 = Arrays.asList(3442, 3446, 3177, 3975, 4444, 4123);  // Set quần
         int countItem1 = 0, countItem2 = 0, countItem3 = 0;
-        boolean cung = false, maybay = false,haoquanhoalong = false,bang = false,hophong = false;
+        boolean cung = false, maybay = false, haoquanhoalong = false, bang = false, hophong = false;
 // Kiểm tra toàn bộ items nhân vật đang mặc
         for (Item item : wearing) {
             totalDamage += item.getPart().getLevel();
@@ -266,6 +278,7 @@ public class User {
 // Cập nhật damage cuối cùng
         this.dameToXu = totalDamage;
     }
+
     private void handleSkill(boolean hasItem, int skillId) {
         if (hasItem) {
             addSkill(skillId);  // Thêm kỹ năng
@@ -283,11 +296,13 @@ public class User {
             removeSkill(1);  // Thiếu món nào thì xóa skill 1
         }
     }
+
     private void addSkill(int skillId) {
         if (!this.availableSkills.contains(skillId)) {
             this.availableSkills.add(skillId);
         }
     }
+
     private void removeSkill(int skillId) {
         this.availableSkills.remove(Integer.valueOf(skillId));
         this.useSkill = 0;  // Reset skill được sử dụng nếu xóa
@@ -297,13 +312,14 @@ public class User {
         this.username = username;
         this.xu_from_boss = xuFromBoss;
     }
+
     public User(String username, int xeng, int TopPhaoLuong) {
         this.username = username;
         this.xeng = xeng;
         this.TopPhaoLuong = TopPhaoLuong;
     }
 
-    public User(String username, int id,int xeng, int TopPhaoXu) {
+    public User(String username, int id, int xeng, int TopPhaoXu) {
         this.username = username;
         this.id = id;
         this.xeng = xeng;
@@ -349,24 +365,30 @@ public class User {
     public synchronized void updateXu(long xuUp) {
         this.xu += xuUp;
     }
+
     public synchronized void updateXuKillBoss(int dame) {
         this.storedXuUpdate += dame; // Lưu xu vào biến tạm thời
     }
+
     public void applyStoredXuUpdate() {
         //this.updateXu(storedXuUpdate * 5); // Cộng dồn số xu ba lần
         this.Updatexu_from_boss(storedXuUpdate);
-        Utils.writeLog(this,"xu : " + storedXuUpdate +" X "+this.getDame()+ " dame to xu = >" + this.xu);
+        Utils.writeLog(this, "xu : " + storedXuUpdate + " X " + this.getDame() + " dame to xu = >" + this.xu);
         this.storedXuUpdate = 0; // Reset xu đã lưu trữ
     }
+
     public synchronized void updateCrazy(int crazy) {
         this.crazy += crazy;
     }//1k item câu cá
+
     public synchronized void updateHappy(int Happy) {
         this.happy += Happy;
     }
+
     public synchronized void updateHunger(int hunger) {
         this.hunger += (byte) hunger;
     }//100 vp kill bos
+
     public synchronized void updateXP(int XP) {
         this.expMain += XP;
     }
@@ -378,8 +400,8 @@ public class User {
     public synchronized void updateLuong(int luongUp) {
         this.luong += luongUp;
         try {
-            this.getAvatarService().SendTabmsg("Luong : "+ this.luong);
-            Utils.writeLog(this,"luong : " + luong);
+            this.getAvatarService().SendTabmsg("Luong : " + this.luong);
+            Utils.writeLog(this, "luong : " + luong);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -392,28 +414,32 @@ public class User {
     public synchronized void updateLuongKhoa(int luongUp) {
         this.luong += luongUp;
     }
+
     public synchronized void updateXeng(int xengUp) {
         this.xeng += xengUp;
     }
+
     public synchronized void updateChestSlot(int chestslot) {
         this.chestSlot += (byte) chestslot;
     }
+
     public synchronized void updateChest_homeSlot(int chestslot) {
         this.chestHomeSlot += (byte) chestslot;
     }
-    public synchronized void updateHP(long dame,Boss boss,User us) throws IOException {
+
+    public synchronized void updateHP(long dame, Boss boss, User us) throws IOException {
         this.HP += dame;
         if (HP <= 0) {
             HP = 0;
             if (!isDefeated) {
                 isDefeated = true;
                 // Chỉ thực hiện xử lý khi boss chưa bị đánh bại
-                boss.handleBossDefeat(boss,us);
+                boss.handleBossDefeat(boss, us);
             }
         }
     }
 
-    public synchronized void updateSpam(long spams,Boss boss, User us) throws IOException {
+    public synchronized void updateSpam(long spams, Boss boss, User us) throws IOException {
         boss.spam += spams;
         System.out.println("Spam " + boss.getSpam());
         if (boss.getSpam() <= 0) {
@@ -421,13 +447,15 @@ public class User {
             isSpam = false;
             if (!isSpam) {
                 isSpam = true;
-                boss.hanlderNhatHopQua(boss,us);
+                boss.hanlderNhatHopQua(boss, us);
             }
         }
     }
+
     public boolean isSpam() {
         return isSpam;
     }
+
     public boolean isDefeated() {
         return isDefeated;
     }
@@ -437,7 +465,9 @@ public class User {
     }
 
     public synchronized void setRoomID(byte RoomID) {
-        this.roomID = RoomID;}
+        this.roomID = RoomID;
+    }
+
     public long getRandomTimeInMillis() {
         return randomTimeInMillis;
     }
@@ -516,16 +546,16 @@ public class User {
 
     protected void saveData() {
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `gender` = ?, `friendly` = ?, `crazy` = ?, `stylish` = ?, `happy` = ?, `hunger` = ?, `chest_slot` = ? , `chest_home_slot` = ? WHERE `user_id` = ? LIMIT 1;",
-                this.gender, this.friendly, this.crazy, this.stylish, this.happy, this.hunger,this.chestSlot,this.chestHomeSlot, this.id);
+                this.gender, this.friendly, this.crazy, this.stylish, this.happy, this.hunger, this.chestSlot, this.chestHomeSlot, this.id);
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `xu` = ?, `luong` = ?, `luong_khoa` = ?, `xeng` = ?, `level_main` = ?, `exp_main` = ?,`scores` = ? , `xu_from_boss` = ? , `TopPhaoLuong` = ?, `TopPhaoXu` = ? WHERE `user_id` = ? LIMIT 1;",
-                this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain,this.scores,this.xu_from_boss,this.TopPhaoLuong,this.TopPhaoXu, this.id);
+                this.xu, this.luong, this.luongKhoa, this.xeng, this.leverMain, this.expMain, this.scores, this.xu_from_boss, this.TopPhaoLuong, this.TopPhaoXu, this.id);
         JSONArray jChests = new JSONArray();
         for (Item item : this.chests) {
             JSONObject obj = new JSONObject();
             obj.put("id", item.getId());
             obj.put("expired", item.getExpired());
             obj.put("quantity", item.getQuantity());
-            checkItemQuantityLog(item,"saveData error" + item.getPart().getName()
+            checkItemQuantityLog(item, "saveData error" + item.getPart().getName()
 
             );
             jChests.add(obj);
@@ -549,7 +579,7 @@ public class User {
         }
 
         DbManager.getInstance().executeUpdate("UPDATE `players` SET `chests` = ?, `wearing` = ?, `chests_home` = ? WHERE `user_id` = ? LIMIT 1;",
-                jChests.toJSONString(), jWearing.toJSONString(),jChestsHome.toJSONString(), this.id);
+                jChests.toJSONString(), jWearing.toJSONString(), jChestsHome.toJSONString(), this.id);
         System.out.println("Save data user " + this.getUsername());
 
         try {
@@ -558,6 +588,7 @@ public class User {
             throw new RuntimeException(e);
         }
     }
+
     public void saveFarmData(int userId) throws SQLException {
         // Chuẩn bị dữ liệu để lưu vào cơ sở dữ liệu
         JSONArray landData = new JSONArray();
@@ -618,6 +649,7 @@ public class User {
             ps.executeUpdate();
         }
     }
+
     public void loadFarmData(int userId) throws SQLException {
 
         String query = "SELECT land_data, animal_data FROM `farm_data` WHERE user_id = ?";
@@ -670,7 +702,7 @@ public class User {
                         boolean isReadyForBreeding = (Boolean) obj.get("isReadyForBreeding");
                         boolean isHarvestable = (Boolean) obj.get("isHarvestable");
 
-                        Animal animalObj = new Animal(id,health, level, resourceCount, nextProductionTime, isAlive, isReadyForBreeding, isHarvestable);
+                        Animal animalObj = new Animal(id, health, level, resourceCount, nextProductionTime, isAlive, isReadyForBreeding, isHarvestable);
                         animals.add(animalObj);
                     }
 
@@ -685,7 +717,7 @@ public class User {
             // Tạo mặc định cho 6 ô đất
             List<LandItem> defaultLandItems = new ArrayList<>();
             for (int i = 0; i < 6; i++) {
-                defaultLandItems.add(new LandItem(0, -1, 0, false, false, false,LocalDateTime.now())); // Cây mặc định
+                defaultLandItems.add(new LandItem(0, -1, 0, false, false, false, LocalDateTime.now())); // Cây mặc định
             }
             this.session.user.landItems = defaultLandItems;
         }
@@ -695,6 +727,7 @@ public class User {
             this.session.user.Animal = new ArrayList<>();
         }
     }
+
     public synchronized boolean login() {
         if (!ServerManager.active) {
             getService().serverMessage("Máy chủ đang bảo trì. Vui lòng quay lại sau : v");
@@ -799,6 +832,41 @@ public class User {
             getService().serverMessage(ex.getMessage());
         }
         return false;
+    }
+
+
+    public void GetdataUserHenho() {
+        String GET_PLAYER_DATA = "SELECT wearing FROM `players` WHERE `user_id` = ? LIMIT 1;";
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement(GET_PLAYER_DATA);) {
+            ps.setInt(1, this.idUsHenHo);
+            try (ResultSet res = ps.executeQuery()) {
+                if (res.next()) {
+                    this.wearingMarry = new ArrayList<>();
+                    JSONArray wearing = (JSONArray) JSONValue.parse(res.getString("wearing"));
+                    for (Object o : wearing) {
+                        JSONObject obj = (JSONObject) o;
+                        int id = ((Long) obj.get("id")).intValue();
+                        long expired = ((Long) obj.get("expired"));
+                        int quantity = 1;
+                        if (obj.containsKey("quantity")) {
+                            quantity = ((Long) obj.get("quantity")).intValue();
+                        }
+                        Item item = Item.builder().id(id)
+                                .quantity(quantity)
+                                .expired(expired)
+                                .build();
+                        if (item.reliability() > 0) {
+                            this.wearingMarry.add(item);
+                        }
+                    }
+                }
+            } catch (SQLException ex) {
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean loadData() {
@@ -910,10 +978,62 @@ public class User {
                     loadFarmData(this.id);
                     calculateDameToXu();
 
+
+
+                    String checkExistQuery = "SELECT * FROM marry WHERE idNam = ? OR idNu = ?";
+                    int userId = this.id; // ID của người dùng hiện tại
+
+                    try (Connection conn = DbManager.getInstance().getConnection();
+                         PreparedStatement psCheck = conn.prepareStatement(checkExistQuery)) {
+
+                        // Cung cấp ID của người dùng để kiểm tra
+                        psCheck.setInt(1, userId);
+                        psCheck.setInt(2, userId);
+
+                        try (ResultSet rs = psCheck.executeQuery()) {
+                            if (rs.next()) {
+                                // Nếu có kết quả, chúng ta lấy idNam và idNu
+                                int idNam = rs.getInt("idNam");
+                                int idNu = rs.getInt("idNu");
+                                this.levelMarry = rs.getInt("level");
+                                this.PerLevelMarry = rs.getInt("perLevel");
+                                // Kiểm tra xem ID người dùng hiện tại là idNam hay idNu, và lấy ID còn lại
+                                int otherId = (idNam == userId) ? idNu : idNam;
+
+                                // Lấy thông tin của người còn lại
+                                String userInfoQuery = "SELECT * FROM users WHERE id = ?";
+                                try (PreparedStatement psUser = conn.prepareStatement(userInfoQuery)) {
+                                    psUser.setInt(1, otherId);
+
+                                    try (ResultSet rsUser = psUser.executeQuery()) {
+                                        if (rsUser.next()) {
+                                            // Lấy thông tin của người còn lại từ bảng users
+                                            String username = rsUser.getString("username");
+                                            int userID = rsUser.getInt("id");
+                                            this.setIdUsHenHo(userID);
+                                            this.setNamehh(username);
+                                            GetdataUserHenho();
+                                            System.out.println("Người còn lại: " + username+ " , id = " + userID);
+                                        }
+                                    }
+                                }
+                            } else {
+                                System.out.println("Không tìm thấy người dùng hẹn hò hoặc kết hôn với bạn.");
+                            }
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+
+
                     setLoadDataFinish(true);
                     return true;
                 }
             }
+
+
+
         } catch (Exception ex) {
             ex.printStackTrace();
             getService().serverMessage(ex.getMessage());

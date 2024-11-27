@@ -868,24 +868,30 @@ public class AvatarService extends Service {
             ds.writeByte(100 - us.getHunger());
 
 
-            ds.writeInt(1); // Set this to 0 to simulate a second avatar (or use -1 to simulate no second avatar)
-            User us2 = UserManager.getInstance().find(1);
-            ds.writeUTF(us2.getUsername());
-            ds.writeByte(us2.getWearing().size()); // Number of SeriParts
-            for (Item item : us2.getWearing()) {
+            if(us.getIdUsHenHo()!=0){
+                ds.writeInt(us.getIdUsHenHo());
+            }else {
+                ds.writeInt(-1);
+            }
+
+            //User us2 = UserManager.getInstance().find(1);
+            ds.writeUTF(us.getNamehh());
+            ds.writeByte(us.getWearingMarry().size()); // Number of SeriParts
+            for (Item item : us.getWearingMarry()) {
                 ds.writeShort(item.getId()); // ID item
             }
 
-            ds.writeUTF("test hẹn hò"); // Slogan
+            ds.writeUTF("text 1"); // Slogan
             ds.writeShort(1114); // idImage
-            ds.writeByte(1); // Level of avatar3
-            ds.writeByte(0); // Percent level of avatar3
-            ds.writeUTF("ố ô"); // Relationship
+            ds.writeByte(us.getLevelMarry()); // Level of avatar3
+            ds.writeByte(us.getLevelMarry()); // Percent level of avatar3
+            ds.writeUTF("text 2"); // Relationship
             ds.writeShort(1); // num23
             ds.writeUTF("text 3"); // Action name if num23 != -1
 
             ds.writeShort(us.getLeverMain());
             ds.flush();
+
             sendMessage(ms);
         } catch (IOException e) {
             e.printStackTrace();
