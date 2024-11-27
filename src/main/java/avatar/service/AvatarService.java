@@ -250,7 +250,12 @@ public class AvatarService extends Service {
             }
             ds.writeByte(1);
             ds.writeShort(us.getLeverMain());
-            ds.writeShort(-1);
+
+            //hẹn hò
+            if(us.getIdUsHenHo() !=0){
+                ds.writeShort(2);
+            }else
+                ds.writeShort(-1);
 
             ds.writeBoolean(session.isNewVersion());//new version
             if (session.isNewVersion()) {
