@@ -872,6 +872,10 @@ public class AvatarService extends Service {
                 ds.writeInt(us.getIdUsHenHo());
             }else {
                 ds.writeInt(-1);
+                ds.writeShort(us.getLeverMain());
+                ds.flush();
+                sendMessage(ms);
+                return;
             }
 
             //User us2 = UserManager.getInstance().find(1);
@@ -1023,7 +1027,7 @@ public class AvatarService extends Service {
                 }
                 //hẹn hò
                 case 36: {
-                    us.getAvatarService().sendTextBoxPopup(us.getId(), 100, "gửi lời mới hẹn hò tới ?", 0);
+                    us.getAvatarService().sendTextBoxPopup(us.getId(), 100, "gửi lời mới hẹn hò tới ? (ghi tên nhân vật)", 0);
                     break;
                 }
                 case 48: {

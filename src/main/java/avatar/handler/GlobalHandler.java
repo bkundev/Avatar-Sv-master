@@ -198,6 +198,11 @@ public class GlobalHandler {
                             if(user.getId() == us.getIdUsHenHo()){
                                 user.getAvatarService().serverDialog("Bạn đã hẹn hò thành công với " + us.getUsername());
                                 us.getAvatarService().serverDialog("Bạn đã hẹn hò thành công với "+ user.getUsername());
+
+                                user.setWearingMarry(us.getWearing());
+                                user.setNamehh(us.getUsername());
+                                us.setWearingMarry(user.getWearing());
+                                us.setNamehh(user.getUsername());
                             }
                         });
                     }else{
