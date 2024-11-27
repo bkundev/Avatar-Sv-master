@@ -64,6 +64,8 @@ public class User {
     private boolean isDefeated;
     private boolean isSpam;
 
+    public int idUsHenHo;
+
     private int storedXuUpdate; // Biến lưu trữ xu đã cập nhật
     private static final Logger logger = Logger.getLogger(User.class);
     public Session session;
@@ -939,8 +941,8 @@ public class User {
         //listCmdRotate.add(new Command((short) 11, "thả bóng bay (20k xu)", 577, (byte) 0)); // sk
 
 
-        //listCmdRotate.add(new Command((short) 23, "Đổi Skill", 355, (byte) 0));
-        //listCmdRotate.add(new Command((short) 36, "Hẹn hò", 1096, (byte) 1));
+        listCmdRotate.add(new Command((short) 23, "Đổi Skill", 355, (byte) 0));
+        listCmdRotate.add(new Command((short) 36, "Hẹn hò", 1096, (byte) 1));
     }
 
     public void doAction(Message ms) {

@@ -236,9 +236,10 @@ public class ServerManager {
             //call bot join map
             List<Integer> mapIds1 = List.of(11,9,23,0);
 
-            for (int mapId : mapIds1) {
-                botPlayer.getInstance().spawnBotesForMap(mapId);
-            }
+            // bật bot người chơi
+//            for (int mapId : mapIds1) {
+//                botPlayer.getInstance().spawnBotesForMap(mapId);
+//            }
 
             while (ServerManager.start) {
                 try {

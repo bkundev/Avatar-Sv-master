@@ -856,17 +856,34 @@ public class AvatarService extends Service {
 
     public void requestYourInfo(User us) {
         try {
-            Message ms = new Message(Cmd.REQUEST_YOUR_INFO);
+            Message ms = new Message(-22);
             DataOutputStream ds = ms.writer();
             ds.writeInt(us.getId());
             ds.writeByte(us.getLeverMain());
             ds.writeByte(us.getLeverMainPercen());
             ds.writeByte(us.getFriendly());
-            ds.writeByte(0);//us.getCrazy()
+            ds.writeByte(0); //us.getCrazy()
             ds.writeByte(us.getStylish());
             ds.writeByte(us.getHappy());
             ds.writeByte(100 - us.getHunger());
-            ds.writeInt(-1);//keets hon
+
+
+            ds.writeInt(1); // Set this to 0 to simulate a second avatar (or use -1 to simulate no second avatar)
+            User us2 = UserManager.getInstance().find(1);
+            ds.writeUTF(us2.getUsername());
+            ds.writeByte(us2.getWearing().size()); // Number of SeriParts
+            for (Item item : us2.getWearing()) {
+                ds.writeShort(item.getId()); // ID item
+            }
+
+            ds.writeUTF("test hẹn hò"); // Slogan
+            ds.writeShort(1114); // idImage
+            ds.writeByte(1); // Level of avatar3
+            ds.writeByte(0); // Percent level of avatar3
+            ds.writeUTF("ố ô"); // Relationship
+            ds.writeShort(1); // num23
+            ds.writeUTF("text 3"); // Action name if num23 != -1
+
             ds.writeShort(us.getLeverMain());
             ds.flush();
             sendMessage(ms);
@@ -998,7 +1015,11 @@ public class AvatarService extends Service {
                     this.session.sendMessage(mss);
                     break;
                 }
-
+                //hẹn hò
+                case 36: {
+                    us.getAvatarService().sendTextBoxPopup(us.getId(), 100, "gửi lời mới hẹn hò tới ?", 0);
+                    break;
+                }
                 case 48: {
                     us.getZone().getPlayers().forEach(u -> {
                         EffectService.createEffect()

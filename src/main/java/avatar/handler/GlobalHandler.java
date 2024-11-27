@@ -121,13 +121,92 @@ public class GlobalHandler {
     }
 
 
+    private void acceptHenHo(){
+        String insertQuery = "INSERT INTO marry (idNam, idNu, level, perLevel) VALUES (?, ?, ?, ?)";
+        int idNvNam,idNu;
+        if(this.us.getGender() == 1){
+            idNvNam = this.us.getId();
+            idNu = this.us.getIdUsHenHo();
+        }else {
+            idNvNam = this.us.getIdUsHenHo();
+            idNu = this.us.getId();
+        }
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(insertQuery)) {
+            ps.setInt(1, idNvNam);
+                                ps.setInt(2, idNu);
+                                ps.setInt(3, 0);
+                                ps.setInt(4, 0);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void handleTextBox(Message ms) throws IOException {
         int userId = ms.reader().readInt();
         byte menuId = ms.reader().readByte();
         String text = ms.reader().readUTF();
 
         switch (menuId) {
+            case 100:
+                String nameU = text;
+                if(nameU.equals(us.getUsername())){
+                    this.us.getAvatarService().serverDialog("không chơi tự sướng nha b");
+                    return;
+                }
+                int idNvNam, idNu;
+                if (this.us.getGender() == 1) {
+                    idNvNam = this.us.getId();
+                    idNu = this.us.getIdUsHenHo();
+                } else {
+                    idNvNam = this.us.getIdUsHenHo();
+                    idNu = this.us.getId();
+                }
+                    String checkExistQuery = "SELECT COUNT(*) FROM marry WHERE idNam = ? OR idNu = ?";
+                    try (Connection conn = DbManager.getInstance().getConnection()) {
+                        // Kiểm tra xem cặp idNam và idNu có tồn tại hay không
+                        try (PreparedStatement psCheck = conn.prepareStatement(checkExistQuery)) {
+                            psCheck.setInt(1, idNvNam);
+                            psCheck.setInt(2, idNu);
+                            try (ResultSet rs = psCheck.executeQuery()) {
+                                if (rs.next() && rs.getInt(1) == 0) {
+                                    UserManager.users.forEach(user -> {
+                                        if(user.getUsername().equals(nameU)){
+                                            this.us.getAvatarService().serverDialog("ok gửi lời mới hẹn hò tới " + nameU);
+                                            this.us.setIdUsHenHo(user.getId());
+                                            user.setIdUsHenHo(this.us.getId());
+                                            user.getAvatarService().sendTextBoxPopup(user.getId(), 101, "Bạn có muốn hẹn hò với "+us.getUsername() +" không ? nếu muốn thì trả lời ok hoặc yes", 1);
+                                        }
+                                    });
+                                } else {
+                                    us.getAvatarService().serverDialog("đã hẹn hò hoặc kết hôn rồi");
+                                }
+                            }
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
 
+
+                break;
+            case 101:
+                try {
+                    if(text.equals("ok")||text.equals("yes")){
+                        acceptHenHo();
+                        UserManager.users.forEach(user -> {
+                            if(user.getId() == us.getIdUsHenHo()){
+                                user.getAvatarService().serverDialog("Bạn đã hẹn hò thành công với " + us.getUsername());
+                                us.getAvatarService().serverDialog("Bạn đã hẹn hò thành công với "+ user.getUsername());
+                            }
+                        });
+                    }else{
+
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
             case 0: // Cược Tài (Xu)
             case 1: // Cược Xỉu (Xu)
             case 2: // Cược Tài (Lượng)
