@@ -77,7 +77,7 @@ public class FarmService extends Service {
         ms = new Message(Cmd.TREE_HARVEST);
         DataOutputStream ds = ms.writer();
         ds.writeByte(indexcell);
-        ds.writeShort(1);//so luong thu hoach duoc
+        ds.writeShort(99);//so luong thu hoach duoc
         ds.flush();
         this.session.sendMessage(ms);
     }
@@ -303,7 +303,7 @@ public void openLand(Message ms) throws IOException {
     private void writeInfoCell(DataOutputStream ds, LandItem land) throws IOException {
         ds.writeShort((int)land.getMinutesSincePlanted());
         ds.writeByte(land.getType());
-        ds.writeByte(land.getResourceCount());
+        ds.writeByte(1); //100 la héo
         ds.writeBoolean(land.isWatered());
         ds.writeBoolean(land.isFertilized());
         ds.writeBoolean(land.isHarvestable());
@@ -348,7 +348,7 @@ public void openLand(Message ms) throws IOException {
         }
 
         // Ghi thông tin khác
-        ds.writeByte(10);
+        ds.writeByte(111);
         ds.writeByte(8);
         ds.writeShort(5000);  // Ví dụ cấp độ cây khế
         ds.writeShort(43);

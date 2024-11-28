@@ -599,7 +599,7 @@ public class User {
         for (LandItem landItem : this.session.user.landItems) {
             JSONObject landObject = new JSONObject();
             landObject.put("growthTime", landItem.getGrowthTime());
-            landObject.put("type", landItem.getType());
+            landObject.put("type", landItem.getType());//sức khỏe cây
             landObject.put("resourceCount", landItem.getResourceCount());
             landObject.put("isWatered", landItem.isWatered());
             landObject.put("isFertilized", landItem.isFertilized());
@@ -609,7 +609,6 @@ public class User {
             if (plantedTime != null) {
                 landObject.put("plantedTime", plantedTime.format(formatter));
             } else {
-                // Lưu giá trị mặc định hoặc không lưu trường này
                 landObject.put("plantedTime", "not_planted"); // Hoặc loại bỏ dòng này
             }
 

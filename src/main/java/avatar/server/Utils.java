@@ -419,7 +419,7 @@ public class Utils {
 
 
     public static void readTreeInfo() {
-        byte[] dat = Avatar.getFile("res/data/tree_info.dat");
+        byte[] dat = Avatar.getFile("res/data/farm_info.dat");
         try (DataInputStream dataInputStream = new DataInputStream(new ByteArrayInputStream(dat))) {
             short numTrees = dataInputStream.readShort();
             System.out.println("Number of Trees: " + numTrees);
