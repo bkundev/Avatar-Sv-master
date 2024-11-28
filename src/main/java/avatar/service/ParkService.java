@@ -1,6 +1,7 @@
 package avatar.service;
 
 import avatar.constants.Cmd;
+import avatar.db.DbManager;
 import avatar.item.Item;
 import avatar.lib.RandomCollection;
 import avatar.lucky.GiftBox;
@@ -16,6 +17,9 @@ import org.apache.log4j.Logger;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Random;
 
 public class ParkService extends Service {
@@ -33,19 +37,35 @@ public class ParkService extends Service {
         try {
             Message ms1 = new Message(Cmd.WEDDING_BIGIN);
             DataOutputStream ds = ms1.writer();
-            ds.writeInt(user.getId());
-            ds.writeInt(7);//id girl
+            ds.writeInt(7);
+            ds.writeInt(1);//id girl
             ds.flush();
             user.getZone().getPlayers().forEach(u -> {
                 u.session.sendMessage(ms1);
             });
+            accceptMarry(user.getId());
+            user.setLevelMarry(1
+            );
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
+    public void accceptMarry(int IDuserNam){
 
+        String updateQuery = "UPDATE marry SET level = ?, perLevel = ? WHERE idNam = ?";
+        try (Connection conn = DbManager.getInstance().getConnection();
+             PreparedStatement psUpdate = conn.prepareStatement(updateQuery)) {
+            psUpdate.setInt(1, 1);
+            psUpdate.setInt(2, 0);
+            psUpdate.setInt(3, IDuserNam);
+            psUpdate.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public void handleAddFriendRequest(Message ms) {
         try {
             int userId = ms.reader().readInt(); // id người nhận

@@ -69,7 +69,7 @@ public class GlobalHandler {
                     break;
                 case 1000:
                     switch (menuId) {
-                        case 1:
+                        case 1: {
                             if (select != 2) {
                                 this.us.incrementIntSpanboss(); // Tăng spam lên 1
                                 if (this.us.getIntSpanboss() >= 500) { // Giả sử MAX_SPAM là 10
@@ -89,13 +89,19 @@ public class GlobalHandler {
                                     int number2 = 1 + random.nextInt(10);
                                     this.us.setcorrectAnswer(number1 + number2);
                                     String equation = number1 + " + " + number2 + " =  ?";
-                                    this.us.getAvatarService().sendTextBoxPopup(this.us.getId(),102,equation,1);
+                                    this.us.getAvatarService().sendTextBoxPopup(this.us.getId(), 102, equation, 1);
                                     break;
                                 case 3:
 
                                     break;
                             }
                             break;
+                        }
+                        case 2:{
+                            if(select == 1){
+
+                            }
+                        }
                     }
                     break;
             }

@@ -252,8 +252,30 @@ public class AvatarService extends Service {
             ds.writeShort(us.getLeverMain());
 
             //hẹn hò
-            if(us.getIdUsHenHo() !=0){
+            if(us.getIdUsHenHo() !=0&&us.getLevelMarry() ==0){
                 ds.writeShort(2);
+                us.setTenNhan("Cặp đôi hẹn hò");
+                us.setImginfo(1114);
+            } else if (us.getLevelMarry() > 0 && us.getLevelMarry()<5) {
+                ds.writeShort(1153);
+                us.setTenNhan("Cặp đôi mới cưới");
+                us.setImginfo(1106);
+            } else if (us.getLevelMarry() > 4 && us.getLevelMarry()<10) {
+                ds.writeShort(1154);
+                us.setTenNhan("Cặp đôi gì đó lv hơn 5 dưới 10");
+                us.setImginfo(1107);
+            } else if (us.getLevelMarry() > 9 && us.getLevelMarry()<15) {
+                ds.writeShort(1155);
+                us.setTenNhan("Cặp đôi gì đó lv hơn 10 dưới 15");
+                us.setImginfo(1108);
+            }else if (us.getLevelMarry() > 14 && us.getLevelMarry()<20) {
+                ds.writeShort(1156);
+                us.setTenNhan("Cặp đôi gì đó lv hơn 15 dưới 20");
+                us.setImginfo(1109);
+            } else if (us.getLevelMarry() > 19 && us.getLevelMarry()<24) {
+                ds.writeShort(1157);
+                us.setTenNhan("Cặp đôi gì đó lv hơn 5 dưới 10");
+                us.setImginfo(1110);
             }else
                 ds.writeShort(-1);
 
@@ -885,15 +907,15 @@ public class AvatarService extends Service {
 
             //User us2 = UserManager.getInstance().find(1);
             ds.writeUTF(us.getNamehh());
-            ds.writeByte(us.getWearingMarry().size()); // Number of SeriParts
+            ds.writeByte(us.getWearingMarry().size());
             for (Item item : us.getWearingMarry()) {
-                ds.writeShort(item.getId()); // ID item
+                ds.writeShort(item.getId());
             }
 
-            ds.writeUTF("text 1"); // Slogan
-            ds.writeShort(1114); // idImage
+            ds.writeUTF(us.getTenNhan()); // Slogan
+            ds.writeShort(us.getImginfo()); // idImage
             ds.writeByte(us.getLevelMarry()); // Level of avatar3
-            ds.writeByte(us.getLevelMarry()); // Percent level of avatar3
+            ds.writeByte(us.getPerLevelMarry()); // Percent level of avatar3
             ds.writeUTF("text 2"); // Relationship
             ds.writeShort(1); // num23
             ds.writeUTF("text 3"); // Action name if num23 != -1
@@ -1002,6 +1024,12 @@ public class AvatarService extends Service {
             DataOutputStream ds = ms.writer();
             ds.writeShort(id);
             switch (id) {
+//                case 1: {
+//                    us.getAvatarService().openMenuOption(1000, 2,
+//                            "Hủy hẹn hò ? : không",
+//                            "Hủy hẹn hò ? : Có");
+//                    break;
+//                }
                 case 4: {
                     mss = new Message(Cmd.MENU_ROTATE);
                     DataOutputStream ds1 = mss.writer();

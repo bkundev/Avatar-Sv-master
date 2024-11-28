@@ -70,6 +70,8 @@ public class User {
     private List<Item> wearingMarry;
     private int levelMarry;
     private int PerLevelMarry;
+    private int imginfo;
+    private String tenNhan;
 /// //////////
     private int storedXuUpdate; // Biến lưu trữ xu đã cập nhật
     private static final Logger logger = Logger.getLogger(User.class);
