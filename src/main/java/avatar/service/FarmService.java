@@ -82,7 +82,18 @@ public class FarmService extends Service {
         ms = new Message(Cmd.TREE_HARVEST);
         DataOutputStream ds = ms.writer();
         ds.writeByte(indexcell);
-        ds.writeShort(99);//so luong thu hoach duoc
+        if (indexcell >= 0 && indexcell < this.session.user.landItems.size()) {
+            // Lấy ô đất tại vị trí indexCell và cập nhật thông tin
+            LandItem landItem = this.session.user.landItems.get(indexcell);
+            farmItem itemf = PartManager.getInstance().findFarmitemByID(landItem.getType());
+            landItem.setType(-1);
+            int sanluong = (itemf.getQuantity()%100) * landItem.getSucKhoe()/100;
+            ds.writeShort(sanluong);//so luong thu hoach duoc
+        } else {
+            // Nếu ô đất không tồn tại, có thể xử lý ngoại lệ hoặc thông báo lỗi
+            System.out.println("Ô đất không tồn tại hoặc indexCell không hợp lệ.");
+        }
+        //ds.writeShort(sanluong);//so luong thu hoach duoc
         ds.flush();
         this.session.sendMessage(ms);
     }
@@ -275,14 +286,6 @@ public class FarmService extends Service {
 
     public void getInventory(Message ms) throws IOException {
         User us = session.user;
-
-
-        Vector<KeyValue<Integer, Integer>> nongsan = new Vector<>();
-        nongsan.add(new KeyValue(9, 23684));//23684 kho hàng(nông sản) hoa hướng dương
-        nongsan.add(new KeyValue(50, 4000));//trứng gà
-        Vector<KeyValue<Integer, Integer>> phanbon = new Vector<>();
-        phanbon.add(new KeyValue<Integer, Integer>(118, 70));
-        phanbon.add(new KeyValue<Integer, Integer>(119, 78));//kho giống(phân bón thức ăn)
         Vector<KeyValue<Integer, Integer>> nongsandacbiet = new Vector<>();
         nongsandacbiet.add(new KeyValue(255, 20));//thit ca
         nongsandacbiet.add(new KeyValue(215, 680));//khe
@@ -294,6 +297,8 @@ public class FarmService extends Service {
             ds.writeByte(hatgiong.getId());
             ds.writeShort(hatgiong.getSoluong());
         }
+
+
         ds.writeByte(nongsan.size());
         for (KeyValue<Integer, Integer> i : nongsan) {
             ds.writeByte(i.getKey());

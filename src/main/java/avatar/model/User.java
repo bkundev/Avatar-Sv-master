@@ -1,11 +1,9 @@
 package avatar.model;
 
-import avatar.Farm.Animal;
-import avatar.Farm.HatGiong;
+import avatar.Farm.*;
 import avatar.common.BossShopItem;
 import avatar.db.DbManager;
 import avatar.item.Item;
-import avatar.Farm.LandItem;
 import avatar.item.Part;
 import avatar.lucky.DialLucky;
 import avatar.lucky.GiftBox;
@@ -120,7 +118,9 @@ public class User {
     public List<LandItem> landItems = new ArrayList<>();
     public List<Animal> Animal = new ArrayList<>();
     public List<HatGiong> hatgiong = new ArrayList<>();
-    public HatGiong hatgiong1;
+    public List<NongSan> NongSan = new ArrayList<>();
+    public List<PhanBon> PhanBon = new ArrayList<>();
+    public List<NongSanDacBiet> NongSanDacBiet = new ArrayList<>();
 /// /////
     private Zone zone;
     private short x, y;
@@ -155,6 +155,11 @@ public class User {
         this.landItems = new ArrayList<>();
         this.Animal = new ArrayList<>();
         this.hatgiong = new ArrayList<>();
+        this.NongSan = new ArrayList<>();
+        this.NongSanDacBiet = new ArrayList<>();
+        this.PhanBon = new ArrayList<>();
+
+
 
         this.listCmd = new ArrayList<>();
         this.listCmdRotate = new ArrayList<>();
@@ -647,8 +652,33 @@ public class User {
         }
 
 
+        JSONArray phanbonData = new JSONArray();
+        for (PhanBon phanBon : this.session.user.PhanBon) {
+            JSONObject phanBonObject = new JSONObject();
+            phanBonObject.put("id", phanBon.getId());
+            phanBonObject.put("soluong", phanBon.getSoluong());
+            phanbonData.add(phanbonData);
+        }
+
+        JSONArray nongsanData = new JSONArray();
+        for (NongSan nongSan : this.session.user.NongSan) {
+            JSONObject nongSanObject = new JSONObject();
+            nongSanObject.put("id", nongSan.getId());
+            nongSanObject.put("soluong", nongSan.getSoluong());
+            nongsanData.add(nongsanData);
+        }
+
+        JSONArray nongsandacbietData = new JSONArray();
+        for (NongSanDacBiet nongsandacbiet : this.session.user.NongSanDacBiet) {
+            JSONObject nongsandacbietObject = new JSONObject();
+            nongsandacbietObject.put("id", nongsandacbiet.getId());
+            nongsandacbietObject.put("soluong", nongsandacbiet.getSoluong());
+            phanbonData.add(phanbonData);
+        }
+
+
         // Cập nhật cơ sở dữ liệu với dữ liệu đã tạo
-        String query = "INSERT INTO `farm_data` (user_id, land_data, animal_data,hatgiong) VALUES (?, ?, ?, ?) " +
+        String query = "INSERT INTO `farm_data` (user_id, land_data, animal_data,hatgiong,phanbon,nongsan,nongsandacbiet) VALUES (?, ?, ?, ?, ?, ?, ?) " +
                 "ON DUPLICATE KEY UPDATE land_data = ?, animal_data = ?, hatgiong = ?";
         try (Connection connection = DbManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
@@ -657,12 +687,20 @@ public class User {
             String landDataString = landData.toString();
             String animalDataString = animalData.toString();
             String hatgiongDataString = hatgiongData.toString();
+            String phanbonDataString = phanbonData.toString();
+            String nongsanDataString = nongsanData.toString();
+            String nongsandacbietDataString = nongsandacbietData.toString();
 
             // Cập nhật hoặc thêm mới dữ liệu vào bảng `farm_data`
             ps.setInt(1, userId);
             ps.setString(2, landDataString);
             ps.setString(3, animalDataString);
             ps.setString(4, hatgiongDataString);
+            ps.setString(5, phanbonDataString);
+            ps.setString(6, nongsanDataString);
+            ps.setString(7, nongsandacbietDataString);
+
+
             ps.setString(5, landDataString);
             ps.setString(6, animalDataString);
             ps.setString(7, hatgiongDataString);
