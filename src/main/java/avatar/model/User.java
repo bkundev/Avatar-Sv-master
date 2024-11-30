@@ -679,7 +679,7 @@ public class User {
 
         // Cập nhật cơ sở dữ liệu với dữ liệu đã tạo
         String query = "INSERT INTO `farm_data` (user_id, land_data, animal_data,hatgiong,phanbon,nongsan,nongsandacbiet) VALUES (?, ?, ?, ?, ?, ?, ?) " +
-                "ON DUPLICATE KEY UPDATE land_data = ?, animal_data = ?, hatgiong = ?";
+                "ON DUPLICATE KEY UPDATE land_data = ?, animal_data = ?, hatgiong = ?, phanbon = ?, nongsan = ?, nongsandacbiet = ?";
         try (Connection connection = DbManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
 
@@ -711,7 +711,7 @@ public class User {
 
     public void loadFarmData(int userId) throws SQLException {
 
-        String query = "SELECT land_data, animal_data,hatgiong FROM `farm_data` WHERE user_id = ?";
+        String query = "SELECT land_data, animal_data,hatgiong,phanbon,nongsan,nongsandacbiet FROM `farm_data` WHERE user_id = ?";
 
         try (Connection connection = DbManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
@@ -721,6 +721,10 @@ public class User {
                 if (res.next()) {
                     String landDataString = res.getString("land_data");
                     String animalDataString = res.getString("animal_data");
+                    String hatgiongDataString = res.getString("hatgiong");
+                    String phanbonDataString = res.getString("phanbon");
+                    String nongsanDataString = res.getString("nongsan");
+                    String nongsandacbietDataString = res.getString("nongsandacbiet");
 
                     // Phân tích dữ liệu ô đất (land_data)
                     JSONArray landData = (JSONArray) JSONValue.parse(landDataString);
@@ -770,7 +774,7 @@ public class User {
 
 
 
-                    JSONArray hatgiongdata = (JSONArray) JSONValue.parse(animalDataString);
+                    JSONArray hatgiongdata = (JSONArray) JSONValue.parse(hatgiongDataString);
                     List<HatGiong> hatgiongs = new ArrayList<>();
 
                     for (Object hatgiong : hatgiongdata) {
@@ -781,8 +785,52 @@ public class User {
                         HatGiong animalObj = new HatGiong(id, soluong);
                         hatgiongs.add(animalObj);
                     }
-                    // Cập nhật danh sách vật nuôi cho người chơi
                     this.session.user.hatgiong = hatgiongs;
+
+
+                    JSONArray phanbondata = (JSONArray) JSONValue.parse(phanbonDataString);
+                    List<PhanBon> phanBons = new ArrayList<>();
+
+                    for (Object phanbon : phanbondata) {
+                        JSONObject obj = (JSONObject) phanbon;
+                        int id = ((Long) obj.get("id")).intValue();
+                        int soluong = ((Long) obj.get("soluong")).intValue();
+
+                        PhanBon pb = new PhanBon(id, soluong);
+                        phanBons.add(pb);
+                    }
+                    this.session.user.PhanBon = phanBons;
+
+
+
+                    JSONArray nongsandata = (JSONArray) JSONValue.parse(nongsanDataString);
+                    List<NongSan> nongSans = new ArrayList<>();
+
+                    for (Object nongsan : nongsandata) {
+                        JSONObject obj = (JSONObject) nongsan;
+                        int id = ((Long) obj.get("id")).intValue();
+                        int soluong = ((Long) obj.get("soluong")).intValue();
+
+                        NongSan ns = new NongSan(id, soluong);
+                        nongSans.add(ns);
+                    }
+                    this.session.user.NongSan = nongSans;
+
+
+                    JSONArray nongsandbdata = (JSONArray) JSONValue.parse(nongsandacbietDataString);
+                    List<NongSanDacBiet> nongSandbs = new ArrayList<>();
+
+                    for (Object nongsandb : nongsandbdata) {
+                        JSONObject obj = (JSONObject) nongsandb;
+                        int id = ((Long) obj.get("id")).intValue();
+                        int soluong = ((Long) obj.get("soluong")).intValue();
+
+                        NongSanDacBiet nsdb = new NongSanDacBiet(id, soluong);
+                        NongSanDacBiet.add(nsdb);
+                    }
+                    this.session.user.NongSanDacBiet = nongSandbs;
+
+
                 }
             }
         }
@@ -805,6 +853,18 @@ public class User {
         if (this.session.user.hatgiong.isEmpty()) {
             // Không có vật nuôi, nên không cần thêm gì
             this.session.user.hatgiong = new ArrayList<>();
+        }
+        if (this.session.user.PhanBon.isEmpty()) {
+            // Không có vật nuôi, nên không cần thêm gì
+            this.session.user.PhanBon = new ArrayList<>();
+        }
+        if (this.session.user.NongSan.isEmpty()) {
+            // Không có vật nuôi, nên không cần thêm gì
+            this.session.user.NongSan = new ArrayList<>();
+        }
+        if (this.session.user.NongSanDacBiet.isEmpty()) {
+            // Không có vật nuôi, nên không cần thêm gì
+            this.session.user.NongSanDacBiet = new ArrayList<>();
         }
 
     }

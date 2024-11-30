@@ -99,6 +99,7 @@ public class FarmMsgHandler extends MessageHandler {
                     break;
                 }
                 case Cmd.GET_CARD: {
+
                     this.service.serverDialog("LAI BUON chưa có vốn mua vui lòng quay lại sau");
                     break;
                 }

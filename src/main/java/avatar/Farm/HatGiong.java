@@ -3,7 +3,7 @@ package avatar.Farm;
 import avatar.lib.KeyValue;
 
 import java.util.Vector;
-
+/// //sorry không dùng đa hình
 public class HatGiong {
     private int id;          // ID của hạt giống
     private int soluong;     // Số lượng của hạt giống

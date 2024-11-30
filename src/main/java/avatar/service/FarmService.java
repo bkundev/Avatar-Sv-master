@@ -1,9 +1,6 @@
 package avatar.service;
 
-import avatar.Farm.Animal;
-import avatar.Farm.HatGiong;
-import avatar.Farm.LandItem;
-import avatar.Farm.farmItem;
+import avatar.Farm.*;
 import avatar.db.DbManager;
 import avatar.item.PartManager;
 import avatar.lib.KeyValue;
@@ -37,6 +34,11 @@ public class FarmService extends Service {
 
     public FarmService(Session cl) {
         super(cl);
+    }
+
+
+    public void sellFarmitm(User user,Message ms) {
+
     }
 
 
@@ -298,20 +300,22 @@ public class FarmService extends Service {
             ds.writeShort(hatgiong.getSoluong());
         }
 
-
-        ds.writeByte(nongsan.size());
-        for (KeyValue<Integer, Integer> i : nongsan) {
-            ds.writeByte(i.getKey());
-            ds.writeShort(i.getValue());
+        ds.writeByte(this.session.user.NongSan.size());
+        for (NongSan ns : this.session.user.NongSan) {
+            ds.writeByte(ns.getId());
+            ds.writeShort(ns.getSoluong());
         }
+
         ds.writeInt(Math.toIntExact(this.session.user.getXu()));
         ds.writeByte(us.getLeverFarm());
         ds.writeByte(us.getLeverPercen());
-        ds.writeByte(phanbon.size());
-        for (KeyValue<Integer, Integer> i : phanbon) {
-            ds.writeShort(i.getKey());
-            ds.writeShort(i.getValue());
+
+        ds.writeByte(this.session.user.PhanBon.size());
+        for (PhanBon pb : this.session.user.PhanBon) {
+            ds.writeByte(pb.getId());
+            ds.writeShort(pb.getSoluong());
         }
+        /// ///////
         ds.writeByte(nongsandacbiet.size());
         for (KeyValue<Integer, Integer> i : nongsandacbiet) {
             ds.writeShort(i.getKey());
@@ -322,11 +326,13 @@ public class FarmService extends Service {
         ds.writeBoolean(true);
         ds.writeShort(us.getLeverFarm());
         ds.writeByte(us.getLeverPercen());
-        ds.writeByte(nongsan.size());
-        for (KeyValue<Integer, Integer> i : nongsan) {
-            ds.writeShort(i.getKey());
-            ds.writeInt(i.getValue());
+        ds.writeByte(this.session.user.NongSan.size());
+        for (NongSan ns : this.session.user.NongSan) {
+            ds.writeByte(ns.getId());
+            ds.writeShort(ns.getSoluong());
         }
+
+        /// //////
         ds.writeByte(nongsandacbiet.size());
         for (KeyValue<Integer, Integer> i : nongsandacbiet) {
             ds.writeShort(i.getKey());
@@ -354,7 +360,6 @@ public class FarmService extends Service {
         ds.writeBoolean(animal.isReadyForBreeding());
         ds.writeBoolean(animal.isHarvestable());
     }
-
 
 
     public void joinFarm(Message ms) throws IOException, SQLException {
@@ -405,9 +410,6 @@ public class FarmService extends Service {
 
         this.session.sendMessage(ms);
     }
-
-
-
 
 
     public void getImgFarm(Message ms) throws IOException {
