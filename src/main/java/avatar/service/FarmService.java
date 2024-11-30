@@ -37,8 +37,10 @@ public class FarmService extends Service {
     }
 
 
-    public void sellFarmitm(User user,Message ms) {
-
+    public void sellFarmitm(User user,Message ms) throws IOException {
+        short idFarmItm = ms.reader().readShort();
+        System.out.println(idFarmItm);
+        user.getAvatarService().serverDialog("id");
     }
 
 
@@ -49,12 +51,13 @@ public class FarmService extends Service {
         int indexCell = ms.reader().readByte();
         int idSeed = ms.reader().readByte();
 
+        HatGiong hd = this.session.user.findhatgiong(idSeed);
         // Kiểm tra ô đất có tồn tại trong danh sách không
-        if (indexCell >= 0 && indexCell < this.session.user.landItems.size()) {
+        if (indexCell >= 0 && indexCell < this.session.user.landItems.size() && hd.getSoluong()>0 ) {
             // Lấy ô đất tại vị trí indexCell và cập nhật thông tin
             LandItem landItem = this.session.user.landItems.get(indexCell);
             landItem.setType(idSeed); // Đặt mã cây mới
-
+            hd.setSoluong(hd.getSoluong()-1);
             landItem.setSucKhoe(100);
             landItem.setGrowthTime(0); // Reset thời gian tăng trưởng, vì cây mới vừa trồng
             landItem.setResourceCount(0); // Đặt số lượng tài nguyên về 0, vì cây mới chưa có tài nguyên
@@ -114,7 +117,7 @@ public class FarmService extends Service {
     int id = ms.reader().readInt(); // ID của nông trại
     byte typeBuy = ms.reader().readByte(); // Loại giao dịch hoặc mã người dùng
 
-    this.session.user.landItems.add(new LandItem(0, 0,0, 0, false, false, false, LocalDateTime.now())); // Ô đất mặc định
+    this.session.user.landItems.add(new LandItem(0, -1,0, 0, false, false, false, LocalDateTime.now())); // Ô đất mặc định
 
     ms = new Message(Cmd.OPEN_LAND);
     DataOutputStream ds = ms.writer();
@@ -173,9 +176,8 @@ public class FarmService extends Service {
         short id = ms.reader().readShort();
         byte n = ms.reader().readByte();
         byte type = ms.reader().readByte();
-
-
         System.out.println("item farm id "+id+" sl "+n+" type sell"+type);
+
         farmItem itemf = PartManager.getInstance().findFarmitemByID(id);
 
         if(type == 1){
@@ -404,7 +406,7 @@ public class FarmService extends Service {
             ds.writeByte(1);  // Trạng thái ô đất
         }
 
-        ds.writeShort(1);
+        ds.writeShort(3);//nấu ăn
         ds.writeShort(5);
         ds.flush();
 

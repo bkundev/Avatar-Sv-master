@@ -99,8 +99,7 @@ public class FarmMsgHandler extends MessageHandler {
                     break;
                 }
                 case Cmd.GET_CARD: {
-
-                    this.service.serverDialog("LAI BUON chưa có vốn mua vui lòng quay lại sau");
+                    this.service.sellFarmitm(this.client.user, mss);
                     break;
                 }
                 case Cmd.UPDATE_FARM_CATTLE: {
@@ -112,7 +111,7 @@ public class FarmMsgHandler extends MessageHandler {
                     break;
                 }
                 case Cmd.COOKING: {
-                    this.service.serverDialog("Hủy Nấu Ăn Nhanh tutu");
+                   // this.service.huy("Hủy Nấu Ăn Nhanh tutu");
                     break;
                 }
                 case Cmd.COMMUNICATE: {
