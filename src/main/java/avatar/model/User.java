@@ -1,6 +1,7 @@
 package avatar.model;
 
 import avatar.Farm.Animal;
+import avatar.Farm.HatGiong;
 import avatar.common.BossShopItem;
 import avatar.db.DbManager;
 import avatar.item.Item;
@@ -114,9 +115,13 @@ public class User {
     public List<Item> chests;
     public List<Item> chestsHome;
 
+
+    /// /fam
     public List<LandItem> landItems = new ArrayList<>();
     public List<Animal> Animal = new ArrayList<>();
-
+    public List<HatGiong> hatgiong = new ArrayList<>();
+    public HatGiong hatgiong1;
+/// /////
     private Zone zone;
     private short x, y;
     private byte direct;
@@ -146,8 +151,10 @@ public class User {
         this.role = -1;
         this.chests = new ArrayList<>();
         this.wearing = new ArrayList<>();
+
         this.landItems = new ArrayList<>();
         this.Animal = new ArrayList<>();
+        this.hatgiong = new ArrayList<>();
 
         this.listCmd = new ArrayList<>();
         this.listCmdRotate = new ArrayList<>();
@@ -162,7 +169,7 @@ public class User {
         this.wearingMarry = new ArrayList<>();
     }
 
-    public int getIntSpanboss() {
+    public synchronized int getIntSpanboss() {
         return intSpanboss;
     }
 
@@ -372,7 +379,7 @@ public class User {
         this.storedXuUpdate += dame; // Lưu xu vào biến tạm thời
     }
 
-    public void applyStoredXuUpdate() {
+    public synchronized void applyStoredXuUpdate() {
         //this.updateXu(storedXuUpdate * 5); // Cộng dồn số xu ba lần
         this.Updatexu_from_boss(storedXuUpdate);
         Utils.writeLog(this, "xu : " + storedXuUpdate + " X " + this.getDame() + " dame to xu = >" + this.xu);
@@ -499,7 +506,7 @@ public class User {
     }
 
 
-    public int getChestLevel() {
+    public synchronized int getChestLevel() {
         int chestSlotHome = this.getChestHomeSlot(); // Lấy số ô của rương hiện tại
 
         if (chestSlotHome <= 10) {
@@ -631,30 +638,41 @@ public class User {
             animalData.add(animalObject);
         }
 
+        JSONArray hatgiongData = new JSONArray();
+        for (HatGiong hatGiong : this.session.user.hatgiong) {
+            JSONObject hatGiongObject = new JSONObject();
+            hatGiongObject.put("id", hatGiong.getId());
+            hatGiongObject.put("soluong", hatGiong.getSoluong());
+            hatgiongData.add(hatGiongObject);
+        }
+
+
         // Cập nhật cơ sở dữ liệu với dữ liệu đã tạo
-        String query = "INSERT INTO `farm_data` (user_id, land_data, animal_data) VALUES (?, ?, ?) " +
-                "ON DUPLICATE KEY UPDATE land_data = ?, animal_data = ?";
+        String query = "INSERT INTO `farm_data` (user_id, land_data, animal_data,hatgiong) VALUES (?, ?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE land_data = ?, animal_data = ?, hatgiong = ?";
         try (Connection connection = DbManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
 
             // Chuyển đổi dữ liệu thành chuỗi JSON
             String landDataString = landData.toString();
             String animalDataString = animalData.toString();
+            String hatgiongDataString = hatgiongData.toString();
 
             // Cập nhật hoặc thêm mới dữ liệu vào bảng `farm_data`
             ps.setInt(1, userId);
             ps.setString(2, landDataString);
             ps.setString(3, animalDataString);
-            ps.setString(4, landDataString);
-            ps.setString(5, animalDataString);
-
+            ps.setString(4, hatgiongDataString);
+            ps.setString(5, landDataString);
+            ps.setString(6, animalDataString);
+            ps.setString(7, hatgiongDataString);
             ps.executeUpdate();
         }
     }
 
     public void loadFarmData(int userId) throws SQLException {
 
-        String query = "SELECT land_data, animal_data FROM `farm_data` WHERE user_id = ?";
+        String query = "SELECT land_data, animal_data,hatgiong FROM `farm_data` WHERE user_id = ?";
 
         try (Connection connection = DbManager.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
@@ -708,9 +726,24 @@ public class User {
                         Animal animalObj = new Animal(id, health, level, resourceCount, nextProductionTime, isAlive, isReadyForBreeding, isHarvestable);
                         animals.add(animalObj);
                     }
-
                     // Cập nhật danh sách vật nuôi cho người chơi
                     this.session.user.Animal = animals;
+
+
+
+                    JSONArray hatgiongdata = (JSONArray) JSONValue.parse(animalDataString);
+                    List<HatGiong> hatgiongs = new ArrayList<>();
+
+                    for (Object hatgiong : hatgiongdata) {
+                        JSONObject obj = (JSONObject) hatgiong;
+                        int id = ((Long) obj.get("id")).intValue();
+                        int soluong = ((Long) obj.get("soluong")).intValue();
+
+                        HatGiong animalObj = new HatGiong(id, soluong);
+                        hatgiongs.add(animalObj);
+                    }
+                    // Cập nhật danh sách vật nuôi cho người chơi
+                    this.session.user.hatgiong = hatgiongs;
                 }
             }
         }
@@ -729,6 +762,12 @@ public class User {
             // Không có vật nuôi, nên không cần thêm gì
             this.session.user.Animal = new ArrayList<>();
         }
+
+        if (this.session.user.hatgiong.isEmpty()) {
+            // Không có vật nuôi, nên không cần thêm gì
+            this.session.user.hatgiong = new ArrayList<>();
+        }
+
     }
 
     public synchronized boolean login() {
@@ -1437,6 +1476,26 @@ public class User {
         }
         return false;
     }
+
+
+    public HatGiong findhatgiong(int id) {
+        synchronized (hatgiong) {
+            for (HatGiong hd : hatgiong) {
+                if (hd.getId() == id) {
+                    return hd;
+                }
+            }
+            return null;
+        }
+    }
+
+
+
+
+
+
+
+
 
     public void usingItem(short itemID, byte type) {
         try {

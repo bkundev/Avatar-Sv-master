@@ -1,6 +1,7 @@
 package avatar.service;
 
 import avatar.Farm.Animal;
+import avatar.Farm.HatGiong;
 import avatar.Farm.LandItem;
 import avatar.Farm.farmItem;
 import avatar.db.DbManager;
@@ -160,7 +161,29 @@ public class FarmService extends Service {
         byte n = ms.reader().readByte();
         byte type = ms.reader().readByte();
 
+
+        System.out.println("item farm id "+id+" sl "+n+" type sell"+type);
         farmItem itemf = PartManager.getInstance().findFarmitemByID(id);
+
+        if(type == 1){
+            if(this.session.user.getXu()<itemf.getSell()*n){
+                this.session.user.getAvatarService().serverDialog("bạn không đủ xu");
+                return;
+            }
+        } else{
+            if(this.session.user.getLuong()<itemf.getSell()*n){
+                this.session.user.getAvatarService().serverDialog("bạn không đủ lượng");
+                return;
+            }
+        }
+
+        HatGiong hdid = this.session.user.findhatgiong(id);
+        if(hdid != null){
+            if((hdid.getSoluong()+n) >99){
+                this.session.user.getAvatarService().serverDialog("số lượng nhiều rồi");
+                return;
+            }
+        }
 
         ms = new Message(62);
         DataOutputStream ds = ms.writer();
@@ -174,6 +197,8 @@ public class FarmService extends Service {
         ds.writeInt(0);//luongK
         ds.flush();
         this.session.sendMessage(ms);
+
+        this.session.user.hatgiong.add(new HatGiong(id,n));
     }
 
     public void Buy_ANIMAL(Message ms) throws IOException {
@@ -250,8 +275,8 @@ public class FarmService extends Service {
 
     public void getInventory(Message ms) throws IOException {
         User us = session.user;
-        Vector<KeyValue<Integer, Integer>> hatgiong = new Vector<>();
-        hatgiong.add(new KeyValue(34, 10));
+
+
         Vector<KeyValue<Integer, Integer>> nongsan = new Vector<>();
         nongsan.add(new KeyValue(9, 23684));//23684 kho hàng(nông sản) hoa hướng dương
         nongsan.add(new KeyValue(50, 4000));//trứng gà
@@ -264,10 +289,10 @@ public class FarmService extends Service {
         nongsandacbiet.add(new KeyValue(214, 4));//tinh dau huong duong
         ms = new Message(60);
         DataOutputStream ds = ms.writer();
-        ds.writeByte(hatgiong.size());
-        for (KeyValue<Integer, Integer> i : hatgiong) {
-            ds.writeByte(i.getKey());
-            ds.writeShort(i.getValue());
+        ds.writeByte(this.session.user.hatgiong.size());
+        for (HatGiong hatgiong : this.session.user.hatgiong) {
+            ds.writeByte(hatgiong.getId());
+            ds.writeShort(hatgiong.getSoluong());
         }
         ds.writeByte(nongsan.size());
         for (KeyValue<Integer, Integer> i : nongsan) {
