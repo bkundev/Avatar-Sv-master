@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import avatar.Farm.farmItem;
 import avatar.model.UpgradeItem;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -23,6 +24,10 @@ public class PartManager {
     public static PartManager getInstance() {
         return instance;
     }
+
+    @Getter
+    private final List<farmItem> farmItems = new ArrayList<>();
+
 
     @Getter
     private final List<Part> parts = new ArrayList<>();
@@ -147,7 +152,36 @@ public class PartManager {
             e.printStackTrace();
         }
         loadUpgradeItemData();
+        loadFarmItemData();
     }
+    public void loadFarmItemData() {
+        farmItems.clear();
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `farmitems`;");
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                int time = rs.getInt("so_phut_chin");
+                int quantity = rs.getInt("san_luong_khi_chin");
+                int sell = rs.getInt("gia_san_pham");
+                farmItems.add(farmItem
+                        .builder()
+                        .id(id)
+                        .name(name)
+                        .time(time)
+                        .quantity(quantity)
+                        .sell(sell)
+                        .build()
+                );
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+
 
 
     public void loadUpgradeItemData() {
@@ -192,6 +226,15 @@ public class PartManager {
         for (Part part : parts) {
             if (part.getId() == id) {
                 return part;
+            }
+        }
+        return null;
+    }
+
+    public farmItem findFarmitemByID(int id) {
+        for (farmItem farmItem : farmItems) {
+            if (farmItem.getId() == id) {
+                return farmItem;
             }
         }
         return null;

@@ -2,7 +2,9 @@ package avatar.service;
 
 import avatar.Farm.Animal;
 import avatar.Farm.LandItem;
+import avatar.Farm.farmItem;
 import avatar.db.DbManager;
+import avatar.item.PartManager;
 import avatar.lib.KeyValue;
 import avatar.model.GameData;
 import avatar.model.ImageInfo;
@@ -49,6 +51,8 @@ public class FarmService extends Service {
             // Lấy ô đất tại vị trí indexCell và cập nhật thông tin
             LandItem landItem = this.session.user.landItems.get(indexCell);
             landItem.setType(idSeed); // Đặt mã cây mới
+
+            landItem.setSucKhoe(100);
             landItem.setGrowthTime(0); // Reset thời gian tăng trưởng, vì cây mới vừa trồng
             landItem.setResourceCount(0); // Đặt số lượng tài nguyên về 0, vì cây mới chưa có tài nguyên
             landItem.setWatered(false); // Đặt trạng thái tưới nước ban đầu
@@ -92,11 +96,11 @@ public class FarmService extends Service {
     }
 
 //mở ô đất
-public void openLand(Message ms) throws IOException {
+    public void openLand(Message ms) throws IOException {
     int id = ms.reader().readInt(); // ID của nông trại
     byte typeBuy = ms.reader().readByte(); // Loại giao dịch hoặc mã người dùng
 
-    this.session.user.landItems.add(new LandItem(0, -1, 0, false, false, false, LocalDateTime.now())); // Ô đất mặc định
+    this.session.user.landItems.add(new LandItem(0, 0,0, 0, false, false, false, LocalDateTime.now())); // Ô đất mặc định
 
     ms = new Message(Cmd.OPEN_LAND);
     DataOutputStream ds = ms.writer();
@@ -112,7 +116,7 @@ public void openLand(Message ms) throws IOException {
     ds.flush();
 
     this.session.sendMessage(ms);
-}
+    }
 
 
     public void setBigFarm(Message ms) throws IOException {
@@ -156,16 +160,18 @@ public void openLand(Message ms) throws IOException {
         byte n = ms.reader().readByte();
         byte type = ms.reader().readByte();
 
+        farmItem itemf = PartManager.getInstance().findFarmitemByID(id);
+
         ms = new Message(62);
         DataOutputStream ds = ms.writer();
         ds.writeShort(id);
         ds.writeByte(n);
-        ds.writeInt(0);//.newMoney
+        ds.writeInt((int) this.session.user.getXu());//.newMoney
+        this.session.user.updateXu(-itemf.getSell()*n);
         ds.writeByte(type);
-        ds.writeInt((int) 0);
-        ds.writeInt(0);//luong
+        ds.writeInt((int) this.session.user.getXu());
+        ds.writeInt(this.session.user.getLuong());//luong
         ds.writeInt(0);//luongK
-
         ds.flush();
         this.session.sendMessage(ms);
     }
@@ -302,7 +308,7 @@ public void openLand(Message ms) throws IOException {
 
     private void writeInfoCell(DataOutputStream ds, LandItem land) throws IOException {
         ds.writeShort((int)land.getMinutesSincePlanted());
-        ds.writeByte(land.getType());
+        ds.writeByte(land.getSucKhoe());
         ds.writeByte(1); //100 la héo
         ds.writeBoolean(land.isWatered());
         ds.writeBoolean(land.isFertilized());
@@ -335,7 +341,7 @@ public void openLand(Message ms) throws IOException {
         for (int i = 0; i < landSize; ++i) {
             LandItem landItem =  this.session.user.landItems.get(i);
             if (landItem.getType() >= 0) {
-                ds.writeByte(landItem.getType());  // ID cây
+                ds.writeByte(landItem.getType());  //id
                 writeInfoCell(ds, landItem);
             } else {
                 ds.writeByte(-1);  // Không có cây trong ô đất này
@@ -348,15 +354,15 @@ public void openLand(Message ms) throws IOException {
         }
 
         // Ghi thông tin khác
-        ds.writeByte(111);
-        ds.writeByte(8);
-        ds.writeShort(5000);  // Ví dụ cấp độ cây khế
-        ds.writeShort(43);
-        ds.writeShort(46);
+        ds.writeByte(10);// chỉnh kích cỡ chuồng bò
+        ds.writeByte(10);//chỉnh kích cỡ hồ cá
+        ds.writeShort(10);  //cấp độ cây khế
+        ds.writeShort(43);//43//img cay khe
+        ds.writeShort(46);//46//img qua khe
         ds.writeShort(180);  // Số khế có thể thu hoạch
-        ds.writeShort(170);
-        ds.writeShort(0);
-        ds.writeShort(0);
+        ds.writeShort(0);//
+        ds.writeShort(0);//0
+        ds.writeShort(0);//0
 
         // Ghi trạng thái các ô đất
         for (int i = 0; i < landSize; ++i) {

@@ -5,16 +5,18 @@ import java.time.LocalDateTime;
 
 public class LandItem {
     private int growthTime;        // Thời gian cần để cây trưởng thành
-    private int sucKhoe;              // Loại cây (ID hoặc mã số của cây)
+    private int type;
+    private int sucKhoe;
     private int resourceCount;     // Số lượng tài nguyên trong ô đất (có thể là số quả hoặc các tài nguyên khác)
     private boolean isWatered;     // Trạng thái tưới nước
     private boolean isFertilized;  // Trạng thái đã bón phân
     private boolean isHarvestable; // Trạng thái có thể thu hoạch
     private LocalDateTime plantedTime; // Time when the plant was planted
     // Constructor
-    public LandItem(int growthTime, int type, int resourceCount, boolean isWatered, boolean isFertilized, boolean isHarvestable, LocalDateTime plantedTime) {
+    public LandItem(int growthTime, int type,int suckhoe, int resourceCount, boolean isWatered, boolean isFertilized, boolean isHarvestable, LocalDateTime plantedTime) {
         this.growthTime = growthTime;
-        this.sucKhoe = type;
+        this.type = type;
+        this.sucKhoe = suckhoe;
         this.resourceCount = resourceCount;
         this.isWatered = isWatered;
         this.isFertilized = isFertilized;
@@ -40,11 +42,18 @@ public class LandItem {
     }
 
     public int getType() {
-        return sucKhoe;
+        return type;
     }
 
     public void setType(int type) {
-        this.sucKhoe = type;
+        this.type = type;
+    }
+    public int getSucKhoe() {
+        return sucKhoe;
+    }
+
+    public void setSucKhoe(int sucKhoe) {
+        this.sucKhoe = sucKhoe;
     }
 
     public int getResourceCount() {

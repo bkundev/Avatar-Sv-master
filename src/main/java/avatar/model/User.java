@@ -599,7 +599,8 @@ public class User {
         for (LandItem landItem : this.session.user.landItems) {
             JSONObject landObject = new JSONObject();
             landObject.put("growthTime", landItem.getGrowthTime());
-            landObject.put("type", landItem.getType());//sức khỏe cây
+            landObject.put("type", landItem.getType());//lao
+            landObject.put("suckhoe", landItem.getSucKhoe());//skhoe
             landObject.put("resourceCount", landItem.getResourceCount());
             landObject.put("isWatered", landItem.isWatered());
             landObject.put("isFertilized", landItem.isFertilized());
@@ -674,6 +675,7 @@ public class User {
                         JSONObject obj = (JSONObject) land;
                         int growthTime = ((Long) obj.get("growthTime")).intValue();
                         int type = ((Long) obj.get("type")).intValue();
+                        int suckhoe = ((Long) obj.get("suckhoe")).intValue();
                         int resourceCount = ((Long) obj.get("resourceCount")).intValue();
                         boolean isWatered = (Boolean) obj.get("isWatered");
                         boolean isFertilized = (Boolean) obj.get("isFertilized");
@@ -682,7 +684,7 @@ public class User {
                         String plantedTimeStr = (String) obj.get("plantedTime");
                         LocalDateTime plantedTime = LocalDateTime.parse(plantedTimeStr, formatter);
 
-                        LandItem landItem = new LandItem(growthTime, type, resourceCount, isWatered, isFertilized, isHarvestable, plantedTime);
+                        LandItem landItem = new LandItem(growthTime, type,suckhoe, resourceCount, isWatered, isFertilized, isHarvestable, plantedTime);
                         landItems.add(landItem);
                     }
                     // Cập nhật danh sách ô đất cho người chơi
@@ -718,7 +720,7 @@ public class User {
             // Tạo mặc định cho 6 ô đất
             List<LandItem> defaultLandItems = new ArrayList<>();
             for (int i = 0; i < 6; i++) {
-                defaultLandItems.add(new LandItem(0, -1, 0, false, false, false, LocalDateTime.now())); // Cây mặc định
+                defaultLandItems.add(new LandItem(0, -1,-1, 0, false, false, false, LocalDateTime.now())); // Cây mặc định
             }
             this.session.user.landItems = defaultLandItems;
         }

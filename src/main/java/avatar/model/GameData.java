@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import avatar.Farm.farmItem;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -26,6 +27,7 @@ public class GameData {
     private List<ImageInfo> farmImageDatas = new ArrayList<>();
     private List<MapItem> mapItems = new ArrayList<>();
     private List<MapItemType> mapItemTypes = new ArrayList<>();
+    private List<farmItem> farmItems = new ArrayList<>();
 
 
     public void load() {
@@ -33,8 +35,28 @@ public class GameData {
         loadFarmImageData();
         loadMapItem();
         loadMapItemType();
+        loadItemfarm();
     }
 
+
+    public void loadItemfarm() {
+        farmItems.clear();
+        try (Connection connection = DbManager.getInstance().getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM `farmitems`;");
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                int time = rs.getInt("time");
+                int quantity = rs.getInt("quantity");
+                int sell = rs.getInt("sell");
+                farmItems.add(farmItem.builder().id(id).name(name).time(time).quantity(quantity).sell(sell).build());
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
     public void loadItemImageData() {
         itemImageDatas.clear();
