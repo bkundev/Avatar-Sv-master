@@ -699,11 +699,12 @@ public class User {
             ps.setString(5, phanbonDataString);
             ps.setString(6, nongsanDataString);
             ps.setString(7, nongsandacbietDataString);
-
-
-            ps.setString(5, landDataString);
-            ps.setString(6, animalDataString);
-            ps.setString(7, hatgiongDataString);
+            ps.setString(8, landDataString);
+            ps.setString(9, animalDataString);
+            ps.setString(10, hatgiongDataString);
+            ps.setString(11, phanbonDataString);
+            ps.setString(12, nongsanDataString);
+            ps.setString(13, nongsandacbietDataString);
             ps.executeUpdate();
         }
     }
