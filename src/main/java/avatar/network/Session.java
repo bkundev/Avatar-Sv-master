@@ -480,7 +480,7 @@ public class Session implements ISession {
             getAvatarService().serverDialog("Chào mừng bạn đã đến với Avatar Thanh Pho lo");
             //getAvatarService().serverInfo("");
             //getAvatarService().serverInfo("");
-            getAvatarService().serverInfo("sự kiện halloween p2 đến 22h ngày 07/11/2024, phần quà đua top xem o npc Vegeta , do admin bận việc lên ko bảo trì đúng như tb này và ở zalo, hiện tại admin đóng đua top và code thêm chút và hoàn lại về 10h tối ngày hôm qua ( ở pháo lượng ai thả hơn sẽ hoàn đúng lúc 10h, nếu bạn trong top 3 thì liên hệ admin để tùy chọn set. thanks mn. tối admin sẽ rep zalo, hiện đt có zalo đang hết pin sạc hỏng chiều mới đi mua");
+            getAvatarService().serverInfo("donate mb 0110121112002 , thanks : soucre share đem bán làm chó , ");
             checkThuongNapLanDau();
 
             checkThuongNapSet();
